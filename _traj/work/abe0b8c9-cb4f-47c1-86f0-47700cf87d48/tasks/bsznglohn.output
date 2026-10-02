@@ -1,0 +1,26 @@
+ready after 587 s
+def is_prime(n: int) -> bool:
+    if n < 2:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return False
+        i += 2
+
+    return True
+{'cache_n': 0, 'prompt_n': 67, 'prompt_ms': 1585.6, 'prompt_per_token_ms': 23.666, 'prompt_per_second': 42.3, 'predicted_n': 234, 'predicted_ms': 6999.6, 'predicted_per_token_ms': 29.913, 'predicted_per_second': 33.4, 'draft_n': 192, 'draft_n_accepted': 158}
+[strata] experts loaded: 55.43 GiB at 0.11 GiB/s (580 s so far)
+[strata] filling the GPU's expert cache (1864 experts, 4.19 GiB of VRAM) ...
+[strata] done: 234 tokens in 9 s (33.7 tok/s) (stop, cancel=False), expert cache 48.3% hit
+11557 MiB
+               total        used        free      shared  buff/cache   available
+Mem:              92          60           0           0          32          31
+stopped
+
+[exited with code 0]
