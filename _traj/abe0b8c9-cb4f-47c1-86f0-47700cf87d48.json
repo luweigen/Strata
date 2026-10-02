@@ -15607,19 +15607,718 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 214,
+      "timestamp": "2026-10-02T10:27:50.100Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>b20qonrun</task-id>\n<tool-use-id>toolu_01FzL9NkQpKWjm1j6fiiaW2H</tool-use-id>\n<output-file>/tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/tasks/b20qonrun.output</output-file>\n<status>completed</status>\n<summary>Background command \"Copy the UD-IQ4_XS shards to ~/Documents and check sizes\" completed (exit code 0)</summary>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 215,
+      "timestamp": "2026-10-02T10:27:54.057Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01UeUUz5cV8n1RrsSsySQr5d",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01UeUUz5cV8n1RrsSsySQr5d",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cat /tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/tasks/b20qonrun.output; tr '\\r' '\\n' < /tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/scratchpad/rsync-iq4xs.log | tail -1",
+            "description": "Check copy result"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01UeUUz5cV8n1RrsSsySQr5d",
+            "content": "exit=0\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00003-of-00003.gguf\n\n[exited with code 0]\n 93,682,584,224 100%  112.22MB/s    0:13:16 (xfr#3, to-chk=0/3)\n\n[stdout]\nexit=0\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00003-of-00003.gguf\n\n[exited with code 0]\n 93,682,584,224 100%  112.22MB/s    0:13:16 (xfr#3, to-chk=0/3)\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 172880,
+        "completion_tokens": 231,
+        "cached_tokens": 172876,
+        "extra": {
+          "cache_creation_input_tokens": 384,
+          "cache_read_input_tokens": 172876,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 384,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 231,
+              "cache_read_input_tokens": 172876,
+              "cache_creation_input_tokens": 384,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 384
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "exit=0\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00003-of-00003.gguf\n\n[exited with code 0]\n 93,682,584,224 100%  112.22MB/s    0:13:16 (xfr#3, to-chk=0/3)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01UeUUz5cV8n1RrsSsySQr5d",
+            "type": "tool_result",
+            "content": "exit=0\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00003-of-00003.gguf\n\n[exited with code 0]\n 93,682,584,224 100%  112.22MB/s    0:13:16 (xfr#3, to-chk=0/3)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "exit=0\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00003-of-00003.gguf\n\n[exited with code 0]\n 93,682,584,224 100%  112.22MB/s    0:13:16 (xfr#3, to-chk=0/3)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01UeUUz5cV8n1RrsSsySQr5d",
+            "type": "tool_result",
+            "content": "exit=0\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nsize ok Qwen3.8-Flash-Next-UD-IQ4_XS-00003-of-00003.gguf\n\n[exited with code 0]\n 93,682,584,224 100%  112.22MB/s    0:13:16 (xfr#3, to-chk=0/3)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cat /tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/tasks/b20qonrun.output; tr '\\r' '\\n' < /tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/scratchpad/rsync-iq4xs.log | tail -1",
+          "description": "Check copy result"
+        }
+      }
+    },
+    {
+      "step_id": 216,
+      "timestamp": "2026-10-02T10:27:58.003Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 173262,
+        "completion_tokens": 1289,
+        "cached_tokens": 173260,
+        "extra": {
+          "cache_creation_input_tokens": 417,
+          "cache_read_input_tokens": 173260,
+          "output_tokens_details": {
+            "thinking_tokens": 132
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 417,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1289,
+              "cache_read_input_tokens": 173260,
+              "cache_creation_input_tokens": 417,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 417
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 217,
+      "timestamp": "2026-10-02T10:27:58.009Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "All 3 shards copied (93.7 GB in 13 min 16 s) and their sizes match the source. Writing the config and start script for the local copy, then a start from the SSD:",
+      "metrics": {
+        "prompt_tokens": 173262,
+        "completion_tokens": 1289,
+        "cached_tokens": 173260,
+        "extra": {
+          "cache_creation_input_tokens": 417,
+          "cache_read_input_tokens": 173260,
+          "output_tokens_details": {
+            "thinking_tokens": 132
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 417,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1289,
+              "cache_read_input_tokens": 173260,
+              "cache_creation_input_tokens": 417,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 417
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 218,
+      "timestamp": "2026-10-02T10:28:05.503Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01Ksfu5DeEw9v2RdzJAakvPN",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01Ksfu5DeEw9v2RdzJAakvPN",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; S=/tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/scratchpad; python - <<'EOF'\nimport json, os\nfrom pathlib import Path\nROOT = Path.cwd()\nc = json.load(open(\"/tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/scratchpad/strata-ud-iq4_xs-net.json\"))\na = c[\"args\"]; a[a.index(\"--native\") + 1] = str(Path.home() / \"Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf\")\nc[\"log\"] = str(ROOT / \"strata-unsloth-ud-iq4_xs.log\")\ncfg = ROOT / \"strata-unsloth-ud-iq4_xs.json\"; cfg.write_text(json.dumps(c, indent=1))\nP = os.environ[\"CONDA_PREFIX\"]\nsh = ROOT / \"run-unsloth-ud-iq4_xs.sh\"\nsh.write_text(f'#!/bin/sh\\ncd \"{ROOT}\"\\nexec \"{P}/bin/python\" \"{ROOT}/serve/server.py\" --engine strata --config \"{cfg}\" --port 8080 --open\\n')\nsh.chmod(0o755); print(sh.read_text()); print(a)\nEOF\nt0=$(date +%s); python serve/server.py --engine strata --config strata-unsloth-ud-iq4_xs.json --port 8080 > $S/server-iq4xs-ssd.log 2>&1 & pid=$!; until grep -q \"^ready: http\" $S/server-iq4xs-ssd.log; do kill -0 $pid 2>/dev/null || { echo DIED; tail -5 strata-unsloth-ud-iq4_xs.log; exit 1; }; sleep 1; done; echo \"ready after $(( $(date +%s) - t0 )) s\"; grep -E \"experts loaded|expert cache \\(\" $S/server-iq4xs-ssd.log; curl -s http://127.0.0.1:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\":\"x\",\"temperature\":0,\"max_tokens\":300,\"messages\":[{\"role\":\"user\",\"content\":\"Write a Python function that checks whether a number is prime. Code only.\"}]}' | python -c \"import sys,json; r=json.load(sys.stdin); t=r['timings']; print(t['predicted_n'], t['predicted_per_second'], t['draft_n_accepted'], t['draft_n'])\"; kill $pid; wait $pid 2>/dev/null; echo stopped",
+            "description": "Write UD-IQ4_XS config and start it from the SSD",
+            "timeout": 1200000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01Ksfu5DeEw9v2RdzJAakvPN",
+            "content": "#!/bin/sh\ncd \"/home/luwei/work/AI/Strata\"\nexec \"/home/luwei/miniconda3/envs/strata/bin/python\" \"/home/luwei/work/AI/Strata/serve/server.py\" --engine strata --config \"/home/luwei/work/AI/Strata/strata-unsloth-ud-iq4_xs.json\" --port 8080 --open\n\n['--pack', '/home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs', '--native', '/home/luwei/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf', '--expert-profile', '/home/luwei/work/AI/Strata/data/expert-profile.bin', '--expert-cache', 'auto', '--prefill', 'auto', '--spec', '4', '--spec-min-p', '0.5', '--mtp', '/home/luwei/work/AI/Strata-data/mtp/rt', '--max-context', '32768', '--kv', 'int8']\nready after 42 s\n[strata] experts loaded: 55.43 GiB at 2.72 GiB/s (39 s so far)\n[strata] filling the GPU's expert cache (1864 experts, 4.19 GiB of VRAM) ...\n251 34.1 166 208\nstopped\n\n[stdout]\n#!/bin/sh\ncd \"/home/luwei/work/AI/Strata\"\nexec \"/home/luwei/miniconda3/envs/strata/bin/python\" \"/home/luwei/work/AI/Strata/serve/server.py\" --engine strata --config \"/home/luwei/work/AI/Strata/strata-unsloth-ud-iq4_xs.json\" --port 8080 --open\n\n['--pack', '/home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs', '--native', '/home/luwei/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf', '--expert-profile', '/home/luwei/work/AI/Strata/data/expert-profile.bin', '--expert-cache', 'auto', '--prefill', 'auto', '--spec', '4', '--spec-min-p', '0.5', '--mtp', '/home/luwei/work/AI/Strata-data/mtp/rt', '--max-context', '32768', '--kv', 'int8']\nready after 42 s\n[strata] experts loaded: 55.43 GiB at 2.72 GiB/s (39 s so far)\n[strata] filling the GPU's expert cache (1864 experts, 4.19 GiB of VRAM) ...\n251 34.1 166 208\nstopped\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 173262,
+        "completion_tokens": 1289,
+        "cached_tokens": 173260,
+        "extra": {
+          "cache_creation_input_tokens": 417,
+          "cache_read_input_tokens": 173260,
+          "output_tokens_details": {
+            "thinking_tokens": 132
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 417,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1289,
+              "cache_read_input_tokens": 173260,
+              "cache_creation_input_tokens": 417,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 417
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "#!/bin/sh\ncd \"/home/luwei/work/AI/Strata\"\nexec \"/home/luwei/miniconda3/envs/strata/bin/python\" \"/home/luwei/work/AI/Strata/serve/server.py\" --engine strata --config \"/home/luwei/work/AI/Strata/strata-unsloth-ud-iq4_xs.json\" --port 8080 --open\n\n['--pack', '/home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs', '--native', '/home/luwei/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf', '--expert-profile', '/home/luwei/work/AI/Strata/data/expert-profile.bin', '--expert-cache', 'auto', '--prefill', 'auto', '--spec', '4', '--spec-min-p', '0.5', '--mtp', '/home/luwei/work/AI/Strata-data/mtp/rt', '--max-context', '32768', '--kv', 'int8']\nready after 42 s\n[strata] experts loaded: 55.43 GiB at 2.72 GiB/s (39 s so far)\n[strata] filling the GPU's expert cache (1864 experts, 4.19 GiB of VRAM) ...\n251 34.1 166 208\nstopped",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Ksfu5DeEw9v2RdzJAakvPN",
+            "type": "tool_result",
+            "content": "#!/bin/sh\ncd \"/home/luwei/work/AI/Strata\"\nexec \"/home/luwei/miniconda3/envs/strata/bin/python\" \"/home/luwei/work/AI/Strata/serve/server.py\" --engine strata --config \"/home/luwei/work/AI/Strata/strata-unsloth-ud-iq4_xs.json\" --port 8080 --open\n\n['--pack', '/home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs', '--native', '/home/luwei/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf', '--expert-profile', '/home/luwei/work/AI/Strata/data/expert-profile.bin', '--expert-cache', 'auto', '--prefill', 'auto', '--spec', '4', '--spec-min-p', '0.5', '--mtp', '/home/luwei/work/AI/Strata-data/mtp/rt', '--max-context', '32768', '--kv', 'int8']\nready after 42 s\n[strata] experts loaded: 55.43 GiB at 2.72 GiB/s (39 s so far)\n[strata] filling the GPU's expert cache (1864 experts, 4.19 GiB of VRAM) ...\n251 34.1 166 208\nstopped",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "#!/bin/sh\ncd \"/home/luwei/work/AI/Strata\"\nexec \"/home/luwei/miniconda3/envs/strata/bin/python\" \"/home/luwei/work/AI/Strata/serve/server.py\" --engine strata --config \"/home/luwei/work/AI/Strata/strata-unsloth-ud-iq4_xs.json\" --port 8080 --open\n\n['--pack', '/home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs', '--native', '/home/luwei/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf', '--expert-profile', '/home/luwei/work/AI/Strata/data/expert-profile.bin', '--expert-cache', 'auto', '--prefill', 'auto', '--spec', '4', '--spec-min-p', '0.5', '--mtp', '/home/luwei/work/AI/Strata-data/mtp/rt', '--max-context', '32768', '--kv', 'int8']\nready after 42 s\n[strata] experts loaded: 55.43 GiB at 2.72 GiB/s (39 s so far)\n[strata] filling the GPU's expert cache (1864 experts, 4.19 GiB of VRAM) ...\n251 34.1 166 208\nstopped",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Ksfu5DeEw9v2RdzJAakvPN",
+            "type": "tool_result",
+            "content": "#!/bin/sh\ncd \"/home/luwei/work/AI/Strata\"\nexec \"/home/luwei/miniconda3/envs/strata/bin/python\" \"/home/luwei/work/AI/Strata/serve/server.py\" --engine strata --config \"/home/luwei/work/AI/Strata/strata-unsloth-ud-iq4_xs.json\" --port 8080 --open\n\n['--pack', '/home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs', '--native', '/home/luwei/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf', '--expert-profile', '/home/luwei/work/AI/Strata/data/expert-profile.bin', '--expert-cache', 'auto', '--prefill', 'auto', '--spec', '4', '--spec-min-p', '0.5', '--mtp', '/home/luwei/work/AI/Strata-data/mtp/rt', '--max-context', '32768', '--kv', 'int8']\nready after 42 s\n[strata] experts loaded: 55.43 GiB at 2.72 GiB/s (39 s so far)\n[strata] filling the GPU's expert cache (1864 experts, 4.19 GiB of VRAM) ...\n251 34.1 166 208\nstopped",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; S=/tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/scratchpad; python - <<'EOF'\nimport json, os\nfrom pathlib import Path\nROOT = Path.cwd()\nc = json.load(open(\"/tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/scratchpad/strata-ud-iq4_xs-net.json\"))\na = c[\"args\"]; a[a.index(\"--native\") + 1] = str(Path.home() / \"Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf\")\nc[\"log\"] = str(ROOT / \"strata-unsloth-ud-iq4_xs.log\")\ncfg = ROOT / \"strata-unsloth-ud-iq4_xs.json\"; cfg.write_text(json.dumps(c, indent=1))\nP = os.environ[\"CONDA_PREFIX\"]\nsh = ROOT / \"run-unsloth-ud-iq4_xs.sh\"\nsh.write_text(f'#!/bin/sh\\ncd \"{ROOT}\"\\nexec \"{P}/bin/python\" \"{ROOT}/serve/server.py\" --engine strata --config \"{cfg}\" --port 8080 --open\\n')\nsh.chmod(0o755); print(sh.read_text()); print(a)\nEOF\nt0=$(date +%s); python serve/server.py --engine strata --config strata-unsloth-ud-iq4_xs.json --port 8080 > $S/server-iq4xs-ssd.log 2>&1 & pid=$!; until grep -q \"^ready: http\" $S/server-iq4xs-ssd.log; do kill -0 $pid 2>/dev/null || { echo DIED; tail -5 strata-unsloth-ud-iq4_xs.log; exit 1; }; sleep 1; done; echo \"ready after $(( $(date +%s) - t0 )) s\"; grep -E \"experts loaded|expert cache \\(\" $S/server-iq4xs-ssd.log; curl -s http://127.0.0.1:8080/v1/chat/completions -H 'Content-Type: application/json' -d '{\"model\":\"x\",\"temperature\":0,\"max_tokens\":300,\"messages\":[{\"role\":\"user\",\"content\":\"Write a Python function that checks whether a number is prime. Code only.\"}]}' | python -c \"import sys,json; r=json.load(sys.stdin); t=r['timings']; print(t['predicted_n'], t['predicted_per_second'], t['draft_n_accepted'], t['draft_n'])\"; kill $pid; wait $pid 2>/dev/null; echo stopped",
+          "description": "Write UD-IQ4_XS config and start it from the SSD",
+          "timeout": 1200000
+        }
+      }
+    },
+    {
+      "step_id": 219,
+      "timestamp": "2026-10-02T10:29:03.469Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 173679,
+        "completion_tokens": 1550,
+        "cached_tokens": 173677,
+        "extra": {
+          "cache_creation_input_tokens": 1770,
+          "cache_read_input_tokens": 173677,
+          "output_tokens_details": {
+            "thinking_tokens": 63
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1770,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1550,
+              "cache_read_input_tokens": 173677,
+              "cache_creation_input_tokens": 1770,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1770
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 220,
+      "timestamp": "2026-10-02T10:29:03.472Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Loading from the SSD takes 42 s instead of 587 s, and the test answer came at 34.1 t/s. Adding a UD-IQ4_XS section to the doc:",
+      "metrics": {
+        "prompt_tokens": 173679,
+        "completion_tokens": 1550,
+        "cached_tokens": 173677,
+        "extra": {
+          "cache_creation_input_tokens": 1770,
+          "cache_read_input_tokens": 173677,
+          "output_tokens_details": {
+            "thinking_tokens": 63
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1770,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1550,
+              "cache_read_input_tokens": 173677,
+              "cache_creation_input_tokens": 1770,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1770
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 221,
+      "timestamp": "2026-10-02T10:29:15.220Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_014YakL9UBkpJc4rnyoniAje",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_014YakL9UBkpJc4rnyoniAje",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cat >> /home/luwei/work/AI/Strata/docs/3080M.md <<'EOF'\n\n## Unsloth UD-IQ4_XS (not a setup choice): it runs\n\nUnsloth's UD-IQ4_XS of the original model (3 shards, 93.7 GB) is not one of setup's sizes; setup offers only\nUD-Q4_K_XL of Unsloth's files. It was tried by hand on 2026-10-02, the same way as the Coder above.\n\n**The file.** Shard 1 holds metadata only (10.9 MB); shards 2 and 3 hold the tensors, and layer 14's gate, up and\ndown are split across them. The experts are IQ3_S (33.9 GB), IQ4_NL (20.3 GB), Q8_0 (4.5 GB) and IQ4_XS (0.9 GB):\n55.4 GiB in all, which fits in this PC's 92 GB of RAM, so the engine keeps all of them there (not setup's\nUD-Q4_K_XL mode, which keeps a RAM budget and reads the rest from the SSD). The `mtp-...-Q8_0.gguf` llama.cpp\nsidecar in the same folder is not used: Strata uses its own draft layer (step 6, shared with the Coder).\n\n**The pack** (29 s; with `--compat-bf16`, as setup does for UD-Q4_K_XL):\n\n```sh\npython tools/iq_pack.py --gguf ~/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf \\\n  --out ../Strata-data/packs/unsloth-ud-iq4_xs --compat-bf16\n```\n\nResult: every tensor accepted; `native_experts.txt` v4 (the per-role shard column for layer 14); 1079 tensors,\n303 served natively, arena 1.38 GiB; 195 tensors (1.20 GiB) to BF16, expert and PLE table bytes unchanged.\n\n**The config** `strata-unsloth-ud-iq4_xs.json` is the Coder's with `--pack`, `--native` (shard 1),\n`--expert-profile data/expert-profile.bin` (the original model's) and the tokenizer changed. With more than two\nshards there is no `--ple-gguf`: the engine finds the PLE table's shard itself from shard 1, as setup does for\nUD-Q4_K_XL. Start: `./run-unsloth-ud-iq4_xs.sh`.\n\n**Measured on this PC** (32K context, 8-bit KV, MTP; \"Write a Python function that checks whether a number is\nprime. Code only.\", temperature 0):\n\n| | from the network share | from the local SSD |\n|---|---|---|\n| model load to listening | 587 s (55.43 GiB at 0.11 GiB/s) | **42 s** (55.43 GiB at 2.72 GiB/s) |\n| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |\n| GPU expert cache | 1864 experts, 4.19 GiB; 48.3% hit | 1864 experts, 4.19 GiB |\n| RAM in use while serving | 60 GB of 92 (31 GB available) | |\n\nThe answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the\nexperts, so fewer of them fit on the GPU (1864 vs 2666) and fewer hit there (48.3% vs 64.6%). The SSD load ran\nright after the copy, so part of the file may still have been in the page cache: a cold load can be slower.\n\nThe shards were copied with `rsync` from the share (93.7 GB, 112 MB/s, 13 min 16 s), sizes compared after the\ncopy. The Strix Halo benchmark tasks above were not run on this model.\nEOF",
+            "description": "Append the UD-IQ4_XS section to docs/3080M.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_014YakL9UBkpJc4rnyoniAje",
+            "content": "(Bash completed with no output)\n\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/3080M.md\", \"hunks\": [{\"oldStart\": 259, \"oldLines\": 3, \"newStart\": 259, \"newLines\": 46, \"lines\": [\" (78-88%). The repeated-prompt row is the one where llama.cpp is ahead (49.9 vs 45.1 t/s): its ngram speculator\", \" reuses the answer it has seen, and Strata's suffix drafting does not seem to gain as much there. Quality was not\", \" compared.\", \"+\", \"+## Unsloth UD-IQ4_XS (not a setup choice): it runs\", \"+\", \"+Unsloth's UD-IQ4_XS of the original model (3 shards, 93.7 GB) is not one of setup's sizes; setup offers only\", \"+UD-Q4_K_XL of Unsloth's files. It was tried by hand on 2026-10-02, the same way as the Coder above.\", \"+\", \"+**The file.** Shard 1 holds metadata only (10.9 MB); shards 2 and 3 hold the tensors, and layer 14's gate, up and\", \"+down are split across them. The experts are IQ3_S (33.9 GB), IQ4_NL (20.3 GB), Q8_0 (4.5 GB) and IQ4_XS (0.9 GB):\", \"+55.4 GiB in all, which fits in this PC's 92 GB of RAM, so the engine keeps all of them there (not setup's\", \"+UD-Q4_K_XL mode, which keeps a RAM budget and reads the rest from the SSD). The `mtp-...-Q8_0.gguf` llama.cpp\", \"+sidecar in the same folder is not used: Strata uses its own draft layer (step 6, shared with the Coder).\", \"+\", \"+**The pack** (29 s; with `--compat-bf16`, as setup does for UD-Q4_K_XL):\", \"+\", \"+```sh\", \"+python tools/iq_pack.py --gguf ~/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf \\\\\", \"+  --out ../Strata-data/packs/unsloth-ud-iq4_xs --compat-bf16\", \"+```\", \"+\", \"+Result: every tensor accepted; `native_experts.txt` v4 (the per-role shard column for layer 14); 1079 tensors,\", \"+303 served natively, arena 1.38 GiB; 195 tensors (1.20 GiB) to BF16, expert and PLE table bytes unchanged.\", \"+\", \"+**The config** `strata-unsloth-ud-iq4_xs.json` is the Coder's with `--pack`, `--native` (shard 1),\", \"+`--expert-profile data/expert-profile.bin` (the original model's) and the tokenizer changed. With more than two\", \"+shards there is no `--ple-gguf`: the engine finds the PLE table's shard itself from shard 1, as setup does for\", \"+UD-Q4_K_XL. Start: `./run-unsloth-ud-iq4_xs.sh`.\", \"+\", \"+**Measured on this PC** (32K context, 8-bit KV, MTP; \\\"Write a Python function that checks whether a number is\", \"+prime. Code only.\\\", temperature 0):\", \"+\", \"+| | from the network share | from the local SSD |\", \"+|---|---|---|\", \"+| model load to listening | 587 s (55.43 GiB at 0.11 GiB/s) | **42 s** (55.43 GiB at 2.72 GiB/s) |\", \"+| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |\", \"+| GPU expert cache | 1864 experts, 4.19 GiB; 48.3% hit | 1864 experts, 4.19 GiB |\", \"+| RAM in use while serving | 60 GB of 92 (31 GB available) | |\", \"+\", \"+The answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the\", \"+experts, so fewer of them fit on the GPU (1864 vs 2666) and fewer hit there (48.3% vs 64.6%). The SSD load ran\", \"+right after the copy, so part of the file may still have been in the page cache: a cold load can be slower.\", \"+\", \"+The shards were copied with `rsync` from the share (93.7 GB, 112 MB/s, 13 min 16 s), sizes compared after the\", \"+copy. The Strix Halo benchmark tasks above were not run on this model.\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/3080M.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 173679,
+        "completion_tokens": 1550,
+        "cached_tokens": 173677,
+        "extra": {
+          "cache_creation_input_tokens": 1770,
+          "cache_read_input_tokens": 173677,
+          "output_tokens_details": {
+            "thinking_tokens": 63
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1770,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1550,
+              "cache_read_input_tokens": 173677,
+              "cache_creation_input_tokens": 1770,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1770
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3080M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 259,
+                      "oldLines": 3,
+                      "newStart": 259,
+                      "newLines": 46,
+                      "lines": [
+                        " (78-88%). The repeated-prompt row is the one where llama.cpp is ahead (49.9 vs 45.1 t/s): its ngram speculator",
+                        " reuses the answer it has seen, and Strata's suffix drafting does not seem to gain as much there. Quality was not",
+                        " compared.",
+                        "+",
+                        "+## Unsloth UD-IQ4_XS (not a setup choice): it runs",
+                        "+",
+                        "+Unsloth's UD-IQ4_XS of the original model (3 shards, 93.7 GB) is not one of setup's sizes; setup offers only",
+                        "+UD-Q4_K_XL of Unsloth's files. It was tried by hand on 2026-10-02, the same way as the Coder above.",
+                        "+",
+                        "+**The file.** Shard 1 holds metadata only (10.9 MB); shards 2 and 3 hold the tensors, and layer 14's gate, up and",
+                        "+down are split across them. The experts are IQ3_S (33.9 GB), IQ4_NL (20.3 GB), Q8_0 (4.5 GB) and IQ4_XS (0.9 GB):",
+                        "+55.4 GiB in all, which fits in this PC's 92 GB of RAM, so the engine keeps all of them there (not setup's",
+                        "+UD-Q4_K_XL mode, which keeps a RAM budget and reads the rest from the SSD). The `mtp-...-Q8_0.gguf` llama.cpp",
+                        "+sidecar in the same folder is not used: Strata uses its own draft layer (step 6, shared with the Coder).",
+                        "+",
+                        "+**The pack** (29 s; with `--compat-bf16`, as setup does for UD-Q4_K_XL):",
+                        "+",
+                        "+```sh",
+                        "+python tools/iq_pack.py --gguf ~/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf \\",
+                        "+  --out ../Strata-data/packs/unsloth-ud-iq4_xs --compat-bf16",
+                        "+```",
+                        "+",
+                        "+Result: every tensor accepted; `native_experts.txt` v4 (the per-role shard column for layer 14); 1079 tensors,",
+                        "+303 served natively, arena 1.38 GiB; 195 tensors (1.20 GiB) to BF16, expert and PLE table bytes unchanged.",
+                        "+",
+                        "+**The config** `strata-unsloth-ud-iq4_xs.json` is the Coder's with `--pack`, `--native` (shard 1),",
+                        "+`--expert-profile data/expert-profile.bin` (the original model's) and the tokenizer changed. With more than two",
+                        "+shards there is no `--ple-gguf`: the engine finds the PLE table's shard itself from shard 1, as setup does for",
+                        "+UD-Q4_K_XL. Start: `./run-unsloth-ud-iq4_xs.sh`.",
+                        "+",
+                        "+**Measured on this PC** (32K context, 8-bit KV, MTP; \"Write a Python function that checks whether a number is",
+                        "+prime. Code only.\", temperature 0):",
+                        "+",
+                        "+| | from the network share | from the local SSD |",
+                        "+|---|---|---|",
+                        "+| model load to listening | 587 s (55.43 GiB at 0.11 GiB/s) | **42 s** (55.43 GiB at 2.72 GiB/s) |",
+                        "+| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |",
+                        "+| GPU expert cache | 1864 experts, 4.19 GiB; 48.3% hit | 1864 experts, 4.19 GiB |",
+                        "+| RAM in use while serving | 60 GB of 92 (31 GB available) | |",
+                        "+",
+                        "+The answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the",
+                        "+experts, so fewer of them fit on the GPU (1864 vs 2666) and fewer hit there (48.3% vs 64.6%). The SSD load ran",
+                        "+right after the copy, so part of the file may still have been in the page cache: a cold load can be slower.",
+                        "+",
+                        "+The shards were copied with `rsync` from the share (93.7 GB, 112 MB/s, 13 min 16 s), sizes compared after the",
+                        "+copy. The Strix Halo benchmark tasks above were not run on this model."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3080M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_014YakL9UBkpJc4rnyoniAje",
+            "type": "tool_result",
+            "content": "(Bash completed with no output)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3080M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 259,
+                      "oldLines": 3,
+                      "newStart": 259,
+                      "newLines": 46,
+                      "lines": [
+                        " (78-88%). The repeated-prompt row is the one where llama.cpp is ahead (49.9 vs 45.1 t/s): its ngram speculator",
+                        " reuses the answer it has seen, and Strata's suffix drafting does not seem to gain as much there. Quality was not",
+                        " compared.",
+                        "+",
+                        "+## Unsloth UD-IQ4_XS (not a setup choice): it runs",
+                        "+",
+                        "+Unsloth's UD-IQ4_XS of the original model (3 shards, 93.7 GB) is not one of setup's sizes; setup offers only",
+                        "+UD-Q4_K_XL of Unsloth's files. It was tried by hand on 2026-10-02, the same way as the Coder above.",
+                        "+",
+                        "+**The file.** Shard 1 holds metadata only (10.9 MB); shards 2 and 3 hold the tensors, and layer 14's gate, up and",
+                        "+down are split across them. The experts are IQ3_S (33.9 GB), IQ4_NL (20.3 GB), Q8_0 (4.5 GB) and IQ4_XS (0.9 GB):",
+                        "+55.4 GiB in all, which fits in this PC's 92 GB of RAM, so the engine keeps all of them there (not setup's",
+                        "+UD-Q4_K_XL mode, which keeps a RAM budget and reads the rest from the SSD). The `mtp-...-Q8_0.gguf` llama.cpp",
+                        "+sidecar in the same folder is not used: Strata uses its own draft layer (step 6, shared with the Coder).",
+                        "+",
+                        "+**The pack** (29 s; with `--compat-bf16`, as setup does for UD-Q4_K_XL):",
+                        "+",
+                        "+```sh",
+                        "+python tools/iq_pack.py --gguf ~/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf \\",
+                        "+  --out ../Strata-data/packs/unsloth-ud-iq4_xs --compat-bf16",
+                        "+```",
+                        "+",
+                        "+Result: every tensor accepted; `native_experts.txt` v4 (the per-role shard column for layer 14); 1079 tensors,",
+                        "+303 served natively, arena 1.38 GiB; 195 tensors (1.20 GiB) to BF16, expert and PLE table bytes unchanged.",
+                        "+",
+                        "+**The config** `strata-unsloth-ud-iq4_xs.json` is the Coder's with `--pack`, `--native` (shard 1),",
+                        "+`--expert-profile data/expert-profile.bin` (the original model's) and the tokenizer changed. With more than two",
+                        "+shards there is no `--ple-gguf`: the engine finds the PLE table's shard itself from shard 1, as setup does for",
+                        "+UD-Q4_K_XL. Start: `./run-unsloth-ud-iq4_xs.sh`.",
+                        "+",
+                        "+**Measured on this PC** (32K context, 8-bit KV, MTP; \"Write a Python function that checks whether a number is",
+                        "+prime. Code only.\", temperature 0):",
+                        "+",
+                        "+| | from the network share | from the local SSD |",
+                        "+|---|---|---|",
+                        "+| model load to listening | 587 s (55.43 GiB at 0.11 GiB/s) | **42 s** (55.43 GiB at 2.72 GiB/s) |",
+                        "+| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |",
+                        "+| GPU expert cache | 1864 experts, 4.19 GiB; 48.3% hit | 1864 experts, 4.19 GiB |",
+                        "+| RAM in use while serving | 60 GB of 92 (31 GB available) | |",
+                        "+",
+                        "+The answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the",
+                        "+experts, so fewer of them fit on the GPU (1864 vs 2666) and fewer hit there (48.3% vs 64.6%). The SSD load ran",
+                        "+right after the copy, so part of the file may still have been in the page cache: a cold load can be slower.",
+                        "+",
+                        "+The shards were copied with `rsync` from the share (93.7 GB, 112 MB/s, 13 min 16 s), sizes compared after the",
+                        "+copy. The Strix Halo benchmark tasks above were not run on this model."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3080M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_014YakL9UBkpJc4rnyoniAje",
+            "type": "tool_result",
+            "content": "(Bash completed with no output)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cat >> /home/luwei/work/AI/Strata/docs/3080M.md <<'EOF'\n\n## Unsloth UD-IQ4_XS (not a setup choice): it runs\n\nUnsloth's UD-IQ4_XS of the original model (3 shards, 93.7 GB) is not one of setup's sizes; setup offers only\nUD-Q4_K_XL of Unsloth's files. It was tried by hand on 2026-10-02, the same way as the Coder above.\n\n**The file.** Shard 1 holds metadata only (10.9 MB); shards 2 and 3 hold the tensors, and layer 14's gate, up and\ndown are split across them. The experts are IQ3_S (33.9 GB), IQ4_NL (20.3 GB), Q8_0 (4.5 GB) and IQ4_XS (0.9 GB):\n55.4 GiB in all, which fits in this PC's 92 GB of RAM, so the engine keeps all of them there (not setup's\nUD-Q4_K_XL mode, which keeps a RAM budget and reads the rest from the SSD). The `mtp-...-Q8_0.gguf` llama.cpp\nsidecar in the same folder is not used: Strata uses its own draft layer (step 6, shared with the Coder).\n\n**The pack** (29 s; with `--compat-bf16`, as setup does for UD-Q4_K_XL):\n\n```sh\npython tools/iq_pack.py --gguf ~/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf \\\n  --out ../Strata-data/packs/unsloth-ud-iq4_xs --compat-bf16\n```\n\nResult: every tensor accepted; `native_experts.txt` v4 (the per-role shard column for layer 14); 1079 tensors,\n303 served natively, arena 1.38 GiB; 195 tensors (1.20 GiB) to BF16, expert and PLE table bytes unchanged.\n\n**The config** `strata-unsloth-ud-iq4_xs.json` is the Coder's with `--pack`, `--native` (shard 1),\n`--expert-profile data/expert-profile.bin` (the original model's) and the tokenizer changed. With more than two\nshards there is no `--ple-gguf`: the engine finds the PLE table's shard itself from shard 1, as setup does for\nUD-Q4_K_XL. Start: `./run-unsloth-ud-iq4_xs.sh`.\n\n**Measured on this PC** (32K context, 8-bit KV, MTP; \"Write a Python function that checks whether a number is\nprime. Code only.\", temperature 0):\n\n| | from the network share | from the local SSD |\n|---|---|---|\n| model load to listening | 587 s (55.43 GiB at 0.11 GiB/s) | **42 s** (55.43 GiB at 2.72 GiB/s) |\n| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |\n| GPU expert cache | 1864 experts, 4.19 GiB; 48.3% hit | 1864 experts, 4.19 GiB |\n| RAM in use while serving | 60 GB of 92 (31 GB available) | |\n\nThe answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the\nexperts, so fewer of them fit on the GPU (1864 vs 2666) and fewer hit there (48.3% vs 64.6%). The SSD load ran\nright after the copy, so part of the file may still have been in the page cache: a cold load can be slower.\n\nThe shards were copied with `rsync` from the share (93.7 GB, 112 MB/s, 13 min 16 s), sizes compared after the\ncopy. The Strix Halo benchmark tasks above were not run on this model.\nEOF",
+          "description": "Append the UD-IQ4_XS section to docs/3080M.md"
+        }
+      }
+    },
+    {
+      "step_id": 222,
+      "timestamp": "2026-10-02T10:29:23.354Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Unsloth's UD-IQ4_XS runs on this PC. I copied it to `~/Documents/Qwen3.8-Flash-Next/` and added it to `docs/3080M.md`.\n\n**Copy:** only the 3 model files (93.7 GB), in 13 min 16 s. Each file's size matches the source.\n\n**Test results** (same test prompt as the Coder, 32K context, MTP on):\n\n| | Network share | Local SSD |\n|---|---|---|\n| Load until listening | 587 s | **42 s** |\n| Output speed | 33.4 t/s, 82% of drafts accepted | 34.1 t/s, 80% accepted |\n\n- **Answer:** correct both times.\n- **Memory:** its experts take 55.4 GiB, and the whole model used 60 GB of the 92 GB RAM, so it's all held in RAM.\n- **Compared with the Coder IQ1_M:** about 20% slower (34 vs 41 t/s). It has twice as many experts, so fewer fit on the GPU (1864 vs 2666).\n- **Load time caveat:** the SSD load ran right after the copy, when part of the file may still have been cached in memory. A load after a reboot may be slower.\n\n**How it was set up:** setup doesn't offer this size; its only Unsloth option is UD-Q4_K_XL. So I configured it by hand, as with the Coder:\n- The model pack is in `../Strata-data/packs/unsloth-ud-iq4_xs`.\n- It shares the MTP draft layer with the Coder. The llama.cpp MTP file (`mtp-...-Q8_0.gguf`) in that folder isn't needed and wasn't copied.\n- Start it with `./run-unsloth-ud-iq4_xs.sh`; the Coder still starts with `./run-coder-iq1_m.sh`. Both use port 8080, so run only one at a time.\n\nI didn't run the Strix Halo benchmark tasks on this model. If you want that comparison, I can do it the same way as for the Coder. The server is stopped and nothing is committed.",
+      "metrics": {
+        "prompt_tokens": 175449,
+        "completion_tokens": 693,
+        "cached_tokens": 175447,
+        "extra": {
+          "cache_creation_input_tokens": 1565,
+          "cache_read_input_tokens": 175447,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1565,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 693,
+              "cache_read_input_tokens": 175447,
+              "cache_creation_input_tokens": 1565,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1565
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 21111688,
-    "total_completion_tokens": 126307,
-    "total_cached_tokens": 21111250,
-    "total_steps": 213,
+    "total_prompt_tokens": 22500840,
+    "total_completion_tokens": 135748,
+    "total_cached_tokens": 22500384,
+    "total_steps": 222,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 307278,
-      "total_cache_read_input_tokens": 21111250
+      "total_cache_creation_input_tokens": 315788,
+      "total_cache_read_input_tokens": 22500384
     }
   }
 }
