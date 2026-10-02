@@ -22,6 +22,10 @@
 #   --label TEXT                         appended to the run folder
 #   --start                              start the Strata server for this config and stop it at the end
 #                                        (without it, a server must already answer on $STRATA_URL)
+#   --resume RUN_DIR                     continue a stopped run in its own folder: config, path, think, category
+#                                        and pilot come from its run.json (other flags than --start/--threads are
+#                                        ignored); entries that ended in an inference error are removed first (BFCL
+#                                        keeps them and scores them 0), then BFCL generates only the missing ids
 # Environment: BFCL_HOME (default ~/work/AI/bfcl), BFCL_ENV (default bfcl-py312), STRATA_URL (default
 # http://127.0.0.1:8080/v1), STRATA_ENV (the conda environment the server runs in, default strata).
 set -uo pipefail
@@ -32,7 +36,7 @@ BFCL_ENV=${BFCL_ENV:-bfcl-py312}
 STRATA_URL=${STRATA_URL:-http://127.0.0.1:8080/v1}
 STRATA_ENV=${STRATA_ENV:-strata}
 
-config="" path=A think=off category=multi_turn_base,multi_turn_miss_param threads=1 pilot=0 label="" start=0
+config="" path=A think=off category=multi_turn_base,multi_turn_miss_param threads=1 pilot=0 label="" start=0 resume=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --config) config=$2; shift 2 ;;
@@ -43,9 +47,22 @@ while [ $# -gt 0 ]; do
     --pilot) pilot=1; shift ;;
     --label) label=$2; shift 2 ;;
     --start) start=1; shift ;;
+    --resume) resume=${2%/}; shift 2 ;;
     *) echo "unknown option $1 (see the header of $0)"; exit 2 ;;
   esac
 done
+if [ -n "$resume" ]; then         # the stopped run's own settings
+  [ -f "$resume/run.json" ] || { echo "no run.json in $resume"; exit 2; }
+  eval "$(python3 - "$resume/run.json" <<'EOF'
+import json, shlex, sys
+m = json.load(open(sys.argv[1], encoding="utf-8-sig"))
+for k in ("config", "path", "think", "category"):
+    print(f"{k}={shlex.quote(str(m[k]))}")
+print(f"pilot={1 if m.get('pilot') else 0}")
+EOF
+)" || { echo "cannot read $resume/run.json"; exit 2; }
+  echo "resuming $resume: --config $config --path $path --think $think --category $category$([ $pilot = 1 ] && echo ' --pilot')"
+fi
 case "$config" in       # config -> Strata's model config and the model id /v1/models must list
   strata-gsq)   cfg="$STRATA/strata-coder-iq1_m.json";       want=qwen3.8-flash-next-coder-iq1_m ;;
   strata-iq4xs) cfg="$STRATA/strata-unsloth-ud-iq4_xs.json"; want=qwen3.8-flash-next-ud-iq4_xs ;;
@@ -74,9 +91,13 @@ PROJ="$BFCL_HOME/gorilla/berkeley-function-call-leaderboard"
 [ "$path" = A ] || [ -f "$TOKENIZER/tokenizer.json" ] || { echo "no tokenizer in $TOKENIZER: run setup-bfcl.sh"; exit 1; }
 
 stamp=$(date +%Y%m%d-%H%M)
-cat_tag=${category//,/+}; [ $pilot = 1 ] && cat_tag=pilot
-run="$BFCL_HOME/runs/$config-$path-$think-$cat_tag-$stamp${label:+-$label}"
-mkdir -p "$run"
+if [ -n "$resume" ]; then
+  run=$(cd "$resume" && pwd)
+else
+  cat_tag=${category//,/+}; [ $pilot = 1 ] && cat_tag=pilot
+  run="$BFCL_HOME/runs/$config-$path-$think-$cat_tag-$stamp${label:+-$label}"
+  mkdir -p "$run"
+fi
 
 # the server: started here (--start) or already running
 server_pid=""
@@ -92,9 +113,10 @@ if [ $start = 1 ]; then
   port=${STRATA_URL##*:}; port=${port%%/*}
   echo "starting Strata: $cfg"
   t0=$(date +%s)
-  (cd "$STRATA" && exec "$SPY" serve/server.py --engine strata --config "$cfg" --port "$port") > "$run/server.log" 2>&1 &
+  (cd "$STRATA" && exec "$SPY" serve/server.py --engine strata --config "$cfg" --port "$port") >> "$run/server.log" 2>&1 &
   server_pid=$!
-  until grep -q "^ready: http" "$run/server.log"; do
+  skip=$(wc -l < "$run/server.log")                 # a resumed run's log already has an earlier start
+  until tail -n +$((skip + 1)) "$run/server.log" | grep -q "^ready: http"; do
     kill -0 "$server_pid" 2>/dev/null || { echo "the server exited:"; tail -20 "$run/server.log"; server_pid=""; exit 1; }
     sleep 1
   done
@@ -106,7 +128,30 @@ ids=$(echo "$served" | "$PY" -c 'import sys, json; print(",".join(m["id"] for m 
 echo "endpoint $STRATA_URL serves: $ids"
 [[ ",$ids," == *",$want,"* ]] || { echo "expected $want for --config $config"; exit 1; }
 
-# run.json: the keys run-bfcl.ps1 writes, plus what identifies the Strata side
+# run.json: the keys run-bfcl.ps1 writes, plus what identifies the Strata side (a resumed run keeps its own and
+# records this session under "resumed")
+if [ -n "$resume" ]; then
+  "$PY" - "$run/run.json" <<EOF
+import json, subprocess, sys, datetime
+git = lambda d, *a: subprocess.run(["git", "-C", d, *a], capture_output=True, text=True).stdout.strip()
+p = sys.argv[1]; m = json.load(open(p, encoding="utf-8-sig"))
+m.setdefault("resumed", []).append({"started": datetime.datetime.now().isoformat(timespec="seconds"),
+                                    "served": "$ids".split(","), "strata_commit": git("$STRATA", "rev-parse", "--short", "HEAD")})
+json.dump(m, open(p, "w"), indent=1)
+EOF
+  # entries that ended in an inference error (a crash, a lost connection) are kept by BFCL and scored 0: remove them
+  # so they are generated again; the removed lines are kept beside the file
+  "$PY" - "$run/result" "$stamp" <<'EOF'
+import glob, json, os, sys
+for f in glob.glob(os.path.join(sys.argv[1], "**", "*_result.json"), recursive=True):
+    lines = [l for l in open(f, encoding="utf-8") if l.strip()]
+    bad = [l for l in lines if "Error during inference" in json.dumps(json.loads(l).get("result"))]
+    if bad:
+        open(f"{f}.removed-{sys.argv[2]}", "w", encoding="utf-8").writelines(bad)
+        open(f, "w", encoding="utf-8").writelines(l for l in lines if l not in bad)
+    print(f"{os.path.basename(f)}: {len(lines) - len(bad)} kept" + (f", {len(bad)} with an inference error removed" if bad else ""))
+EOF
+else
 "$PY" - "$run/run.json" <<EOF
 import json, subprocess, sys, datetime
 git = lambda d, *a: subprocess.run(["git", "-C", d, *a], capture_output=True, text=True).stdout.strip()
@@ -120,6 +165,7 @@ json.dump({"config": "$config", "path": "$path", "think": "$think", "category": 
            "engine_version": build.get("version"), "strata_config": json.load(open("$cfg")), "gpu": gpu},
           open(sys.argv[1], "w"), indent=1)
 EOF
+fi
 
 export PYTHONUTF8=1
 # `bfcl evaluate` builds the handler too, and the OpenAI client refuses to start without a key: always set one
@@ -136,18 +182,19 @@ if [ $pilot = 1 ]; then cp "$BFCL_HOME/pilot_ids.json" test_case_ids_to_generate
 else sel=(--test-category "$category"); fi
 
 echo "generate -> $run"
+overwrite=(--allow-overwrite); [ -n "$resume" ] && overwrite=()   # resumed: BFCL skips the ids it already has
 g0=$(date +%s)
 "$PY" -m bfcl_eval generate --model "$model" "${sel[@]}" --num-threads "$threads" --include-input-log \
-  --result-dir "$run/result" --allow-overwrite "${extra[@]}" 2>&1 | tee "$run/generate.log"
+  --result-dir "$run/result" "${overwrite[@]}" "${extra[@]}" 2>&1 | tee -a "$run/generate.log"
 g1=$(date +%s)
 echo "evaluate"
 partial=(); [ $pilot = 1 ] || [ "$category" != multi_turn ] && partial=(--partial-eval)
 "$PY" -m bfcl_eval evaluate --model "$model" --test-category multi_turn "${partial[@]}" \
-  --result-dir "$run/result" --score-dir "$run/score" 2>&1 | tee "$run/evaluate.log"
+  --result-dir "$run/result" --score-dir "$run/score" 2>&1 | tee -a "$run/evaluate.log"
 "$PY" - "$run/run.json" $((g1 - g0)) <<'EOF'
 import json, sys, datetime
 p = sys.argv[1]; m = json.load(open(p))
-m["generate_wall_s"] = int(sys.argv[2]); m["ended"] = datetime.datetime.now().isoformat(timespec="seconds")
+m["generate_wall_s"] = m.get("generate_wall_s", 0) + int(sys.argv[2]); m["ended"] = datetime.datetime.now().isoformat(timespec="seconds")
 json.dump(m, open(p, "w"), indent=1)
 EOF
 echo "done: $run  (generate $(( (g1 - g0) / 60 )) min)"
