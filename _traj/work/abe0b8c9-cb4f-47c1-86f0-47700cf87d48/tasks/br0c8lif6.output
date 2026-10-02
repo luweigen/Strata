@@ -1,0 +1,25 @@
+load_to_listening_s 11.548462615
+{"test": "server: cold first request (short code prompt)", "wall_s": 10.47, "finish": "length", "cache_n": 0, "prompt_n": 314, "prompt_per_second": 254.0, "predicted_n": 400, "predicted_per_second": 43.3, "draft_n": 286, "draft_n_accepted": 252, "accept_pct": 88.1}
+{"test": "server: fresh code prompt", "wall_s": 10.5, "finish": "length", "cache_n": 0, "prompt_n": 218, "prompt_per_second": 218.3, "predicted_n": 400, "predicted_per_second": 42.1, "draft_n": 300, "draft_n_accepted": 240, "accept_pct": 80.0}
+{"test": "server: ~4.75K-token prompt, prefill + decode tail", "wall_s": 15.12, "finish": "length", "cache_n": 0, "prompt_n": 4749, "prompt_per_second": 961.3, "predicted_n": 400, "predicted_per_second": 39.3, "draft_n": 289, "draft_n_accepted": 224, "accept_pct": 77.5}
+{"test": "server: repeated first prompt (reference only)", "wall_s": 9.96, "finish": "length", "cache_n": 0, "prompt_n": 314, "prompt_per_second": 290.4, "predicted_n": 400, "predicted_per_second": 45.1, "draft_n": 277, "draft_n_accepted": 254, "accept_pct": 91.7}
+{"test": "pp4096 @ d0", "wall_s": 4.46, "finish": "length", "cache_n": 0, "prompt_n": 4085, "prompt_per_second": 926.9, "predicted_n": 1, "predicted_per_second": 24.9, "draft_n": 0, "draft_n_accepted": 0}
+{"test": "tg128 @ d0", "wall_s": 4.81, "finish": "length", "cache_n": 0, "prompt_n": 68, "prompt_per_second": 53.2, "predicted_n": 128, "predicted_per_second": 36.2, "draft_n": 88, "draft_n_accepted": 54, "accept_pct": 61.4}
+{"test": "depth 16384 prefix (cached for the next rows)", "wall_s": 15.32, "finish": "length", "cache_n": 0, "prompt_n": 16384, "prompt_per_second": 1074.8, "predicted_n": 1, "predicted_per_second": 28.1, "draft_n": 0, "draft_n_accepted": 0}
+{"test": "pp4096 @ d16384", "wall_s": 18.91, "finish": "length", "cache_n": 0, "prompt_n": 20421, "prompt_per_second": 1084.6, "predicted_n": 1, "predicted_per_second": 28.1, "draft_n": 0, "draft_n_accepted": 0}
+{"test": "tg128 @ d16384", "wall_s": 18.69, "finish": "length", "cache_n": 0, "prompt_n": 16401, "prompt_per_second": 1076.4, "predicted_n": 128, "predicted_per_second": 37.4, "draft_n": 95, "draft_n_accepted": 62, "accept_pct": 65.3}
+=== plain
+server died
+loading the model (the first start takes a minute or two) ...
+[strata] starting the engine: reading the model's weights ...
+Traceback (most recent call last):
+  File "/home/luwei/work/AI/Strata/serve/server.py", line 2613, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/home/luwei/work/AI/Strata/serve/server.py", line 2490, in main
+    engine = StrataEngine(exe, engine_args(cfg), cwd=cfg.get("cwd"), log=cfg.get("log"), env=env, lazy=lazy)
+  File "/home/luwei/work/AI/Strata/serve/server.py", line 262, in __init__
+    raise RuntimeError("the engine exited before it was ready" + (f" (see {log})" if log else ""))
+RuntimeError: the engine exited before it was ready (see /tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/scratchpad/plain-engine.log)
+
+[exited with code 1]
