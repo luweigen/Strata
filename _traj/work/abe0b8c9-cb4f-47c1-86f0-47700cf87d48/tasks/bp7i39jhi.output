@@ -1,1 +1,21 @@
 ['--kv', 'int8', '--spec', '2', '--suffix-draft', '0']
+server died
+loading the model (the first start takes a minute or two) ...
+[strata] starting the engine: reading the model's weights ...
+[strata] loading the experts into RAM (about 30 GB) and locking part of them for the GPU.
+         YOUR PC CAN BE SLOW OR STOP RESPONDING FOR 1-3 MINUTES NOW - this is normal.
+         Please wait and don't close this window; the browser opens when it is ready.
+[strata] experts loaded: 23.42 GiB at 9.17 GiB/s (10 s so far)
+[strata] filling the GPU's expert cache (3217 experts, 6.15 GiB of VRAM) ...
+[strata] almost ready ...
+Traceback (most recent call last):
+  File "/home/luwei/work/AI/Strata/serve/server.py", line 2613, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/home/luwei/work/AI/Strata/serve/server.py", line 2490, in main
+    engine = StrataEngine(exe, engine_args(cfg), cwd=cfg.get("cwd"), log=cfg.get("log"), env=env, lazy=lazy)
+  File "/home/luwei/work/AI/Strata/serve/server.py", line 262, in __init__
+    raise RuntimeError("the engine exited before it was ready" + (f" (see {log})" if log else ""))
+RuntimeError: the engine exited before it was ready (see /tmp/claude-1000/-home-luwei-work-AI-Strata/abe0b8c9-cb4f-47c1-86f0-47700cf87d48/scratchpad/plain-engine.log)
+
+[exited with code 1]
