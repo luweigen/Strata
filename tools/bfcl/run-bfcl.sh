@@ -1,15 +1,20 @@
 #!/bin/bash
-# One BFCL multi-turn run against Strata: generate + evaluate, archived under $BFCL_HOME/runs/<config>-A-<think>-<cat>-
-# <stamp>[-<label>]/, the same layout and run.json keys as freetoken/bfcl/run-bfcl.ps1 (so its summarize-bfcl.py reads
-# both).  Path A only (native function calling through /v1/chat/completions + tools): path B needs /v1/completions,
-# which Strata does not have.  Set up the environment first with tools/bfcl/setup-bfcl.sh.
+# One BFCL multi-turn run against Strata: generate + evaluate, archived under $BFCL_HOME/runs/<config>-<path>-<think>-
+# <cat>-<stamp>[-<label>]/, the same layout and run.json keys as freetoken/bfcl/run-bfcl.ps1 (so its summarize-bfcl.py
+# reads both).  Set up the environment first with tools/bfcl/setup-bfcl.sh.
 #
-#   tools/bfcl/run-bfcl.sh --config strata-gsq --think off --start
+#   tools/bfcl/run-bfcl.sh --config strata-gsq --path A --think off --start
+#   tools/bfcl/run-bfcl.sh --config strata-gsq --path B --think off --start      # weights only: BFCL's own prompt
 #   tools/bfcl/run-bfcl.sh --config strata-iq4xs --think on --start --label r1
 #   tools/bfcl/run-bfcl.sh --config strata-gsq --think off --pilot          # the 40 entries of pilot_ids.json
 #
 #   --config strata-gsq | strata-iq4xs   the model (the same files as the Halo's gsq-hip / flashnext-hip runs)
-#   --think off | on                     the handler: local-fc-nothink (max_tokens 4096) / local-fc-think (16384)
+#   --path A | B                         A (default): native function calling, /v1/chat/completions + tools - the
+#                                        server's template and tool parser are part of what is measured.  B: BFCL
+#                                        renders the Qwen3 prompt itself and parses the text, through
+#                                        /v1/completions - only the weights and the engine are measured
+#   --think off | on                     the handler.  A: local-fc-nothink (max_tokens 4096) / local-fc-think
+#                                        (16384).  B: local-qwen-b-nothink / local-qwen-b-think (max_tokens 4096)
 #   --category LIST                      default multi_turn_base,multi_turn_miss_param (what the Halo ran for these
 #                                        two models); long_context needs a 37K+ prompt and is refused at 32K
 #   --threads N                          default 1 (Strata serves one request at a time)
@@ -27,10 +32,11 @@ BFCL_ENV=${BFCL_ENV:-bfcl-py312}
 STRATA_URL=${STRATA_URL:-http://127.0.0.1:8080/v1}
 STRATA_ENV=${STRATA_ENV:-strata}
 
-config="" think=off category=multi_turn_base,multi_turn_miss_param threads=1 pilot=0 label="" start=0
+config="" path=A think=off category=multi_turn_base,multi_turn_miss_param threads=1 pilot=0 label="" start=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --config) config=$2; shift 2 ;;
+    --path) path=$2; shift 2 ;;
     --think) think=$2; shift 2 ;;
     --category) category=$2; shift 2 ;;
     --threads) threads=$2; shift 2 ;;
@@ -45,11 +51,14 @@ case "$config" in       # config -> Strata's model config and the model id /v1/m
   strata-iq4xs) cfg="$STRATA/strata-unsloth-ud-iq4_xs.json"; want=qwen3.8-flash-next-ud-iq4_xs ;;
   *) echo "--config strata-gsq | strata-iq4xs"; exit 2 ;;
 esac
-case "$think" in
-  off) model=local-fc-nothink ;;
-  on)  model=local-fc-think ;;
-  *) echo "--think off | on"; exit 2 ;;
+case "$path-$think" in   # the handler: path + thinking (the names run-bfcl.ps1 uses)
+  A-off) model=local-fc-nothink ;;
+  A-on)  model=local-fc-think ;;
+  B-off) model=local-qwen-b-nothink ;;
+  B-on)  model=local-qwen-b-think ;;
+  *) echo "--path A | B, --think off | on"; exit 2 ;;
 esac
+TOKENIZER="$BFCL_HOME/qwen3.8-tokenizer"   # path B: BFCL counts the prompt's tokens with it (setup-bfcl.sh copies it)
 if [ $pilot = 1 ]; then
   echo "note: the pilot set has 10 long_context entries (up to 37K-token prompts on the Halo); at 32K they can fail"
 elif [[ ",$category," == *long_context* || "$category" == multi_turn ]]; then
@@ -62,10 +71,11 @@ PY="$(conda run -n "$BFCL_ENV" python -c 'import sys; print(sys.executable)')" |
 SPY="$(conda run -n "$STRATA_ENV" python -c 'import sys; print(sys.executable)')" || { echo "no conda env $STRATA_ENV"; exit 1; }
 PROJ="$BFCL_HOME/gorilla/berkeley-function-call-leaderboard"
 [ -d "$PROJ" ] || { echo "no BFCL checkout in $BFCL_HOME: run setup-bfcl.sh"; exit 1; }
+[ "$path" = A ] || [ -f "$TOKENIZER/tokenizer.json" ] || { echo "no tokenizer in $TOKENIZER: run setup-bfcl.sh"; exit 1; }
 
 stamp=$(date +%Y%m%d-%H%M)
 cat_tag=${category//,/+}; [ $pilot = 1 ] && cat_tag=pilot
-run="$BFCL_HOME/runs/$config-A-$think-$cat_tag-$stamp${label:+-$label}"
+run="$BFCL_HOME/runs/$config-$path-$think-$cat_tag-$stamp${label:+-$label}"
 mkdir -p "$run"
 
 # the server: started here (--start) or already running
@@ -103,7 +113,7 @@ git = lambda d, *a: subprocess.run(["git", "-C", d, *a], capture_output=True, te
 build = json.load(open("$STRATA/engine/BUILD.json"))
 gpu = subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"],
                      capture_output=True, text=True).stdout.strip()
-json.dump({"config": "$config", "path": "A", "think": "$think", "category": "$category", "pilot": bool($pilot),
+json.dump({"config": "$config", "path": "$path", "think": "$think", "category": "$category", "pilot": bool($pilot),
            "threads": $threads, "model": "$model", "endpoint": "$STRATA_URL", "served": "$ids".split(","),
            "bfcl_commit": git("$PROJ", "rev-parse", "--short", "HEAD"), "started": datetime.datetime.now().isoformat(timespec="seconds"),
            "engine": "strata", "strata_commit": git("$STRATA", "rev-parse", "--short", "HEAD"),
@@ -114,6 +124,13 @@ EOF
 export PYTHONUTF8=1
 # `bfcl evaluate` builds the handler too, and the OpenAI client refuses to start without a key: always set one
 export OPENAI_BASE_URL="$STRATA_URL" OPENAI_API_KEY=x
+extra=()
+if [ "$path" = B ]; then
+  # the handler's own client (base_oss_handler.py): the endpoint, and a Qwen3.8 tokenizer for counting the prompt;
+  # --skip-server-setup: the server is Strata's, BFCL does not start one
+  export REMOTE_OPENAI_BASE_URL="$STRATA_URL" REMOTE_OPENAI_API_KEY=x REMOTE_OPENAI_TOKENIZER_PATH="$TOKENIZER"
+  extra=(--skip-server-setup)
+fi
 cd "$PROJ"
 if [ $pilot = 1 ]; then cp "$BFCL_HOME/pilot_ids.json" test_case_ids_to_generate.json; sel=(--run-ids)
 else sel=(--test-category "$category"); fi
@@ -121,7 +138,7 @@ else sel=(--test-category "$category"); fi
 echo "generate -> $run"
 g0=$(date +%s)
 "$PY" -m bfcl_eval generate --model "$model" "${sel[@]}" --num-threads "$threads" --include-input-log \
-  --result-dir "$run/result" --allow-overwrite 2>&1 | tee "$run/generate.log"
+  --result-dir "$run/result" --allow-overwrite "${extra[@]}" 2>&1 | tee "$run/generate.log"
 g1=$(date +%s)
 echo "evaluate"
 partial=(); [ $pilot = 1 ] || [ "$category" != multi_turn ] && partial=(--partial-eval)

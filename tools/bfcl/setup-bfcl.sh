@@ -10,11 +10,17 @@
 #              (default /mnt/evox2/large/work/AI/freetoken/bfcl)
 #   BFCL_HOME  where the checkout and the runs go (default ~/work/AI/bfcl)
 #   BFCL_ENV   the conda environment (default bfcl-py312, as on Windows)
+#   TOKENIZER_SRC  a Hugging Face Qwen3.8 folder whose tokenizer and config path B uses (BFCL counts the prompt's
+#              tokens with it and reads the context length from config.json); only its small files are copied
+#              (default: the Qwen3.8-27B-NVFP4 folder the Windows runs used - same 248320-token vocabulary)
 set -euo pipefail
 
 WIN_BFCL=${WIN_BFCL:-/mnt/evox2/large/work/AI/freetoken/bfcl}
 BFCL_HOME=${BFCL_HOME:-$HOME/work/AI/bfcl}
 BFCL_ENV=${BFCL_ENV:-bfcl-py312}
+TOKENIZER_SRC=${TOKENIZER_SRC:-"/mnt/evox2/Users/Wei Lu/Documents/Qwen3.8-27B-NVFP4"}
+TOKENIZER_FILES=(config.json generation_config.json tokenizer.json tokenizer_config.json vocab.json merges.txt
+                 chat_template.jinja preprocessor_config.json video_preprocessor_config.json)
 COMMIT=6ea5797                       # the Windows checkout's HEAD (run.json "bfcl_commit" of every Halo run)
 LEADERBOARD=berkeley-function-call-leaderboard
 # the handlers added on Windows (untracked there, so not in `git diff`)
@@ -74,12 +80,28 @@ fi
 # 5. the Windows tools that are not part of gorilla
 cp "$WIN_BFCL/pilot_ids.json" "$WIN_BFCL/summarize-bfcl.py" "$BFCL_HOME/"
 
-# 6. check: the local handlers are registered
-"$PY" - <<'EOF'
+# 6. path B's tokenizer: the small files only (no weights), so a run does not depend on the share
+TOK="$BFCL_HOME/qwen3.8-tokenizer"
+mkdir -p "$TOK"
+for f in "${TOKENIZER_FILES[@]}"; do
+  if [ -f "$TOKENIZER_SRC/$f" ]; then cp "$TOKENIZER_SRC/$f" "$TOK/"; fi
+done
+[ -f "$TOK/tokenizer.json" ] && [ -f "$TOK/config.json" ] || { echo "no tokenizer.json / config.json in $TOKENIZER_SRC"; exit 1; }
+
+# 7. check: the local handlers are registered, and the tokenizer loads the way base_oss_handler.py loads it
+"$PY" - "$TOK" <<'EOF'
+import sys
 from bfcl_eval.constants.model_config import MODEL_CONFIG_MAPPING as M
 need = ["local-fc-nothink", "local-fc-think", "local-qwen-b-nothink", "local-qwen-b-think"]
 missing = [n for n in need if n not in M]
 assert not missing, f"not registered: {missing}"
 print("handlers registered:", ", ".join(need))
+from transformers import AutoConfig, AutoTokenizer
+tok = AutoTokenizer.from_pretrained(sys.argv[1], trust_remote_code=True)
+cfg = AutoConfig.from_pretrained(sys.argv[1], trust_remote_code=True)
+ctx = getattr(cfg, "max_position_embeddings", None) or tok.model_max_length
+n = len(tok.tokenize("<|im_start|>user\nhello<|im_end|>"))
+print(f"tokenizer: {len(tok)} tokens, context {ctx} (BFCL asks for min(4096, context - prompt) new tokens); "
+      f"test prompt = {n} tokens")
 EOF
 say "done: $G (python: $PY)"
