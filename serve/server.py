@@ -736,6 +736,17 @@ class Detokenizer:
         return delta
 
 
+class RawParser:
+    """/v1/completions: the model's text as it comes - no thinking or tool-call parsing (OutputParser's interface)."""
+    state, buf = "content", ""
+
+    def feed(self, text: str) -> list[Event]:
+        return [Event("content", text)] if text else []
+
+    def finish(self) -> list[Event]:
+        return []
+
+
 class Service:
     def __init__(self, engine: Engine, tokenizer, template: ChatTemplate, model_name: str = "qwen3.8-flash-next",
                  vision: Vision | None = None, sampling_defaults: dict | None = None,
@@ -1156,6 +1167,27 @@ class Service:
                 for path, _ in encoded:
                     f.write(path.read_bytes())
             self.embeddings.path = combined
+        return ids, kwargs.get("enable_thinking", True) is not False, self.fit(ids, max_new)
+
+    def prepare_raw(self, prompt, max_new=None):
+        """/v1/completions: the prompt as given - a string (special tokens such as <|im_start|> parsed, as llama.cpp
+        does) or token ids - with no chat template.  -> (ids, max_new)."""
+        if isinstance(prompt, list) and len(prompt) == 1 and isinstance(prompt[0], (str, list)):
+            prompt = prompt[0]                          # one prompt in a list (the OpenAI client's batch form)
+        if isinstance(prompt, str):
+            ids = self.tok.encode(prompt, parse_special=True)
+        elif isinstance(prompt, list) and prompt and all(isinstance(t, int) and not isinstance(t, bool) and t >= 0
+                                                       for t in prompt):
+            ids = list(prompt)
+        else:
+            raise ValueError("prompt: send one string or one list of token ids (several prompts are not supported)")
+        if not ids:
+            raise ValueError("prompt is empty")
+        self.embeddings.path = None
+        return ids, self.fit(ids, max_new)
+
+    def fit(self, ids, max_new):
+        """The max new tokens for this prompt: the request's, or the rest of the context when unset (0 / -1)."""
         if self.engine.max_context <= 0:                # #344: (re)starting, not a prompt that is too long
             raise EngineStarting("the engine is starting (a minute or two); try again shortly")
         room = self.engine.max_context - CTX_SLACK - len(ids)
@@ -1169,7 +1201,7 @@ class Service:
                 raise ValueError(f"prompt ({len(ids)} tokens) + max tokens ({max_new}) exceeds the context "
                                  f"({self.engine.max_context}); requests are never truncated")
             max_new = max(1, room)          # --fit-max-tokens: a shorter completion beats a 400
-        return ids, kwargs.get("enable_thinking", True) is not False, max_new
+        return max_new
 
     def _note(self, n, evs):
         with self.status_lock:
@@ -1207,14 +1239,15 @@ class Service:
                   f"{el:.0f} s", flush=True)
         return now
 
-    def run(self, ids, thinking, tools, max_new, sampling, cancel) -> Iterator[tuple[str, object]]:
-        """Yields ("event", Event) as text arrives, then ("done", {"finish": .., "completion_tokens": ..})."""
-        budget = self.reasoning_budget(sampling) if thinking else None   # #123: opt-in, off by default
+    def run(self, ids, thinking, tools, max_new, sampling, cancel, raw=False) -> Iterator[tuple[str, object]]:
+        """Yields ("event", Event) as text arrives, then ("done", {"finish": .., "completion_tokens": ..}).
+        raw: the text unparsed, all as "content" events (/v1/completions)."""
+        budget = self.reasoning_budget(sampling) if thinking and not raw else None   # #123: opt-in, off by default
         defaults = {**self.sampling_defaults, **self.shared}   # the config's, then the Chat settings shared with apps
         if defaults:                   # the request's own fields win (explicit 0 stays greedy)
             req_values = {k: v for k, v in (sampling or {}).items() if v is not None}
             sampling = {**defaults, **req_values}
-        parser = OutputParser(thinking=thinking, tools=tools, stream_tools=True)
+        parser = RawParser() if raw else OutputParser(thinking=thinking, tools=tools, stream_tools=True)
         detok, n, finish = Detokenizer(self.tok), 0, "length"
         timings, before = None, None                    # this request's timings; the engine's `last` before it
         raw_ids = []                                    # every generated id (STRATA_DEBUG: dump raw model text)
@@ -1590,6 +1623,76 @@ def openai_collect(chunks) -> dict:
         msg["strata_mcp"] = mcp
     out = {"id": last["id"], "object": "chat.completion", "created": last["created"], "model": last["model"],
            "choices": [{"index": 0, "message": msg, "finish_reason": last["choices"][0]["finish_reason"]}],
+           "usage": last["usage"]}
+    if last.get("timings"):
+        out["timings"] = last["timings"]
+    return out
+
+
+def stop_strings(req: dict) -> list[str]:
+    stop = req.get("stop")
+    stop = [stop] if isinstance(stop, str) else stop or []
+    if not isinstance(stop, list) or not all(isinstance(s, str) for s in stop):
+        raise ValueError("stop: send a string or a list of strings")
+    return [s for s in stop if s]
+
+
+def completion_chunks(svc: Service, req: dict, ids, max_new, cancel):
+    """/v1/completions: OpenAI's text_completion chunks, the model's text unparsed.  A `stop` string ends the text
+    before it (not included, as OpenAI and llama.cpp do); text that may be the start of one is held back until it is
+    not, so a stream never shows part of a stop string."""
+    cid, created, model = "cmpl-" + uuid.uuid4().hex[:24], int(time.time()), svc.model_for(req)
+    stops = stop_strings(req)
+    hold = max((len(s) for s in stops), default=1) - 1
+
+    def chunk(text, finish=None):
+        return {"id": cid, "object": "text_completion", "created": created, "model": model,
+                "choices": [{"index": 0, "text": text, "logprobs": None, "finish_reason": finish}]}
+
+    pending, stopped = "", False
+    for kind, x in svc.run(ids, False, None, max_new, req, cancel, raw=True):
+        if kind == "ping":
+            yield None
+        elif kind == "event":
+            if stopped:                            # the tokens the engine made before it saw the cancel
+                continue
+            pending += x.text
+            at = min((i for i in (pending.find(s) for s in stops) if i >= 0), default=-1)
+            if at >= 0:
+                stopped = True
+                cancel.set()                       # end the engine's turn; its DONE still comes, with the timings
+                if pending[:at]:
+                    yield chunk(pending[:at])
+                pending = ""
+                continue
+            keep = next((k for k in range(min(hold, len(pending)), 0, -1)
+                         if any(s.startswith(pending[-k:]) for s in stops)), 0)
+            if len(pending) > keep:
+                yield chunk(pending[:len(pending) - keep])
+                pending = pending[len(pending) - keep:]
+        else:
+            if pending:
+                yield chunk(pending)
+            finish = "stop" if stopped else {"cancel": "stop"}.get(x["finish"], x["finish"])
+            last = chunk("", finish)
+            last["usage"] = {"prompt_tokens": len(ids), "completion_tokens": x["completion_tokens"],
+                             "total_tokens": len(ids) + x["completion_tokens"],
+                             "prompt_tokens_details": {"cached_tokens": x.get("reused") or 0}}
+            if x.get("timings"):
+                last["timings"] = x["timings"]
+            yield last
+
+
+def completion_collect(chunks) -> dict:
+    text, last = [], None
+    for c in chunks:
+        if c is None:
+            continue
+        text.append(c["choices"][0]["text"])
+        last = c
+    out = {"id": last["id"], "object": "text_completion", "created": last["created"], "model": last["model"],
+           "choices": [{"index": 0, "text": "".join(text), "logprobs": None,
+                        "finish_reason": last["choices"][0]["finish_reason"]}],
            "usage": last["usage"]}
     if last.get("timings"):
         out["timings"] = last["timings"]
@@ -1978,10 +2081,12 @@ def make_handler(svc: Service):
                         result = "loaded"
                     self._json(200, {"status": result, **svc.v1_status()})
                     return
-                if path in ("/v1/chat/completions", "/v1/messages"):
+                if path in ("/v1/chat/completions", "/v1/messages", "/v1/completions"):
                     self.record = svc.begin_request(path, req)
                 if path == "/v1/chat/completions":
                     self._openai(req)
+                elif path == "/v1/completions":
+                    self._completions(req)
                 elif path == "/v1/messages":
                     self._anthropic(req)
                 elif path == "/v1/messages/count_tokens":
@@ -2097,6 +2202,9 @@ def make_handler(svc: Service):
                             delta = item["choices"][0]["delta"]
                             content, reasoning = delta.get("content", ""), delta.get("reasoning_content", "")
                             usage, timings = item.get("usage"), item.get("timings")
+                        elif api == "completions":
+                            content, reasoning = item["choices"][0]["text"], ""
+                            usage, timings = item.get("usage"), item.get("timings")
                         else:
                             _, event = item
                             delta = event.get("delta", {})
@@ -2169,6 +2277,40 @@ def make_handler(svc: Service):
                 self.wfile.write(b"data: " + json.dumps(err).encode() + b"\n\ndata: [DONE]\n\n")
             except ValueError as e:                          # the engine's ERR after the stream started: the
                 err = {"error": {"type": "server_error", "message": str(e)}}   # headers are sent, so no 400 now
+                self._note(error=err["error"])
+                self.wfile.write(b"data: " + json.dumps(err).encode() + b"\n\ndata: [DONE]\n\n")
+
+        def _completions(self, req):
+            """OpenAI's legacy Completions (llama.cpp's /v1/completions): the prompt as given, no chat template, the
+            model's text unparsed.  One prompt, one choice; max_tokens 0/-1/unset: the rest of the context."""
+            if req.get("echo") or req.get("suffix") or req.get("logprobs") is not None:
+                raise ValueError("echo, suffix and logprobs are not supported")
+            if int(req.get("n") or 1) != 1 or int(req.get("best_of") or 1) != 1:
+                raise ValueError("n / best_of: one choice per request")
+            stop_strings(req)                                # a bad value is a 400 before anything runs
+            svc.load()
+            ids, max_new = svc.prepare_raw(req.get("prompt"), int(req.get("max_tokens") or 0))
+            cancel = threading.Event()
+            self._watch_client(cancel)                       # #430 #431
+            chunks = self._capture(completion_chunks(svc, req, ids, max_new, cancel), "completions")
+            if not req.get("stream"):
+                return self._json(200, completion_collect(chunks))
+            self._sse()
+            try:
+                for c in chunks:
+                    if c is None:
+                        self.wfile.write(b": keep-alive\n\n")
+                    else:
+                        self.wfile.write(b"data: " + json.dumps(c, ensure_ascii=False).encode() + b"\n\n")
+                    self.wfile.flush()
+                self.wfile.write(b"data: [DONE]\n\n")
+            except OSError:
+                self._note(outcome="disconnected")
+                cancel.set()
+                chunks.close()
+            except (EngineDied, ValueError) as e:            # mid-stream: say so, then end the stream properly
+                msg = f"{e}; the next request restarts it" if isinstance(e, EngineDied) else str(e)
+                err = {"error": {"type": "server_error", "message": msg}}
                 self._note(error=err["error"])
                 self.wfile.write(b"data: " + json.dumps(err).encode() + b"\n\ndata: [DONE]\n\n")
 

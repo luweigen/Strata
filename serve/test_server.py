@@ -1828,5 +1828,88 @@ class AmdTelemetry(unittest.TestCase):
                 self.assertEqual(svc.free_vram_mib(), 26 << 10)
 
 
+class Completions(unittest.TestCase):
+    """/v1/completions: the prompt as given (no chat template), the model's text unparsed (what BFCL's path B sends)."""
+    SCRIPT = '<think>\nhmm\n</think>\n\n<tool_call>\n{"name": "f", "arguments": {}}\n</tool_call> STOP after'
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tok = ByteTokenizer()
+        cls.engine = RecordingPrompt(cls.tok, cls.SCRIPT, max_context=CTX)
+        cls.svc = Service(cls.engine, cls.tok, ChatTemplate(ROOT / "serve/chat_template.jinja"))
+        cls.httpd = serve(cls.svc, port=0)
+        cls.base = f"http://127.0.0.1:{cls.httpd.server_address[1]}"
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.httpd.shutdown()
+        cls.httpd.server_close()
+
+    def post(self, body, stream=False):
+        req = urllib.request.Request(self.base + "/v1/completions", data=json.dumps(body).encode(),
+                                     headers={"Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                raw = r.read().decode()
+                if not stream:
+                    return r.status, json.loads(raw)
+                lines = [x[6:] for x in raw.split("\n") if x.startswith("data: ")]
+                self.assertEqual(lines[-1], "[DONE]")
+                return r.status, [json.loads(x) for x in lines[:-1]]
+        except urllib.error.HTTPError as e:
+            with e:
+                return e.code, json.loads(e.read())
+
+    def test_raw_prompt_and_text(self):
+        prompt = "<|im_start|>user\nhi<|im_end|>\n<|im_start|>assistant\n"
+        s, b = self.post({"model": "m", "prompt": prompt, "temperature": 0.001})
+        self.assertEqual(s, 200, b)
+        # no template: the ids are the prompt's own, its special tokens parsed
+        self.assertEqual(self.engine.last_ids, self.tok.encode(prompt, parse_special=True))
+        self.assertEqual(b["object"], "text_completion")
+        c = b["choices"][0]
+        self.assertEqual(c["text"], self.SCRIPT)                     # <think> and <tool_call> kept as text
+        self.assertEqual(c["finish_reason"], "stop")
+        self.assertIsNone(c["logprobs"])
+        self.assertEqual(b["usage"]["prompt_tokens"], len(self.engine.last_ids))
+        self.assertEqual(b["usage"]["completion_tokens"], len(self.SCRIPT) + 1)   # + the end-of-turn token
+
+    def test_token_ids_and_list_forms(self):
+        ids = self.tok.encode("abc")
+        for prompt in (ids, [ids], ["abc"]):
+            s, b = self.post({"prompt": prompt, "max_tokens": 4})
+            self.assertEqual(s, 200, b)
+            self.assertEqual(self.engine.last_ids, ids)
+            self.assertEqual(b["choices"][0]["text"], self.SCRIPT[:4])
+            self.assertEqual(b["choices"][0]["finish_reason"], "length")
+
+    def test_stop_string(self):
+        for stream in (False, True):
+            s, b = self.post({"prompt": "x", "stop": ["STOP"], "stream": stream}, stream=stream)
+            self.assertEqual(s, 200, b)
+            if stream:
+                texts = [c["choices"][0]["text"] for c in b]
+                self.assertFalse(any("S" in t for t in texts), texts)    # no piece of the stop string is sent
+                text, last = "".join(texts), b[-1]
+            else:
+                text, last = b["choices"][0]["text"], b
+            self.assertEqual(text, self.SCRIPT[:self.SCRIPT.index(" STOP")] + " ")
+            self.assertEqual(last["choices"][0]["finish_reason"], "stop")
+            self.assertIn("usage", last)
+
+    def test_stream_matches(self):
+        s, chunks = self.post({"prompt": "x", "stream": True}, stream=True)
+        self.assertEqual(s, 200)
+        self.assertEqual("".join(c["choices"][0]["text"] for c in chunks), self.SCRIPT)
+        self.assertEqual(chunks[-1]["choices"][0]["finish_reason"], "stop")
+
+    def test_refused(self):
+        for body in ({"prompt": ""}, {"prompt": ["a", "b"]}, {"prompt": [1, "a"]}, {"prompt": "a", "n": 2},
+                     {"prompt": "a", "echo": True}, {"prompt": "a", "logprobs": 1}, {"prompt": "a", "stop": 3},
+                     {"prompt": "a", "max_tokens": CTX}):
+            s, b = self.post(body)
+            self.assertEqual(s, 400, (body, b))
+
+
 if __name__ == "__main__":
     unittest.main()

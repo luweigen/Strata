@@ -410,6 +410,7 @@ The server listens on `http://127.0.0.1:8080` (change with `--port` in setup, or
 | --- | --- |
 | OpenAI Chat Completions (stream and non-stream, tools) | `POST /v1/chat/completions` |
 | Anthropic Messages (stream and non-stream, tools) | `POST /v1/messages` |
+| OpenAI Completions (raw prompt, no chat template; stream and non-stream) | `POST /v1/completions` |
 | Model list / health | `GET /v1/models`, `GET /models`, `GET /health` |
 | Model properties | `GET /props` (also accepts `?model=<loaded-model-id>`) |
 | What the model is doing right now | `GET /status`, `GET /slots` (single slot, busy or idle) |
@@ -428,6 +429,19 @@ from openai import OpenAI
 client = OpenAI(base_url="http://127.0.0.1:8080/v1", api_key="none")
 r = client.chat.completions.create(model="strata", messages=[{"role": "user", "content": "Hello!"}])
 print(r.choices[0].message.content)
+```
+
+`/v1/completions` takes the prompt as you write it: no chat template, and the model's text comes back unparsed
+(`<think>` and `<tool_call>` stay in `text`, no `reasoning_content` or `tool_calls`). This is for tools that render
+the prompt themselves, such as an evaluation harness. The prompt is one string (special tokens such as
+`<|im_start|>` are read as tokens, as llama.cpp does) or one list of token ids. `stop` (a string or a list) ends the
+text before the first match. `max_tokens` unset, 0 or -1 means the rest of the context. The answer has `usage` and
+llama.cpp's `timings`; a prompt that repeats the last one's beginning reuses it (`cached_tokens`). One prompt and
+one choice per request; `echo`, `suffix` and `logprobs` are refused with a 400.
+
+```bash
+curl http://127.0.0.1:8080/v1/completions -H "Content-Type: application/json" -d '{
+  "prompt": "<|im_start|>user\nWhat is 17*23?<|im_end|>\n<|im_start|>assistant\n", "max_tokens": 400 }'
 ```
 
 - **Thinking levels: none, low, medium, high.** The model thinks before it answers (streamed as
