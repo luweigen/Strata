@@ -1,0 +1,136 @@
+#!/bin/bash
+# One BFCL multi-turn run against Strata: generate + evaluate, archived under $BFCL_HOME/runs/<config>-A-<think>-<cat>-
+# <stamp>[-<label>]/, the same layout and run.json keys as freetoken/bfcl/run-bfcl.ps1 (so its summarize-bfcl.py reads
+# both).  Path A only (native function calling through /v1/chat/completions + tools): path B needs /v1/completions,
+# which Strata does not have.  Set up the environment first with tools/bfcl/setup-bfcl.sh.
+#
+#   tools/bfcl/run-bfcl.sh --config strata-gsq --think off --start
+#   tools/bfcl/run-bfcl.sh --config strata-iq4xs --think on --start --label r1
+#   tools/bfcl/run-bfcl.sh --config strata-gsq --think off --pilot          # the 40 entries of pilot_ids.json
+#
+#   --config strata-gsq | strata-iq4xs   the model (the same files as the Halo's gsq-hip / flashnext-hip runs)
+#   --think off | on                     the handler: local-fc-nothink (max_tokens 4096) / local-fc-think (16384)
+#   --category LIST                      default multi_turn_base,multi_turn_miss_param (what the Halo ran for these
+#                                        two models); long_context needs a 37K+ prompt and is refused at 32K
+#   --threads N                          default 1 (Strata serves one request at a time)
+#   --pilot                              the 40 pilot entries instead of --category
+#   --label TEXT                         appended to the run folder
+#   --start                              start the Strata server for this config and stop it at the end
+#                                        (without it, a server must already answer on $STRATA_URL)
+# Environment: BFCL_HOME (default ~/work/AI/bfcl), BFCL_ENV (default bfcl-py312), STRATA_URL (default
+# http://127.0.0.1:8080/v1), STRATA_ENV (the conda environment the server runs in, default strata).
+set -uo pipefail
+
+STRATA=$(cd "$(dirname "$0")/../.." && pwd)
+BFCL_HOME=${BFCL_HOME:-$HOME/work/AI/bfcl}
+BFCL_ENV=${BFCL_ENV:-bfcl-py312}
+STRATA_URL=${STRATA_URL:-http://127.0.0.1:8080/v1}
+STRATA_ENV=${STRATA_ENV:-strata}
+
+config="" think=off category=multi_turn_base,multi_turn_miss_param threads=1 pilot=0 label="" start=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --config) config=$2; shift 2 ;;
+    --think) think=$2; shift 2 ;;
+    --category) category=$2; shift 2 ;;
+    --threads) threads=$2; shift 2 ;;
+    --pilot) pilot=1; shift ;;
+    --label) label=$2; shift 2 ;;
+    --start) start=1; shift ;;
+    *) echo "unknown option $1 (see the header of $0)"; exit 2 ;;
+  esac
+done
+case "$config" in       # config -> Strata's model config and the model id /v1/models must list
+  strata-gsq)   cfg="$STRATA/strata-coder-iq1_m.json";       want=qwen3.8-flash-next-coder-iq1_m ;;
+  strata-iq4xs) cfg="$STRATA/strata-unsloth-ud-iq4_xs.json"; want=qwen3.8-flash-next-ud-iq4_xs ;;
+  *) echo "--config strata-gsq | strata-iq4xs"; exit 2 ;;
+esac
+case "$think" in
+  off) model=local-fc-nothink ;;
+  on)  model=local-fc-think ;;
+  *) echo "--think off | on"; exit 2 ;;
+esac
+if [ $pilot = 1 ]; then
+  echo "note: the pilot set has 10 long_context entries (up to 37K-token prompts on the Halo); at 32K they can fail"
+elif [[ ",$category," == *long_context* || "$category" == multi_turn ]]; then
+  echo "long_context needs prompts of 37K+ tokens (Halo runs); this config serves 32K: leave it out of --category"
+  exit 2
+fi
+
+eval "$(conda shell.bash hook)"
+PY="$(conda run -n "$BFCL_ENV" python -c 'import sys; print(sys.executable)')" || { echo "no conda env $BFCL_ENV: run setup-bfcl.sh"; exit 1; }
+SPY="$(conda run -n "$STRATA_ENV" python -c 'import sys; print(sys.executable)')" || { echo "no conda env $STRATA_ENV"; exit 1; }
+PROJ="$BFCL_HOME/gorilla/berkeley-function-call-leaderboard"
+[ -d "$PROJ" ] || { echo "no BFCL checkout in $BFCL_HOME: run setup-bfcl.sh"; exit 1; }
+
+stamp=$(date +%Y%m%d-%H%M)
+cat_tag=${category//,/+}; [ $pilot = 1 ] && cat_tag=pilot
+run="$BFCL_HOME/runs/$config-A-$think-$cat_tag-$stamp${label:+-$label}"
+mkdir -p "$run"
+
+# the server: started here (--start) or already running
+server_pid=""
+stop_server() {
+  [ -n "$server_pid" ] || return 0
+  kill "$server_pid" 2>/dev/null; wait "$server_pid" 2>/dev/null
+  while pgrep -x strata >/dev/null; do sleep 1; done
+  echo "server stopped"
+}
+trap stop_server EXIT
+if [ $start = 1 ]; then
+  if curl -s -m 3 "$STRATA_URL/models" >/dev/null; then echo "a server already answers on $STRATA_URL: stop it or drop --start"; exit 1; fi
+  port=${STRATA_URL##*:}; port=${port%%/*}
+  echo "starting Strata: $cfg"
+  t0=$(date +%s)
+  (cd "$STRATA" && exec "$SPY" serve/server.py --engine strata --config "$cfg" --port "$port") > "$run/server.log" 2>&1 &
+  server_pid=$!
+  until grep -q "^ready: http" "$run/server.log"; do
+    kill -0 "$server_pid" 2>/dev/null || { echo "the server exited:"; tail -20 "$run/server.log"; server_pid=""; exit 1; }
+    sleep 1
+  done
+  echo "ready after $(( $(date +%s) - t0 )) s"
+fi
+served=$(curl -s -m 10 "$STRATA_URL/models") || { echo "$STRATA_URL not answering"; exit 1; }
+ids=$(echo "$served" | "$PY" -c 'import sys, json; print(",".join(m["id"] for m in json.load(sys.stdin)["data"]))') \
+  || { echo "$STRATA_URL/models returned: $served"; exit 1; }
+echo "endpoint $STRATA_URL serves: $ids"
+[[ ",$ids," == *",$want,"* ]] || { echo "expected $want for --config $config"; exit 1; }
+
+# run.json: the keys run-bfcl.ps1 writes, plus what identifies the Strata side
+"$PY" - "$run/run.json" <<EOF
+import json, subprocess, sys, datetime
+git = lambda d, *a: subprocess.run(["git", "-C", d, *a], capture_output=True, text=True).stdout.strip()
+build = json.load(open("$STRATA/engine/BUILD.json"))
+gpu = subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"],
+                     capture_output=True, text=True).stdout.strip()
+json.dump({"config": "$config", "path": "A", "think": "$think", "category": "$category", "pilot": bool($pilot),
+           "threads": $threads, "model": "$model", "endpoint": "$STRATA_URL", "served": "$ids".split(","),
+           "bfcl_commit": git("$PROJ", "rev-parse", "--short", "HEAD"), "started": datetime.datetime.now().isoformat(timespec="seconds"),
+           "engine": "strata", "strata_commit": git("$STRATA", "rev-parse", "--short", "HEAD"),
+           "engine_version": build.get("version"), "strata_config": json.load(open("$cfg")), "gpu": gpu},
+          open(sys.argv[1], "w"), indent=1)
+EOF
+
+export PYTHONUTF8=1
+# `bfcl evaluate` builds the handler too, and the OpenAI client refuses to start without a key: always set one
+export OPENAI_BASE_URL="$STRATA_URL" OPENAI_API_KEY=x
+cd "$PROJ"
+if [ $pilot = 1 ]; then cp "$BFCL_HOME/pilot_ids.json" test_case_ids_to_generate.json; sel=(--run-ids)
+else sel=(--test-category "$category"); fi
+
+echo "generate -> $run"
+g0=$(date +%s)
+"$PY" -m bfcl_eval generate --model "$model" "${sel[@]}" --num-threads "$threads" --include-input-log \
+  --result-dir "$run/result" --allow-overwrite 2>&1 | tee "$run/generate.log"
+g1=$(date +%s)
+echo "evaluate"
+partial=(); [ $pilot = 1 ] || [ "$category" != multi_turn ] && partial=(--partial-eval)
+"$PY" -m bfcl_eval evaluate --model "$model" --test-category multi_turn "${partial[@]}" \
+  --result-dir "$run/result" --score-dir "$run/score" 2>&1 | tee "$run/evaluate.log"
+"$PY" - "$run/run.json" $((g1 - g0)) <<'EOF'
+import json, sys, datetime
+p = sys.argv[1]; m = json.load(open(p))
+m["generate_wall_s"] = int(sys.argv[2]); m["ended"] = datetime.datetime.now().isoformat(timespec="seconds")
+json.dump(m, open(p, "w"), indent=1)
+EOF
+echo "done: $run  (generate $(( (g1 - g0) / 60 )) min)"
