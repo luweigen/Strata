@@ -42425,19 +42425,856 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 568,
+      "timestamp": "2026-10-03T19:59:08.559Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>bzatnl4e5</task-id>\n<tool-use-id>toolu_01FRAhN2cPeyde18fdicUiid</tool-use-id>\n<output-file>/tmp/claude-1000/-home-luwei-work-AI-Strata/fdd68fb3-d304-40df-b17b-5a7d3f2afd46/tasks/bzatnl4e5.output</output-file>\n<status>completed</status>\n<summary>Background command \"Run the 400-item path B BFCL on UD-IQ4_XS\" completed (exit code 0)</summary>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 569,
+      "timestamp": "2026-10-03T19:59:11.637Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 22427,
+        "completion_tokens": 1179,
+        "cached_tokens": 22423,
+        "extra": {
+          "cache_creation_input_tokens": 374264,
+          "cache_read_input_tokens": 22423,
+          "output_tokens_details": {
+            "thinking_tokens": 25
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 374264,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 1179,
+              "cache_read_input_tokens": 22423,
+              "cache_creation_input_tokens": 374264,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 374264
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 570,
+      "timestamp": "2026-10-03T19:59:12.518Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "The 400-item run finished. Reading the full score and comparing both halves with llama.cpp's run:",
+      "metrics": {
+        "prompt_tokens": 22427,
+        "completion_tokens": 1179,
+        "cached_tokens": 22423,
+        "extra": {
+          "cache_creation_input_tokens": 374264,
+          "cache_read_input_tokens": 22423,
+          "output_tokens_details": {
+            "thinking_tokens": 25
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 374264,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 1179,
+              "cache_read_input_tokens": 22423,
+              "cache_creation_input_tokens": 374264,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 374264
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 571,
+      "timestamp": "2026-10-03T19:59:20.222Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_019SUZ1QEfEJaD7jN3dCjAbz",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_019SUZ1QEfEJaD7jN3dCjAbz",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cat /tmp/claude-1000/-home-luwei-work-AI-Strata/fdd68fb3-d304-40df-b17b-5a7d3f2afd46/tasks/bzatnl4e5.output; tr '\\r' '\\n' < /tmp/claude-1000/-home-luwei-work-AI-Strata/fdd68fb3-d304-40df-b17b-5a7d3f2afd46/scratchpad/iq4xs-B-400.log | grep -E \"Accuracy|done:\" | tail -3; cd ~/work/AI/bfcl; ~/miniconda3/envs/bfcl-py312/bin/python summarize-bfcl.py runs 2>&1 | grep -E \"r1 \\|\" ; python3 - <<'EOF'\nimport json, glob, math\nH = glob.glob(\"/mnt/evox2/large/work/AI/freetoken/bfcl/runs/flashnext-hip-B-off-*-r1\")[0]\nS = glob.glob(\"/home/luwei/work/AI/bfcl/runs/strata-iq4xs-B-off-*r1\")[0]\nflat = lambda x: [z for y in x for z in flat(y)] if isinstance(x, list) else [x]\nfor cat in (\"base\", \"miss_param\"):\n    ids = [f\"multi_turn_{cat}_{i}\" for i in range(200)]\n    def score(run):\n        f = glob.glob(run + f\"/score/**/BFCL_v4_multi_turn_{cat}_score.json\", recursive=True)[0]\n        lines = [json.loads(l) for l in open(f, encoding=\"utf-8-sig\") if l.strip()]\n        return {i for i in ids if i not in {r[\"id\"] for r in lines[1:]}}\n    def speed(run):\n        f = glob.glob(run + f\"/result/**/BFCL_v4_multi_turn_{cat}_result.json\", recursive=True)[0]\n        lat = calls = out = 0\n        for l in open(f, encoding=\"utf-8-sig\"):\n            r = json.loads(l); ls = flat(r[\"latency\"]); lat += sum(ls); calls += len(ls); out += sum(flat(r[\"output_token_count\"]))\n        return lat / 200, calls / 200, lat / calls, out / calls\n    h, s = score(H), score(S); b, c = len(h - s), len(s - h); n = b + c\n    p = min(1.0, 2 * sum(math.comb(n, k) for k in range(min(b, c) + 1)) / 2**n)\n    print(f\"{cat:10s} llama.cpp {len(h)/2:.1f}  Strata {len(s)/2:.1f} | only llama.cpp {b}, only Strata {c}, McNemar p {p:.2f}\")\n    for name, run in ((\"llama.cpp\", H), (\"Strata\", S)):\n        e, k, sc_, t = speed(run); print(f\"   {name:10s} {e:5.1f} s/entry, {k:4.1f} calls/entry, {sc_:4.2f} s/call, {t:3.0f} tok/call\")\nEOF",
+            "description": "Full 400-item scores and paired comparison"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_019SUZ1QEfEJaD7jN3dCjAbz",
+            "content": "exit 0\n\n[exited with code 0]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 43.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1  (generate 260 min)\n| strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1 | strata-iq4xs | B | off | 52.2 [47,57] n=400 | 61.0 [54,67] n=200 |  | 43.5 [37,50] n=200 |  | 400 | 11.5 | 61 | 4.33 | 4.32 | 0 | multi_turn:instance_state_mismatch:106, multi_turn:empty_turn_model_response:51, multi_turn:execution_response_mismatch:31, multi_turn:force_terminated:3 |\n| strata-iq4xs | B | multi_turn_base+multi_turn_miss_param | r1 | 52.2 | 61.0 |  | 43.5 |  | 4.33 |\nbase       llama.cpp 59.0  Strata 61.0 | only llama.cpp 18, only Strata 22, McNemar p 0.64\n   llama.cpp   49.4 s/entry, 10.7 calls/entry, 4.63 s/call,  61 tok/call\n   Strata      36.2 s/entry, 10.5 calls/entry, 3.44 s/call,  61 tok/call\nmiss_param llama.cpp 37.5  Strata 43.5 | only llama.cpp 18, only Strata 30, McNemar p 0.11\n   llama.cpp   55.3 s/entry, 12.3 calls/entry, 4.51 s/call,  61 tok/call\n   Strata      41.6 s/entry, 12.4 calls/entry, 3.35 s/call,  61 tok/call\nShell cwd was reset to /home/luwei/work/AI/Strata\n\n[stdout]\nexit 0\n\n[exited with code 0]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 43.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1  (generate 260 min)\n| strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1 | strata-iq4xs | B | off | 52.2 [47,57] n=400 | 61.0 [54,67] n=200 |  | 43.5 [37,50] n=200 |  | 400 | 11.5 | 61 | 4.33 | 4.32 | 0 | multi_turn:instance_state_mismatch:106, multi_turn:empty_turn_model_response:51, multi_turn:execution_response_mismatch:31, multi_turn:force_terminated:3 |\n| strata-iq4xs | B | multi_turn_base+multi_turn_miss_param | r1 | 52.2 | 61.0 |  | 43.5 |  | 4.33 |\nbase       llama.cpp 59.0  Strata 61.0 | only llama.cpp 18, only Strata 22, McNemar p 0.64\n   llama.cpp   49.4 s/entry, 10.7 calls/entry, 4.63 s/call,  61 tok/call\n   Strata      36.2 s/entry, 10.5 calls/entry, 3.44 s/call,  61 tok/call\nmiss_param llama.cpp 37.5  Strata 43.5 | only llama.cpp 18, only Strata 30, McNemar p 0.11\n   llama.cpp   55.3 s/entry, 12.3 calls/entry, 4.51 s/call,  61 tok/call\n   Strata      41.6 s/entry, 12.4 calls/entry, 3.35 s/call,  61 tok/call\n[stderr]\n\nShell cwd was reset to /home/luwei/work/AI/Strata\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 22427,
+        "completion_tokens": 1179,
+        "cached_tokens": 22423,
+        "extra": {
+          "cache_creation_input_tokens": 374264,
+          "cache_read_input_tokens": 22423,
+          "output_tokens_details": {
+            "thinking_tokens": 25
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 374264,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 1179,
+              "cache_read_input_tokens": 22423,
+              "cache_creation_input_tokens": 374264,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 374264
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "exit 0\n\n[exited with code 0]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 43.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1  (generate 260 min)\n| strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1 | strata-iq4xs | B | off | 52.2 [47,57] n=400 | 61.0 [54,67] n=200 |  | 43.5 [37,50] n=200 |  | 400 | 11.5 | 61 | 4.33 | 4.32 | 0 | multi_turn:instance_state_mismatch:106, multi_turn:empty_turn_model_response:51, multi_turn:execution_response_mismatch:31, multi_turn:force_terminated:3 |\n| strata-iq4xs | B | multi_turn_base+multi_turn_miss_param | r1 | 52.2 | 61.0 |  | 43.5 |  | 4.33 |\nbase       llama.cpp 59.0  Strata 61.0 | only llama.cpp 18, only Strata 22, McNemar p 0.64\n   llama.cpp   49.4 s/entry, 10.7 calls/entry, 4.63 s/call,  61 tok/call\n   Strata      36.2 s/entry, 10.5 calls/entry, 3.44 s/call,  61 tok/call\nmiss_param llama.cpp 37.5  Strata 43.5 | only llama.cpp 18, only Strata 30, McNemar p 0.11\n   llama.cpp   55.3 s/entry, 12.3 calls/entry, 4.51 s/call,  61 tok/call\n   Strata      41.6 s/entry, 12.4 calls/entry, 3.35 s/call,  61 tok/call",
+            "stderr": "\nShell cwd was reset to /home/luwei/work/AI/Strata",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_019SUZ1QEfEJaD7jN3dCjAbz",
+            "type": "tool_result",
+            "content": "exit 0\n\n[exited with code 0]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 43.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1  (generate 260 min)\n| strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1 | strata-iq4xs | B | off | 52.2 [47,57] n=400 | 61.0 [54,67] n=200 |  | 43.5 [37,50] n=200 |  | 400 | 11.5 | 61 | 4.33 | 4.32 | 0 | multi_turn:instance_state_mismatch:106, multi_turn:empty_turn_model_response:51, multi_turn:execution_response_mismatch:31, multi_turn:force_terminated:3 |\n| strata-iq4xs | B | multi_turn_base+multi_turn_miss_param | r1 | 52.2 | 61.0 |  | 43.5 |  | 4.33 |\nbase       llama.cpp 59.0  Strata 61.0 | only llama.cpp 18, only Strata 22, McNemar p 0.64\n   llama.cpp   49.4 s/entry, 10.7 calls/entry, 4.63 s/call,  61 tok/call\n   Strata      36.2 s/entry, 10.5 calls/entry, 3.44 s/call,  61 tok/call\nmiss_param llama.cpp 37.5  Strata 43.5 | only llama.cpp 18, only Strata 30, McNemar p 0.11\n   llama.cpp   55.3 s/entry, 12.3 calls/entry, 4.51 s/call,  61 tok/call\n   Strata      41.6 s/entry, 12.4 calls/entry, 3.35 s/call,  61 tok/call\nShell cwd was reset to /home/luwei/work/AI/Strata",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "exit 0\n\n[exited with code 0]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 43.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1  (generate 260 min)\n| strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1 | strata-iq4xs | B | off | 52.2 [47,57] n=400 | 61.0 [54,67] n=200 |  | 43.5 [37,50] n=200 |  | 400 | 11.5 | 61 | 4.33 | 4.32 | 0 | multi_turn:instance_state_mismatch:106, multi_turn:empty_turn_model_response:51, multi_turn:execution_response_mismatch:31, multi_turn:force_terminated:3 |\n| strata-iq4xs | B | multi_turn_base+multi_turn_miss_param | r1 | 52.2 | 61.0 |  | 43.5 |  | 4.33 |\nbase       llama.cpp 59.0  Strata 61.0 | only llama.cpp 18, only Strata 22, McNemar p 0.64\n   llama.cpp   49.4 s/entry, 10.7 calls/entry, 4.63 s/call,  61 tok/call\n   Strata      36.2 s/entry, 10.5 calls/entry, 3.44 s/call,  61 tok/call\nmiss_param llama.cpp 37.5  Strata 43.5 | only llama.cpp 18, only Strata 30, McNemar p 0.11\n   llama.cpp   55.3 s/entry, 12.3 calls/entry, 4.51 s/call,  61 tok/call\n   Strata      41.6 s/entry, 12.4 calls/entry, 3.35 s/call,  61 tok/call",
+            "stderr": "\nShell cwd was reset to /home/luwei/work/AI/Strata",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_019SUZ1QEfEJaD7jN3dCjAbz",
+            "type": "tool_result",
+            "content": "exit 0\n\n[exited with code 0]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 43.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1  (generate 260 min)\n| strata-iq4xs-B-off-multi_turn_base+multi_turn_miss_param-20261003-1538-r1 | strata-iq4xs | B | off | 52.2 [47,57] n=400 | 61.0 [54,67] n=200 |  | 43.5 [37,50] n=200 |  | 400 | 11.5 | 61 | 4.33 | 4.32 | 0 | multi_turn:instance_state_mismatch:106, multi_turn:empty_turn_model_response:51, multi_turn:execution_response_mismatch:31, multi_turn:force_terminated:3 |\n| strata-iq4xs | B | multi_turn_base+multi_turn_miss_param | r1 | 52.2 | 61.0 |  | 43.5 |  | 4.33 |\nbase       llama.cpp 59.0  Strata 61.0 | only llama.cpp 18, only Strata 22, McNemar p 0.64\n   llama.cpp   49.4 s/entry, 10.7 calls/entry, 4.63 s/call,  61 tok/call\n   Strata      36.2 s/entry, 10.5 calls/entry, 3.44 s/call,  61 tok/call\nmiss_param llama.cpp 37.5  Strata 43.5 | only llama.cpp 18, only Strata 30, McNemar p 0.11\n   llama.cpp   55.3 s/entry, 12.3 calls/entry, 4.51 s/call,  61 tok/call\n   Strata      41.6 s/entry, 12.4 calls/entry, 3.35 s/call,  61 tok/call\nShell cwd was reset to /home/luwei/work/AI/Strata",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cat /tmp/claude-1000/-home-luwei-work-AI-Strata/fdd68fb3-d304-40df-b17b-5a7d3f2afd46/tasks/bzatnl4e5.output; tr '\\r' '\\n' < /tmp/claude-1000/-home-luwei-work-AI-Strata/fdd68fb3-d304-40df-b17b-5a7d3f2afd46/scratchpad/iq4xs-B-400.log | grep -E \"Accuracy|done:\" | tail -3; cd ~/work/AI/bfcl; ~/miniconda3/envs/bfcl-py312/bin/python summarize-bfcl.py runs 2>&1 | grep -E \"r1 \\|\" ; python3 - <<'EOF'\nimport json, glob, math\nH = glob.glob(\"/mnt/evox2/large/work/AI/freetoken/bfcl/runs/flashnext-hip-B-off-*-r1\")[0]\nS = glob.glob(\"/home/luwei/work/AI/bfcl/runs/strata-iq4xs-B-off-*r1\")[0]\nflat = lambda x: [z for y in x for z in flat(y)] if isinstance(x, list) else [x]\nfor cat in (\"base\", \"miss_param\"):\n    ids = [f\"multi_turn_{cat}_{i}\" for i in range(200)]\n    def score(run):\n        f = glob.glob(run + f\"/score/**/BFCL_v4_multi_turn_{cat}_score.json\", recursive=True)[0]\n        lines = [json.loads(l) for l in open(f, encoding=\"utf-8-sig\") if l.strip()]\n        return {i for i in ids if i not in {r[\"id\"] for r in lines[1:]}}\n    def speed(run):\n        f = glob.glob(run + f\"/result/**/BFCL_v4_multi_turn_{cat}_result.json\", recursive=True)[0]\n        lat = calls = out = 0\n        for l in open(f, encoding=\"utf-8-sig\"):\n            r = json.loads(l); ls = flat(r[\"latency\"]); lat += sum(ls); calls += len(ls); out += sum(flat(r[\"output_token_count\"]))\n        return lat / 200, calls / 200, lat / calls, out / calls\n    h, s = score(H), score(S); b, c = len(h - s), len(s - h); n = b + c\n    p = min(1.0, 2 * sum(math.comb(n, k) for k in range(min(b, c) + 1)) / 2**n)\n    print(f\"{cat:10s} llama.cpp {len(h)/2:.1f}  Strata {len(s)/2:.1f} | only llama.cpp {b}, only Strata {c}, McNemar p {p:.2f}\")\n    for name, run in ((\"llama.cpp\", H), (\"Strata\", S)):\n        e, k, sc_, t = speed(run); print(f\"   {name:10s} {e:5.1f} s/entry, {k:4.1f} calls/entry, {sc_:4.2f} s/call, {t:3.0f} tok/call\")\nEOF",
+          "description": "Full 400-item scores and paired comparison"
+        }
+      }
+    },
+    {
+      "step_id": 572,
+      "timestamp": "2026-10-03T19:59:28.299Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 396689,
+        "completion_tokens": 1177,
+        "cached_tokens": 396687,
+        "extra": {
+          "cache_creation_input_tokens": 1981,
+          "cache_read_input_tokens": 396687,
+          "output_tokens_details": {
+            "thinking_tokens": 141
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1981,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1177,
+              "cache_read_input_tokens": 396687,
+              "cache_creation_input_tokens": 1981,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1981
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 573,
+      "timestamp": "2026-10-03T19:59:28.304Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "The full run is done: Strata scores **52.2** (base 61.0, miss_param 43.5) against llama.cpp's 48.2 on the same 400 items. Updating the doc with the complete result:",
+      "metrics": {
+        "prompt_tokens": 396689,
+        "completion_tokens": 1177,
+        "cached_tokens": 396687,
+        "extra": {
+          "cache_creation_input_tokens": 1981,
+          "cache_read_input_tokens": 396687,
+          "output_tokens_details": {
+            "thinking_tokens": 141
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1981,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1177,
+              "cache_read_input_tokens": 396687,
+              "cache_creation_input_tokens": 1981,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1981
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 574,
+      "timestamp": "2026-10-03T19:59:35.361Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_015WoL9yTZcTLEQV46WRtBhS",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_015WoL9yTZcTLEQV46WRtBhS",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; python3 - <<'PYEOF'\nimport math\nb, c = 36, 52; n = b + c\np = min(1.0, 2 * sum(math.comb(n, k) for k in range(min(b, c) + 1)) / 2**n)\nprint(\"overall McNemar p\", round(p, 3))\nf = \"docs/3060M.md\"; t = open(f).read()\ns = t.index(\"**The 400-item path B run settles it for the base category: no gap.**\")\ne = t.index(\"## Where the CPU time goes during BFCL\")\nnew = f'''**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,\n200 each, thinking off; `~/work/AI/bfcl/runs/strata-iq4xs-B-off-...-r1`) against llama.cpp's 400-item path B run on\nthe same items:\n\n| UD-IQ4_XS, path B, thinking off | overall (400) | base (200) | miss_param (200) | model time / entry | calls / entry | s / call | tok / call |\n|---|---|---|---|---|---|---|---|\n| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.57 | 61 |\n| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.39 | 61 |\n\nItem by item: base - only llama.cpp right 18, only Strata right 22 (exact McNemar p = 0.64); miss_param - 18 and 30\n(p = 0.11); both together 36 and 52 (p = {p:.2f}). Strata is 4 points higher, inside the noise of one pass. The\npilot's 9-to-0 was a small-sample effect on 40 items, not the `--compat-bf16` conversion: with the same weights and\nthe same prompt the two engines score the same. Transport errors 0; failures: state mismatch 106, empty turn 51,\nwrong execution result 31, step limit 3.\n\nSpeed: the whole run took 260 min of generation here (4.33 h; BFCL's model time 4.32 h), against about 5.8 h on\nthe Halo (windows.md: 52 s/entry). Per entry this PC with Strata needs 26% less model time at the same number of\ncalls and output tokens - engine and hardware together.\n\n'''\nt = t[:s] + new + t[e:]\nopen(f, \"w\").write(t)\nPYEOF\ngrep -n \"settles it: no gap\" docs/3060M.md",
+            "description": "Record the complete 400-item result in the doc"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_015WoL9yTZcTLEQV46WRtBhS",
+            "content": "overall McNemar p 0.109\n456:**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,\n\n[stdout]\noverall McNemar p 0.109\n456:**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/3060M.md\", \"hunks\": [{\"oldStart\": 453, \"oldLines\": 20, \"newStart\": 453, \"newLines\": 25, \"lines\": [\" engines match: UD-IQ4_XS is prepared by hand with `--compat-bf16`, which rounds 195 tensors (1.20 GiB) to BF16\", \" (largest absolute error 0.0144); the GSQ pack needs no conversion. That was the first suspect; the 400-item run below answers it.\", \" \", \"-**The 400-item path B run settles it for the base category: no gap.** The 200 `multi_turn_base` items (the\", \"-first half of the 400-item run, 2026-10-03; scored on a copy while miss_param was still running), against\", \"-llama.cpp's 400-item path B run on the same 200:\", \"+**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,\", \"+200 each, thinking off; `~/work/AI/bfcl/runs/strata-iq4xs-B-off-...-r1`) against llama.cpp's 400-item path B run on\", \"+the same items:\", \" \", \"-| UD-IQ4_XS, path B, thinking off | base (200) | model time / entry | calls / entry | s / call | tok / call |\", \"-|---|---|---|---|---|---|\", \"-| llama.cpp, Strix Halo | 59.0 (118) | 49.4 s | 10.7 | 4.63 | 61 |\", \"-| Strata, RTX 3060 Laptop | **61.0** (122) | **36.2 s** | 10.5 | 3.44 | 61 |\", \"+| UD-IQ4_XS, path B, thinking off | overall (400) | base (200) | miss_param (200) | model time / entry | calls / entry | s / call | tok / call |\", \"+|---|---|---|---|---|---|---|---|\", \"+| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.57 | 61 |\", \"+| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.39 | 61 |\", \" \", \"-Item by item: both right 100, both wrong 60, only llama.cpp 18, only Strata 22 (exact McNemar p = 0.64). The\", \"-pilot's 9-to-0 was a small-sample effect on 40 items, not the `--compat-bf16` conversion. With the same weights and\", \"-the same prompt the two engines score the same, and this PC with Strata takes 27% less model time per entry at the\", \"-same number of calls and output tokens. The miss_param half and the full score go here when the run ends.\", \"+Item by item: base - only llama.cpp right 18, only Strata right 22 (exact McNemar p = 0.64); miss_param - 18 and 30\", \"+(p = 0.11); both together 36 and 52 (p = 0.11). Strata is 4 points higher, inside the noise of one pass. The\", \"+pilot's 9-to-0 was a small-sample effect on 40 items, not the `--compat-bf16` conversion: with the same weights and\", \"+the same prompt the two engines score the same. Transport errors 0; failures: state mismatch 106, empty turn 51,\", \"+wrong execution result 31, step limit 3.\", \" \", \"+Speed: the whole run took 260 min of generation here (4.33 h; BFCL's model time 4.32 h), against about 5.8 h on\", \"+the Halo (windows.md: 52 s/entry). Per entry this PC with Strata needs 26% less model time at the same number of\", \"+calls and output tokens - engine and hardware together.\", \"+\", \" ## Where the CPU time goes during BFCL\", \" \", \" The Ryzen 9 8945HX has 16 cores on two chiplets (CCD1: cores 0-7, CCD2: 8-15) and 32 threads: logical CPUs 16-31\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/3060M.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 396689,
+        "completion_tokens": 1177,
+        "cached_tokens": 396687,
+        "extra": {
+          "cache_creation_input_tokens": 1981,
+          "cache_read_input_tokens": 396687,
+          "output_tokens_details": {
+            "thinking_tokens": 141
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1981,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1177,
+              "cache_read_input_tokens": 396687,
+              "cache_creation_input_tokens": 1981,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1981
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "overall McNemar p 0.109\n456:**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 453,
+                      "oldLines": 20,
+                      "newStart": 453,
+                      "newLines": 25,
+                      "lines": [
+                        " engines match: UD-IQ4_XS is prepared by hand with `--compat-bf16`, which rounds 195 tensors (1.20 GiB) to BF16",
+                        " (largest absolute error 0.0144); the GSQ pack needs no conversion. That was the first suspect; the 400-item run below answers it.",
+                        " ",
+                        "-**The 400-item path B run settles it for the base category: no gap.** The 200 `multi_turn_base` items (the",
+                        "-first half of the 400-item run, 2026-10-03; scored on a copy while miss_param was still running), against",
+                        "-llama.cpp's 400-item path B run on the same 200:",
+                        "+**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,",
+                        "+200 each, thinking off; `~/work/AI/bfcl/runs/strata-iq4xs-B-off-...-r1`) against llama.cpp's 400-item path B run on",
+                        "+the same items:",
+                        " ",
+                        "-| UD-IQ4_XS, path B, thinking off | base (200) | model time / entry | calls / entry | s / call | tok / call |",
+                        "-|---|---|---|---|---|---|",
+                        "-| llama.cpp, Strix Halo | 59.0 (118) | 49.4 s | 10.7 | 4.63 | 61 |",
+                        "-| Strata, RTX 3060 Laptop | **61.0** (122) | **36.2 s** | 10.5 | 3.44 | 61 |",
+                        "+| UD-IQ4_XS, path B, thinking off | overall (400) | base (200) | miss_param (200) | model time / entry | calls / entry | s / call | tok / call |",
+                        "+|---|---|---|---|---|---|---|---|",
+                        "+| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.57 | 61 |",
+                        "+| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.39 | 61 |",
+                        " ",
+                        "-Item by item: both right 100, both wrong 60, only llama.cpp 18, only Strata 22 (exact McNemar p = 0.64). The",
+                        "-pilot's 9-to-0 was a small-sample effect on 40 items, not the `--compat-bf16` conversion. With the same weights and",
+                        "-the same prompt the two engines score the same, and this PC with Strata takes 27% less model time per entry at the",
+                        "-same number of calls and output tokens. The miss_param half and the full score go here when the run ends.",
+                        "+Item by item: base - only llama.cpp right 18, only Strata right 22 (exact McNemar p = 0.64); miss_param - 18 and 30",
+                        "+(p = 0.11); both together 36 and 52 (p = 0.11). Strata is 4 points higher, inside the noise of one pass. The",
+                        "+pilot's 9-to-0 was a small-sample effect on 40 items, not the `--compat-bf16` conversion: with the same weights and",
+                        "+the same prompt the two engines score the same. Transport errors 0; failures: state mismatch 106, empty turn 51,",
+                        "+wrong execution result 31, step limit 3.",
+                        " ",
+                        "+Speed: the whole run took 260 min of generation here (4.33 h; BFCL's model time 4.32 h), against about 5.8 h on",
+                        "+the Halo (windows.md: 52 s/entry). Per entry this PC with Strata needs 26% less model time at the same number of",
+                        "+calls and output tokens - engine and hardware together.",
+                        "+",
+                        " ## Where the CPU time goes during BFCL",
+                        " ",
+                        " The Ryzen 9 8945HX has 16 cores on two chiplets (CCD1: cores 0-7, CCD2: 8-15) and 32 threads: logical CPUs 16-31"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_015WoL9yTZcTLEQV46WRtBhS",
+            "type": "tool_result",
+            "content": "overall McNemar p 0.109\n456:**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "overall McNemar p 0.109\n456:**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 453,
+                      "oldLines": 20,
+                      "newStart": 453,
+                      "newLines": 25,
+                      "lines": [
+                        " engines match: UD-IQ4_XS is prepared by hand with `--compat-bf16`, which rounds 195 tensors (1.20 GiB) to BF16",
+                        " (largest absolute error 0.0144); the GSQ pack needs no conversion. That was the first suspect; the 400-item run below answers it.",
+                        " ",
+                        "-**The 400-item path B run settles it for the base category: no gap.** The 200 `multi_turn_base` items (the",
+                        "-first half of the 400-item run, 2026-10-03; scored on a copy while miss_param was still running), against",
+                        "-llama.cpp's 400-item path B run on the same 200:",
+                        "+**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,",
+                        "+200 each, thinking off; `~/work/AI/bfcl/runs/strata-iq4xs-B-off-...-r1`) against llama.cpp's 400-item path B run on",
+                        "+the same items:",
+                        " ",
+                        "-| UD-IQ4_XS, path B, thinking off | base (200) | model time / entry | calls / entry | s / call | tok / call |",
+                        "-|---|---|---|---|---|---|",
+                        "-| llama.cpp, Strix Halo | 59.0 (118) | 49.4 s | 10.7 | 4.63 | 61 |",
+                        "-| Strata, RTX 3060 Laptop | **61.0** (122) | **36.2 s** | 10.5 | 3.44 | 61 |",
+                        "+| UD-IQ4_XS, path B, thinking off | overall (400) | base (200) | miss_param (200) | model time / entry | calls / entry | s / call | tok / call |",
+                        "+|---|---|---|---|---|---|---|---|",
+                        "+| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.57 | 61 |",
+                        "+| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.39 | 61 |",
+                        " ",
+                        "-Item by item: both right 100, both wrong 60, only llama.cpp 18, only Strata 22 (exact McNemar p = 0.64). The",
+                        "-pilot's 9-to-0 was a small-sample effect on 40 items, not the `--compat-bf16` conversion. With the same weights and",
+                        "-the same prompt the two engines score the same, and this PC with Strata takes 27% less model time per entry at the",
+                        "-same number of calls and output tokens. The miss_param half and the full score go here when the run ends.",
+                        "+Item by item: base - only llama.cpp right 18, only Strata right 22 (exact McNemar p = 0.64); miss_param - 18 and 30",
+                        "+(p = 0.11); both together 36 and 52 (p = 0.11). Strata is 4 points higher, inside the noise of one pass. The",
+                        "+pilot's 9-to-0 was a small-sample effect on 40 items, not the `--compat-bf16` conversion: with the same weights and",
+                        "+the same prompt the two engines score the same. Transport errors 0; failures: state mismatch 106, empty turn 51,",
+                        "+wrong execution result 31, step limit 3.",
+                        " ",
+                        "+Speed: the whole run took 260 min of generation here (4.33 h; BFCL's model time 4.32 h), against about 5.8 h on",
+                        "+the Halo (windows.md: 52 s/entry). Per entry this PC with Strata needs 26% less model time at the same number of",
+                        "+calls and output tokens - engine and hardware together.",
+                        "+",
+                        " ## Where the CPU time goes during BFCL",
+                        " ",
+                        " The Ryzen 9 8945HX has 16 cores on two chiplets (CCD1: cores 0-7, CCD2: 8-15) and 32 threads: logical CPUs 16-31"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_015WoL9yTZcTLEQV46WRtBhS",
+            "type": "tool_result",
+            "content": "overall McNemar p 0.109\n456:**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; python3 - <<'PYEOF'\nimport math\nb, c = 36, 52; n = b + c\np = min(1.0, 2 * sum(math.comb(n, k) for k in range(min(b, c) + 1)) / 2**n)\nprint(\"overall McNemar p\", round(p, 3))\nf = \"docs/3060M.md\"; t = open(f).read()\ns = t.index(\"**The 400-item path B run settles it for the base category: no gap.**\")\ne = t.index(\"## Where the CPU time goes during BFCL\")\nnew = f'''**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,\n200 each, thinking off; `~/work/AI/bfcl/runs/strata-iq4xs-B-off-...-r1`) against llama.cpp's 400-item path B run on\nthe same items:\n\n| UD-IQ4_XS, path B, thinking off | overall (400) | base (200) | miss_param (200) | model time / entry | calls / entry | s / call | tok / call |\n|---|---|---|---|---|---|---|---|\n| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.57 | 61 |\n| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.39 | 61 |\n\nItem by item: base - only llama.cpp right 18, only Strata right 22 (exact McNemar p = 0.64); miss_param - 18 and 30\n(p = 0.11); both together 36 and 52 (p = {p:.2f}). Strata is 4 points higher, inside the noise of one pass. The\npilot's 9-to-0 was a small-sample effect on 40 items, not the `--compat-bf16` conversion: with the same weights and\nthe same prompt the two engines score the same. Transport errors 0; failures: state mismatch 106, empty turn 51,\nwrong execution result 31, step limit 3.\n\nSpeed: the whole run took 260 min of generation here (4.33 h; BFCL's model time 4.32 h), against about 5.8 h on\nthe Halo (windows.md: 52 s/entry). Per entry this PC with Strata needs 26% less model time at the same number of\ncalls and output tokens - engine and hardware together.\n\n'''\nt = t[:s] + new + t[e:]\nopen(f, \"w\").write(t)\nPYEOF\ngrep -n \"settles it: no gap\" docs/3060M.md",
+          "description": "Record the complete 400-item result in the doc"
+        }
+      }
+    },
+    {
+      "step_id": 575,
+      "timestamp": "2026-10-03T19:59:40.368Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 398670,
+        "completion_tokens": 604,
+        "cached_tokens": 398668,
+        "extra": {
+          "cache_creation_input_tokens": 1274,
+          "cache_read_input_tokens": 398668,
+          "output_tokens_details": {
+            "thinking_tokens": 232
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1274,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 604,
+              "cache_read_input_tokens": 398668,
+              "cache_creation_input_tokens": 1274,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1274
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 576,
+      "timestamp": "2026-10-03T19:59:40.373Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Correcting two rounded per-call figures to the exact combined values: total model time over total calls is 4.55 s for llama.cpp and 3.40 s for Strata.",
+      "metrics": {
+        "prompt_tokens": 398670,
+        "completion_tokens": 604,
+        "cached_tokens": 398668,
+        "extra": {
+          "cache_creation_input_tokens": 1274,
+          "cache_read_input_tokens": 398668,
+          "output_tokens_details": {
+            "thinking_tokens": 232
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1274,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 604,
+              "cache_read_input_tokens": 398668,
+              "cache_creation_input_tokens": 1274,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1274
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 577,
+      "timestamp": "2026-10-03T19:59:41.976Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01TNgQxV93DwTvd7nBZWy1qg",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01TNgQxV93DwTvd7nBZWy1qg",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; sed -i 's/| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.57 | 61 |/| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |/; s/| \\*\\*38.9 s\\*\\* | 11.5 | 3.39 | 61 |/| **38.9 s** | 11.5 | 3.40 | 61 |/' docs/3060M.md; grep -n \"4.55 | 61\\|3.40 | 61\" docs/3060M.md",
+            "description": "Fix the combined per-call figures"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01TNgQxV93DwTvd7nBZWy1qg",
+            "content": "462:| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |\n463:| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 | 61 |\n\n[stdout]\n462:| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |\n463:| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 | 61 |\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/3060M.md\", \"hunks\": [{\"oldStart\": 459, \"oldLines\": 8, \"newStart\": 459, \"newLines\": 8, \"lines\": [\" \", \" | UD-IQ4_XS, path B, thinking off | overall (400) | base (200) | miss_param (200) | model time / entry | calls / entry | s / call | tok / call |\", \" |---|---|---|---|---|---|---|---|\", \"-| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.57 | 61 |\", \"-| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.39 | 61 |\", \"+| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |\", \"+| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 | 61 |\", \" \", \" Item by item: base - only llama.cpp right 18, only Strata right 22 (exact McNemar p = 0.64); miss_param - 18 and 30\", \" (p = 0.11); both together 36 and 52 (p = 0.11). Strata is 4 points higher, inside the noise of one pass. The\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/3060M.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 398670,
+        "completion_tokens": 604,
+        "cached_tokens": 398668,
+        "extra": {
+          "cache_creation_input_tokens": 1274,
+          "cache_read_input_tokens": 398668,
+          "output_tokens_details": {
+            "thinking_tokens": 232
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1274,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 604,
+              "cache_read_input_tokens": 398668,
+              "cache_creation_input_tokens": 1274,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1274
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "462:| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |\n463:| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 | 61 |",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 459,
+                      "oldLines": 8,
+                      "newStart": 459,
+                      "newLines": 8,
+                      "lines": [
+                        " ",
+                        " | UD-IQ4_XS, path B, thinking off | overall (400) | base (200) | miss_param (200) | model time / entry | calls / entry | s / call | tok / call |",
+                        " |---|---|---|---|---|---|---|---|",
+                        "-| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.57 | 61 |",
+                        "-| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.39 | 61 |",
+                        "+| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |",
+                        "+| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 | 61 |",
+                        " ",
+                        " Item by item: base - only llama.cpp right 18, only Strata right 22 (exact McNemar p = 0.64); miss_param - 18 and 30",
+                        " (p = 0.11); both together 36 and 52 (p = 0.11). Strata is 4 points higher, inside the noise of one pass. The"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01TNgQxV93DwTvd7nBZWy1qg",
+            "type": "tool_result",
+            "content": "462:| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |\n463:| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 | 61 |",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "462:| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |\n463:| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 | 61 |",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 459,
+                      "oldLines": 8,
+                      "newStart": 459,
+                      "newLines": 8,
+                      "lines": [
+                        " ",
+                        " | UD-IQ4_XS, path B, thinking off | overall (400) | base (200) | miss_param (200) | model time / entry | calls / entry | s / call | tok / call |",
+                        " |---|---|---|---|---|---|---|---|",
+                        "-| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.57 | 61 |",
+                        "-| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.39 | 61 |",
+                        "+| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |",
+                        "+| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 | 61 |",
+                        " ",
+                        " Item by item: base - only llama.cpp right 18, only Strata right 22 (exact McNemar p = 0.64); miss_param - 18 and 30",
+                        " (p = 0.11); both together 36 and 52 (p = 0.11). Strata is 4 points higher, inside the noise of one pass. The"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01TNgQxV93DwTvd7nBZWy1qg",
+            "type": "tool_result",
+            "content": "462:| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |\n463:| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 | 61 |",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; sed -i 's/| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.57 | 61 |/| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |/; s/| \\*\\*38.9 s\\*\\* | 11.5 | 3.39 | 61 |/| **38.9 s** | 11.5 | 3.40 | 61 |/' docs/3060M.md; grep -n \"4.55 | 61\\|3.40 | 61\" docs/3060M.md",
+          "description": "Fix the combined per-call figures"
+        }
+      }
+    },
+    {
+      "step_id": 578,
+      "timestamp": "2026-10-03T19:59:50.236Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "The 400-item run finished, and it settles the question: on UD-IQ4_XS path B, Strata is as accurate as llama.cpp. On the same weights and the same prompts, Strata scored 52.2 against llama.cpp's 48.2.\n\n**UD-IQ4_XS, path B, thinking off, the same 400 items:**\n\n| | Overall | base | miss_param | Model time per item | Calls per item | Time per call | Tokens per call |\n|---|---|---|---|---|---|---|---|\n| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 s | 61 |\n| Strata, RTX 3060 Laptop | **52.2** | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 s | 61 |\n\n- **Accuracy:** Strata's 4-point lead is within the noise of one run. Item by item, llama.cpp alone got 36 right and Strata alone got 52 (McNemar p = 0.11; base p = 0.64, miss_param p = 0.11). So the pilot's 9-to-0 was a small-sample effect, and the BF16 conversion (`--compat-bf16`) isn't hurting accuracy.\n- **Speed:** the run took 4.3 h here against about 5.8 h on the Halo, 26% less model time per item. Calls and output tokens are the same, so the difference is in prompt reading and generation speed (engine and hardware together).\n- **Errors:** 0 transport errors and 0 context refusals; all base and miss_param prompts fit in 32K. The failures are the usual model ones: 106 wrong final state, 51 empty turns, 31 wrong execution results, 3 step-limit hits.\n\nI updated `docs/3060M.md`: the gap section now has the full 400-item table, the item-by-item tests and the timings, and calls the question settled. The raw results are in `~/work/AI/bfcl/runs/strata-iq4xs-B-off-…-r1/`, and the Strata server is stopped.\n\nThe other 7 cells of the Halo's matrix still have no full Strata run. The one that matters most for Claude Code is GSQ path A with thinking on, where the Halo scored 60.2; I'd estimate it at 6–8 hours, roughly twice the thinking-off time. Should I start it?",
+      "metrics": {
+        "prompt_tokens": 399944,
+        "completion_tokens": 796,
+        "cached_tokens": 399942,
+        "extra": {
+          "cache_creation_input_tokens": 758,
+          "cache_read_input_tokens": 399942,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 758,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 796,
+              "cache_read_input_tokens": 399942,
+              "cache_creation_input_tokens": 758,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 758
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 109383653,
-    "total_completion_tokens": 403242,
-    "total_cached_tokens": 109382521,
-    "total_steps": 567,
+    "total_prompt_tokens": 112236955,
+    "total_completion_tokens": 412918,
+    "total_cached_tokens": 112235797,
+    "total_steps": 578,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 5102293,
-      "total_cache_read_input_tokens": 109382521
+      "total_cache_creation_input_tokens": 6235608,
+      "total_cache_read_input_tokens": 112235797
     }
   }
 }
