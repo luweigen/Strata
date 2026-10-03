@@ -37019,19 +37019,685 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 514,
+      "timestamp": "2026-10-03T16:02:40.345Z",
+      "source": "user",
+      "message": "系统显示有32个cpu（超线程？），只有一半满负荷，全用上可以更快吗",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 515,
+      "timestamp": "2026-10-03T16:02:44.474Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 365652,
+        "completion_tokens": 529,
+        "cached_tokens": 365650,
+        "extra": {
+          "cache_creation_input_tokens": 61,
+          "cache_read_input_tokens": 365650,
+          "output_tokens_details": {
+            "thinking_tokens": 187
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 61,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 529,
+              "cache_read_input_tokens": 365650,
+              "cache_creation_input_tokens": 61,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 61
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 516,
+      "timestamp": "2026-10-03T16:02:45.933Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Your CPU, the Ryzen 9 8945HX, has 16 physical cores and 32 threads with SMT, so the 32 is hyper-threading. The engine log says it started \"15 expert-pool workers + the host thread\", which is one thread per physical core. I'll check whether that's a deliberate choice and whether the docs have measurements:",
+      "metrics": {
+        "prompt_tokens": 365652,
+        "completion_tokens": 529,
+        "cached_tokens": 365650,
+        "extra": {
+          "cache_creation_input_tokens": 61,
+          "cache_read_input_tokens": 365650,
+          "output_tokens_details": {
+            "thinking_tokens": 187
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 61,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 529,
+              "cache_read_input_tokens": 365650,
+              "cache_creation_input_tokens": 61,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 61
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 517,
+      "timestamp": "2026-10-03T16:02:47.587Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_0143p3EdgiC1cGZgbGLR3n25",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_0143p3EdgiC1cGZgbGLR3n25",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; ./engine/strata --help 2>&1 | grep -inE \"thread|worker|pool|smt|core\" | head; grep -rniE \"SMT|hyper-?thread|logical (cpu|core)|physical core|pool workers|--threads|--pool\" docs/DETAILS.md docs/TROUBLESHOOTING.md src/core/*.cpp 2>/dev/null | head -20",
+            "description": "Find engine thread settings and SMT notes"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_0143p3EdgiC1cGZgbGLR3n25",
+            "content": "15:  --ple-sync-submit    A/B arm: submit table reads on the token thread (default: an I/O thread)\n20:  --kv k8v4            hybrid: INT8 K (exact attention scores) + rotated Q4_0 V, 816 B/cell\n35:  --native-qsa-indexer  experimental pinned indexer key cache and pooling\n73:  --shared-late        A/B: shared expert after the CPU pool (default: overlapped with it)\n98:  --no-pool            skip the CPU expert pool (the GPU-only floor)\n107:  --gpu-only-full      MEASURE: replay pre+post for all 48 layers plus the LM head, no pool.\n116:                       launch so the GPU starts while the CPU pool runs; without it the work\n122:                       with --expert-cache-per-layer: 54.4% hits, CPU pool drain 19.1 -> 10.3\n134:  --no-host-worker     R2.2: the A/B arm.  By default the HOST THREAD joins the drain, so the\n135:                       pool is six threads on six cores instead of five plus an idle core;\nsrc/core/load_main.cpp:32:        else if (a == \"--threads\") threads = std::atoi(val());\nsrc/core/load_main.cpp:37:            std::printf(\"usage: strata-load --file experts.bin [--layers N] [--threads N] [--chunk-mb N]\\n\"\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\nsrc/core/session.cpp:542:    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\nsrc/core/session.cpp:544:    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool\n\n[stdout]\n15:  --ple-sync-submit    A/B arm: submit table reads on the token thread (default: an I/O thread)\n20:  --kv k8v4            hybrid: INT8 K (exact attention scores) + rotated Q4_0 V, 816 B/cell\n35:  --native-qsa-indexer  experimental pinned indexer key cache and pooling\n73:  --shared-late        A/B: shared expert after the CPU pool (default: overlapped with it)\n98:  --no-pool            skip the CPU expert pool (the GPU-only floor)\n107:  --gpu-only-full      MEASURE: replay pre+post for all 48 layers plus the LM head, no pool.\n116:                       launch so the GPU starts while the CPU pool runs; without it the work\n122:                       with --expert-cache-per-layer: 54.4% hits, CPU pool drain 19.1 -> 10.3\n134:  --no-host-worker     R2.2: the A/B arm.  By default the HOST THREAD joins the drain, so the\n135:                       pool is six threads on six cores instead of five plus an idle core;\nsrc/core/load_main.cpp:32:        else if (a == \"--threads\") threads = std::atoi(val());\nsrc/core/load_main.cpp:37:            std::printf(\"usage: strata-load --file experts.bin [--layers N] [--threads N] [--chunk-mb N]\\n\"\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\nsrc/core/session.cpp:542:    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\nsrc/core/session.cpp:544:    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 365652,
+        "completion_tokens": 529,
+        "cached_tokens": 365650,
+        "extra": {
+          "cache_creation_input_tokens": 61,
+          "cache_read_input_tokens": 365650,
+          "output_tokens_details": {
+            "thinking_tokens": 187
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 61,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 529,
+              "cache_read_input_tokens": 365650,
+              "cache_creation_input_tokens": 61,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 61
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "15:  --ple-sync-submit    A/B arm: submit table reads on the token thread (default: an I/O thread)\n20:  --kv k8v4            hybrid: INT8 K (exact attention scores) + rotated Q4_0 V, 816 B/cell\n35:  --native-qsa-indexer  experimental pinned indexer key cache and pooling\n73:  --shared-late        A/B: shared expert after the CPU pool (default: overlapped with it)\n98:  --no-pool            skip the CPU expert pool (the GPU-only floor)\n107:  --gpu-only-full      MEASURE: replay pre+post for all 48 layers plus the LM head, no pool.\n116:                       launch so the GPU starts while the CPU pool runs; without it the work\n122:                       with --expert-cache-per-layer: 54.4% hits, CPU pool drain 19.1 -> 10.3\n134:  --no-host-worker     R2.2: the A/B arm.  By default the HOST THREAD joins the drain, so the\n135:                       pool is six threads on six cores instead of five plus an idle core;\nsrc/core/load_main.cpp:32:        else if (a == \"--threads\") threads = std::atoi(val());\nsrc/core/load_main.cpp:37:            std::printf(\"usage: strata-load --file experts.bin [--layers N] [--threads N] [--chunk-mb N]\\n\"\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\nsrc/core/session.cpp:542:    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\nsrc/core/session.cpp:544:    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_0143p3EdgiC1cGZgbGLR3n25",
+            "type": "tool_result",
+            "content": "15:  --ple-sync-submit    A/B arm: submit table reads on the token thread (default: an I/O thread)\n20:  --kv k8v4            hybrid: INT8 K (exact attention scores) + rotated Q4_0 V, 816 B/cell\n35:  --native-qsa-indexer  experimental pinned indexer key cache and pooling\n73:  --shared-late        A/B: shared expert after the CPU pool (default: overlapped with it)\n98:  --no-pool            skip the CPU expert pool (the GPU-only floor)\n107:  --gpu-only-full      MEASURE: replay pre+post for all 48 layers plus the LM head, no pool.\n116:                       launch so the GPU starts while the CPU pool runs; without it the work\n122:                       with --expert-cache-per-layer: 54.4% hits, CPU pool drain 19.1 -> 10.3\n134:  --no-host-worker     R2.2: the A/B arm.  By default the HOST THREAD joins the drain, so the\n135:                       pool is six threads on six cores instead of five plus an idle core;\nsrc/core/load_main.cpp:32:        else if (a == \"--threads\") threads = std::atoi(val());\nsrc/core/load_main.cpp:37:            std::printf(\"usage: strata-load --file experts.bin [--layers N] [--threads N] [--chunk-mb N]\\n\"\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\nsrc/core/session.cpp:542:    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\nsrc/core/session.cpp:544:    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "15:  --ple-sync-submit    A/B arm: submit table reads on the token thread (default: an I/O thread)\n20:  --kv k8v4            hybrid: INT8 K (exact attention scores) + rotated Q4_0 V, 816 B/cell\n35:  --native-qsa-indexer  experimental pinned indexer key cache and pooling\n73:  --shared-late        A/B: shared expert after the CPU pool (default: overlapped with it)\n98:  --no-pool            skip the CPU expert pool (the GPU-only floor)\n107:  --gpu-only-full      MEASURE: replay pre+post for all 48 layers plus the LM head, no pool.\n116:                       launch so the GPU starts while the CPU pool runs; without it the work\n122:                       with --expert-cache-per-layer: 54.4% hits, CPU pool drain 19.1 -> 10.3\n134:  --no-host-worker     R2.2: the A/B arm.  By default the HOST THREAD joins the drain, so the\n135:                       pool is six threads on six cores instead of five plus an idle core;\nsrc/core/load_main.cpp:32:        else if (a == \"--threads\") threads = std::atoi(val());\nsrc/core/load_main.cpp:37:            std::printf(\"usage: strata-load --file experts.bin [--layers N] [--threads N] [--chunk-mb N]\\n\"\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\nsrc/core/session.cpp:542:    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\nsrc/core/session.cpp:544:    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_0143p3EdgiC1cGZgbGLR3n25",
+            "type": "tool_result",
+            "content": "15:  --ple-sync-submit    A/B arm: submit table reads on the token thread (default: an I/O thread)\n20:  --kv k8v4            hybrid: INT8 K (exact attention scores) + rotated Q4_0 V, 816 B/cell\n35:  --native-qsa-indexer  experimental pinned indexer key cache and pooling\n73:  --shared-late        A/B: shared expert after the CPU pool (default: overlapped with it)\n98:  --no-pool            skip the CPU expert pool (the GPU-only floor)\n107:  --gpu-only-full      MEASURE: replay pre+post for all 48 layers plus the LM head, no pool.\n116:                       launch so the GPU starts while the CPU pool runs; without it the work\n122:                       with --expert-cache-per-layer: 54.4% hits, CPU pool drain 19.1 -> 10.3\n134:  --no-host-worker     R2.2: the A/B arm.  By default the HOST THREAD joins the drain, so the\n135:                       pool is six threads on six cores instead of five plus an idle core;\nsrc/core/load_main.cpp:32:        else if (a == \"--threads\") threads = std::atoi(val());\nsrc/core/load_main.cpp:37:            std::printf(\"usage: strata-load --file experts.bin [--layers N] [--threads N] [--chunk-mb N]\\n\"\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\nsrc/core/session.cpp:542:    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\nsrc/core/session.cpp:544:    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; ./engine/strata --help 2>&1 | grep -inE \"thread|worker|pool|smt|core\" | head; grep -rniE \"SMT|hyper-?thread|logical (cpu|core)|physical core|pool workers|--threads|--pool\" docs/DETAILS.md docs/TROUBLESHOOTING.md src/core/*.cpp 2>/dev/null | head -20",
+          "description": "Find engine thread settings and SMT notes"
+        }
+      }
+    },
+    {
+      "step_id": 518,
+      "timestamp": "2026-10-03T16:02:50.887Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01UfFcYUp3i2top7GM1MTDCq",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01UfFcYUp3i2top7GM1MTDCq",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; sed -n 525,575p src/core/session.cpp; grep -n \"pool-workers\\|pool_workers\" src/program/generate.cpp | head -5; sed -n 318,330p docs/DETAILS.md; grep -rn \"pool-workers\" docs/*.md | head -8",
+            "description": "Read pool-worker sizing and docs on it"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01UfFcYUp3i2top7GM1MTDCq",
+            "content": "if (y_miss != nullptr || probe != nullptr) {\n        err = \"SessionLoopScratch::init: already initialised\";\n        return false;\n    }\n    parts_bytes = parts_bytes_in;\n    // MAPPED as well as pinned: the token graph's handoff kernel reads it through its device pointer.\n    if (cudaHostAlloc((void**) &y_miss, parts_bytes, cudaHostAllocMapped | cudaHostAllocPortable) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaHostAlloc for the pool's staging failed\";\n        return false;\n    }\n    std::memset(y_miss, 0, parts_bytes);\n    if (cudaEventCreate(&probe) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaEventCreate failed\";\n        free();\n        return false;\n    }\n    // **PIN THE HOST ONCE, NOT ONCE PER TOKEN.**  `ExpertPool` builds its workers from `physical_cores(true)`,\n    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\n    // nothing in the pool can pin the host, so if this does not happen the spin is free to land on a worker's\n    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool\n    // runs at 36.32.  It was being done and undone on EVERY token, which is a syscall pair on the critical path\n    // for a property that wants to hold for the whole session.\n    const std::vector<int> cores = strata::kernels::cpu::physical_cores(false);\n    if (!cores.empty()) {\n        pinned_core = strata::kernels::cpu::pin_current_thread(cores[0]);\n        pinned = true;\n    }\n    return true;\n}\n\nvoid SessionLoopScratch::free() {\n    // Restores the caller's affinity on every path, including teardown: a library that silently leaves its\n    // caller's thread nailed to one core is worse than one that never pinned at all.\n    if (pinned) {\n        strata::kernels::cpu::restore_thread_affinity(pinned_core);\n        pinned = false;\n        pinned_core = -1;\n    }\n    if (probe != nullptr) { cudaEventDestroy(probe); probe = nullptr; }\n    if (y_miss != nullptr) { cudaFreeHost(y_miss); y_miss = nullptr; }\n    parts_bytes = 0;\n}\n\nbool session_loop(const ModelGeometry& g, int64_t pos, int32_t pos_base, SessionState& s, SessionGraphs& gr,\n                  PoolFn pool, HitFn hits, void* user, bool overlap, void* stream, std::string& err,\n                  float* dump_layers, SessionLoopScratch* scratch) {\n    if (!gr.captured || gr.n != g.n_layers) { err = \"session_loop: not captured\"; return false; }\n    if (gr.parts_dev == nullptr) { err = \"session_loop: the graphs were captured without a parts buffer\"; return false; }\n    if (s.db == nullptr) { err = \"session_loop: no doorbell; the loop has nothing to poll\"; return false; }\n\n    cudaStream_t cs = (cudaStream_t) stream;\n258:    int pool_workers = 0;         ///< R2.2: 0 = \"all physical cores minus the host's\"; >0 overrides\n555:                 \"  --pool-workers N     R2.2: CPU expert pool worker count.  Default 0 = every physical core\\n\"\n1090:        else if (a == \"--pool-workers\") o.pool_workers = std::atoi(next(\"--pool-workers\"));\n1610:        o.pool_workers < 0 || std::any_of(o.expert_cache_remote.begin(), o.expert_cache_remote.end(),\n2629:    strata::kernels::cpu::ExpertPool pool(o.pool_workers, /*pin=*/true, /*host_works=*/!o.no_host_worker, o.pool_affinity);\n\nWith more than one model installed, it asks which one to start. `run-<model>.bat` starts a model directly.\n\n**Tuning for your PC (`--calibrate`, engine 0.1.19).** Three engine settings depend on the PC more than on the model:\n- the share of the experts missing from VRAM that are copied to the GPU instead of computed by the CPU\n  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\n- how sure the draft layer must be to add another guess to a check (`--spec-min-p`);\n- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\n\nThe defaults were measured on a Ryzen 5 7600 with an RTX 5070. Setup offers to measure them on your PC after an\ninstall; `START-HERE.bat --calibrate` (Linux: `./setup.sh --calibrate`) does it any time. It measures the output\nspeed with each setting and keeps one only when it is more than 3% faster. The result is remembered per PC and model\n(in the settings file next to the data folder's record), so updates keep it.\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\ndocs/AMD_HIP.md:169:  --max-context 4096 --kv int8 --pool-workers 15 \\\ndocs/AMD_HIP_PERFORMANCE.md:33:`--kv-resident 32768`, `--pool-workers 15`, `--adapt-every 0`, `--pcie-frac 0`,\n\n[stdout]\n    if (y_miss != nullptr || probe != nullptr) {\n        err = \"SessionLoopScratch::init: already initialised\";\n        return false;\n    }\n    parts_bytes = parts_bytes_in;\n    // MAPPED as well as pinned: the token graph's handoff kernel reads it through its device pointer.\n    if (cudaHostAlloc((void**) &y_miss, parts_bytes, cudaHostAllocMapped | cudaHostAllocPortable) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaHostAlloc for the pool's staging failed\";\n        return false;\n    }\n    std::memset(y_miss, 0, parts_bytes);\n    if (cudaEventCreate(&probe) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaEventCreate failed\";\n        free();\n        return false;\n    }\n    // **PIN THE HOST ONCE, NOT ONCE PER TOKEN.**  `ExpertPool` builds its workers from `physical_cores(true)`,\n    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\n    // nothing in the pool can pin the host, so if this does not happen the spin is free to land on a worker's\n    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool\n    // runs at 36.32.  It was being done and undone on EVERY token, which is a syscall pair on the critical path\n    // for a property that wants to hold for the whole session.\n    const std::vector<int> cores = strata::kernels::cpu::physical_cores(false);\n    if (!cores.empty()) {\n        pinned_core = strata::kernels::cpu::pin_current_thread(cores[0]);\n        pinned = true;\n    }\n    return true;\n}\n\nvoid SessionLoopScratch::free() {\n    // Restores the caller's affinity on every path, including teardown: a library that silently leaves its\n    // caller's thread nailed to one core is worse than one that never pinned at all.\n    if (pinned) {\n        strata::kernels::cpu::restore_thread_affinity(pinned_core);\n        pinned = false;\n        pinned_core = -1;\n    }\n    if (probe != nullptr) { cudaEventDestroy(probe); probe = nullptr; }\n    if (y_miss != nullptr) { cudaFreeHost(y_miss); y_miss = nullptr; }\n    parts_bytes = 0;\n}\n\nbool session_loop(const ModelGeometry& g, int64_t pos, int32_t pos_base, SessionState& s, SessionGraphs& gr,\n                  PoolFn pool, HitFn hits, void* user, bool overlap, void* stream, std::string& err,\n                  float* dump_layers, SessionLoopScratch* scratch) {\n    if (!gr.captured || gr.n != g.n_layers) { err = \"session_loop: not captured\"; return false; }\n    if (gr.parts_dev == nullptr) { err = \"session_loop: the graphs were captured without a parts buffer\"; return false; }\n    if (s.db == nullptr) { err = \"session_loop: no doorbell; the loop has nothing to poll\"; return false; }\n\n    cudaStream_t cs = (cudaStream_t) stream;\n258:    int pool_workers = 0;         ///< R2.2: 0 = \"all physical cores minus the host's\"; >0 overrides\n555:                 \"  --pool-workers N     R2.2: CPU expert pool worker count.  Default 0 = every physical core\\n\"\n1090:        else if (a == \"--pool-workers\") o.pool_workers = std::atoi(next(\"--pool-workers\"));\n1610:        o.pool_workers < 0 || std::any_of(o.expert_cache_remote.begin(), o.expert_cache_remote.end(),\n2629:    strata::kernels::cpu::ExpertPool pool(o.pool_workers, /*pin=*/true, /*host_works=*/!o.no_host_worker, o.pool_affinity);\n\nWith more than one model installed, it asks which one to start. `run-<model>.bat` starts a model directly.\n\n**Tuning for your PC (`--calibrate`, engine 0.1.19).** Three engine settings depend on the PC more than on the model:\n- the share of the experts missing from VRAM that are copied to the GPU instead of computed by the CPU\n  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\n- how sure the draft layer must be to add another guess to a check (`--spec-min-p`);\n- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\n\nThe defaults were measured on a Ryzen 5 7600 with an RTX 5070. Setup offers to measure them on your PC after an\ninstall; `START-HERE.bat --calibrate` (Linux: `./setup.sh --calibrate`) does it any time. It measures the output\nspeed with each setting and keeps one only when it is more than 3% faster. The result is remembered per PC and model\n(in the settings file next to the data folder's record), so updates keep it.\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\ndocs/AMD_HIP.md:169:  --max-context 4096 --kv int8 --pool-workers 15 \\\ndocs/AMD_HIP_PERFORMANCE.md:33:`--kv-resident 32768`, `--pool-workers 15`, `--adapt-every 0`, `--pcie-frac 0`,\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 365713,
+        "completion_tokens": 193,
+        "cached_tokens": 365711,
+        "extra": {
+          "cache_creation_input_tokens": 1180,
+          "cache_read_input_tokens": 365711,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1180,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 193,
+              "cache_read_input_tokens": 365711,
+              "cache_creation_input_tokens": 1180,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1180
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "    if (y_miss != nullptr || probe != nullptr) {\n        err = \"SessionLoopScratch::init: already initialised\";\n        return false;\n    }\n    parts_bytes = parts_bytes_in;\n    // MAPPED as well as pinned: the token graph's handoff kernel reads it through its device pointer.\n    if (cudaHostAlloc((void**) &y_miss, parts_bytes, cudaHostAllocMapped | cudaHostAllocPortable) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaHostAlloc for the pool's staging failed\";\n        return false;\n    }\n    std::memset(y_miss, 0, parts_bytes);\n    if (cudaEventCreate(&probe) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaEventCreate failed\";\n        free();\n        return false;\n    }\n    // **PIN THE HOST ONCE, NOT ONCE PER TOKEN.**  `ExpertPool` builds its workers from `physical_cores(true)`,\n    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\n    // nothing in the pool can pin the host, so if this does not happen the spin is free to land on a worker's\n    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool\n    // runs at 36.32.  It was being done and undone on EVERY token, which is a syscall pair on the critical path\n    // for a property that wants to hold for the whole session.\n    const std::vector<int> cores = strata::kernels::cpu::physical_cores(false);\n    if (!cores.empty()) {\n        pinned_core = strata::kernels::cpu::pin_current_thread(cores[0]);\n        pinned = true;\n    }\n    return true;\n}\n\nvoid SessionLoopScratch::free() {\n    // Restores the caller's affinity on every path, including teardown: a library that silently leaves its\n    // caller's thread nailed to one core is worse than one that never pinned at all.\n    if (pinned) {\n        strata::kernels::cpu::restore_thread_affinity(pinned_core);\n        pinned = false;\n        pinned_core = -1;\n    }\n    if (probe != nullptr) { cudaEventDestroy(probe); probe = nullptr; }\n    if (y_miss != nullptr) { cudaFreeHost(y_miss); y_miss = nullptr; }\n    parts_bytes = 0;\n}\n\nbool session_loop(const ModelGeometry& g, int64_t pos, int32_t pos_base, SessionState& s, SessionGraphs& gr,\n                  PoolFn pool, HitFn hits, void* user, bool overlap, void* stream, std::string& err,\n                  float* dump_layers, SessionLoopScratch* scratch) {\n    if (!gr.captured || gr.n != g.n_layers) { err = \"session_loop: not captured\"; return false; }\n    if (gr.parts_dev == nullptr) { err = \"session_loop: the graphs were captured without a parts buffer\"; return false; }\n    if (s.db == nullptr) { err = \"session_loop: no doorbell; the loop has nothing to poll\"; return false; }\n\n    cudaStream_t cs = (cudaStream_t) stream;\n258:    int pool_workers = 0;         ///< R2.2: 0 = \"all physical cores minus the host's\"; >0 overrides\n555:                 \"  --pool-workers N     R2.2: CPU expert pool worker count.  Default 0 = every physical core\\n\"\n1090:        else if (a == \"--pool-workers\") o.pool_workers = std::atoi(next(\"--pool-workers\"));\n1610:        o.pool_workers < 0 || std::any_of(o.expert_cache_remote.begin(), o.expert_cache_remote.end(),\n2629:    strata::kernels::cpu::ExpertPool pool(o.pool_workers, /*pin=*/true, /*host_works=*/!o.no_host_worker, o.pool_affinity);\n\nWith more than one model installed, it asks which one to start. `run-<model>.bat` starts a model directly.\n\n**Tuning for your PC (`--calibrate`, engine 0.1.19).** Three engine settings depend on the PC more than on the model:\n- the share of the experts missing from VRAM that are copied to the GPU instead of computed by the CPU\n  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\n- how sure the draft layer must be to add another guess to a check (`--spec-min-p`);\n- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\n\nThe defaults were measured on a Ryzen 5 7600 with an RTX 5070. Setup offers to measure them on your PC after an\ninstall; `START-HERE.bat --calibrate` (Linux: `./setup.sh --calibrate`) does it any time. It measures the output\nspeed with each setting and keeps one only when it is more than 3% faster. The result is remembered per PC and model\n(in the settings file next to the data folder's record), so updates keep it.\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\ndocs/AMD_HIP.md:169:  --max-context 4096 --kv int8 --pool-workers 15 \\\ndocs/AMD_HIP_PERFORMANCE.md:33:`--kv-resident 32768`, `--pool-workers 15`, `--adapt-every 0`, `--pcie-frac 0`,",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01UfFcYUp3i2top7GM1MTDCq",
+            "type": "tool_result",
+            "content": "    if (y_miss != nullptr || probe != nullptr) {\n        err = \"SessionLoopScratch::init: already initialised\";\n        return false;\n    }\n    parts_bytes = parts_bytes_in;\n    // MAPPED as well as pinned: the token graph's handoff kernel reads it through its device pointer.\n    if (cudaHostAlloc((void**) &y_miss, parts_bytes, cudaHostAllocMapped | cudaHostAllocPortable) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaHostAlloc for the pool's staging failed\";\n        return false;\n    }\n    std::memset(y_miss, 0, parts_bytes);\n    if (cudaEventCreate(&probe) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaEventCreate failed\";\n        free();\n        return false;\n    }\n    // **PIN THE HOST ONCE, NOT ONCE PER TOKEN.**  `ExpertPool` builds its workers from `physical_cores(true)`,\n    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\n    // nothing in the pool can pin the host, so if this does not happen the spin is free to land on a worker's\n    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool\n    // runs at 36.32.  It was being done and undone on EVERY token, which is a syscall pair on the critical path\n    // for a property that wants to hold for the whole session.\n    const std::vector<int> cores = strata::kernels::cpu::physical_cores(false);\n    if (!cores.empty()) {\n        pinned_core = strata::kernels::cpu::pin_current_thread(cores[0]);\n        pinned = true;\n    }\n    return true;\n}\n\nvoid SessionLoopScratch::free() {\n    // Restores the caller's affinity on every path, including teardown: a library that silently leaves its\n    // caller's thread nailed to one core is worse than one that never pinned at all.\n    if (pinned) {\n        strata::kernels::cpu::restore_thread_affinity(pinned_core);\n        pinned = false;\n        pinned_core = -1;\n    }\n    if (probe != nullptr) { cudaEventDestroy(probe); probe = nullptr; }\n    if (y_miss != nullptr) { cudaFreeHost(y_miss); y_miss = nullptr; }\n    parts_bytes = 0;\n}\n\nbool session_loop(const ModelGeometry& g, int64_t pos, int32_t pos_base, SessionState& s, SessionGraphs& gr,\n                  PoolFn pool, HitFn hits, void* user, bool overlap, void* stream, std::string& err,\n                  float* dump_layers, SessionLoopScratch* scratch) {\n    if (!gr.captured || gr.n != g.n_layers) { err = \"session_loop: not captured\"; return false; }\n    if (gr.parts_dev == nullptr) { err = \"session_loop: the graphs were captured without a parts buffer\"; return false; }\n    if (s.db == nullptr) { err = \"session_loop: no doorbell; the loop has nothing to poll\"; return false; }\n\n    cudaStream_t cs = (cudaStream_t) stream;\n258:    int pool_workers = 0;         ///< R2.2: 0 = \"all physical cores minus the host's\"; >0 overrides\n555:                 \"  --pool-workers N     R2.2: CPU expert pool worker count.  Default 0 = every physical core\\n\"\n1090:        else if (a == \"--pool-workers\") o.pool_workers = std::atoi(next(\"--pool-workers\"));\n1610:        o.pool_workers < 0 || std::any_of(o.expert_cache_remote.begin(), o.expert_cache_remote.end(),\n2629:    strata::kernels::cpu::ExpertPool pool(o.pool_workers, /*pin=*/true, /*host_works=*/!o.no_host_worker, o.pool_affinity);\n\nWith more than one model installed, it asks which one to start. `run-<model>.bat` starts a model directly.\n\n**Tuning for your PC (`--calibrate`, engine 0.1.19).** Three engine settings depend on the PC more than on the model:\n- the share of the experts missing from VRAM that are copied to the GPU instead of computed by the CPU\n  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\n- how sure the draft layer must be to add another guess to a check (`--spec-min-p`);\n- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\n\nThe defaults were measured on a Ryzen 5 7600 with an RTX 5070. Setup offers to measure them on your PC after an\ninstall; `START-HERE.bat --calibrate` (Linux: `./setup.sh --calibrate`) does it any time. It measures the output\nspeed with each setting and keeps one only when it is more than 3% faster. The result is remembered per PC and model\n(in the settings file next to the data folder's record), so updates keep it.\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\ndocs/AMD_HIP.md:169:  --max-context 4096 --kv int8 --pool-workers 15 \\\ndocs/AMD_HIP_PERFORMANCE.md:33:`--kv-resident 32768`, `--pool-workers 15`, `--adapt-every 0`, `--pcie-frac 0`,",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "    if (y_miss != nullptr || probe != nullptr) {\n        err = \"SessionLoopScratch::init: already initialised\";\n        return false;\n    }\n    parts_bytes = parts_bytes_in;\n    // MAPPED as well as pinned: the token graph's handoff kernel reads it through its device pointer.\n    if (cudaHostAlloc((void**) &y_miss, parts_bytes, cudaHostAllocMapped | cudaHostAllocPortable) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaHostAlloc for the pool's staging failed\";\n        return false;\n    }\n    std::memset(y_miss, 0, parts_bytes);\n    if (cudaEventCreate(&probe) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaEventCreate failed\";\n        free();\n        return false;\n    }\n    // **PIN THE HOST ONCE, NOT ONCE PER TOKEN.**  `ExpertPool` builds its workers from `physical_cores(true)`,\n    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\n    // nothing in the pool can pin the host, so if this does not happen the spin is free to land on a worker's\n    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool\n    // runs at 36.32.  It was being done and undone on EVERY token, which is a syscall pair on the critical path\n    // for a property that wants to hold for the whole session.\n    const std::vector<int> cores = strata::kernels::cpu::physical_cores(false);\n    if (!cores.empty()) {\n        pinned_core = strata::kernels::cpu::pin_current_thread(cores[0]);\n        pinned = true;\n    }\n    return true;\n}\n\nvoid SessionLoopScratch::free() {\n    // Restores the caller's affinity on every path, including teardown: a library that silently leaves its\n    // caller's thread nailed to one core is worse than one that never pinned at all.\n    if (pinned) {\n        strata::kernels::cpu::restore_thread_affinity(pinned_core);\n        pinned = false;\n        pinned_core = -1;\n    }\n    if (probe != nullptr) { cudaEventDestroy(probe); probe = nullptr; }\n    if (y_miss != nullptr) { cudaFreeHost(y_miss); y_miss = nullptr; }\n    parts_bytes = 0;\n}\n\nbool session_loop(const ModelGeometry& g, int64_t pos, int32_t pos_base, SessionState& s, SessionGraphs& gr,\n                  PoolFn pool, HitFn hits, void* user, bool overlap, void* stream, std::string& err,\n                  float* dump_layers, SessionLoopScratch* scratch) {\n    if (!gr.captured || gr.n != g.n_layers) { err = \"session_loop: not captured\"; return false; }\n    if (gr.parts_dev == nullptr) { err = \"session_loop: the graphs were captured without a parts buffer\"; return false; }\n    if (s.db == nullptr) { err = \"session_loop: no doorbell; the loop has nothing to poll\"; return false; }\n\n    cudaStream_t cs = (cudaStream_t) stream;\n258:    int pool_workers = 0;         ///< R2.2: 0 = \"all physical cores minus the host's\"; >0 overrides\n555:                 \"  --pool-workers N     R2.2: CPU expert pool worker count.  Default 0 = every physical core\\n\"\n1090:        else if (a == \"--pool-workers\") o.pool_workers = std::atoi(next(\"--pool-workers\"));\n1610:        o.pool_workers < 0 || std::any_of(o.expert_cache_remote.begin(), o.expert_cache_remote.end(),\n2629:    strata::kernels::cpu::ExpertPool pool(o.pool_workers, /*pin=*/true, /*host_works=*/!o.no_host_worker, o.pool_affinity);\n\nWith more than one model installed, it asks which one to start. `run-<model>.bat` starts a model directly.\n\n**Tuning for your PC (`--calibrate`, engine 0.1.19).** Three engine settings depend on the PC more than on the model:\n- the share of the experts missing from VRAM that are copied to the GPU instead of computed by the CPU\n  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\n- how sure the draft layer must be to add another guess to a check (`--spec-min-p`);\n- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\n\nThe defaults were measured on a Ryzen 5 7600 with an RTX 5070. Setup offers to measure them on your PC after an\ninstall; `START-HERE.bat --calibrate` (Linux: `./setup.sh --calibrate`) does it any time. It measures the output\nspeed with each setting and keeps one only when it is more than 3% faster. The result is remembered per PC and model\n(in the settings file next to the data folder's record), so updates keep it.\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\ndocs/AMD_HIP.md:169:  --max-context 4096 --kv int8 --pool-workers 15 \\\ndocs/AMD_HIP_PERFORMANCE.md:33:`--kv-resident 32768`, `--pool-workers 15`, `--adapt-every 0`, `--pcie-frac 0`,",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01UfFcYUp3i2top7GM1MTDCq",
+            "type": "tool_result",
+            "content": "    if (y_miss != nullptr || probe != nullptr) {\n        err = \"SessionLoopScratch::init: already initialised\";\n        return false;\n    }\n    parts_bytes = parts_bytes_in;\n    // MAPPED as well as pinned: the token graph's handoff kernel reads it through its device pointer.\n    if (cudaHostAlloc((void**) &y_miss, parts_bytes, cudaHostAllocMapped | cudaHostAllocPortable) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaHostAlloc for the pool's staging failed\";\n        return false;\n    }\n    std::memset(y_miss, 0, parts_bytes);\n    if (cudaEventCreate(&probe) != cudaSuccess) {\n        err = \"SessionLoopScratch: cudaEventCreate failed\";\n        free();\n        return false;\n    }\n    // **PIN THE HOST ONCE, NOT ONCE PER TOKEN.**  `ExpertPool` builds its workers from `physical_cores(true)`,\n    // which drops the first physical core so the host loop can spin without taking a worker's cycles - and\n    // nothing in the pool can pin the host, so if this does not happen the spin is free to land on a worker's\n    // core or its SMT sibling.  The symptom is not an error: it is a CPU path at 26.9 GB/s where the same pool\n    // runs at 36.32.  It was being done and undone on EVERY token, which is a syscall pair on the critical path\n    // for a property that wants to hold for the whole session.\n    const std::vector<int> cores = strata::kernels::cpu::physical_cores(false);\n    if (!cores.empty()) {\n        pinned_core = strata::kernels::cpu::pin_current_thread(cores[0]);\n        pinned = true;\n    }\n    return true;\n}\n\nvoid SessionLoopScratch::free() {\n    // Restores the caller's affinity on every path, including teardown: a library that silently leaves its\n    // caller's thread nailed to one core is worse than one that never pinned at all.\n    if (pinned) {\n        strata::kernels::cpu::restore_thread_affinity(pinned_core);\n        pinned = false;\n        pinned_core = -1;\n    }\n    if (probe != nullptr) { cudaEventDestroy(probe); probe = nullptr; }\n    if (y_miss != nullptr) { cudaFreeHost(y_miss); y_miss = nullptr; }\n    parts_bytes = 0;\n}\n\nbool session_loop(const ModelGeometry& g, int64_t pos, int32_t pos_base, SessionState& s, SessionGraphs& gr,\n                  PoolFn pool, HitFn hits, void* user, bool overlap, void* stream, std::string& err,\n                  float* dump_layers, SessionLoopScratch* scratch) {\n    if (!gr.captured || gr.n != g.n_layers) { err = \"session_loop: not captured\"; return false; }\n    if (gr.parts_dev == nullptr) { err = \"session_loop: the graphs were captured without a parts buffer\"; return false; }\n    if (s.db == nullptr) { err = \"session_loop: no doorbell; the loop has nothing to poll\"; return false; }\n\n    cudaStream_t cs = (cudaStream_t) stream;\n258:    int pool_workers = 0;         ///< R2.2: 0 = \"all physical cores minus the host's\"; >0 overrides\n555:                 \"  --pool-workers N     R2.2: CPU expert pool worker count.  Default 0 = every physical core\\n\"\n1090:        else if (a == \"--pool-workers\") o.pool_workers = std::atoi(next(\"--pool-workers\"));\n1610:        o.pool_workers < 0 || std::any_of(o.expert_cache_remote.begin(), o.expert_cache_remote.end(),\n2629:    strata::kernels::cpu::ExpertPool pool(o.pool_workers, /*pin=*/true, /*host_works=*/!o.no_host_worker, o.pool_affinity);\n\nWith more than one model installed, it asks which one to start. `run-<model>.bat` starts a model directly.\n\n**Tuning for your PC (`--calibrate`, engine 0.1.19).** Three engine settings depend on the PC more than on the model:\n- the share of the experts missing from VRAM that are copied to the GPU instead of computed by the CPU\n  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\n- how sure the draft layer must be to add another guess to a check (`--spec-min-p`);\n- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\n\nThe defaults were measured on a Ryzen 5 7600 with an RTX 5070. Setup offers to measure them on your PC after an\ninstall; `START-HERE.bat --calibrate` (Linux: `./setup.sh --calibrate`) does it any time. It measures the output\nspeed with each setting and keeps one only when it is more than 3% faster. The result is remembered per PC and model\n(in the settings file next to the data folder's record), so updates keep it.\ndocs/DETAILS.md:325:- how many CPU threads compute experts (`--pool-workers`: on CPUs with efficiency cores, fewer can be faster).\ndocs/AMD_HIP.md:169:  --max-context 4096 --kv int8 --pool-workers 15 \\\ndocs/AMD_HIP_PERFORMANCE.md:33:`--kv-resident 32768`, `--pool-workers 15`, `--adapt-every 0`, `--pcie-frac 0`,",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; sed -n 525,575p src/core/session.cpp; grep -n \"pool-workers\\|pool_workers\" src/program/generate.cpp | head -5; sed -n 318,330p docs/DETAILS.md; grep -rn \"pool-workers\" docs/*.md | head -8",
+          "description": "Read pool-worker sizing and docs on it"
+        }
+      }
+    },
+    {
+      "step_id": 519,
+      "timestamp": "2026-10-03T16:02:56.726Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 366893,
+        "completion_tokens": 574,
+        "cached_tokens": 366891,
+        "extra": {
+          "cache_creation_input_tokens": 2145,
+          "cache_read_input_tokens": 366891,
+          "output_tokens_details": {
+            "thinking_tokens": 363
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2145,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 574,
+              "cache_read_input_tokens": 366891,
+              "cache_creation_input_tokens": 2145,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2145
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 520,
+      "timestamp": "2026-10-03T16:02:58.323Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01PPwAY86MagSzzvc78zo96M",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01PPwAY86MagSzzvc78zo96M",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; grep -rn \"ExpertPool::ExpertPool\" -A30 src/kernels/cpu/*.cpp | grep -nE \"physical_cores|n_workers|workers|logical|min\\(|clamp\" | head -12; grep -n \"pool-workers\" -A3 tools/calibrate.py | head -20",
+            "description": "Check how ExpertPool sizes workers and what calibrate tries"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01PPwAY86MagSzzvc78zo96M",
+            "content": "1:src/kernels/cpu/pool.cpp:345:ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n5:src/kernels/cpu/pool.cpp-349-    if (n_workers > 0) {\n6:src/kernels/cpu/pool.cpp-350-        n_ = n_workers;\n9:  --pool-workers  the CPU threads that compute experts.  Every physical core is not always best: on hybrid CPUs the\n10-                  efficiency cores can make the whole window wait for them.\n11-The first two are measured through one engine (per-request `strata_tune` keys); the worker count needs a restart\n12-per value.  Decode speed only: the prompt path streams every expert whatever these settings say.\n--\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n179-            try:\n180-                sw = Session(e, ids_list)\n181-                sw.warm_up(1)\n--\n189:            settings[\"--pool-workers\"] = str(w_best)\n190-            base_rate = statistics.median(by_workers[w_best])\n191-        elif by_workers.get(d_workers):\n192-            base_rate = statistics.median(by_workers[d_workers])\n--\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice\n212-\n213-\n214-def apply(args: list[str], settings: dict) -> list[str]:\n\n[stdout]\n1:src/kernels/cpu/pool.cpp:345:ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n5:src/kernels/cpu/pool.cpp-349-    if (n_workers > 0) {\n6:src/kernels/cpu/pool.cpp-350-        n_ = n_workers;\n9:  --pool-workers  the CPU threads that compute experts.  Every physical core is not always best: on hybrid CPUs the\n10-                  efficiency cores can make the whole window wait for them.\n11-The first two are measured through one engine (per-request `strata_tune` keys); the worker count needs a restart\n12-per value.  Decode speed only: the prompt path streams every expert whatever these settings say.\n--\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n179-            try:\n180-                sw = Session(e, ids_list)\n181-                sw.warm_up(1)\n--\n189:            settings[\"--pool-workers\"] = str(w_best)\n190-            base_rate = statistics.median(by_workers[w_best])\n191-        elif by_workers.get(d_workers):\n192-            base_rate = statistics.median(by_workers[d_workers])\n--\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice\n212-\n213-\n214-def apply(args: list[str], settings: dict) -> list[str]:\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 366893,
+        "completion_tokens": 574,
+        "cached_tokens": 366891,
+        "extra": {
+          "cache_creation_input_tokens": 2145,
+          "cache_read_input_tokens": 366891,
+          "output_tokens_details": {
+            "thinking_tokens": 363
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2145,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 574,
+              "cache_read_input_tokens": 366891,
+              "cache_creation_input_tokens": 2145,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2145
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "1:src/kernels/cpu/pool.cpp:345:ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n5:src/kernels/cpu/pool.cpp-349-    if (n_workers > 0) {\n6:src/kernels/cpu/pool.cpp-350-        n_ = n_workers;\n9:  --pool-workers  the CPU threads that compute experts.  Every physical core is not always best: on hybrid CPUs the\n10-                  efficiency cores can make the whole window wait for them.\n11-The first two are measured through one engine (per-request `strata_tune` keys); the worker count needs a restart\n12-per value.  Decode speed only: the prompt path streams every expert whatever these settings say.\n--\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n179-            try:\n180-                sw = Session(e, ids_list)\n181-                sw.warm_up(1)\n--\n189:            settings[\"--pool-workers\"] = str(w_best)\n190-            base_rate = statistics.median(by_workers[w_best])\n191-        elif by_workers.get(d_workers):\n192-            base_rate = statistics.median(by_workers[d_workers])\n--\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice\n212-\n213-\n214-def apply(args: list[str], settings: dict) -> list[str]:",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01PPwAY86MagSzzvc78zo96M",
+            "type": "tool_result",
+            "content": "1:src/kernels/cpu/pool.cpp:345:ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n5:src/kernels/cpu/pool.cpp-349-    if (n_workers > 0) {\n6:src/kernels/cpu/pool.cpp-350-        n_ = n_workers;\n9:  --pool-workers  the CPU threads that compute experts.  Every physical core is not always best: on hybrid CPUs the\n10-                  efficiency cores can make the whole window wait for them.\n11-The first two are measured through one engine (per-request `strata_tune` keys); the worker count needs a restart\n12-per value.  Decode speed only: the prompt path streams every expert whatever these settings say.\n--\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n179-            try:\n180-                sw = Session(e, ids_list)\n181-                sw.warm_up(1)\n--\n189:            settings[\"--pool-workers\"] = str(w_best)\n190-            base_rate = statistics.median(by_workers[w_best])\n191-        elif by_workers.get(d_workers):\n192-            base_rate = statistics.median(by_workers[d_workers])\n--\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice\n212-\n213-\n214-def apply(args: list[str], settings: dict) -> list[str]:",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "1:src/kernels/cpu/pool.cpp:345:ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n5:src/kernels/cpu/pool.cpp-349-    if (n_workers > 0) {\n6:src/kernels/cpu/pool.cpp-350-        n_ = n_workers;\n9:  --pool-workers  the CPU threads that compute experts.  Every physical core is not always best: on hybrid CPUs the\n10-                  efficiency cores can make the whole window wait for them.\n11-The first two are measured through one engine (per-request `strata_tune` keys); the worker count needs a restart\n12-per value.  Decode speed only: the prompt path streams every expert whatever these settings say.\n--\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n179-            try:\n180-                sw = Session(e, ids_list)\n181-                sw.warm_up(1)\n--\n189:            settings[\"--pool-workers\"] = str(w_best)\n190-            base_rate = statistics.median(by_workers[w_best])\n191-        elif by_workers.get(d_workers):\n192-            base_rate = statistics.median(by_workers[d_workers])\n--\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice\n212-\n213-\n214-def apply(args: list[str], settings: dict) -> list[str]:",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01PPwAY86MagSzzvc78zo96M",
+            "type": "tool_result",
+            "content": "1:src/kernels/cpu/pool.cpp:345:ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n5:src/kernels/cpu/pool.cpp-349-    if (n_workers > 0) {\n6:src/kernels/cpu/pool.cpp-350-        n_ = n_workers;\n9:  --pool-workers  the CPU threads that compute experts.  Every physical core is not always best: on hybrid CPUs the\n10-                  efficiency cores can make the whole window wait for them.\n11-The first two are measured through one engine (per-request `strata_tune` keys); the worker count needs a restart\n12-per value.  Decode speed only: the prompt path streams every expert whatever these settings say.\n--\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n179-            try:\n180-                sw = Session(e, ids_list)\n181-                sw.warm_up(1)\n--\n189:            settings[\"--pool-workers\"] = str(w_best)\n190-            base_rate = statistics.median(by_workers[w_best])\n191-        elif by_workers.get(d_workers):\n192-            base_rate = statistics.median(by_workers[d_workers])\n--\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice\n212-\n213-\n214-def apply(args: list[str], settings: dict) -> list[str]:",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; grep -rn \"ExpertPool::ExpertPool\" -A30 src/kernels/cpu/*.cpp | grep -nE \"physical_cores|n_workers|workers|logical|min\\(|clamp\" | head -12; grep -n \"pool-workers\" -A3 tools/calibrate.py | head -20",
+          "description": "Check how ExpertPool sizes workers and what calibrate tries"
+        }
+      }
+    },
+    {
+      "step_id": 521,
+      "timestamp": "2026-10-03T16:03:01.173Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_012a3RJCgpyACLDiX7yJDbwt",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_012a3RJCgpyACLDiX7yJDbwt",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; sed -n 345,380p src/kernels/cpu/pool.cpp; grep -n \"workers\\b.*=\\|candidates\\|for w in\" tools/calibrate.py | head -8",
+            "description": "Read pool sizing and calibrate's worker candidates"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_012a3RJCgpyACLDiX7yJDbwt",
+            "content": "ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n    : host_works_(host_works), affinity_(affinity), topo_(detect_cpu_topology(true, affinity)) {\n    if (const char* e = std::getenv(\"STRATA_POOL_SPIN_US\"))   // a test knob; see kSpinBeforeSleep\n        spin_before_sleep_ = std::chrono::microseconds((std::max)(0, std::atoi(e)));\n    if (n_workers > 0) {\n        n_ = n_workers;\n    } else if (topo_.is_hybrid && affinity_ != PoolAffinity::All) {\n        n_ = (std::max)(1, topo_.p_cores - 1);\n    } else {\n        n_ = (int) topo_.worker_cores.size();\n    }\n    if (n_ < 1) n_ = 1;\n    scratch_.resize((size_t) n_);\n    wstate_.reset(new std::atomic<int32_t>[(size_t) n_]);\n    for (int i = 0; i < n_; ++i) wstate_[(size_t) i].store(kParked);\n    hstate_ms_.store(now_ms());\n    g_diag_pool.store(this);\n    strata::core::diag_pool_fn().store(&diag_active_pool);\n    split_.resize((size_t) kMaxSplit);\n    split_multi_.resize((size_t) kMaxSplitMulti);\n    threads_.reserve((size_t) n_);\n    for (int i = 0; i < n_; ++i) {\n        const int core = pin ? (i < (int) topo_.worker_cores.size() ? topo_.worker_cores[(size_t) i] : -1) : -1;\n        threads_.emplace_back([this, i, core] {\n            pin_this_thread(core);\n            worker(i);\n        });\n    }\n}\n\nExpertPool::~ExpertPool() {\n    const ExpertPool* self = this;\n    g_diag_pool.compare_exchange_strong(self, nullptr);\n    stop_.store(true, std::memory_order_release);\n    // Bump the epoch so a PARKED worker notices the stop flag rather than sleeping through it.\n    publish();\n63:def worker_candidates(default: int) -> list[int]:\n66:    for w in (round(default * 2 / 3), round(default / 2)):\n138:        d_workers = int(info.get(\"pool_workers\", 0)) or None\n173:    if d_workers and len(worker_candidates(d_workers)) > 1:\n175:        by_workers = {}\n176:        for w in worker_candidates(d_workers):\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n182:                by_workers[w] = [sw.rate(), sw.rate()]\n\n[stdout]\nExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n    : host_works_(host_works), affinity_(affinity), topo_(detect_cpu_topology(true, affinity)) {\n    if (const char* e = std::getenv(\"STRATA_POOL_SPIN_US\"))   // a test knob; see kSpinBeforeSleep\n        spin_before_sleep_ = std::chrono::microseconds((std::max)(0, std::atoi(e)));\n    if (n_workers > 0) {\n        n_ = n_workers;\n    } else if (topo_.is_hybrid && affinity_ != PoolAffinity::All) {\n        n_ = (std::max)(1, topo_.p_cores - 1);\n    } else {\n        n_ = (int) topo_.worker_cores.size();\n    }\n    if (n_ < 1) n_ = 1;\n    scratch_.resize((size_t) n_);\n    wstate_.reset(new std::atomic<int32_t>[(size_t) n_]);\n    for (int i = 0; i < n_; ++i) wstate_[(size_t) i].store(kParked);\n    hstate_ms_.store(now_ms());\n    g_diag_pool.store(this);\n    strata::core::diag_pool_fn().store(&diag_active_pool);\n    split_.resize((size_t) kMaxSplit);\n    split_multi_.resize((size_t) kMaxSplitMulti);\n    threads_.reserve((size_t) n_);\n    for (int i = 0; i < n_; ++i) {\n        const int core = pin ? (i < (int) topo_.worker_cores.size() ? topo_.worker_cores[(size_t) i] : -1) : -1;\n        threads_.emplace_back([this, i, core] {\n            pin_this_thread(core);\n            worker(i);\n        });\n    }\n}\n\nExpertPool::~ExpertPool() {\n    const ExpertPool* self = this;\n    g_diag_pool.compare_exchange_strong(self, nullptr);\n    stop_.store(true, std::memory_order_release);\n    // Bump the epoch so a PARKED worker notices the stop flag rather than sleeping through it.\n    publish();\n63:def worker_candidates(default: int) -> list[int]:\n66:    for w in (round(default * 2 / 3), round(default / 2)):\n138:        d_workers = int(info.get(\"pool_workers\", 0)) or None\n173:    if d_workers and len(worker_candidates(d_workers)) > 1:\n175:        by_workers = {}\n176:        for w in worker_candidates(d_workers):\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n182:                by_workers[w] = [sw.rate(), sw.rate()]\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 369038,
+        "completion_tokens": 164,
+        "cached_tokens": 369036,
+        "extra": {
+          "cache_creation_input_tokens": 1130,
+          "cache_read_input_tokens": 369036,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1130,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 164,
+              "cache_read_input_tokens": 369036,
+              "cache_creation_input_tokens": 1130,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1130
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n    : host_works_(host_works), affinity_(affinity), topo_(detect_cpu_topology(true, affinity)) {\n    if (const char* e = std::getenv(\"STRATA_POOL_SPIN_US\"))   // a test knob; see kSpinBeforeSleep\n        spin_before_sleep_ = std::chrono::microseconds((std::max)(0, std::atoi(e)));\n    if (n_workers > 0) {\n        n_ = n_workers;\n    } else if (topo_.is_hybrid && affinity_ != PoolAffinity::All) {\n        n_ = (std::max)(1, topo_.p_cores - 1);\n    } else {\n        n_ = (int) topo_.worker_cores.size();\n    }\n    if (n_ < 1) n_ = 1;\n    scratch_.resize((size_t) n_);\n    wstate_.reset(new std::atomic<int32_t>[(size_t) n_]);\n    for (int i = 0; i < n_; ++i) wstate_[(size_t) i].store(kParked);\n    hstate_ms_.store(now_ms());\n    g_diag_pool.store(this);\n    strata::core::diag_pool_fn().store(&diag_active_pool);\n    split_.resize((size_t) kMaxSplit);\n    split_multi_.resize((size_t) kMaxSplitMulti);\n    threads_.reserve((size_t) n_);\n    for (int i = 0; i < n_; ++i) {\n        const int core = pin ? (i < (int) topo_.worker_cores.size() ? topo_.worker_cores[(size_t) i] : -1) : -1;\n        threads_.emplace_back([this, i, core] {\n            pin_this_thread(core);\n            worker(i);\n        });\n    }\n}\n\nExpertPool::~ExpertPool() {\n    const ExpertPool* self = this;\n    g_diag_pool.compare_exchange_strong(self, nullptr);\n    stop_.store(true, std::memory_order_release);\n    // Bump the epoch so a PARKED worker notices the stop flag rather than sleeping through it.\n    publish();\n63:def worker_candidates(default: int) -> list[int]:\n66:    for w in (round(default * 2 / 3), round(default / 2)):\n138:        d_workers = int(info.get(\"pool_workers\", 0)) or None\n173:    if d_workers and len(worker_candidates(d_workers)) > 1:\n175:        by_workers = {}\n176:        for w in worker_candidates(d_workers):\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n182:                by_workers[w] = [sw.rate(), sw.rate()]",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_012a3RJCgpyACLDiX7yJDbwt",
+            "type": "tool_result",
+            "content": "ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n    : host_works_(host_works), affinity_(affinity), topo_(detect_cpu_topology(true, affinity)) {\n    if (const char* e = std::getenv(\"STRATA_POOL_SPIN_US\"))   // a test knob; see kSpinBeforeSleep\n        spin_before_sleep_ = std::chrono::microseconds((std::max)(0, std::atoi(e)));\n    if (n_workers > 0) {\n        n_ = n_workers;\n    } else if (topo_.is_hybrid && affinity_ != PoolAffinity::All) {\n        n_ = (std::max)(1, topo_.p_cores - 1);\n    } else {\n        n_ = (int) topo_.worker_cores.size();\n    }\n    if (n_ < 1) n_ = 1;\n    scratch_.resize((size_t) n_);\n    wstate_.reset(new std::atomic<int32_t>[(size_t) n_]);\n    for (int i = 0; i < n_; ++i) wstate_[(size_t) i].store(kParked);\n    hstate_ms_.store(now_ms());\n    g_diag_pool.store(this);\n    strata::core::diag_pool_fn().store(&diag_active_pool);\n    split_.resize((size_t) kMaxSplit);\n    split_multi_.resize((size_t) kMaxSplitMulti);\n    threads_.reserve((size_t) n_);\n    for (int i = 0; i < n_; ++i) {\n        const int core = pin ? (i < (int) topo_.worker_cores.size() ? topo_.worker_cores[(size_t) i] : -1) : -1;\n        threads_.emplace_back([this, i, core] {\n            pin_this_thread(core);\n            worker(i);\n        });\n    }\n}\n\nExpertPool::~ExpertPool() {\n    const ExpertPool* self = this;\n    g_diag_pool.compare_exchange_strong(self, nullptr);\n    stop_.store(true, std::memory_order_release);\n    // Bump the epoch so a PARKED worker notices the stop flag rather than sleeping through it.\n    publish();\n63:def worker_candidates(default: int) -> list[int]:\n66:    for w in (round(default * 2 / 3), round(default / 2)):\n138:        d_workers = int(info.get(\"pool_workers\", 0)) or None\n173:    if d_workers and len(worker_candidates(d_workers)) > 1:\n175:        by_workers = {}\n176:        for w in worker_candidates(d_workers):\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n182:                by_workers[w] = [sw.rate(), sw.rate()]",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n    : host_works_(host_works), affinity_(affinity), topo_(detect_cpu_topology(true, affinity)) {\n    if (const char* e = std::getenv(\"STRATA_POOL_SPIN_US\"))   // a test knob; see kSpinBeforeSleep\n        spin_before_sleep_ = std::chrono::microseconds((std::max)(0, std::atoi(e)));\n    if (n_workers > 0) {\n        n_ = n_workers;\n    } else if (topo_.is_hybrid && affinity_ != PoolAffinity::All) {\n        n_ = (std::max)(1, topo_.p_cores - 1);\n    } else {\n        n_ = (int) topo_.worker_cores.size();\n    }\n    if (n_ < 1) n_ = 1;\n    scratch_.resize((size_t) n_);\n    wstate_.reset(new std::atomic<int32_t>[(size_t) n_]);\n    for (int i = 0; i < n_; ++i) wstate_[(size_t) i].store(kParked);\n    hstate_ms_.store(now_ms());\n    g_diag_pool.store(this);\n    strata::core::diag_pool_fn().store(&diag_active_pool);\n    split_.resize((size_t) kMaxSplit);\n    split_multi_.resize((size_t) kMaxSplitMulti);\n    threads_.reserve((size_t) n_);\n    for (int i = 0; i < n_; ++i) {\n        const int core = pin ? (i < (int) topo_.worker_cores.size() ? topo_.worker_cores[(size_t) i] : -1) : -1;\n        threads_.emplace_back([this, i, core] {\n            pin_this_thread(core);\n            worker(i);\n        });\n    }\n}\n\nExpertPool::~ExpertPool() {\n    const ExpertPool* self = this;\n    g_diag_pool.compare_exchange_strong(self, nullptr);\n    stop_.store(true, std::memory_order_release);\n    // Bump the epoch so a PARKED worker notices the stop flag rather than sleeping through it.\n    publish();\n63:def worker_candidates(default: int) -> list[int]:\n66:    for w in (round(default * 2 / 3), round(default / 2)):\n138:        d_workers = int(info.get(\"pool_workers\", 0)) or None\n173:    if d_workers and len(worker_candidates(d_workers)) > 1:\n175:        by_workers = {}\n176:        for w in worker_candidates(d_workers):\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n182:                by_workers[w] = [sw.rate(), sw.rate()]",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_012a3RJCgpyACLDiX7yJDbwt",
+            "type": "tool_result",
+            "content": "ExpertPool::ExpertPool(int n_workers, bool pin, bool host_works, PoolAffinity affinity)\n    : host_works_(host_works), affinity_(affinity), topo_(detect_cpu_topology(true, affinity)) {\n    if (const char* e = std::getenv(\"STRATA_POOL_SPIN_US\"))   // a test knob; see kSpinBeforeSleep\n        spin_before_sleep_ = std::chrono::microseconds((std::max)(0, std::atoi(e)));\n    if (n_workers > 0) {\n        n_ = n_workers;\n    } else if (topo_.is_hybrid && affinity_ != PoolAffinity::All) {\n        n_ = (std::max)(1, topo_.p_cores - 1);\n    } else {\n        n_ = (int) topo_.worker_cores.size();\n    }\n    if (n_ < 1) n_ = 1;\n    scratch_.resize((size_t) n_);\n    wstate_.reset(new std::atomic<int32_t>[(size_t) n_]);\n    for (int i = 0; i < n_; ++i) wstate_[(size_t) i].store(kParked);\n    hstate_ms_.store(now_ms());\n    g_diag_pool.store(this);\n    strata::core::diag_pool_fn().store(&diag_active_pool);\n    split_.resize((size_t) kMaxSplit);\n    split_multi_.resize((size_t) kMaxSplitMulti);\n    threads_.reserve((size_t) n_);\n    for (int i = 0; i < n_; ++i) {\n        const int core = pin ? (i < (int) topo_.worker_cores.size() ? topo_.worker_cores[(size_t) i] : -1) : -1;\n        threads_.emplace_back([this, i, core] {\n            pin_this_thread(core);\n            worker(i);\n        });\n    }\n}\n\nExpertPool::~ExpertPool() {\n    const ExpertPool* self = this;\n    g_diag_pool.compare_exchange_strong(self, nullptr);\n    stop_.store(true, std::memory_order_release);\n    // Bump the epoch so a PARKED worker notices the stop flag rather than sleeping through it.\n    publish();\n63:def worker_candidates(default: int) -> list[int]:\n66:    for w in (round(default * 2 / 3), round(default / 2)):\n138:        d_workers = int(info.get(\"pool_workers\", 0)) or None\n173:    if d_workers and len(worker_candidates(d_workers)) > 1:\n175:        by_workers = {}\n176:        for w in worker_candidates(d_workers):\n178:            e = start_engine(with_arg(tuned, \"--pool-workers\", None if w == d_workers else str(w)))\n182:                by_workers[w] = [sw.rate(), sw.rate()]",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; sed -n 345,380p src/kernels/cpu/pool.cpp; grep -n \"workers\\b.*=\\|candidates\\|for w in\" tools/calibrate.py | head -8",
+          "description": "Read pool sizing and calibrate's worker candidates"
+        }
+      }
+    },
+    {
+      "step_id": 522,
+      "timestamp": "2026-10-03T16:03:12.021Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 370168,
+        "completion_tokens": 879,
+        "cached_tokens": 370166,
+        "extra": {
+          "cache_creation_input_tokens": 1149,
+          "cache_read_input_tokens": 370166,
+          "output_tokens_details": {
+            "thinking_tokens": 205
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1149,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 879,
+              "cache_read_input_tokens": 370166,
+              "cache_creation_input_tokens": 1149,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1149
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 523,
+      "timestamp": "2026-10-03T16:03:12.027Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Probably not faster, and I wouldn't change it during the running benchmark.\n\n**Why half the threads are busy:** the 8945HX has 16 physical cores and 32 threads with SMT. Strata deliberately puts one expert-pool worker on each physical core: 15 workers plus the host thread (`src/kernels/cpu/pool.cpp:345`, `src/core/session.cpp:541`). So 16 threads look fully busy and their SMT siblings stay idle. The workers spin while waiting, so they show 100% even when they aren't computing.\n\n**Why using all 32 likely won't help:**\n- Computing experts on the CPU is limited mostly by memory bandwidth, not by core count. Each token reads the weights of the experts not held on the GPU from RAM. An SMT sibling shares its core's caches, load units and memory path, so it adds no bandwidth.\n- The code notes that a stray thread on a worker's core or its SMT sibling slowed the CPU path from 36.3 to 26.9 GB/s. That's why everything is pinned one per core.\n- These are measurements from other machines (the defaults come from a Ryzen 5 7600). **On this laptop nothing has been measured yet.**\n\n**It can be tested:** `--pool-workers N` sets the count. Above 16, the extra threads would run unpinned on the SMT siblings. Strata's `tools/calibrate.py` also tests fewer workers (2/3 and 1/2 of the default), since fewer is sometimes faster, for example on a hot laptop.\n\n**I suggest not touching it now.** The 400-item run is 1/400 done, and changing the worker count mid-run would mix two settings in one score. Changing it needs an engine restart anyway. After the run, I can do a quick A/B on UD-IQ4_XS with the same decode prompt: the default 15 workers against `--pool-workers 31`, plus calibrate's 10 and 8. That takes about 10 minutes, with one restart per setting. If one is more than about 3% faster, it goes in the config.",
+      "metrics": {
+        "prompt_tokens": 370168,
+        "completion_tokens": 879,
+        "cached_tokens": 370166,
+        "extra": {
+          "cache_creation_input_tokens": 1149,
+          "cache_read_input_tokens": 370166,
+          "output_tokens_details": {
+            "thinking_tokens": 205
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1149,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 879,
+              "cache_read_input_tokens": 370166,
+              "cache_creation_input_tokens": 1149,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1149
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 91838832,
-    "total_completion_tokens": 354630,
-    "total_cached_tokens": 91837810,
-    "total_steps": 513,
+    "total_prompt_tokens": 95144661,
+    "total_completion_tokens": 359480,
+    "total_cached_tokens": 95143621,
+    "total_steps": 523,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 3943446,
-      "total_cache_read_input_tokens": 91837810
+      "total_cache_creation_input_tokens": 3952527,
+      "total_cache_read_input_tokens": 95143621
     }
   }
 }
