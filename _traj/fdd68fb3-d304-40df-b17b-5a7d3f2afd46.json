@@ -37685,19 +37685,541 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 524,
+      "timestamp": "2026-10-03T16:04:54.322Z",
+      "source": "user",
+      "message": "<bash-input>~/temp.sh</bash-input>",
+      "extra": {
+        "is_sidechain": false,
+        "is_human_prompt": false,
+        "bash_input": "! ~/temp.sh"
+      }
+    },
+    {
+      "step_id": 525,
+      "timestamp": "2026-10-03T16:04:54.655Z",
+      "source": "user",
+      "message": "<bash-stdout>温度  2026-10-03 16:04:54\n\n  CPU    Tctl           85.0°C \n  CPU    Tccd1          87.1°C \n  CPU    Tccd2          63.1°C \n  独显   GPU            60.0°C 占用 100%\n  核显   edge           57.0°C \n  硬盘   Composite      42.8°C \n\n  CPU 真实温度看 Tccd1/Tccd2；Tctl 是风扇调速用的带偏移值。</bash-stdout><bash-stderr></bash-stderr>",
+      "extra": {
+        "is_sidechain": false,
+        "is_human_prompt": false
+      }
+    },
+    {
+      "step_id": 526,
+      "timestamp": "2026-10-03T16:05:00.920Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 372198,
+        "completion_tokens": 860,
+        "cached_tokens": 372194,
+        "extra": {
+          "cache_creation_input_tokens": 214,
+          "cache_read_input_tokens": 372194,
+          "output_tokens_details": {
+            "thinking_tokens": 484
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 214,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 860,
+              "cache_read_input_tokens": 372194,
+              "cache_creation_input_tokens": 214,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 214
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 527,
+      "timestamp": "2026-10-03T16:05:02.418Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "That reading has one oddity: CCD1 is at 87 °C while CCD2 is at 63 °C. If the 15 workers were spread over all 16 physical cores, both chiplets (8 cores each) should be roughly equally warm. A 24 °C gap suggests the load sits mostly on CCD1. I'll check where the engine's threads actually run; this only reads, without touching the run:",
+      "metrics": {
+        "prompt_tokens": 372198,
+        "completion_tokens": 860,
+        "cached_tokens": 372194,
+        "extra": {
+          "cache_creation_input_tokens": 214,
+          "cache_read_input_tokens": 372194,
+          "output_tokens_details": {
+            "thinking_tokens": 484
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 214,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 860,
+              "cache_read_input_tokens": 372194,
+              "cache_creation_input_tokens": 214,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 214
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 528,
+      "timestamp": "2026-10-03T16:05:04.405Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01RzqQpcUv1BrLj58GGNPdHN",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01RzqQpcUv1BrLj58GGNPdHN",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "lscpu -e=CPU,CORE,SOCKET,NODE,CACHE | head -40; echo; P=$(pgrep -x strata); echo \"engine pid $P\"; ps -L -o tid,psr,pcpu,comm -p $P --sort=-pcpu | head -25; echo; for t in $(ls /proc/$P/task | head -60); do grep -h Cpus_allowed_list /proc/$P/task/$t/status; done | sort | uniq -c | sort -rn | head",
+            "description": "Map CPU topology and engine thread placement"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01RzqQpcUv1BrLj58GGNPdHN",
+            "content": "CPU CORE SOCKET NODE L1d:L1i:L2:L3\n  0    0      0    0 0:0:0:0\n  1    1      0    0 1:1:1:0\n  2    2      0    0 2:2:2:0\n  3    3      0    0 3:3:3:0\n  4    4      0    0 4:4:4:0\n  5    5      0    0 5:5:5:0\n  6    6      0    0 6:6:6:0\n  7    7      0    0 7:7:7:0\n  8    8      0    0 8:8:8:1\n  9    9      0    0 9:9:9:1\n 10   10      0    0 10:10:10:1\n 11   11      0    0 11:11:11:1\n 12   12      0    0 12:12:12:1\n 13   13      0    0 13:13:13:1\n 14   14      0    0 14:14:14:1\n 15   15      0    0 15:15:15:1\n 16    0      0    0 0:0:0:0\n 17    1      0    0 1:1:1:0\n 18    2      0    0 2:2:2:0\n 19    3      0    0 3:3:3:0\n 20    4      0    0 4:4:4:0\n 21    5      0    0 5:5:5:0\n 22    6      0    0 6:6:6:0\n 23    7      0    0 7:7:7:0\n 24    8      0    0 8:8:8:1\n 25    9      0    0 9:9:9:1\n 26   10      0    0 10:10:10:1\n 27   11      0    0 11:11:11:1\n 28   12      0    0 12:12:12:1\n 29   13      0    0 13:13:13:1\n 30   14      0    0 14:14:14:1\n 31   15      0    0 15:15:15:1\n\nengine pid 38542\n    TID PSR %CPU COMMAND\n  38542   0 1142 strata\n\n     20 Cpus_allowed_list:\t0-31\n      7 Cpus_allowed_list:\t0\n      1 Cpus_allowed_list:\t9\n      1 Cpus_allowed_list:\t8\n      1 Cpus_allowed_list:\t7\n      1 Cpus_allowed_list:\t6\n      1 Cpus_allowed_list:\t5\n      1 Cpus_allowed_list:\t4\n      1 Cpus_allowed_list:\t3\n      1 Cpus_allowed_list:\t2\n\n[stdout]\nCPU CORE SOCKET NODE L1d:L1i:L2:L3\n  0    0      0    0 0:0:0:0\n  1    1      0    0 1:1:1:0\n  2    2      0    0 2:2:2:0\n  3    3      0    0 3:3:3:0\n  4    4      0    0 4:4:4:0\n  5    5      0    0 5:5:5:0\n  6    6      0    0 6:6:6:0\n  7    7      0    0 7:7:7:0\n  8    8      0    0 8:8:8:1\n  9    9      0    0 9:9:9:1\n 10   10      0    0 10:10:10:1\n 11   11      0    0 11:11:11:1\n 12   12      0    0 12:12:12:1\n 13   13      0    0 13:13:13:1\n 14   14      0    0 14:14:14:1\n 15   15      0    0 15:15:15:1\n 16    0      0    0 0:0:0:0\n 17    1      0    0 1:1:1:0\n 18    2      0    0 2:2:2:0\n 19    3      0    0 3:3:3:0\n 20    4      0    0 4:4:4:0\n 21    5      0    0 5:5:5:0\n 22    6      0    0 6:6:6:0\n 23    7      0    0 7:7:7:0\n 24    8      0    0 8:8:8:1\n 25    9      0    0 9:9:9:1\n 26   10      0    0 10:10:10:1\n 27   11      0    0 11:11:11:1\n 28   12      0    0 12:12:12:1\n 29   13      0    0 13:13:13:1\n 30   14      0    0 14:14:14:1\n 31   15      0    0 15:15:15:1\n\nengine pid 38542\n    TID PSR %CPU COMMAND\n  38542   0 1142 strata\n\n     20 Cpus_allowed_list:\t0-31\n      7 Cpus_allowed_list:\t0\n      1 Cpus_allowed_list:\t9\n      1 Cpus_allowed_list:\t8\n      1 Cpus_allowed_list:\t7\n      1 Cpus_allowed_list:\t6\n      1 Cpus_allowed_list:\t5\n      1 Cpus_allowed_list:\t4\n      1 Cpus_allowed_list:\t3\n      1 Cpus_allowed_list:\t2\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 372198,
+        "completion_tokens": 860,
+        "cached_tokens": 372194,
+        "extra": {
+          "cache_creation_input_tokens": 214,
+          "cache_read_input_tokens": 372194,
+          "output_tokens_details": {
+            "thinking_tokens": 484
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 214,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 860,
+              "cache_read_input_tokens": 372194,
+              "cache_creation_input_tokens": 214,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 214
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "CPU CORE SOCKET NODE L1d:L1i:L2:L3\n  0    0      0    0 0:0:0:0\n  1    1      0    0 1:1:1:0\n  2    2      0    0 2:2:2:0\n  3    3      0    0 3:3:3:0\n  4    4      0    0 4:4:4:0\n  5    5      0    0 5:5:5:0\n  6    6      0    0 6:6:6:0\n  7    7      0    0 7:7:7:0\n  8    8      0    0 8:8:8:1\n  9    9      0    0 9:9:9:1\n 10   10      0    0 10:10:10:1\n 11   11      0    0 11:11:11:1\n 12   12      0    0 12:12:12:1\n 13   13      0    0 13:13:13:1\n 14   14      0    0 14:14:14:1\n 15   15      0    0 15:15:15:1\n 16    0      0    0 0:0:0:0\n 17    1      0    0 1:1:1:0\n 18    2      0    0 2:2:2:0\n 19    3      0    0 3:3:3:0\n 20    4      0    0 4:4:4:0\n 21    5      0    0 5:5:5:0\n 22    6      0    0 6:6:6:0\n 23    7      0    0 7:7:7:0\n 24    8      0    0 8:8:8:1\n 25    9      0    0 9:9:9:1\n 26   10      0    0 10:10:10:1\n 27   11      0    0 11:11:11:1\n 28   12      0    0 12:12:12:1\n 29   13      0    0 13:13:13:1\n 30   14      0    0 14:14:14:1\n 31   15      0    0 15:15:15:1\n\nengine pid 38542\n    TID PSR %CPU COMMAND\n  38542   0 1142 strata\n\n     20 Cpus_allowed_list:\t0-31\n      7 Cpus_allowed_list:\t0\n      1 Cpus_allowed_list:\t9\n      1 Cpus_allowed_list:\t8\n      1 Cpus_allowed_list:\t7\n      1 Cpus_allowed_list:\t6\n      1 Cpus_allowed_list:\t5\n      1 Cpus_allowed_list:\t4\n      1 Cpus_allowed_list:\t3\n      1 Cpus_allowed_list:\t2",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01RzqQpcUv1BrLj58GGNPdHN",
+            "type": "tool_result",
+            "content": "CPU CORE SOCKET NODE L1d:L1i:L2:L3\n  0    0      0    0 0:0:0:0\n  1    1      0    0 1:1:1:0\n  2    2      0    0 2:2:2:0\n  3    3      0    0 3:3:3:0\n  4    4      0    0 4:4:4:0\n  5    5      0    0 5:5:5:0\n  6    6      0    0 6:6:6:0\n  7    7      0    0 7:7:7:0\n  8    8      0    0 8:8:8:1\n  9    9      0    0 9:9:9:1\n 10   10      0    0 10:10:10:1\n 11   11      0    0 11:11:11:1\n 12   12      0    0 12:12:12:1\n 13   13      0    0 13:13:13:1\n 14   14      0    0 14:14:14:1\n 15   15      0    0 15:15:15:1\n 16    0      0    0 0:0:0:0\n 17    1      0    0 1:1:1:0\n 18    2      0    0 2:2:2:0\n 19    3      0    0 3:3:3:0\n 20    4      0    0 4:4:4:0\n 21    5      0    0 5:5:5:0\n 22    6      0    0 6:6:6:0\n 23    7      0    0 7:7:7:0\n 24    8      0    0 8:8:8:1\n 25    9      0    0 9:9:9:1\n 26   10      0    0 10:10:10:1\n 27   11      0    0 11:11:11:1\n 28   12      0    0 12:12:12:1\n 29   13      0    0 13:13:13:1\n 30   14      0    0 14:14:14:1\n 31   15      0    0 15:15:15:1\n\nengine pid 38542\n    TID PSR %CPU COMMAND\n  38542   0 1142 strata\n\n     20 Cpus_allowed_list:\t0-31\n      7 Cpus_allowed_list:\t0\n      1 Cpus_allowed_list:\t9\n      1 Cpus_allowed_list:\t8\n      1 Cpus_allowed_list:\t7\n      1 Cpus_allowed_list:\t6\n      1 Cpus_allowed_list:\t5\n      1 Cpus_allowed_list:\t4\n      1 Cpus_allowed_list:\t3\n      1 Cpus_allowed_list:\t2",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "CPU CORE SOCKET NODE L1d:L1i:L2:L3\n  0    0      0    0 0:0:0:0\n  1    1      0    0 1:1:1:0\n  2    2      0    0 2:2:2:0\n  3    3      0    0 3:3:3:0\n  4    4      0    0 4:4:4:0\n  5    5      0    0 5:5:5:0\n  6    6      0    0 6:6:6:0\n  7    7      0    0 7:7:7:0\n  8    8      0    0 8:8:8:1\n  9    9      0    0 9:9:9:1\n 10   10      0    0 10:10:10:1\n 11   11      0    0 11:11:11:1\n 12   12      0    0 12:12:12:1\n 13   13      0    0 13:13:13:1\n 14   14      0    0 14:14:14:1\n 15   15      0    0 15:15:15:1\n 16    0      0    0 0:0:0:0\n 17    1      0    0 1:1:1:0\n 18    2      0    0 2:2:2:0\n 19    3      0    0 3:3:3:0\n 20    4      0    0 4:4:4:0\n 21    5      0    0 5:5:5:0\n 22    6      0    0 6:6:6:0\n 23    7      0    0 7:7:7:0\n 24    8      0    0 8:8:8:1\n 25    9      0    0 9:9:9:1\n 26   10      0    0 10:10:10:1\n 27   11      0    0 11:11:11:1\n 28   12      0    0 12:12:12:1\n 29   13      0    0 13:13:13:1\n 30   14      0    0 14:14:14:1\n 31   15      0    0 15:15:15:1\n\nengine pid 38542\n    TID PSR %CPU COMMAND\n  38542   0 1142 strata\n\n     20 Cpus_allowed_list:\t0-31\n      7 Cpus_allowed_list:\t0\n      1 Cpus_allowed_list:\t9\n      1 Cpus_allowed_list:\t8\n      1 Cpus_allowed_list:\t7\n      1 Cpus_allowed_list:\t6\n      1 Cpus_allowed_list:\t5\n      1 Cpus_allowed_list:\t4\n      1 Cpus_allowed_list:\t3\n      1 Cpus_allowed_list:\t2",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01RzqQpcUv1BrLj58GGNPdHN",
+            "type": "tool_result",
+            "content": "CPU CORE SOCKET NODE L1d:L1i:L2:L3\n  0    0      0    0 0:0:0:0\n  1    1      0    0 1:1:1:0\n  2    2      0    0 2:2:2:0\n  3    3      0    0 3:3:3:0\n  4    4      0    0 4:4:4:0\n  5    5      0    0 5:5:5:0\n  6    6      0    0 6:6:6:0\n  7    7      0    0 7:7:7:0\n  8    8      0    0 8:8:8:1\n  9    9      0    0 9:9:9:1\n 10   10      0    0 10:10:10:1\n 11   11      0    0 11:11:11:1\n 12   12      0    0 12:12:12:1\n 13   13      0    0 13:13:13:1\n 14   14      0    0 14:14:14:1\n 15   15      0    0 15:15:15:1\n 16    0      0    0 0:0:0:0\n 17    1      0    0 1:1:1:0\n 18    2      0    0 2:2:2:0\n 19    3      0    0 3:3:3:0\n 20    4      0    0 4:4:4:0\n 21    5      0    0 5:5:5:0\n 22    6      0    0 6:6:6:0\n 23    7      0    0 7:7:7:0\n 24    8      0    0 8:8:8:1\n 25    9      0    0 9:9:9:1\n 26   10      0    0 10:10:10:1\n 27   11      0    0 11:11:11:1\n 28   12      0    0 12:12:12:1\n 29   13      0    0 13:13:13:1\n 30   14      0    0 14:14:14:1\n 31   15      0    0 15:15:15:1\n\nengine pid 38542\n    TID PSR %CPU COMMAND\n  38542   0 1142 strata\n\n     20 Cpus_allowed_list:\t0-31\n      7 Cpus_allowed_list:\t0\n      1 Cpus_allowed_list:\t9\n      1 Cpus_allowed_list:\t8\n      1 Cpus_allowed_list:\t7\n      1 Cpus_allowed_list:\t6\n      1 Cpus_allowed_list:\t5\n      1 Cpus_allowed_list:\t4\n      1 Cpus_allowed_list:\t3\n      1 Cpus_allowed_list:\t2",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "lscpu -e=CPU,CORE,SOCKET,NODE,CACHE | head -40; echo; P=$(pgrep -x strata); echo \"engine pid $P\"; ps -L -o tid,psr,pcpu,comm -p $P --sort=-pcpu | head -25; echo; for t in $(ls /proc/$P/task | head -60); do grep -h Cpus_allowed_list /proc/$P/task/$t/status; done | sort | uniq -c | sort -rn | head",
+          "description": "Map CPU topology and engine thread placement"
+        }
+      }
+    },
+    {
+      "step_id": 529,
+      "timestamp": "2026-10-03T16:05:12.386Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 372410,
+        "completion_tokens": 931,
+        "cached_tokens": 372408,
+        "extra": {
+          "cache_creation_input_tokens": 1670,
+          "cache_read_input_tokens": 372408,
+          "output_tokens_details": {
+            "thinking_tokens": 398
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1670,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 931,
+              "cache_read_input_tokens": 372408,
+              "cache_creation_input_tokens": 1670,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1670
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 530,
+      "timestamp": "2026-10-03T16:05:12.389Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "Placement looks correct—CPUs 16–31 are SMT siblings of cores 0–15, workers are pinned one per core across both chiplets (CCD1: 0–7, CCD2: 8–15), with CPU 0 also hosting the host thread plus 7 other pinned threads. Now measuring actual load per chiplet over a few seconds.",
+      "metrics": {
+        "prompt_tokens": 372410,
+        "completion_tokens": 931,
+        "cached_tokens": 372408,
+        "extra": {
+          "cache_creation_input_tokens": 1670,
+          "cache_read_input_tokens": 372408,
+          "output_tokens_details": {
+            "thinking_tokens": 398
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1670,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 931,
+              "cache_read_input_tokens": 372408,
+              "cache_creation_input_tokens": 1670,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1670
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 531,
+      "timestamp": "2026-10-03T16:05:14.113Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01FM3CZPg7KCuFvA3JNjgcC9",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01FM3CZPg7KCuFvA3JNjgcC9",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "python3 - <<'EOF'\nimport time\ndef snap():\n    d = {}\n    for l in open(\"/proc/stat\"):\n        if l.startswith(\"cpu\") and l[3].isdigit():\n            p = l.split(); v = list(map(int, p[1:])); d[int(p[0][3:])] = (sum(v) - v[3] - v[4], sum(v))\n    return d\na = snap(); time.sleep(5); b = snap()\nu = {c: 100 * (b[c][0] - a[c][0]) / max(1, b[c][1] - a[c][1]) for c in a}\nfr = {}\nfor c in range(32):\n    try: fr[c] = int(open(f\"/sys/devices/system/cpu/cpu{c}/cpufreq/scaling_cur_freq\").read()) // 1000\n    except OSError: fr[c] = None\nfor name, cores in ((\"CCD1 cores 0-7\", range(0, 8)), (\"CCD2 cores 8-15\", range(8, 16))):\n    print(f\"{name}: busy \" + \" \".join(f\"{u[c]:3.0f}\" for c in cores) + f\" | SMT siblings \" + \" \".join(f\"{u[c+16]:3.0f}\" for c in cores))\n    print(f\"{'':15s}  MHz  \" + \" \".join(f\"{fr[c]}\" for c in cores))\nEOF",
+            "description": "Measure per-core load and clock per chiplet"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01FM3CZPg7KCuFvA3JNjgcC9",
+            "content": "CCD1 cores 0-7: busy 100  12  12  12  12  12  12  12 | SMT siblings   3   0   1   0   1   0   0   1\n                 MHz  5083 5083 5085 5085 5085 5085 5086 5084\nCCD2 cores 8-15: busy  12  12  12  12  12  12  12  12 | SMT siblings   0   0   0   0   0   0   0   0\n                 MHz  4901 4903 4903 4901 4903 4901 4903 4901\n\n[stdout]\nCCD1 cores 0-7: busy 100  12  12  12  12  12  12  12 | SMT siblings   3   0   1   0   1   0   0   1\n                 MHz  5083 5083 5085 5085 5085 5085 5086 5084\nCCD2 cores 8-15: busy  12  12  12  12  12  12  12  12 | SMT siblings   0   0   0   0   0   0   0   0\n                 MHz  4901 4903 4903 4901 4903 4901 4903 4901\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 372410,
+        "completion_tokens": 931,
+        "cached_tokens": 372408,
+        "extra": {
+          "cache_creation_input_tokens": 1670,
+          "cache_read_input_tokens": 372408,
+          "output_tokens_details": {
+            "thinking_tokens": 398
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1670,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 931,
+              "cache_read_input_tokens": 372408,
+              "cache_creation_input_tokens": 1670,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1670
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "CCD1 cores 0-7: busy 100  12  12  12  12  12  12  12 | SMT siblings   3   0   1   0   1   0   0   1\n                 MHz  5083 5083 5085 5085 5085 5085 5086 5084\nCCD2 cores 8-15: busy  12  12  12  12  12  12  12  12 | SMT siblings   0   0   0   0   0   0   0   0\n                 MHz  4901 4903 4903 4901 4903 4901 4903 4901",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FM3CZPg7KCuFvA3JNjgcC9",
+            "type": "tool_result",
+            "content": "CCD1 cores 0-7: busy 100  12  12  12  12  12  12  12 | SMT siblings   3   0   1   0   1   0   0   1\n                 MHz  5083 5083 5085 5085 5085 5085 5086 5084\nCCD2 cores 8-15: busy  12  12  12  12  12  12  12  12 | SMT siblings   0   0   0   0   0   0   0   0\n                 MHz  4901 4903 4903 4901 4903 4901 4903 4901",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "CCD1 cores 0-7: busy 100  12  12  12  12  12  12  12 | SMT siblings   3   0   1   0   1   0   0   1\n                 MHz  5083 5083 5085 5085 5085 5085 5086 5084\nCCD2 cores 8-15: busy  12  12  12  12  12  12  12  12 | SMT siblings   0   0   0   0   0   0   0   0\n                 MHz  4901 4903 4903 4901 4903 4901 4903 4901",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FM3CZPg7KCuFvA3JNjgcC9",
+            "type": "tool_result",
+            "content": "CCD1 cores 0-7: busy 100  12  12  12  12  12  12  12 | SMT siblings   3   0   1   0   1   0   0   1\n                 MHz  5083 5083 5085 5085 5085 5085 5086 5084\nCCD2 cores 8-15: busy  12  12  12  12  12  12  12  12 | SMT siblings   0   0   0   0   0   0   0   0\n                 MHz  4901 4903 4903 4901 4903 4901 4903 4901",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "python3 - <<'EOF'\nimport time\ndef snap():\n    d = {}\n    for l in open(\"/proc/stat\"):\n        if l.startswith(\"cpu\") and l[3].isdigit():\n            p = l.split(); v = list(map(int, p[1:])); d[int(p[0][3:])] = (sum(v) - v[3] - v[4], sum(v))\n    return d\na = snap(); time.sleep(5); b = snap()\nu = {c: 100 * (b[c][0] - a[c][0]) / max(1, b[c][1] - a[c][1]) for c in a}\nfr = {}\nfor c in range(32):\n    try: fr[c] = int(open(f\"/sys/devices/system/cpu/cpu{c}/cpufreq/scaling_cur_freq\").read()) // 1000\n    except OSError: fr[c] = None\nfor name, cores in ((\"CCD1 cores 0-7\", range(0, 8)), (\"CCD2 cores 8-15\", range(8, 16))):\n    print(f\"{name}: busy \" + \" \".join(f\"{u[c]:3.0f}\" for c in cores) + f\" | SMT siblings \" + \" \".join(f\"{u[c+16]:3.0f}\" for c in cores))\n    print(f\"{'':15s}  MHz  \" + \" \".join(f\"{fr[c]}\" for c in cores))\nEOF",
+          "description": "Measure per-core load and clock per chiplet"
+        }
+      }
+    },
+    {
+      "step_id": 532,
+      "timestamp": "2026-10-03T16:05:33.337Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 374080,
+        "completion_tokens": 1191,
+        "cached_tokens": 374078,
+        "extra": {
+          "cache_creation_input_tokens": 1396,
+          "cache_read_input_tokens": 374078,
+          "output_tokens_details": {
+            "thinking_tokens": 519
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1396,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1191,
+              "cache_read_input_tokens": 374078,
+              "cache_creation_input_tokens": 1396,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1396
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 533,
+      "timestamp": "2026-10-03T16:05:33.347Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Measured over 5 s during the BFCL run, the CPU is mostly idle, so more threads wouldn't help here.\n\n| | Core 0 | Cores 1–15 (expert workers) | SMT siblings (16–31) | Clock |\n|---|---|---|---|---|\n| CCD1 (cores 0–7) | **100%** | 12% each | 0–3% | 5083 MHz |\n| CCD2 (cores 8–15) | n/a | 12% each | 0% | 4901 MHz |\n\n- **The workers are busy only about 12% of the time.** The rest of each call is spent on the GPU (shown at 100% in your readout). BFCL calls are mostly prompt reading: prompts of 14–27K characters with short answers of about 50–70 tokens. Strata reads prompts on the GPU, and the expert workers only matter during the short decode. Adding the 16 SMT threads would give more threads to a pool that is already waiting most of the time. What you saw as \"half fully loaded\" may have been a decode moment, but over this whole workload the CPU isn't the limit.\n- **Core 0 at 100%** is the engine's host thread, which spins on purpose to react to the GPU without delay. Seven of the engine's other threads are also pinned to CPU 0.\n\n**Why CCD1 runs hotter (87 vs 63 °C):** core 0 with its constant 100% spin is on CCD1. CCD1 is also the faster chiplet on this CPU: its cores run at about 5083 MHz versus 4901 on CCD2, so it draws more power. The worker load itself is spread evenly over both chiplets. 87 °C is within the 8945HX's range, which throttles at 100 °C.\n\n**Progress:** 50/400 after 26 min, at 29.6 s per item, faster than the pilot. About **2 h 50 min** remain.\n\nThe `--pool-workers` A/B I offered would mainly matter for long answers, like Claude Code sessions, not for this benchmark. It can still be done after the run if you want it.",
+      "metrics": {
+        "prompt_tokens": 374080,
+        "completion_tokens": 1191,
+        "cached_tokens": 374078,
+        "extra": {
+          "cache_creation_input_tokens": 1396,
+          "cache_read_input_tokens": 374078,
+          "output_tokens_details": {
+            "thinking_tokens": 519
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1396,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1191,
+              "cache_read_input_tokens": 374078,
+              "cache_creation_input_tokens": 1396,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1396
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 95144661,
-    "total_completion_tokens": 359480,
-    "total_cached_tokens": 95143621,
-    "total_steps": 523,
+    "total_prompt_tokens": 98126645,
+    "total_completion_tokens": 367235,
+    "total_cached_tokens": 98125583,
+    "total_steps": 533,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 3952527,
-      "total_cache_read_input_tokens": 95143621
+      "total_cache_creation_input_tokens": 3960971,
+      "total_cache_read_input_tokens": 98125583
     }
   }
 }
