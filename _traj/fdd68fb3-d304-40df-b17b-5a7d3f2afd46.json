@@ -61857,19 +61857,126 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 907,
+      "timestamp": "2026-10-04T18:34:49.299Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>b803pyk9q</task-id>\n<summary>Monitor event: \"pcie-frac A/B: each result line, or an error\"</summary>\n<event>{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"test\": \"prefill 16K\", \"tok_s\": 887.1, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 50}</event>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 908,
+      "timestamp": "2026-10-04T18:34:56.276Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 520501,
+        "completion_tokens": 1814,
+        "cached_tokens": 520497,
+        "extra": {
+          "cache_creation_input_tokens": 325,
+          "cache_read_input_tokens": 520497,
+          "output_tokens_details": {
+            "thinking_tokens": 649
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 325,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 1814,
+              "cache_read_input_tokens": 520497,
+              "cache_creation_input_tokens": 325,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 325
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 909,
+      "timestamp": "2026-10-04T18:35:06.838Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "All 24 rows are in. Summary, with decode as the median of 3 (the first, uncached run in brackets) and prefill as one run each:\n\n**Coder IQ1_M**\n\n| `--pcie-frac` | Decode median (1st run) | vs 0.55 | Prefill 4K | Prefill 16K |\n|---|---|---|---|---|\n| 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |\n| 0.2 | **62.3** (61.3) | +20% | 900.2 | 1065.3 |\n| 0.55 (current default) | 51.9 (51.8) | — | 896.7 | 1063.7 |\n| 0.75 | 46.6 (43.4) | −10% | 892.2 | 1061.9 |\n\n**UD-IQ4_XS**\n\n| `--pcie-frac` | Decode median (1st run) | vs 0.55 | Prefill 4K | Prefill 16K |\n|---|---|---|---|---|\n| 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |\n| 0.25 | **55.4** (55.4) | +24% | 800.3 | 889.8 |\n| 0.55 (current default) | 44.6 (43.9) | — | 794.3 | 887.7 |\n| 0.75 | 39.7 (39.6) | −11% | 794.6 | 887.1 |\n\n**Decode: your prediction holds.**\n- The best values are 0–0.25: about **+20–25% over the current 0.55**, on both models.\n- Between 0 and 0.2/0.25 there's no clear winner. The repeats vary by ±2 t/s, which is larger than the gap between those two values.\n- Above 0.55 it keeps getting worse: 0.75 is another 10–11% slower.\n\n**Prefill: no effect from `--pcie-frac` at all.**\n- All four values are within ±0.5% at both 4K and 16K, on both models.\n- So the 0.65–0.85 optimum for prefill doesn't apply to Strata's current engine. Its prompt path streams every expert whatever `--pcie-frac` says, as `tools/calibrate.py` notes. Your theoretical prefill trade-off would only matter if prompt reading also used this split.\n\n**What this means for this PC:**\n- **Recommended setting:** `--pcie-frac 0.2` for the Coder and 0.25 for UD-IQ4_XS. That gives about 20–25% faster output, with no prefill cost and no cost elsewhere that I found.\n- **Why the engine picked 0.55:** its rule keeps the default 0.55 for any PCIe link of 20 GB/s or more. It never compares the link with the CPU's 55 GB/s of RAM bandwidth, and that comparison is what makes copying lose here.\n\n**Measurement notes:**\n- The engine got the intended value in all 8 runs: the engine arguments showed the flag each time, and the probe never ran.\n- The 4K and 16K prompts were the same text for every value, with no cache reuse.\n- Decode repeats 2 and 3 reuse the cached prompt and change the drafts slightly, so I've shown the first run as well.\n\nShould I add `--pcie-frac` to the two configs (and the 64K configs) and write this test into `docs/3060M.md`? The template test is still paused at 10/400. Since the template test compares against the earlier 0.55 runs, it should keep 0.55; the new value would apply to the configs from then on.",
+      "metrics": {
+        "prompt_tokens": 520501,
+        "completion_tokens": 1814,
+        "cached_tokens": 520497,
+        "extra": {
+          "cache_creation_input_tokens": 325,
+          "cache_read_input_tokens": 520497,
+          "output_tokens_details": {
+            "thinking_tokens": 649
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 325,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 1814,
+              "cache_read_input_tokens": 520497,
+              "cache_creation_input_tokens": 325,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 325
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 230381013,
-    "total_completion_tokens": 609928,
-    "total_cached_tokens": 230379199,
-    "total_steps": 906,
+    "total_prompt_tokens": 231422015,
+    "total_completion_tokens": 613556,
+    "total_cached_tokens": 231420193,
+    "total_steps": 909,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 8347056,
-      "total_cache_read_input_tokens": 230379199
+      "total_cache_creation_input_tokens": 8347706,
+      "total_cache_read_input_tokens": 231420193
     }
   }
 }
