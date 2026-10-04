@@ -10,6 +10,7 @@
 #
 #   --config strata-gsq | strata-iq4xs   the model (the same files as the Halo's gsq-hip / flashnext-hip runs);
 #            | strata-gsq-64k            the Coder at 64K context with KV streaming (no refusals of 16K+ prompts)
+#            | strata-gsq-64k-v224       the same with the Halo's chat template (froggeric v22.4) in place of the model's
 #   --path A | B                         A (default): native function calling, /v1/chat/completions + tools - the
 #                                        server's template and tool parser are part of what is measured.  B: BFCL
 #                                        renders the Qwen3 prompt itself and parses the text, through
@@ -68,7 +69,8 @@ case "$config" in       # config -> Strata's model config and the model id /v1/m
   strata-gsq)   cfg="$STRATA/strata-coder-iq1_m.json";       want=qwen3.8-flash-next-coder-iq1_m ;;
   strata-iq4xs) cfg="$STRATA/strata-unsloth-ud-iq4_xs.json"; want=qwen3.8-flash-next-ud-iq4_xs ;;
   strata-gsq-64k) cfg="$STRATA/strata-coder-iq1_m-64k.json"; want=qwen3.8-flash-next-coder-iq1_m ;;   # 64K, KV streaming
-  *) echo "--config strata-gsq | strata-iq4xs | strata-gsq-64k"; exit 2 ;;
+  strata-gsq-64k-v224) cfg="$STRATA/strata-coder-iq1_m-64k-v224.json"; want=qwen3.8-flash-next-coder-iq1_m ;;  # + froggeric v22.4
+  *) echo "--config strata-gsq | strata-iq4xs | strata-gsq-64k | strata-gsq-64k-v224"; exit 2 ;;
 esac
 case "$path-$think" in   # the handler: path + thinking (the names run-bfcl.ps1 uses)
   A-off) model=local-fc-nothink ;;
