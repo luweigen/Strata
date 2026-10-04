@@ -8,7 +8,8 @@
 #   tools/bfcl/run-bfcl.sh --config strata-iq4xs --think on --start --label r1
 #   tools/bfcl/run-bfcl.sh --config strata-gsq --think off --pilot          # the 40 entries of pilot_ids.json
 #
-#   --config strata-gsq | strata-iq4xs   the model (the same files as the Halo's gsq-hip / flashnext-hip runs)
+#   --config strata-gsq | strata-iq4xs   the model (the same files as the Halo's gsq-hip / flashnext-hip runs);
+#            | strata-gsq-64k            the Coder at 64K context with KV streaming (no refusals of 16K+ prompts)
 #   --path A | B                         A (default): native function calling, /v1/chat/completions + tools - the
 #                                        server's template and tool parser are part of what is measured.  B: BFCL
 #                                        renders the Qwen3 prompt itself and parses the text, through
@@ -66,7 +67,8 @@ fi
 case "$config" in       # config -> Strata's model config and the model id /v1/models must list
   strata-gsq)   cfg="$STRATA/strata-coder-iq1_m.json";       want=qwen3.8-flash-next-coder-iq1_m ;;
   strata-iq4xs) cfg="$STRATA/strata-unsloth-ud-iq4_xs.json"; want=qwen3.8-flash-next-ud-iq4_xs ;;
-  *) echo "--config strata-gsq | strata-iq4xs"; exit 2 ;;
+  strata-gsq-64k) cfg="$STRATA/strata-coder-iq1_m-64k.json"; want=qwen3.8-flash-next-coder-iq1_m ;;   # 64K, KV streaming
+  *) echo "--config strata-gsq | strata-iq4xs | strata-gsq-64k"; exit 2 ;;
 esac
 case "$path-$think" in   # the handler: path + thinking (the names run-bfcl.ps1 uses)
   A-off) model=local-fc-nothink ;;
