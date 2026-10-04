@@ -60407,19 +60407,77 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 857,
+      "timestamp": "2026-10-04T18:27:24.532Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>b803pyk9q</task-id>\n<summary>Monitor event: \"pcie-frac A/B: each result line, or an error\"</summary>\n<event>{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"test\": \"prefill 16K\", \"tok_s\": 1063.7, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 11}</event>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 858,
+      "timestamp": "2026-10-04T18:27:26.751Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Recorded. So far, prefill doesn't change with `--pcie-frac`: about 896–900 t/s at 4K and 1064–1066 at 16K for the Coder at 0, 0.2 and 0.55.",
+      "metrics": {
+        "prompt_tokens": 512040,
+        "completion_tokens": 74,
+        "cached_tokens": 512036,
+        "extra": {
+          "cache_creation_input_tokens": 314,
+          "cache_read_input_tokens": 512036,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 314,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 74,
+              "cache_read_input_tokens": 512036,
+              "cache_creation_input_tokens": 314,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 314
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 217477824,
-    "total_completion_tokens": 609631,
-    "total_cached_tokens": 217476110,
-    "total_steps": 856,
+    "total_prompt_tokens": 217989864,
+    "total_completion_tokens": 609705,
+    "total_cached_tokens": 217988146,
+    "total_steps": 858,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 8338915,
-      "total_cache_read_input_tokens": 217476110
+      "total_cache_creation_input_tokens": 8339229,
+      "total_cache_read_input_tokens": 217988146
     }
   }
 }
