@@ -62174,19 +62174,1290 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 914,
+      "timestamp": "2026-10-04T18:43:07.630Z",
+      "source": "user",
+      "message": "改默认config，实验过程和结果记入3060M.md",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 915,
+      "timestamp": "2026-10-04T18:43:13.659Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 523470,
+        "completion_tokens": 978,
+        "cached_tokens": 523468,
+        "extra": {
+          "cache_creation_input_tokens": 46,
+          "cache_read_input_tokens": 523468,
+          "output_tokens_details": {
+            "thinking_tokens": 361
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 46,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 978,
+              "cache_read_input_tokens": 523468,
+              "cache_creation_input_tokens": 46,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 46
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 916,
+      "timestamp": "2026-10-04T18:43:14.503Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "I'll change only the two default configs. The derived experiment configs (`-64k`, `-64k-v224`) keep the engine's default 0.55, so the paused template test still compares cleanly with the earlier runs:",
+      "metrics": {
+        "prompt_tokens": 523470,
+        "completion_tokens": 978,
+        "cached_tokens": 523468,
+        "extra": {
+          "cache_creation_input_tokens": 46,
+          "cache_read_input_tokens": 523468,
+          "output_tokens_details": {
+            "thinking_tokens": 361
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 46,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 978,
+              "cache_read_input_tokens": 523468,
+              "cache_creation_input_tokens": 46,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 46
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 917,
+      "timestamp": "2026-10-04T18:43:18.635Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_018TvZ8fhLZXYALfsxXvR4H1",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_018TvZ8fhLZXYALfsxXvR4H1",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; python3 - <<'EOF'\nimport json\nfor f, v in ((\"strata-coder-iq1_m.json\", \"0.2\"), (\"strata-unsloth-ud-iq4_xs.json\", \"0.25\")):\n    c = json.load(open(f)); a = c[\"args\"]\n    if \"--pcie-frac\" in a: a[a.index(\"--pcie-frac\") + 1] = v\n    else: a += [\"--pcie-frac\", v]\n    json.dump(c, open(f, \"w\"), indent=1)\n    print(f, a[-4:])\nfor f in (\"strata-coder-iq1_m-64k.json\", \"strata-coder-iq1_m-64k-v224.json\"):\n    print(f, \"--pcie-frac\" in json.load(open(f))[\"args\"])\nEOF\nS=/tmp/claude-1000/-home-luwei-work-AI-Strata/fdd68fb3-d304-40df-b17b-5a7d3f2afd46/scratchpad; cp $S/pcie_ab2.py docs/benchmarks/2026-10-04-3060m-pcie-frac.py; cp $S/pcie_ab2.jsonl docs/benchmarks/2026-10-04-3060m-pcie-frac.jsonl; git check-ignore -q strata-coder-iq1_m.json && echo \"configs are gitignored (local)\"",
+            "description": "Set pcie-frac in the default configs and save the test"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_018TvZ8fhLZXYALfsxXvR4H1",
+            "content": "strata-coder-iq1_m.json ['--kv', 'int8', '--pcie-frac', '0.2']\nstrata-unsloth-ud-iq4_xs.json ['--kv', 'int8', '--pcie-frac', '0.25']\nstrata-coder-iq1_m-64k.json False\nstrata-coder-iq1_m-64k-v224.json False\nconfigs are gitignored (local)\n\n[stdout]\nstrata-coder-iq1_m.json ['--kv', 'int8', '--pcie-frac', '0.2']\nstrata-unsloth-ud-iq4_xs.json ['--kv', 'int8', '--pcie-frac', '0.25']\nstrata-coder-iq1_m-64k.json False\nstrata-coder-iq1_m-64k-v224.json False\nconfigs are gitignored (local)\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.py\", \"hunks\": [{\"oldStart\": 1, \"oldLines\": 0, \"newStart\": 1, \"newLines\": 57, \"lines\": [\"+\\\"\\\"\\\"--pcie-frac A/B: per value a fresh server, a warm-up, decode x3 (same prompt), prefill 4K and 16K (1 token out).\", \"+Usage: pcie_ab2.py <base config> <label> <frac> [<frac> ...]   -> JSON lines on stdout\\\"\\\"\\\"\", \"+import json, subprocess, sys, time, urllib.request\", \"+from pathlib import Path\", \"+S = Path(__file__).parent; ROOT = Path(\\\"/home/luwei/work/AI/Strata\\\"); URL = \\\"http://127.0.0.1:8080\\\"\", \"+base, label, fracs = sys.argv[1], sys.argv[2], sys.argv[3:]\", \"+E = Path(\\\"/mnt/evox2/large/work/AI/EngramHalo.cpp/src\\\")\", \"+L = (E / \\\"llama-model-loader.cpp\\\").read_text()\", \"+i = L.index(\\\"static std::vector<std::string> llama_get_list_splits\\\"); j = L.index(\\\"\\\\n}\\\\n\\\", i) + 3\", \"+DECODE = \\\"Rewrite this C++ function to be clearer and faster. Keep the behavior. Reply with the code.\\\\n\\\\n```cpp\\\\n\\\" + L[i:j] + \\\"```\\\"\", \"+SRC = \\\"\\\".join(p.read_text() for p in sorted(E.glob(\\\"llama-*.cpp\\\")) if p.name != \\\"llama-model-loader.cpp\\\")\", \"+\", \"+def post(path, body):\", \"+    r = urllib.request.Request(URL + path, json.dumps(body).encode(), {\\\"Content-Type\\\": \\\"application/json\\\"})\", \"+    with urllib.request.urlopen(r, timeout=3600) as f:\", \"+        return json.load(f)\", \"+def chat(text, n):\", \"+    return post(\\\"/v1/chat/completions\\\", {\\\"model\\\": \\\"x\\\", \\\"temperature\\\": 0, \\\"max_tokens\\\": n,\", \"+            \\\"chat_template_kwargs\\\": {\\\"enable_thinking\\\": False}, \\\"messages\\\": [{\\\"role\\\": \\\"user\\\", \\\"content\\\": text}]})\", \"+def count(text):\", \"+    return post(\\\"/v1/messages/count_tokens\\\", {\\\"model\\\": \\\"x\\\", \\\"messages\\\": [{\\\"role\\\": \\\"user\\\", \\\"content\\\": text}]})[\\\"input_tokens\\\"]\", \"+def cut(text, tokens):\", \"+    n = int(len(text) * tokens / count(text[:400000]) * len(text[:400000]) / len(text)) if False else int(tokens * 3.3)\", \"+    for _ in range(4):\", \"+        c = count(text[:n])\", \"+        if abs(c - tokens) <= tokens * 0.01: break\", \"+        n = int(n * tokens / c)\", \"+    return text[:n]\", \"+\", \"+texts = None\", \"+for x in fracs:\", \"+    c = json.load(open(ROOT / base)); c[\\\"args\\\"] += [\\\"--pcie-frac\\\", x]; c[\\\"log\\\"] = str(S / f\\\"ab-{label}-{x}-engine.log\\\")\", \"+    cfg = S / f\\\"ab-{label}-{x}.json\\\"; cfg.write_text(json.dumps(c))\", \"+    log = open(S / f\\\"ab-{label}-{x}-server.log\\\", \\\"w\\\")\", \"+    p = subprocess.Popen([sys.executable, \\\"serve/server.py\\\", \\\"--engine\\\", \\\"strata\\\", \\\"--config\\\", str(cfg), \\\"--port\\\", \\\"8080\\\"],\", \"+                         cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)\", \"+    t0 = time.time()\", \"+    while \\\"ready: http\\\" not in (S / f\\\"ab-{label}-{x}-server.log\\\").read_text():\", \"+        if p.poll() is not None: sys.exit(f\\\"server died at {x}\\\")\", \"+        time.sleep(1)\", \"+    ready = round(time.time() - t0)\", \"+    args = subprocess.run([\\\"bash\\\", \\\"-c\\\", \\\"ps -o args= -p $(pgrep -x strata) | grep -oE -- '--pcie-frac [0-9.]+'\\\"],\", \"+                          capture_output=True, text=True).stdout.strip()\", \"+    if texts is None:                       # the same prefill texts for every value (a fresh server each time)\", \"+        a = cut(SRC, 4096); b = cut(SRC[len(a):], 16384); texts = (a, b)\", \"+    chat(\\\"Write a thread-safe LRU cache in C++.\\\", 128)                       # warm-up\", \"+    for k in range(3):\", \"+        t = chat(DECODE, 512)[\\\"timings\\\"]\", \"+        print(json.dumps({\\\"model\\\": label, \\\"pcie_frac\\\": x, \\\"engine_args\\\": args, \\\"test\\\": f\\\"decode#{k+1}\\\",\", \"+                          \\\"tok_s\\\": t[\\\"predicted_per_second\\\"], \\\"tokens\\\": t[\\\"predicted_n\\\"],\", \"+                          \\\"drafts\\\": f'{t.get(\\\"draft_n_accepted\\\")}/{t.get(\\\"draft_n\\\")}', \\\"cache_n\\\": t[\\\"cache_n\\\"]}), flush=True)\", \"+    for name, text in ((\\\"prefill 4K\\\", texts[0]), (\\\"prefill 16K\\\", texts[1])):\", \"+        t = chat(text, 1)[\\\"timings\\\"]\", \"+        print(json.dumps({\\\"model\\\": label, \\\"pcie_frac\\\": x, \\\"test\\\": name, \\\"tok_s\\\": t[\\\"prompt_per_second\\\"],\", \"+                          \\\"tokens\\\": t[\\\"prompt_n\\\"], \\\"cache_n\\\": t[\\\"cache_n\\\"], \\\"ready_s\\\": ready}), flush=True)\", \"+    p.terminate(); p.wait()\", \"+    while subprocess.run([\\\"pgrep\\\", \\\"-x\\\", \\\"strata\\\"], capture_output=True).returncode == 0: time.sleep(1)\"]}], \"created\": true}, {\"filePath\": \"/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.jsonl\", \"hunks\": [{\"oldStart\": 1, \"oldLines\": 0, \"newStart\": 1, \"newLines\": 40, \"lines\": [\"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0\\\", \\\"engine_args\\\": \\\"--pcie-frac 0\\\", \\\"test\\\": \\\"decode#1\\\", \\\"tok_s\\\": 62.0, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"176/197\\\", \\\"cache_n\\\": 0}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0\\\", \\\"engine_args\\\": \\\"--pcie-frac 0\\\", \\\"test\\\": \\\"decode#2\\\", \\\"tok_s\\\": 65.1, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"169/180\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0\\\", \\\"engine_args\\\": \\\"--pcie-frac 0\\\", \\\"test\\\": \\\"decode#3\\\", \\\"tok_s\\\": 65.5, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"169/179\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0\\\", \\\"test\\\": \\\"prefill 4K\\\", \\\"tok_s\\\": 895.5, \\\"tokens\\\": 4038, \\\"cache_n\\\": 0, \\\"ready_s\\\": 11}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0\\\", \\\"test\\\": \\\"prefill 16K\\\", \\\"tok_s\\\": 1066.3, \\\"tokens\\\": 16298, \\\"cache_n\\\": 0, \\\"ready_s\\\": 11}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.2\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.2\\\", \\\"test\\\": \\\"decode#1\\\", \\\"tok_s\\\": 61.3, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"176/197\\\", \\\"cache_n\\\": 0}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.2\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.2\\\", \\\"test\\\": \\\"decode#2\\\", \\\"tok_s\\\": 64.2, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"169/179\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.2\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.2\\\", \\\"test\\\": \\\"decode#3\\\", \\\"tok_s\\\": 62.3, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"170/185\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.2\\\", \\\"test\\\": \\\"prefill 4K\\\", \\\"tok_s\\\": 900.2, \\\"tokens\\\": 4038, \\\"cache_n\\\": 0, \\\"ready_s\\\": 11}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.2\\\", \\\"test\\\": \\\"prefill 16K\\\", \\\"tok_s\\\": 1065.3, \\\"tokens\\\": 16298, \\\"cache_n\\\": 0, \\\"ready_s\\\": 11}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.55\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.55\\\", \\\"test\\\": \\\"decode#1\\\", \\\"tok_s\\\": 51.8, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"176/186\\\", \\\"cache_n\\\": 0}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.55\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.55\\\", \\\"test\\\": \\\"decode#2\\\", \\\"tok_s\\\": 52.5, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"171/188\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.55\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.55\\\", \\\"test\\\": \\\"decode#3\\\", \\\"tok_s\\\": 51.9, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"171/191\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.55\\\", \\\"test\\\": \\\"prefill 4K\\\", \\\"tok_s\\\": 896.7, \\\"tokens\\\": 4038, \\\"cache_n\\\": 0, \\\"ready_s\\\": 11}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.55\\\", \\\"test\\\": \\\"prefill 16K\\\", \\\"tok_s\\\": 1063.7, \\\"tokens\\\": 16298, \\\"cache_n\\\": 0, \\\"ready_s\\\": 11}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.75\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.75\\\", \\\"test\\\": \\\"decode#1\\\", \\\"tok_s\\\": 43.4, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"175/203\\\", \\\"cache_n\\\": 0}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.75\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.75\\\", \\\"test\\\": \\\"decode#2\\\", \\\"tok_s\\\": 46.6, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"168/187\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.75\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.75\\\", \\\"test\\\": \\\"decode#3\\\", \\\"tok_s\\\": 48.3, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"169/180\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.75\\\", \\\"test\\\": \\\"prefill 4K\\\", \\\"tok_s\\\": 892.2, \\\"tokens\\\": 4038, \\\"cache_n\\\": 0, \\\"ready_s\\\": 11}\", \"+{\\\"model\\\": \\\"coder\\\", \\\"pcie_frac\\\": \\\"0.75\\\", \\\"test\\\": \\\"prefill 16K\\\", \\\"tok_s\\\": 1061.9, \\\"tokens\\\": 16298, \\\"cache_n\\\": 0, \\\"ready_s\\\": 11}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0\\\", \\\"engine_args\\\": \\\"--pcie-frac 0\\\", \\\"test\\\": \\\"decode#1\\\", \\\"tok_s\\\": 53.4, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"175/194\\\", \\\"cache_n\\\": 0}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0\\\", \\\"engine_args\\\": \\\"--pcie-frac 0\\\", \\\"test\\\": \\\"decode#2\\\", \\\"tok_s\\\": 56.0, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"171/179\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0\\\", \\\"engine_args\\\": \\\"--pcie-frac 0\\\", \\\"test\\\": \\\"decode#3\\\", \\\"tok_s\\\": 55.4, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"173/183\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0\\\", \\\"test\\\": \\\"prefill 4K\\\", \\\"tok_s\\\": 796.7, \\\"tokens\\\": 4038, \\\"cache_n\\\": 0, \\\"ready_s\\\": 50}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0\\\", \\\"test\\\": \\\"prefill 16K\\\", \\\"tok_s\\\": 889.2, \\\"tokens\\\": 16298, \\\"cache_n\\\": 0, \\\"ready_s\\\": 50}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.25\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.25\\\", \\\"test\\\": \\\"decode#1\\\", \\\"tok_s\\\": 55.4, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"175/194\\\", \\\"cache_n\\\": 0}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.25\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.25\\\", \\\"test\\\": \\\"decode#2\\\", \\\"tok_s\\\": 54.6, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"170/191\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.25\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.25\\\", \\\"test\\\": \\\"decode#3\\\", \\\"tok_s\\\": 55.8, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"172/181\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.25\\\", \\\"test\\\": \\\"prefill 4K\\\", \\\"tok_s\\\": 800.3, \\\"tokens\\\": 4038, \\\"cache_n\\\": 0, \\\"ready_s\\\": 53}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.25\\\", \\\"test\\\": \\\"prefill 16K\\\", \\\"tok_s\\\": 889.8, \\\"tokens\\\": 16298, \\\"cache_n\\\": 0, \\\"ready_s\\\": 53}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.55\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.55\\\", \\\"test\\\": \\\"decode#1\\\", \\\"tok_s\\\": 43.9, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"175/194\\\", \\\"cache_n\\\": 0}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.55\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.55\\\", \\\"test\\\": \\\"decode#2\\\", \\\"tok_s\\\": 44.6, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"174/188\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.55\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.55\\\", \\\"test\\\": \\\"decode#3\\\", \\\"tok_s\\\": 45.2, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"175/196\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.55\\\", \\\"test\\\": \\\"prefill 4K\\\", \\\"tok_s\\\": 794.3, \\\"tokens\\\": 4038, \\\"cache_n\\\": 0, \\\"ready_s\\\": 50}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.55\\\", \\\"test\\\": \\\"prefill 16K\\\", \\\"tok_s\\\": 887.7, \\\"tokens\\\": 16298, \\\"cache_n\\\": 0, \\\"ready_s\\\": 50}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.75\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.75\\\", \\\"test\\\": \\\"decode#1\\\", \\\"tok_s\\\": 39.6, \\\"tokens\\\": 229, \\\"drafts\\\": \\\"177/196\\\", \\\"cache_n\\\": 0}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.75\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.75\\\", \\\"test\\\": \\\"decode#2\\\", \\\"tok_s\\\": 39.7, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"176/197\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.75\\\", \\\"engine_args\\\": \\\"--pcie-frac 0.75\\\", \\\"test\\\": \\\"decode#3\\\", \\\"tok_s\\\": 40.9, \\\"tokens\\\": 230, \\\"drafts\\\": \\\"179/202\\\", \\\"cache_n\\\": 267}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.75\\\", \\\"test\\\": \\\"prefill 4K\\\", \\\"tok_s\\\": 794.6, \\\"tokens\\\": 4038, \\\"cache_n\\\": 0, \\\"ready_s\\\": 50}\", \"+{\\\"model\\\": \\\"iq4xs\\\", \\\"pcie_frac\\\": \\\"0.75\\\", \\\"test\\\": \\\"prefill 16K\\\", \\\"tok_s\\\": 887.1, \\\"tokens\\\": 16298, \\\"cache_n\\\": 0, \\\"ready_s\\\": 50}\"]}], \"created\": true}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.py\", \"/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.jsonl\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 523470,
+        "completion_tokens": 978,
+        "cached_tokens": 523468,
+        "extra": {
+          "cache_creation_input_tokens": 46,
+          "cache_read_input_tokens": 523468,
+          "output_tokens_details": {
+            "thinking_tokens": 361
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 46,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 978,
+              "cache_read_input_tokens": 523468,
+              "cache_creation_input_tokens": 46,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 46
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "strata-coder-iq1_m.json ['--kv', 'int8', '--pcie-frac', '0.2']\nstrata-unsloth-ud-iq4_xs.json ['--kv', 'int8', '--pcie-frac', '0.25']\nstrata-coder-iq1_m-64k.json False\nstrata-coder-iq1_m-64k-v224.json False\nconfigs are gitignored (local)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.py",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 0,
+                      "newStart": 1,
+                      "newLines": 57,
+                      "lines": [
+                        "+\"\"\"--pcie-frac A/B: per value a fresh server, a warm-up, decode x3 (same prompt), prefill 4K and 16K (1 token out).",
+                        "+Usage: pcie_ab2.py <base config> <label> <frac> [<frac> ...]   -> JSON lines on stdout\"\"\"",
+                        "+import json, subprocess, sys, time, urllib.request",
+                        "+from pathlib import Path",
+                        "+S = Path(__file__).parent; ROOT = Path(\"/home/luwei/work/AI/Strata\"); URL = \"http://127.0.0.1:8080\"",
+                        "+base, label, fracs = sys.argv[1], sys.argv[2], sys.argv[3:]",
+                        "+E = Path(\"/mnt/evox2/large/work/AI/EngramHalo.cpp/src\")",
+                        "+L = (E / \"llama-model-loader.cpp\").read_text()",
+                        "+i = L.index(\"static std::vector<std::string> llama_get_list_splits\"); j = L.index(\"\\n}\\n\", i) + 3",
+                        "+DECODE = \"Rewrite this C++ function to be clearer and faster. Keep the behavior. Reply with the code.\\n\\n```cpp\\n\" + L[i:j] + \"```\"",
+                        "+SRC = \"\".join(p.read_text() for p in sorted(E.glob(\"llama-*.cpp\")) if p.name != \"llama-model-loader.cpp\")",
+                        "+",
+                        "+def post(path, body):",
+                        "+    r = urllib.request.Request(URL + path, json.dumps(body).encode(), {\"Content-Type\": \"application/json\"})",
+                        "+    with urllib.request.urlopen(r, timeout=3600) as f:",
+                        "+        return json.load(f)",
+                        "+def chat(text, n):",
+                        "+    return post(\"/v1/chat/completions\", {\"model\": \"x\", \"temperature\": 0, \"max_tokens\": n,",
+                        "+            \"chat_template_kwargs\": {\"enable_thinking\": False}, \"messages\": [{\"role\": \"user\", \"content\": text}]})",
+                        "+def count(text):",
+                        "+    return post(\"/v1/messages/count_tokens\", {\"model\": \"x\", \"messages\": [{\"role\": \"user\", \"content\": text}]})[\"input_tokens\"]",
+                        "+def cut(text, tokens):",
+                        "+    n = int(len(text) * tokens / count(text[:400000]) * len(text[:400000]) / len(text)) if False else int(tokens * 3.3)",
+                        "+    for _ in range(4):",
+                        "+        c = count(text[:n])",
+                        "+        if abs(c - tokens) <= tokens * 0.01: break",
+                        "+        n = int(n * tokens / c)",
+                        "+    return text[:n]",
+                        "+",
+                        "+texts = None",
+                        "+for x in fracs:",
+                        "+    c = json.load(open(ROOT / base)); c[\"args\"] += [\"--pcie-frac\", x]; c[\"log\"] = str(S / f\"ab-{label}-{x}-engine.log\")",
+                        "+    cfg = S / f\"ab-{label}-{x}.json\"; cfg.write_text(json.dumps(c))",
+                        "+    log = open(S / f\"ab-{label}-{x}-server.log\", \"w\")",
+                        "+    p = subprocess.Popen([sys.executable, \"serve/server.py\", \"--engine\", \"strata\", \"--config\", str(cfg), \"--port\", \"8080\"],",
+                        "+                         cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)",
+                        "+    t0 = time.time()",
+                        "+    while \"ready: http\" not in (S / f\"ab-{label}-{x}-server.log\").read_text():",
+                        "+        if p.poll() is not None: sys.exit(f\"server died at {x}\")",
+                        "+        time.sleep(1)",
+                        "+    ready = round(time.time() - t0)",
+                        "+    args = subprocess.run([\"bash\", \"-c\", \"ps -o args= -p $(pgrep -x strata) | grep -oE -- '--pcie-frac [0-9.]+'\"],",
+                        "+                          capture_output=True, text=True).stdout.strip()",
+                        "+    if texts is None:                       # the same prefill texts for every value (a fresh server each time)",
+                        "+        a = cut(SRC, 4096); b = cut(SRC[len(a):], 16384); texts = (a, b)",
+                        "+    chat(\"Write a thread-safe LRU cache in C++.\", 128)                       # warm-up",
+                        "+    for k in range(3):",
+                        "+        t = chat(DECODE, 512)[\"timings\"]",
+                        "+        print(json.dumps({\"model\": label, \"pcie_frac\": x, \"engine_args\": args, \"test\": f\"decode#{k+1}\",",
+                        "+                          \"tok_s\": t[\"predicted_per_second\"], \"tokens\": t[\"predicted_n\"],",
+                        "+                          \"drafts\": f'{t.get(\"draft_n_accepted\")}/{t.get(\"draft_n\")}', \"cache_n\": t[\"cache_n\"]}), flush=True)",
+                        "+    for name, text in ((\"prefill 4K\", texts[0]), (\"prefill 16K\", texts[1])):",
+                        "+        t = chat(text, 1)[\"timings\"]",
+                        "+        print(json.dumps({\"model\": label, \"pcie_frac\": x, \"test\": name, \"tok_s\": t[\"prompt_per_second\"],",
+                        "+                          \"tokens\": t[\"prompt_n\"], \"cache_n\": t[\"cache_n\"], \"ready_s\": ready}), flush=True)",
+                        "+    p.terminate(); p.wait()",
+                        "+    while subprocess.run([\"pgrep\", \"-x\", \"strata\"], capture_output=True).returncode == 0: time.sleep(1)"
+                      ]
+                    }
+                  ],
+                  "created": true
+                },
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.jsonl",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 0,
+                      "newStart": 1,
+                      "newLines": 40,
+                      "lines": [
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#1\", \"tok_s\": 62.0, \"tokens\": 229, \"drafts\": \"176/197\", \"cache_n\": 0}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#2\", \"tok_s\": 65.1, \"tokens\": 229, \"drafts\": \"169/180\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#3\", \"tok_s\": 65.5, \"tokens\": 229, \"drafts\": \"169/179\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0\", \"test\": \"prefill 4K\", \"tok_s\": 895.5, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0\", \"test\": \"prefill 16K\", \"tok_s\": 1066.3, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.2\", \"engine_args\": \"--pcie-frac 0.2\", \"test\": \"decode#1\", \"tok_s\": 61.3, \"tokens\": 229, \"drafts\": \"176/197\", \"cache_n\": 0}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.2\", \"engine_args\": \"--pcie-frac 0.2\", \"test\": \"decode#2\", \"tok_s\": 64.2, \"tokens\": 229, \"drafts\": \"169/179\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.2\", \"engine_args\": \"--pcie-frac 0.2\", \"test\": \"decode#3\", \"tok_s\": 62.3, \"tokens\": 230, \"drafts\": \"170/185\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.2\", \"test\": \"prefill 4K\", \"tok_s\": 900.2, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.2\", \"test\": \"prefill 16K\", \"tok_s\": 1065.3, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#1\", \"tok_s\": 51.8, \"tokens\": 230, \"drafts\": \"176/186\", \"cache_n\": 0}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#2\", \"tok_s\": 52.5, \"tokens\": 229, \"drafts\": \"171/188\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#3\", \"tok_s\": 51.9, \"tokens\": 229, \"drafts\": \"171/191\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"test\": \"prefill 4K\", \"tok_s\": 896.7, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"test\": \"prefill 16K\", \"tok_s\": 1063.7, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#1\", \"tok_s\": 43.4, \"tokens\": 229, \"drafts\": \"175/203\", \"cache_n\": 0}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#2\", \"tok_s\": 46.6, \"tokens\": 229, \"drafts\": \"168/187\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#3\", \"tok_s\": 48.3, \"tokens\": 229, \"drafts\": \"169/180\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.75\", \"test\": \"prefill 4K\", \"tok_s\": 892.2, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.75\", \"test\": \"prefill 16K\", \"tok_s\": 1061.9, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#1\", \"tok_s\": 53.4, \"tokens\": 230, \"drafts\": \"175/194\", \"cache_n\": 0}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#2\", \"tok_s\": 56.0, \"tokens\": 230, \"drafts\": \"171/179\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#3\", \"tok_s\": 55.4, \"tokens\": 230, \"drafts\": \"173/183\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0\", \"test\": \"prefill 4K\", \"tok_s\": 796.7, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 50}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0\", \"test\": \"prefill 16K\", \"tok_s\": 889.2, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 50}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.25\", \"engine_args\": \"--pcie-frac 0.25\", \"test\": \"decode#1\", \"tok_s\": 55.4, \"tokens\": 230, \"drafts\": \"175/194\", \"cache_n\": 0}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.25\", \"engine_args\": \"--pcie-frac 0.25\", \"test\": \"decode#2\", \"tok_s\": 54.6, \"tokens\": 230, \"drafts\": \"170/191\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.25\", \"engine_args\": \"--pcie-frac 0.25\", \"test\": \"decode#3\", \"tok_s\": 55.8, \"tokens\": 230, \"drafts\": \"172/181\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.25\", \"test\": \"prefill 4K\", \"tok_s\": 800.3, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 53}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.25\", \"test\": \"prefill 16K\", \"tok_s\": 889.8, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 53}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#1\", \"tok_s\": 43.9, \"tokens\": 230, \"drafts\": \"175/194\", \"cache_n\": 0}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#2\", \"tok_s\": 44.6, \"tokens\": 230, \"drafts\": \"174/188\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#3\", \"tok_s\": 45.2, \"tokens\": 230, \"drafts\": \"175/196\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.55\", \"test\": \"prefill 4K\", \"tok_s\": 794.3, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 50}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.55\", \"test\": \"prefill 16K\", \"tok_s\": 887.7, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 50}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#1\", \"tok_s\": 39.6, \"tokens\": 229, \"drafts\": \"177/196\", \"cache_n\": 0}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#2\", \"tok_s\": 39.7, \"tokens\": 230, \"drafts\": \"176/197\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#3\", \"tok_s\": 40.9, \"tokens\": 230, \"drafts\": \"179/202\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"test\": \"prefill 4K\", \"tok_s\": 794.6, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 50}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"test\": \"prefill 16K\", \"tok_s\": 887.1, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 50}"
+                      ]
+                    }
+                  ],
+                  "created": true
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.py",
+                "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.jsonl"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_018TvZ8fhLZXYALfsxXvR4H1",
+            "type": "tool_result",
+            "content": "strata-coder-iq1_m.json ['--kv', 'int8', '--pcie-frac', '0.2']\nstrata-unsloth-ud-iq4_xs.json ['--kv', 'int8', '--pcie-frac', '0.25']\nstrata-coder-iq1_m-64k.json False\nstrata-coder-iq1_m-64k-v224.json False\nconfigs are gitignored (local)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "strata-coder-iq1_m.json ['--kv', 'int8', '--pcie-frac', '0.2']\nstrata-unsloth-ud-iq4_xs.json ['--kv', 'int8', '--pcie-frac', '0.25']\nstrata-coder-iq1_m-64k.json False\nstrata-coder-iq1_m-64k-v224.json False\nconfigs are gitignored (local)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.py",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 0,
+                      "newStart": 1,
+                      "newLines": 57,
+                      "lines": [
+                        "+\"\"\"--pcie-frac A/B: per value a fresh server, a warm-up, decode x3 (same prompt), prefill 4K and 16K (1 token out).",
+                        "+Usage: pcie_ab2.py <base config> <label> <frac> [<frac> ...]   -> JSON lines on stdout\"\"\"",
+                        "+import json, subprocess, sys, time, urllib.request",
+                        "+from pathlib import Path",
+                        "+S = Path(__file__).parent; ROOT = Path(\"/home/luwei/work/AI/Strata\"); URL = \"http://127.0.0.1:8080\"",
+                        "+base, label, fracs = sys.argv[1], sys.argv[2], sys.argv[3:]",
+                        "+E = Path(\"/mnt/evox2/large/work/AI/EngramHalo.cpp/src\")",
+                        "+L = (E / \"llama-model-loader.cpp\").read_text()",
+                        "+i = L.index(\"static std::vector<std::string> llama_get_list_splits\"); j = L.index(\"\\n}\\n\", i) + 3",
+                        "+DECODE = \"Rewrite this C++ function to be clearer and faster. Keep the behavior. Reply with the code.\\n\\n```cpp\\n\" + L[i:j] + \"```\"",
+                        "+SRC = \"\".join(p.read_text() for p in sorted(E.glob(\"llama-*.cpp\")) if p.name != \"llama-model-loader.cpp\")",
+                        "+",
+                        "+def post(path, body):",
+                        "+    r = urllib.request.Request(URL + path, json.dumps(body).encode(), {\"Content-Type\": \"application/json\"})",
+                        "+    with urllib.request.urlopen(r, timeout=3600) as f:",
+                        "+        return json.load(f)",
+                        "+def chat(text, n):",
+                        "+    return post(\"/v1/chat/completions\", {\"model\": \"x\", \"temperature\": 0, \"max_tokens\": n,",
+                        "+            \"chat_template_kwargs\": {\"enable_thinking\": False}, \"messages\": [{\"role\": \"user\", \"content\": text}]})",
+                        "+def count(text):",
+                        "+    return post(\"/v1/messages/count_tokens\", {\"model\": \"x\", \"messages\": [{\"role\": \"user\", \"content\": text}]})[\"input_tokens\"]",
+                        "+def cut(text, tokens):",
+                        "+    n = int(len(text) * tokens / count(text[:400000]) * len(text[:400000]) / len(text)) if False else int(tokens * 3.3)",
+                        "+    for _ in range(4):",
+                        "+        c = count(text[:n])",
+                        "+        if abs(c - tokens) <= tokens * 0.01: break",
+                        "+        n = int(n * tokens / c)",
+                        "+    return text[:n]",
+                        "+",
+                        "+texts = None",
+                        "+for x in fracs:",
+                        "+    c = json.load(open(ROOT / base)); c[\"args\"] += [\"--pcie-frac\", x]; c[\"log\"] = str(S / f\"ab-{label}-{x}-engine.log\")",
+                        "+    cfg = S / f\"ab-{label}-{x}.json\"; cfg.write_text(json.dumps(c))",
+                        "+    log = open(S / f\"ab-{label}-{x}-server.log\", \"w\")",
+                        "+    p = subprocess.Popen([sys.executable, \"serve/server.py\", \"--engine\", \"strata\", \"--config\", str(cfg), \"--port\", \"8080\"],",
+                        "+                         cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)",
+                        "+    t0 = time.time()",
+                        "+    while \"ready: http\" not in (S / f\"ab-{label}-{x}-server.log\").read_text():",
+                        "+        if p.poll() is not None: sys.exit(f\"server died at {x}\")",
+                        "+        time.sleep(1)",
+                        "+    ready = round(time.time() - t0)",
+                        "+    args = subprocess.run([\"bash\", \"-c\", \"ps -o args= -p $(pgrep -x strata) | grep -oE -- '--pcie-frac [0-9.]+'\"],",
+                        "+                          capture_output=True, text=True).stdout.strip()",
+                        "+    if texts is None:                       # the same prefill texts for every value (a fresh server each time)",
+                        "+        a = cut(SRC, 4096); b = cut(SRC[len(a):], 16384); texts = (a, b)",
+                        "+    chat(\"Write a thread-safe LRU cache in C++.\", 128)                       # warm-up",
+                        "+    for k in range(3):",
+                        "+        t = chat(DECODE, 512)[\"timings\"]",
+                        "+        print(json.dumps({\"model\": label, \"pcie_frac\": x, \"engine_args\": args, \"test\": f\"decode#{k+1}\",",
+                        "+                          \"tok_s\": t[\"predicted_per_second\"], \"tokens\": t[\"predicted_n\"],",
+                        "+                          \"drafts\": f'{t.get(\"draft_n_accepted\")}/{t.get(\"draft_n\")}', \"cache_n\": t[\"cache_n\"]}), flush=True)",
+                        "+    for name, text in ((\"prefill 4K\", texts[0]), (\"prefill 16K\", texts[1])):",
+                        "+        t = chat(text, 1)[\"timings\"]",
+                        "+        print(json.dumps({\"model\": label, \"pcie_frac\": x, \"test\": name, \"tok_s\": t[\"prompt_per_second\"],",
+                        "+                          \"tokens\": t[\"prompt_n\"], \"cache_n\": t[\"cache_n\"], \"ready_s\": ready}), flush=True)",
+                        "+    p.terminate(); p.wait()",
+                        "+    while subprocess.run([\"pgrep\", \"-x\", \"strata\"], capture_output=True).returncode == 0: time.sleep(1)"
+                      ]
+                    }
+                  ],
+                  "created": true
+                },
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.jsonl",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 0,
+                      "newStart": 1,
+                      "newLines": 40,
+                      "lines": [
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#1\", \"tok_s\": 62.0, \"tokens\": 229, \"drafts\": \"176/197\", \"cache_n\": 0}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#2\", \"tok_s\": 65.1, \"tokens\": 229, \"drafts\": \"169/180\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#3\", \"tok_s\": 65.5, \"tokens\": 229, \"drafts\": \"169/179\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0\", \"test\": \"prefill 4K\", \"tok_s\": 895.5, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0\", \"test\": \"prefill 16K\", \"tok_s\": 1066.3, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.2\", \"engine_args\": \"--pcie-frac 0.2\", \"test\": \"decode#1\", \"tok_s\": 61.3, \"tokens\": 229, \"drafts\": \"176/197\", \"cache_n\": 0}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.2\", \"engine_args\": \"--pcie-frac 0.2\", \"test\": \"decode#2\", \"tok_s\": 64.2, \"tokens\": 229, \"drafts\": \"169/179\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.2\", \"engine_args\": \"--pcie-frac 0.2\", \"test\": \"decode#3\", \"tok_s\": 62.3, \"tokens\": 230, \"drafts\": \"170/185\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.2\", \"test\": \"prefill 4K\", \"tok_s\": 900.2, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.2\", \"test\": \"prefill 16K\", \"tok_s\": 1065.3, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#1\", \"tok_s\": 51.8, \"tokens\": 230, \"drafts\": \"176/186\", \"cache_n\": 0}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#2\", \"tok_s\": 52.5, \"tokens\": 229, \"drafts\": \"171/188\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#3\", \"tok_s\": 51.9, \"tokens\": 229, \"drafts\": \"171/191\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"test\": \"prefill 4K\", \"tok_s\": 896.7, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.55\", \"test\": \"prefill 16K\", \"tok_s\": 1063.7, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#1\", \"tok_s\": 43.4, \"tokens\": 229, \"drafts\": \"175/203\", \"cache_n\": 0}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#2\", \"tok_s\": 46.6, \"tokens\": 229, \"drafts\": \"168/187\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#3\", \"tok_s\": 48.3, \"tokens\": 229, \"drafts\": \"169/180\", \"cache_n\": 267}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.75\", \"test\": \"prefill 4K\", \"tok_s\": 892.2, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"coder\", \"pcie_frac\": \"0.75\", \"test\": \"prefill 16K\", \"tok_s\": 1061.9, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 11}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#1\", \"tok_s\": 53.4, \"tokens\": 230, \"drafts\": \"175/194\", \"cache_n\": 0}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#2\", \"tok_s\": 56.0, \"tokens\": 230, \"drafts\": \"171/179\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0\", \"engine_args\": \"--pcie-frac 0\", \"test\": \"decode#3\", \"tok_s\": 55.4, \"tokens\": 230, \"drafts\": \"173/183\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0\", \"test\": \"prefill 4K\", \"tok_s\": 796.7, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 50}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0\", \"test\": \"prefill 16K\", \"tok_s\": 889.2, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 50}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.25\", \"engine_args\": \"--pcie-frac 0.25\", \"test\": \"decode#1\", \"tok_s\": 55.4, \"tokens\": 230, \"drafts\": \"175/194\", \"cache_n\": 0}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.25\", \"engine_args\": \"--pcie-frac 0.25\", \"test\": \"decode#2\", \"tok_s\": 54.6, \"tokens\": 230, \"drafts\": \"170/191\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.25\", \"engine_args\": \"--pcie-frac 0.25\", \"test\": \"decode#3\", \"tok_s\": 55.8, \"tokens\": 230, \"drafts\": \"172/181\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.25\", \"test\": \"prefill 4K\", \"tok_s\": 800.3, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 53}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.25\", \"test\": \"prefill 16K\", \"tok_s\": 889.8, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 53}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#1\", \"tok_s\": 43.9, \"tokens\": 230, \"drafts\": \"175/194\", \"cache_n\": 0}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#2\", \"tok_s\": 44.6, \"tokens\": 230, \"drafts\": \"174/188\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.55\", \"engine_args\": \"--pcie-frac 0.55\", \"test\": \"decode#3\", \"tok_s\": 45.2, \"tokens\": 230, \"drafts\": \"175/196\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.55\", \"test\": \"prefill 4K\", \"tok_s\": 794.3, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 50}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.55\", \"test\": \"prefill 16K\", \"tok_s\": 887.7, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 50}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#1\", \"tok_s\": 39.6, \"tokens\": 229, \"drafts\": \"177/196\", \"cache_n\": 0}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#2\", \"tok_s\": 39.7, \"tokens\": 230, \"drafts\": \"176/197\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"engine_args\": \"--pcie-frac 0.75\", \"test\": \"decode#3\", \"tok_s\": 40.9, \"tokens\": 230, \"drafts\": \"179/202\", \"cache_n\": 267}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"test\": \"prefill 4K\", \"tok_s\": 794.6, \"tokens\": 4038, \"cache_n\": 0, \"ready_s\": 50}",
+                        "+{\"model\": \"iq4xs\", \"pcie_frac\": \"0.75\", \"test\": \"prefill 16K\", \"tok_s\": 887.1, \"tokens\": 16298, \"cache_n\": 0, \"ready_s\": 50}"
+                      ]
+                    }
+                  ],
+                  "created": true
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.py",
+                "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-04-3060m-pcie-frac.jsonl"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_018TvZ8fhLZXYALfsxXvR4H1",
+            "type": "tool_result",
+            "content": "strata-coder-iq1_m.json ['--kv', 'int8', '--pcie-frac', '0.2']\nstrata-unsloth-ud-iq4_xs.json ['--kv', 'int8', '--pcie-frac', '0.25']\nstrata-coder-iq1_m-64k.json False\nstrata-coder-iq1_m-64k-v224.json False\nconfigs are gitignored (local)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; python3 - <<'EOF'\nimport json\nfor f, v in ((\"strata-coder-iq1_m.json\", \"0.2\"), (\"strata-unsloth-ud-iq4_xs.json\", \"0.25\")):\n    c = json.load(open(f)); a = c[\"args\"]\n    if \"--pcie-frac\" in a: a[a.index(\"--pcie-frac\") + 1] = v\n    else: a += [\"--pcie-frac\", v]\n    json.dump(c, open(f, \"w\"), indent=1)\n    print(f, a[-4:])\nfor f in (\"strata-coder-iq1_m-64k.json\", \"strata-coder-iq1_m-64k-v224.json\"):\n    print(f, \"--pcie-frac\" in json.load(open(f))[\"args\"])\nEOF\nS=/tmp/claude-1000/-home-luwei-work-AI-Strata/fdd68fb3-d304-40df-b17b-5a7d3f2afd46/scratchpad; cp $S/pcie_ab2.py docs/benchmarks/2026-10-04-3060m-pcie-frac.py; cp $S/pcie_ab2.jsonl docs/benchmarks/2026-10-04-3060m-pcie-frac.jsonl; git check-ignore -q strata-coder-iq1_m.json && echo \"configs are gitignored (local)\"",
+          "description": "Set pcie-frac in the default configs and save the test"
+        }
+      }
+    },
+    {
+      "step_id": 918,
+      "timestamp": "2026-10-04T18:43:27.622Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 523516,
+        "completion_tokens": 579,
+        "cached_tokens": 523514,
+        "extra": {
+          "cache_creation_input_tokens": 1140,
+          "cache_read_input_tokens": 523514,
+          "output_tokens_details": {
+            "thinking_tokens": 428
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1140,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 579,
+              "cache_read_input_tokens": 523514,
+              "cache_creation_input_tokens": 1140,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1140
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 919,
+      "timestamp": "2026-10-04T18:43:27.625Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "I've confirmed the default configs changed while experiment configs retained the engine default, and saved the test script plus its 40 result rows under `docs/benchmarks/`. Since the script's `--pcie-frac X` flag overrides the config value (last argument wins), reruns remain accurate; now I'll add a doc section covering the method, results, and config listing.",
+      "metrics": {
+        "prompt_tokens": 523516,
+        "completion_tokens": 579,
+        "cached_tokens": 523514,
+        "extra": {
+          "cache_creation_input_tokens": 1140,
+          "cache_read_input_tokens": 523514,
+          "output_tokens_details": {
+            "thinking_tokens": 428
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1140,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 579,
+              "cache_read_input_tokens": 523514,
+              "cache_creation_input_tokens": 1140,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1140
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 920,
+      "timestamp": "2026-10-04T18:43:27.626Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01SLH4qdnfdo9Wu5zoLwtdWb",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01SLH4qdnfdo9Wu5zoLwtdWb",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; grep -n '\"--max-context\", \"32768\", \"--kv\", \"int8\"\\],' docs/3060M.md; grep -n \"^## \" docs/3060M.md | tail -5",
+            "description": "Find the config listing and the last sections"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01SLH4qdnfdo9Wu5zoLwtdWb",
+            "content": "237:          \"--max-context\", \"32768\", \"--kv\", \"int8\"],\n297:## Against llama.cpp on Strix Halo (the same tasks)\n361:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n447:## `/v1/completions` (added for BFCL's path B)\n466:## BFCL multi-turn against llama.cpp on the Strix Halo\n600:## Where the CPU time goes during BFCL\n\n[stdout]\n237:          \"--max-context\", \"32768\", \"--kv\", \"int8\"],\n297:## Against llama.cpp on Strix Halo (the same tasks)\n361:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n447:## `/v1/completions` (added for BFCL's path B)\n466:## BFCL multi-turn against llama.cpp on the Strix Halo\n600:## Where the CPU time goes during BFCL\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 523516,
+        "completion_tokens": 579,
+        "cached_tokens": 523514,
+        "extra": {
+          "cache_creation_input_tokens": 1140,
+          "cache_read_input_tokens": 523514,
+          "output_tokens_details": {
+            "thinking_tokens": 428
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1140,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 579,
+              "cache_read_input_tokens": 523514,
+              "cache_creation_input_tokens": 1140,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1140
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "237:          \"--max-context\", \"32768\", \"--kv\", \"int8\"],\n297:## Against llama.cpp on Strix Halo (the same tasks)\n361:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n447:## `/v1/completions` (added for BFCL's path B)\n466:## BFCL multi-turn against llama.cpp on the Strix Halo\n600:## Where the CPU time goes during BFCL",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01SLH4qdnfdo9Wu5zoLwtdWb",
+            "type": "tool_result",
+            "content": "237:          \"--max-context\", \"32768\", \"--kv\", \"int8\"],\n297:## Against llama.cpp on Strix Halo (the same tasks)\n361:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n447:## `/v1/completions` (added for BFCL's path B)\n466:## BFCL multi-turn against llama.cpp on the Strix Halo\n600:## Where the CPU time goes during BFCL",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "237:          \"--max-context\", \"32768\", \"--kv\", \"int8\"],\n297:## Against llama.cpp on Strix Halo (the same tasks)\n361:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n447:## `/v1/completions` (added for BFCL's path B)\n466:## BFCL multi-turn against llama.cpp on the Strix Halo\n600:## Where the CPU time goes during BFCL",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01SLH4qdnfdo9Wu5zoLwtdWb",
+            "type": "tool_result",
+            "content": "237:          \"--max-context\", \"32768\", \"--kv\", \"int8\"],\n297:## Against llama.cpp on Strix Halo (the same tasks)\n361:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n447:## `/v1/completions` (added for BFCL's path B)\n466:## BFCL multi-turn against llama.cpp on the Strix Halo\n600:## Where the CPU time goes during BFCL",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; grep -n '\"--max-context\", \"32768\", \"--kv\", \"int8\"\\],' docs/3060M.md; grep -n \"^## \" docs/3060M.md | tail -5",
+          "description": "Find the config listing and the last sections"
+        }
+      }
+    },
+    {
+      "step_id": 921,
+      "timestamp": "2026-10-04T18:43:45.372Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01T4zR83Y9Sv6tVKFVQqFiBp",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01T4zR83Y9Sv6tVKFVQqFiBp",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; python3 - <<'PYEOF'\np = \"docs/3060M.md\"; t = open(p).read()\nold = '          \"--max-context\", \"32768\", \"--kv\", \"int8\"],'\nnew = '          \"--max-context\", \"32768\", \"--kv\", \"int8\", \"--pcie-frac\", \"0.2\"],'\nassert t.count(old) == 1; t = t.replace(old, new)\nt = t.rstrip(\"\\n\") + \"\\n\" + r'''\n## `--pcie-frac`: decode and prefill\n\n`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;\nthe CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when\nthe link is fast: here \"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\" (`src/program/generate.cpp`:\n20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC\nthe two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),\nand the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.\n\n**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill\nthe other way, 0.65-0.85.\n\n**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in\n`benchmarks/2026-10-04-3060m-pcie-frac.jsonl`). For each model and value, a fresh server with the model's config plus\n`--pcie-frac X` (checked in the engine's arguments; the probe did not run), one warm-up request, then:\n\n- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,\n  thinking off, `max_tokens` 512 (the answers stop on their own at 229-230 tokens). Repeats 2 and 3 reuse the cached\n  prompt (`cache_n` 267) and their drafts differ a little, so the first, uncached run is given beside the median;\n- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused\n  (`cache_n` 0); the same text for every value.\n\n| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |\n|---|---|---|---|---|---|\n| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |\n| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |\n| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |\n| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |\n| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |\n| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |\n| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |\n| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |\n\ntokens/s. A single run before this test (same prompt, Coder) gave 61.8 / 61.3 / 51.7 t/s at 0 / 0.2 / 0.55, with\nbyte-identical answers at 0 and 0.2 and a different answer from byte 650 at 0.55; its GPU expert-cache hit rate rose\nwith the value (63.4% / 66.3% / 76.2%) while decode got slower.\n\n- **Decode: the prediction holds.** 0-0.25 is 20-25% faster than the 0.55 the engine picks, on both models; 0.75 is\n  another 10-11% slower. Between 0 and 0.2/0.25 there is no clear winner (the repeats vary by about 2 t/s, more than\n  the difference).\n- **Prefill: `--pcie-frac` changes nothing** - within 0.5% across all four values at 4K and 16K, on both models. The\n  prompt path streams every expert whatever the value says (as `tools/calibrate.py` notes), so the 0.65-0.85\n  predicted for prefill does not apply to this engine.\n- **So the configs now set it**: `--pcie-frac 0.2` in `strata-coder-iq1_m.json`, `0.25` in\n  `strata-unsloth-ud-iq4_xs.json` (2026-10-04). The configs made for the experiments above keep the engine's choice\n  (0.55): `strata-coder-iq1_m-64k.json` and `-64k-v224.json`, so the template test compares with the runs before it.\n  Every speed on this page measured before this section ran at 0.55: with the new setting, output is 20-25% faster\n  than those figures.\n'''\nopen(p, \"w\").write(t)\nPYEOF\ngrep -n \"^## \\`--pcie-frac\\`\" docs/3060M.md; grep -n '\"--pcie-frac\", \"0.2\"' docs/3060M.md",
+            "description": "Add the pcie-frac section and update the config listing"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01T4zR83Y9Sv6tVKFVQqFiBp",
+            "content": "626:## `--pcie-frac`: decode and prefill\n237:          \"--max-context\", \"32768\", \"--kv\", \"int8\", \"--pcie-frac\", \"0.2\"],\n\n[stdout]\n626:## `--pcie-frac`: decode and prefill\n237:          \"--max-context\", \"32768\", \"--kv\", \"int8\", \"--pcie-frac\", \"0.2\"],\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/3060M.md\", \"hunks\": [{\"oldStart\": 234, \"oldLines\": 7, \"newStart\": 234, \"newLines\": 7, \"lines\": [\"           \\\"--expert-profile\\\", \\\"/home/luwei/work/AI/Strata/data/expert-profile-coder.bin\\\",\", \"           \\\"--expert-cache\\\", \\\"auto\\\", \\\"--prefill\\\", \\\"auto\\\", \\\"--spec\\\", \\\"4\\\", \\\"--spec-min-p\\\", \\\"0.5\\\",\", \"           \\\"--mtp\\\", \\\"/home/luwei/work/AI/Strata-data/mtp/rt\\\",\", \"-          \\\"--max-context\\\", \\\"32768\\\", \\\"--kv\\\", \\\"int8\\\"],\", \"+          \\\"--max-context\\\", \\\"32768\\\", \\\"--kv\\\", \\\"int8\\\", \\\"--pcie-frac\\\", \\\"0.2\\\"],\", \"  \\\"cwd\\\": \\\"/home/luwei/work/AI/Strata\\\",\", \"  \\\"tokenizer\\\": \\\"/home/luwei/work/AI/Strata-data/packs/coder-iq1_m/tokenizer\\\",\", \"  \\\"model_name\\\": \\\"qwen3.8-flash-next-coder-iq1_m\\\",\"]}, {\"oldStart\": 622, \"oldLines\": 3, \"newStart\": 622, \"newLines\": 52, \"lines\": [\" iGPU 57 °C; SSD 42.8 °C. CCD1 is warmer because it holds core 0 with the spinning host thread (seven engine threads are\", \" pinned to CPU 0, the host thread among them), and it runs about 180 MHz faster than CCD2; the worker load is spread evenly over\", \" both. 87 °C is below the 8945HX's 100 °C limit.\", \"+\", \"+## `--pcie-frac`: decode and prefill\", \"+\", \"+`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;\", \"+the CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when\", \"+the link is fast: here \\\"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\\\" (`src/program/generate.cpp`:\", \"+20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC\", \"+the two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),\", \"+and the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.\", \"+\", \"+**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill\", \"+the other way, 0.65-0.85.\", \"+\", \"+**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in\", \"+`benchmarks/2026-10-04-3060m-pcie-frac.jsonl`). For each model and value, a fresh server with the model's config plus\", \"+`--pcie-frac X` (checked in the engine's arguments; the probe did not run), one warm-up request, then:\", \"+\", \"+- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,\", \"+  thinking off, `max_tokens` 512 (the answers stop on their own at 229-230 tokens). Repeats 2 and 3 reuse the cached\", \"+  prompt (`cache_n` 267) and their drafts differ a little, so the first, uncached run is given beside the median;\", \"+- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused\", \"+  (`cache_n` 0); the same text for every value.\", \"+\", \"+| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |\", \"+|---|---|---|---|---|---|\", \"+| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |\", \"+| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |\", \"+| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |\", \"+| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |\", \"+| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |\", \"+| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |\", \"+| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |\", \"+| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |\", \"+\", \"+tokens/s. A single run before this test (same prompt, Coder) gave 61.8 / 61.3 / 51.7 t/s at 0 / 0.2 / 0.55, with\", \"+byte-identical answers at 0 and 0.2 and a different answer from byte 650 at 0.55; its GPU expert-cache hit rate rose\", \"+with the value (63.4% / 66.3% / 76.2%) while decode got slower.\", \"+\", \"+- **Decode: the prediction holds.** 0-0.25 is 20-25% faster than the 0.55 the engine picks, on both models; 0.75 is\", \"+  another 10-11% slower. Between 0 and 0.2/0.25 there is no clear winner (the repeats vary by about 2 t/s, more than\", \"+  the difference).\", \"+- **Prefill: `--pcie-frac` changes nothing** - within 0.5% across all four values at 4K and 16K, on both models. The\", \"+  prompt path streams every expert whatever the value says (as `tools/calibrate.py` notes), so the 0.65-0.85\", \"+  predicted for prefill does not apply to this engine.\", \"+- **So the configs now set it**: `--pcie-frac 0.2` in `strata-coder-iq1_m.json`, `0.25` in\", \"+  `strata-unsloth-ud-iq4_xs.json` (2026-10-04). The configs made for the experiments above keep the engine's choice\", \"+  (0.55): `strata-coder-iq1_m-64k.json` and `-64k-v224.json`, so the template test compares with the runs before it.\", \"+  Every speed on this page measured before this section ran at 0.55: with the new setting, output is 20-25% faster\", \"+  than those figures.\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/3060M.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 524656,
+        "completion_tokens": 2026,
+        "cached_tokens": 524654,
+        "extra": {
+          "cache_creation_input_tokens": 756,
+          "cache_read_input_tokens": 524654,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 756,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2026,
+              "cache_read_input_tokens": 524654,
+              "cache_creation_input_tokens": 756,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 756
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "626:## `--pcie-frac`: decode and prefill\n237:          \"--max-context\", \"32768\", \"--kv\", \"int8\", \"--pcie-frac\", \"0.2\"],",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 234,
+                      "oldLines": 7,
+                      "newStart": 234,
+                      "newLines": 7,
+                      "lines": [
+                        "           \"--expert-profile\", \"/home/luwei/work/AI/Strata/data/expert-profile-coder.bin\",",
+                        "           \"--expert-cache\", \"auto\", \"--prefill\", \"auto\", \"--spec\", \"4\", \"--spec-min-p\", \"0.5\",",
+                        "           \"--mtp\", \"/home/luwei/work/AI/Strata-data/mtp/rt\",",
+                        "-          \"--max-context\", \"32768\", \"--kv\", \"int8\"],",
+                        "+          \"--max-context\", \"32768\", \"--kv\", \"int8\", \"--pcie-frac\", \"0.2\"],",
+                        "  \"cwd\": \"/home/luwei/work/AI/Strata\",",
+                        "  \"tokenizer\": \"/home/luwei/work/AI/Strata-data/packs/coder-iq1_m/tokenizer\",",
+                        "  \"model_name\": \"qwen3.8-flash-next-coder-iq1_m\","
+                      ]
+                    },
+                    {
+                      "oldStart": 622,
+                      "oldLines": 3,
+                      "newStart": 622,
+                      "newLines": 52,
+                      "lines": [
+                        " iGPU 57 °C; SSD 42.8 °C. CCD1 is warmer because it holds core 0 with the spinning host thread (seven engine threads are",
+                        " pinned to CPU 0, the host thread among them), and it runs about 180 MHz faster than CCD2; the worker load is spread evenly over",
+                        " both. 87 °C is below the 8945HX's 100 °C limit.",
+                        "+",
+                        "+## `--pcie-frac`: decode and prefill",
+                        "+",
+                        "+`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;",
+                        "+the CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when",
+                        "+the link is fast: here \"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\" (`src/program/generate.cpp`:",
+                        "+20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC",
+                        "+the two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),",
+                        "+and the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.",
+                        "+",
+                        "+**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill",
+                        "+the other way, 0.65-0.85.",
+                        "+",
+                        "+**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in",
+                        "+`benchmarks/2026-10-04-3060m-pcie-frac.jsonl`). For each model and value, a fresh server with the model's config plus",
+                        "+`--pcie-frac X` (checked in the engine's arguments; the probe did not run), one warm-up request, then:",
+                        "+",
+                        "+- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,",
+                        "+  thinking off, `max_tokens` 512 (the answers stop on their own at 229-230 tokens). Repeats 2 and 3 reuse the cached",
+                        "+  prompt (`cache_n` 267) and their drafts differ a little, so the first, uncached run is given beside the median;",
+                        "+- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused",
+                        "+  (`cache_n` 0); the same text for every value.",
+                        "+",
+                        "+| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |",
+                        "+|---|---|---|---|---|---|",
+                        "+| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |",
+                        "+| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |",
+                        "+| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |",
+                        "+| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |",
+                        "+| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |",
+                        "+| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |",
+                        "+| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |",
+                        "+| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |",
+                        "+",
+                        "+tokens/s. A single run before this test (same prompt, Coder) gave 61.8 / 61.3 / 51.7 t/s at 0 / 0.2 / 0.55, with",
+                        "+byte-identical answers at 0 and 0.2 and a different answer from byte 650 at 0.55; its GPU expert-cache hit rate rose",
+                        "+with the value (63.4% / 66.3% / 76.2%) while decode got slower.",
+                        "+",
+                        "+- **Decode: the prediction holds.** 0-0.25 is 20-25% faster than the 0.55 the engine picks, on both models; 0.75 is",
+                        "+  another 10-11% slower. Between 0 and 0.2/0.25 there is no clear winner (the repeats vary by about 2 t/s, more than",
+                        "+  the difference).",
+                        "+- **Prefill: `--pcie-frac` changes nothing** - within 0.5% across all four values at 4K and 16K, on both models. The",
+                        "+  prompt path streams every expert whatever the value says (as `tools/calibrate.py` notes), so the 0.65-0.85",
+                        "+  predicted for prefill does not apply to this engine.",
+                        "+- **So the configs now set it**: `--pcie-frac 0.2` in `strata-coder-iq1_m.json`, `0.25` in",
+                        "+  `strata-unsloth-ud-iq4_xs.json` (2026-10-04). The configs made for the experiments above keep the engine's choice",
+                        "+  (0.55): `strata-coder-iq1_m-64k.json` and `-64k-v224.json`, so the template test compares with the runs before it.",
+                        "+  Every speed on this page measured before this section ran at 0.55: with the new setting, output is 20-25% faster",
+                        "+  than those figures."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01T4zR83Y9Sv6tVKFVQqFiBp",
+            "type": "tool_result",
+            "content": "626:## `--pcie-frac`: decode and prefill\n237:          \"--max-context\", \"32768\", \"--kv\", \"int8\", \"--pcie-frac\", \"0.2\"],",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "626:## `--pcie-frac`: decode and prefill\n237:          \"--max-context\", \"32768\", \"--kv\", \"int8\", \"--pcie-frac\", \"0.2\"],",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 234,
+                      "oldLines": 7,
+                      "newStart": 234,
+                      "newLines": 7,
+                      "lines": [
+                        "           \"--expert-profile\", \"/home/luwei/work/AI/Strata/data/expert-profile-coder.bin\",",
+                        "           \"--expert-cache\", \"auto\", \"--prefill\", \"auto\", \"--spec\", \"4\", \"--spec-min-p\", \"0.5\",",
+                        "           \"--mtp\", \"/home/luwei/work/AI/Strata-data/mtp/rt\",",
+                        "-          \"--max-context\", \"32768\", \"--kv\", \"int8\"],",
+                        "+          \"--max-context\", \"32768\", \"--kv\", \"int8\", \"--pcie-frac\", \"0.2\"],",
+                        "  \"cwd\": \"/home/luwei/work/AI/Strata\",",
+                        "  \"tokenizer\": \"/home/luwei/work/AI/Strata-data/packs/coder-iq1_m/tokenizer\",",
+                        "  \"model_name\": \"qwen3.8-flash-next-coder-iq1_m\","
+                      ]
+                    },
+                    {
+                      "oldStart": 622,
+                      "oldLines": 3,
+                      "newStart": 622,
+                      "newLines": 52,
+                      "lines": [
+                        " iGPU 57 °C; SSD 42.8 °C. CCD1 is warmer because it holds core 0 with the spinning host thread (seven engine threads are",
+                        " pinned to CPU 0, the host thread among them), and it runs about 180 MHz faster than CCD2; the worker load is spread evenly over",
+                        " both. 87 °C is below the 8945HX's 100 °C limit.",
+                        "+",
+                        "+## `--pcie-frac`: decode and prefill",
+                        "+",
+                        "+`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;",
+                        "+the CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when",
+                        "+the link is fast: here \"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\" (`src/program/generate.cpp`:",
+                        "+20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC",
+                        "+the two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),",
+                        "+and the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.",
+                        "+",
+                        "+**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill",
+                        "+the other way, 0.65-0.85.",
+                        "+",
+                        "+**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in",
+                        "+`benchmarks/2026-10-04-3060m-pcie-frac.jsonl`). For each model and value, a fresh server with the model's config plus",
+                        "+`--pcie-frac X` (checked in the engine's arguments; the probe did not run), one warm-up request, then:",
+                        "+",
+                        "+- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,",
+                        "+  thinking off, `max_tokens` 512 (the answers stop on their own at 229-230 tokens). Repeats 2 and 3 reuse the cached",
+                        "+  prompt (`cache_n` 267) and their drafts differ a little, so the first, uncached run is given beside the median;",
+                        "+- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused",
+                        "+  (`cache_n` 0); the same text for every value.",
+                        "+",
+                        "+| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |",
+                        "+|---|---|---|---|---|---|",
+                        "+| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |",
+                        "+| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |",
+                        "+| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |",
+                        "+| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |",
+                        "+| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |",
+                        "+| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |",
+                        "+| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |",
+                        "+| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |",
+                        "+",
+                        "+tokens/s. A single run before this test (same prompt, Coder) gave 61.8 / 61.3 / 51.7 t/s at 0 / 0.2 / 0.55, with",
+                        "+byte-identical answers at 0 and 0.2 and a different answer from byte 650 at 0.55; its GPU expert-cache hit rate rose",
+                        "+with the value (63.4% / 66.3% / 76.2%) while decode got slower.",
+                        "+",
+                        "+- **Decode: the prediction holds.** 0-0.25 is 20-25% faster than the 0.55 the engine picks, on both models; 0.75 is",
+                        "+  another 10-11% slower. Between 0 and 0.2/0.25 there is no clear winner (the repeats vary by about 2 t/s, more than",
+                        "+  the difference).",
+                        "+- **Prefill: `--pcie-frac` changes nothing** - within 0.5% across all four values at 4K and 16K, on both models. The",
+                        "+  prompt path streams every expert whatever the value says (as `tools/calibrate.py` notes), so the 0.65-0.85",
+                        "+  predicted for prefill does not apply to this engine.",
+                        "+- **So the configs now set it**: `--pcie-frac 0.2` in `strata-coder-iq1_m.json`, `0.25` in",
+                        "+  `strata-unsloth-ud-iq4_xs.json` (2026-10-04). The configs made for the experiments above keep the engine's choice",
+                        "+  (0.55): `strata-coder-iq1_m-64k.json` and `-64k-v224.json`, so the template test compares with the runs before it.",
+                        "+  Every speed on this page measured before this section ran at 0.55: with the new setting, output is 20-25% faster",
+                        "+  than those figures."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01T4zR83Y9Sv6tVKFVQqFiBp",
+            "type": "tool_result",
+            "content": "626:## `--pcie-frac`: decode and prefill\n237:          \"--max-context\", \"32768\", \"--kv\", \"int8\", \"--pcie-frac\", \"0.2\"],",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; python3 - <<'PYEOF'\np = \"docs/3060M.md\"; t = open(p).read()\nold = '          \"--max-context\", \"32768\", \"--kv\", \"int8\"],'\nnew = '          \"--max-context\", \"32768\", \"--kv\", \"int8\", \"--pcie-frac\", \"0.2\"],'\nassert t.count(old) == 1; t = t.replace(old, new)\nt = t.rstrip(\"\\n\") + \"\\n\" + r'''\n## `--pcie-frac`: decode and prefill\n\n`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;\nthe CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when\nthe link is fast: here \"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\" (`src/program/generate.cpp`:\n20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC\nthe two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),\nand the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.\n\n**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill\nthe other way, 0.65-0.85.\n\n**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in\n`benchmarks/2026-10-04-3060m-pcie-frac.jsonl`). For each model and value, a fresh server with the model's config plus\n`--pcie-frac X` (checked in the engine's arguments; the probe did not run), one warm-up request, then:\n\n- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,\n  thinking off, `max_tokens` 512 (the answers stop on their own at 229-230 tokens). Repeats 2 and 3 reuse the cached\n  prompt (`cache_n` 267) and their drafts differ a little, so the first, uncached run is given beside the median;\n- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused\n  (`cache_n` 0); the same text for every value.\n\n| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |\n|---|---|---|---|---|---|\n| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |\n| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |\n| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |\n| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |\n| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |\n| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |\n| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |\n| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |\n\ntokens/s. A single run before this test (same prompt, Coder) gave 61.8 / 61.3 / 51.7 t/s at 0 / 0.2 / 0.55, with\nbyte-identical answers at 0 and 0.2 and a different answer from byte 650 at 0.55; its GPU expert-cache hit rate rose\nwith the value (63.4% / 66.3% / 76.2%) while decode got slower.\n\n- **Decode: the prediction holds.** 0-0.25 is 20-25% faster than the 0.55 the engine picks, on both models; 0.75 is\n  another 10-11% slower. Between 0 and 0.2/0.25 there is no clear winner (the repeats vary by about 2 t/s, more than\n  the difference).\n- **Prefill: `--pcie-frac` changes nothing** - within 0.5% across all four values at 4K and 16K, on both models. The\n  prompt path streams every expert whatever the value says (as `tools/calibrate.py` notes), so the 0.65-0.85\n  predicted for prefill does not apply to this engine.\n- **So the configs now set it**: `--pcie-frac 0.2` in `strata-coder-iq1_m.json`, `0.25` in\n  `strata-unsloth-ud-iq4_xs.json` (2026-10-04). The configs made for the experiments above keep the engine's choice\n  (0.55): `strata-coder-iq1_m-64k.json` and `-64k-v224.json`, so the template test compares with the runs before it.\n  Every speed on this page measured before this section ran at 0.55: with the new setting, output is 20-25% faster\n  than those figures.\n'''\nopen(p, \"w\").write(t)\nPYEOF\ngrep -n \"^## \\`--pcie-frac\\`\" docs/3060M.md; grep -n '\"--pcie-frac\", \"0.2\"' docs/3060M.md",
+          "description": "Add the pcie-frac section and update the config listing"
+        }
+      }
+    },
+    {
+      "step_id": 922,
+      "timestamp": "2026-10-04T18:43:49.140Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 525412,
+        "completion_tokens": 510,
+        "cached_tokens": 525410,
+        "extra": {
+          "cache_creation_input_tokens": 2112,
+          "cache_read_input_tokens": 525410,
+          "output_tokens_details": {
+            "thinking_tokens": 124
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2112,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 510,
+              "cache_read_input_tokens": 525410,
+              "cache_creation_input_tokens": 2112,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2112
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 923,
+      "timestamp": "2026-10-04T18:43:49.145Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Step 7 of the doc says its config \"carries the arguments setup chooses\", which `--pcie-frac` no longer fits. Adding a sentence there:",
+      "metrics": {
+        "prompt_tokens": 525412,
+        "completion_tokens": 510,
+        "cached_tokens": 525410,
+        "extra": {
+          "cache_creation_input_tokens": 2112,
+          "cache_read_input_tokens": 525410,
+          "output_tokens_details": {
+            "thinking_tokens": 124
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2112,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 510,
+              "cache_read_input_tokens": 525410,
+              "cache_creation_input_tokens": 2112,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2112
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 924,
+      "timestamp": "2026-10-04T18:43:51.528Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_013DLL61aPGcXnJUqxqZmnsN",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_013DLL61aPGcXnJUqxqZmnsN",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; python3 - <<'PYEOF'\np = \"docs/3060M.md\"; t = open(p).read()\nold = \"`lib_dirs` is what makes the conda CUDA libraries work\"\nassert t.count(old) == 1\nt = t.replace(old, \"`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)\\n(setup leaves it to the engine, which picks 0.55 here); everything measured before that ran at 0.55.\\n\\n\" + old)\nopen(p, \"w\").write(t)\nPYEOF\ngrep -n \"was added on 2026-10-04\" docs/3060M.md",
+            "description": "Note the added flag in step 7"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_013DLL61aPGcXnJUqxqZmnsN",
+            "content": "247:`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)\n\n[stdout]\n247:`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/3060M.md\", \"hunks\": [{\"oldStart\": 244, \"oldLines\": 6, \"newStart\": 244, \"newLines\": 9, \"lines\": [\" }\", \" ```\", \" \", \"+`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)\", \"+(setup leaves it to the engine, which picks 0.55 here); everything measured before that ran at 0.55.\", \"+\", \" `lib_dirs` is what makes the conda CUDA libraries work: the server puts them on the engine's `LD_LIBRARY_PATH`\", \" (`serve/server.py`, `child_env`).\", \" \"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/3060M.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 525412,
+        "completion_tokens": 510,
+        "cached_tokens": 525410,
+        "extra": {
+          "cache_creation_input_tokens": 2112,
+          "cache_read_input_tokens": 525410,
+          "output_tokens_details": {
+            "thinking_tokens": 124
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2112,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 510,
+              "cache_read_input_tokens": 525410,
+              "cache_creation_input_tokens": 2112,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2112
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "247:`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 244,
+                      "oldLines": 6,
+                      "newStart": 244,
+                      "newLines": 9,
+                      "lines": [
+                        " }",
+                        " ```",
+                        " ",
+                        "+`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)",
+                        "+(setup leaves it to the engine, which picks 0.55 here); everything measured before that ran at 0.55.",
+                        "+",
+                        " `lib_dirs` is what makes the conda CUDA libraries work: the server puts them on the engine's `LD_LIBRARY_PATH`",
+                        " (`serve/server.py`, `child_env`).",
+                        " "
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_013DLL61aPGcXnJUqxqZmnsN",
+            "type": "tool_result",
+            "content": "247:`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "247:`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 244,
+                      "oldLines": 6,
+                      "newStart": 244,
+                      "newLines": 9,
+                      "lines": [
+                        " }",
+                        " ```",
+                        " ",
+                        "+`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)",
+                        "+(setup leaves it to the engine, which picks 0.55 here); everything measured before that ran at 0.55.",
+                        "+",
+                        " `lib_dirs` is what makes the conda CUDA libraries work: the server puts them on the engine's `LD_LIBRARY_PATH`",
+                        " (`serve/server.py`, `child_env`).",
+                        " "
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_013DLL61aPGcXnJUqxqZmnsN",
+            "type": "tool_result",
+            "content": "247:`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; python3 - <<'PYEOF'\np = \"docs/3060M.md\"; t = open(p).read()\nold = \"`lib_dirs` is what makes the conda CUDA libraries work\"\nassert t.count(old) == 1\nt = t.replace(old, \"`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)\\n(setup leaves it to the engine, which picks 0.55 here); everything measured before that ran at 0.55.\\n\\n\" + old)\nopen(p, \"w\").write(t)\nPYEOF\ngrep -n \"was added on 2026-10-04\" docs/3060M.md",
+          "description": "Note the added flag in step 7"
+        }
+      }
+    },
+    {
+      "step_id": 925,
+      "timestamp": "2026-10-04T18:43:59.838Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "I changed the default configs and recorded the experiment in `docs/3060M.md`.\n\n**Configs:**\n- `strata-coder-iq1_m.json` now sets `--pcie-frac 0.2`, so `run-coder-iq1_m.sh` uses it.\n- `strata-unsloth-ud-iq4_xs.json` now sets `--pcie-frac 0.25`.\n- **Left at the engine's 0.55:** the experiment configs, `strata-coder-iq1_m-64k.json` and `-64k-v224.json`. The paused template test should compare with the earlier runs under the same setting.\n- **BFCL:** future runs with `--config strata-gsq` / `strata-iq4xs` will use the new values, since those options point at the default configs.\n- The configs are gitignored local files, so the doc is the record of this change.\n\n**Doc** (a new section, \"`--pcie-frac`: decode and prefill\"):\n- **Why the engine picks 0.55:** its probe rule keeps the default on a 20+ GB/s link. It never compares the PCIe link (26.8 GB/s) with the CPU's RAM path (~55 GB/s), even though the copies come out of that same RAM bandwidth.\n- **Your prediction:** decode best near 0.2 / 0.25, prefill best at 0.65–0.85.\n- **The test:** a fresh server for each value, with the flag checked in the engine's arguments; a warm-up; decode ×3 on the same prompt; prefill at 4K and 16K with no cache reuse.\n- **The full table for both models.** It also includes the earlier single-run test, where 0 and 0.2 gave byte-identical answers and 0.55 a different one.\n- **Conclusions:** decode is 20–25% faster at 0–0.25. Prefill doesn't change at any value, because Strata's prompt path streams every expert whatever the setting.\n- **A dating note:** every speed on the page measured before this section ran at 0.55. Step 7's config listing also notes when and why the flag was added.\n\nThe test script and its 40 result rows are saved as `docs/benchmarks/2026-10-04-3060m-pcie-frac.py` and `.jsonl`.\n\nThe template test is still paused at 10/400, and resumes with the `--resume` command given earlier.",
+      "metrics": {
+        "prompt_tokens": 527524,
+        "completion_tokens": 761,
+        "cached_tokens": 527522,
+        "extra": {
+          "cache_creation_input_tokens": 607,
+          "cache_read_input_tokens": 527522,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 607,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 761,
+              "cache_read_input_tokens": 527522,
+              "cache_creation_input_tokens": 607,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 607
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 232986695,
-    "total_completion_tokens": 614217,
-    "total_cached_tokens": 232984863,
-    "total_steps": 913,
+    "total_prompt_tokens": 238756069,
+    "total_completion_tokens": 623205,
+    "total_cached_tokens": 238754215,
+    "total_steps": 925,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 8352435,
-      "total_cache_read_input_tokens": 232984863
+      "total_cache_creation_input_tokens": 8363692,
+      "total_cache_read_input_tokens": 238754215
     }
   }
 }
