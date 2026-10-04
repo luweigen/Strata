@@ -85,6 +85,7 @@
 #include <mutex>
 #include <optional>
 #include <new>
+#include <memory>
 #include <charconv>
 #include <cmath>
 #include <limits>
@@ -976,6 +977,78 @@ double probe_pcie_h2d_gbps() {
     return bw;
 }
 
+// The host-RAM read bandwidth the CPU expert pool draws on: `threads` threads (the pool's, one per physical core)
+// each sum their slice of a 1 GiB buffer (far past any L3), best of 3 passes.  The pool reads the missed experts'
+// weights from this RAM, and the PCIe share's copies are read from the same RAM, so the default share depends on
+// it as much as on the link.  Returns < 0 when it cannot run (then the caller keeps the link-only rule).
+double probe_host_read_gbps(int threads) {
+    constexpr size_t kBytes = 1ull << 30;
+    constexpr size_t kWords = kBytes / sizeof(uint64_t);
+    threads = std::max(1, threads);
+    std::unique_ptr<uint64_t[]> buf(new (std::nothrow) uint64_t[kWords]);
+    if (!buf) return -1.0;
+    std::atomic<uint64_t> sink{0};
+    double best = std::numeric_limits<double>::max();
+    for (int pass = 0; pass < 4; ++pass) {          // pass 0 faults the pages in from the threads that read them
+        const auto t0 = std::chrono::steady_clock::now();
+        std::vector<std::thread> ts;
+        ts.reserve((size_t) threads);
+        for (int k = 0; k < threads; ++k) {
+            ts.emplace_back([&, k] {
+                const size_t lo = kWords * (size_t) k / (size_t) threads, hi = kWords * (size_t) (k + 1) / (size_t) threads;
+                uint64_t* p = buf.get();
+                if (pass == 0) {
+                    std::memset(p + lo, 1, (hi - lo) * sizeof(uint64_t));
+                    return;
+                }
+                uint64_t a0 = 0, a1 = 0, a2 = 0, a3 = 0;   // four chains: the adds never limit the reads
+                size_t i = lo;
+                for (; i + 4 <= hi; i += 4) {
+                    a0 += p[i];
+                    a1 += p[i + 1];
+                    a2 += p[i + 2];
+                    a3 += p[i + 3];
+                }
+                for (; i < hi; ++i) a0 += p[i];
+                sink.fetch_add(a0 + a1 + a2 + a3, std::memory_order_relaxed);
+            });
+        }
+        for (auto& t : ts) t.join();
+        const double s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+        if (pass > 0) best = std::min(best, s);
+    }
+    return sink.load() != 0 && best > 0.0 ? (double) kBytes / best / 1e9 : -1.0;
+}
+
+// The default PCIe share of the missed experts (plan v0.3 P6), for both CUDA0 and a layer split's other cards.
+// The link-only rule (PR #44): 0.55 for native packs from 20 GB/s up, scaled down on slower links, none below 4.
+// DRAFT, opt-in with STRATA_PCIE_HOST_RULE=1 (docs/3060M.md, "--pcie-frac"): the link is weighed against the
+// host's RAM read bandwidth too.  0.55 was measured on a 6-core machine with an x16 link of ~27 GB/s whose pool
+// kernel reads 44.14 GB/s (see `no_host_worker`); a PC whose CPU side is faster relative to its link wants a smaller
+// share - measured on an RTX 3060 Laptop GPU + Ryzen 9 8945HX (26.8 GB/s link, ~55 GB/s RAM read): best at 0-0.25,
+// 20-25% faster decode than 0.55.  The ratio rule alone gives 0.44 there: the GPU-side cost of the copy kernel is
+// not in it yet, so it lowers the share only part of the way.  The rule never raises the link-only value.
+double default_pcie_frac(bool native_pack, double link_gbps, double host_gbps) {
+    constexpr double kBase = 0.55;
+    if (!native_pack) return 0.2;   // the canonical pack's 0.2 was never measured against the link
+    if (link_gbps <= 0.0) return kBase;
+    double f = link_gbps >= 20.0 ? kBase
+             : link_gbps < 4.0  ? 0.0
+                                : std::min(kBase, std::max(0.05, kBase * (link_gbps / 26.0)));
+    const char* on = std::getenv("STRATA_PCIE_HOST_RULE");
+    if (on != nullptr && std::strcmp(on, "1") == 0 && host_gbps > 0.0 && f > 0.0) {
+        constexpr double kRefLinkToHost = 27.0 / 44.14;   // the measuring machine's link : pool kernel read
+        f = std::min(f, std::max(0.05, kBase * (link_gbps / host_gbps) / kRefLinkToHost));
+    }
+    return f;
+}
+
+// The host read bandwidth, probed once per process (it is the same RAM for every card of a layer split).
+double host_read_gbps_once() {
+    static const double gbps = probe_host_read_gbps((int) strata::kernels::cpu::physical_cores(true).size());
+    return gbps;
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -1726,9 +1799,11 @@ int main(int argc, char** argv) {
         } else if (bw > 0.0) {
             // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU
             // pool takes to compute it, so none of them go over the link
-            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));
-            std::fprintf(stderr, "strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\n",
-                         bw, o.pcie_frac, base);
+            const double host = host_read_gbps_once();
+            o.pcie_frac = default_pcie_frac(native_pack, bw, host);
+            std::fprintf(stderr, "strata generate: PCIe probe: %.1f GB/s host->device, host RAM read %.1f GB/s -> "
+                         "pcie_frac %.2f (default %.2f%s)\n", bw, host, o.pcie_frac, base,
+                         std::getenv("STRATA_PCIE_HOST_RULE") ? "; host rule on" : "");
         } else {
             o.pcie_frac = base;
             std::fprintf(stderr, "strata generate: PCIe probe failed -> pcie_frac default %.2f\n", base);
@@ -2233,7 +2308,7 @@ int main(int argc, char** argv) {
         st.pcie_frac = o.pcie_frac;
         if (!pcie_given && native_pack) {
             const double bw = probe_pcie_h2d_gbps();
-            if (bw > 0.0) st.pcie_frac = bw >= 20.0 ? 0.55 : bw < 4.0 ? 0.0 : std::min(0.55, std::max(0.05, 0.55 * (bw / 26.0)));
+            if (bw > 0.0) st.pcie_frac = default_pcie_frac(true, bw, host_read_gbps_once());
             std::fprintf(stderr, "strata generate: layer split: CUDA%d PCIe probe %.1f GB/s -> pcie_frac %.2f\n", st.dev,
                          bw, st.pcie_frac);
         }
