@@ -64645,19 +64645,1050 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 940,
+      "timestamp": "2026-10-04T18:47:51.865Z",
+      "source": "user",
+      "message": "所以strata代码计算pcie-frac的方式有问题吗？",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 941,
+      "timestamp": "2026-10-04T18:47:53.795Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 533787,
+        "completion_tokens": 216,
+        "cached_tokens": 533785,
+        "extra": {
+          "cache_creation_input_tokens": 50,
+          "cache_read_input_tokens": 533785,
+          "output_tokens_details": {
+            "thinking_tokens": 33
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 50,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 216,
+              "cache_read_input_tokens": 533785,
+              "cache_creation_input_tokens": 50,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 50
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 942,
+      "timestamp": "2026-10-04T18:47:55.140Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "I'll read the code that picks the value before answering:",
+      "metrics": {
+        "prompt_tokens": 533787,
+        "completion_tokens": 216,
+        "cached_tokens": 533785,
+        "extra": {
+          "cache_creation_input_tokens": 50,
+          "cache_read_input_tokens": 533785,
+          "output_tokens_details": {
+            "thinking_tokens": 33
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 50,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 216,
+              "cache_read_input_tokens": 533785,
+              "cache_creation_input_tokens": 50,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 50
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 943,
+      "timestamp": "2026-10-04T18:47:55.160Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01LVY4BPqAENqULDrJsvEDQs",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01LVY4BPqAENqULDrJsvEDQs",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; sed -n 1700,1740p src/program/generate.cpp; grep -n \"pcie_frac\" src/program/generate.cpp | sed -n 1,40p | awk -F: '$1>2200' | head -15",
+            "description": "Read the pcie_frac selection code"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01LVY4BPqAENqULDrJsvEDQs",
+            "content": "// STRATA_EARLY_REMOTE_CONTEXTS=1: create EVERY secondary context here, like CUDA1's.  Under WSL2 the driver's\n    // pinned/mapped host budget (dxg gpadl, ~1 GiB) is spent by CUDA0's weights and MTP before the later loop runs,\n    // and a new context then fails with cudaErrorMemoryAllocation (CUDA2: \"cudaSetDevice(2) failed: out of memory\").\n    const char* early_env = std::getenv(\"STRATA_EARLY_REMOTE_CONTEXTS\");\n    const bool early_remote = early_env && early_env[0] == '1';\n    for (int r = 0; r < 3; ++r) if (o.expert_cache_remote[(size_t) r] > 0 && (r == 0 || early_remote)) {\n        // Keep CUDA1's proven startup order: initialise its context before\n        // allocating GPU0 weights or mapping the large host expert arena.\n        double free_gib = 0;\n        if (!strata::core::RemoteExperts::preflight(remote_dev[r], free_gib, err)) {\n            std::fprintf(stderr, \"strata generate: %s\\n\", err.c_str());\n            return 1;\n        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n2233:        st.pcie_frac = o.pcie_frac;\n2236:            if (bw > 0.0) st.pcie_frac = bw >= 20.0 ? 0.55 : bw < 4.0 ? 0.0 : std::min(0.55, std::max(0.05, 0.55 * (bw / 26.0)));\n2237:            std::fprintf(stderr, \"strata generate: layer split: CUDA%d PCIe probe %.1f GB/s -> pcie_frac %.2f\\n\", st.dev,\n2238:                         bw, st.pcie_frac);\n4174:                split_drive.pcie_num[st] = pcie_num_of(o.pcie_frac);\n4192:                    split_drive.pcie_num[st] = pcie_num_of(gs.pcie_frac);\n4423:        drive.d.pcie_num = std::max(0, std::min(256, (int) (o.pcie_frac * 256.0 + 0.5)));\n4615:                        \"mtp_max=%d lookup=%d vram_free_mib=%lld cvec=%s arena_mib=%lld pool_workers=%d pcie_frac=%.2f \"\n4626:                        pool.workers(), o.pcie_frac,\n4702:            double req_pcie_frac = o.pcie_frac, req_spec_min_p = o.spec_min_p;\n4725:                    else if (key == \"pcie_frac\") req_pcie_frac = std::clamp((double) fv, 0.0, 1.0);\n5205:            drive.d.pcie_num = std::max(0, std::min(256, (int) (req_pcie_frac * 256.0 + 0.5)));\n5208:                split_drive.pcie_num[st] = (st == 0 || split_same || req_pcie_frac != o.pcie_frac)\n5209:                                               ? drive.d.pcie_num : pcie_num_of(stages[(size_t) st - 1]->pcie_frac);\n6017:        drive.d.pcie_num = (int) (o.pcie_frac * 256.0 + 0.5);\n\n[stdout]\n    // STRATA_EARLY_REMOTE_CONTEXTS=1: create EVERY secondary context here, like CUDA1's.  Under WSL2 the driver's\n    // pinned/mapped host budget (dxg gpadl, ~1 GiB) is spent by CUDA0's weights and MTP before the later loop runs,\n    // and a new context then fails with cudaErrorMemoryAllocation (CUDA2: \"cudaSetDevice(2) failed: out of memory\").\n    const char* early_env = std::getenv(\"STRATA_EARLY_REMOTE_CONTEXTS\");\n    const bool early_remote = early_env && early_env[0] == '1';\n    for (int r = 0; r < 3; ++r) if (o.expert_cache_remote[(size_t) r] > 0 && (r == 0 || early_remote)) {\n        // Keep CUDA1's proven startup order: initialise its context before\n        // allocating GPU0 weights or mapping the large host expert arena.\n        double free_gib = 0;\n        if (!strata::core::RemoteExperts::preflight(remote_dev[r], free_gib, err)) {\n            std::fprintf(stderr, \"strata generate: %s\\n\", err.c_str());\n            return 1;\n        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n2233:        st.pcie_frac = o.pcie_frac;\n2236:            if (bw > 0.0) st.pcie_frac = bw >= 20.0 ? 0.55 : bw < 4.0 ? 0.0 : std::min(0.55, std::max(0.05, 0.55 * (bw / 26.0)));\n2237:            std::fprintf(stderr, \"strata generate: layer split: CUDA%d PCIe probe %.1f GB/s -> pcie_frac %.2f\\n\", st.dev,\n2238:                         bw, st.pcie_frac);\n4174:                split_drive.pcie_num[st] = pcie_num_of(o.pcie_frac);\n4192:                    split_drive.pcie_num[st] = pcie_num_of(gs.pcie_frac);\n4423:        drive.d.pcie_num = std::max(0, std::min(256, (int) (o.pcie_frac * 256.0 + 0.5)));\n4615:                        \"mtp_max=%d lookup=%d vram_free_mib=%lld cvec=%s arena_mib=%lld pool_workers=%d pcie_frac=%.2f \"\n4626:                        pool.workers(), o.pcie_frac,\n4702:            double req_pcie_frac = o.pcie_frac, req_spec_min_p = o.spec_min_p;\n4725:                    else if (key == \"pcie_frac\") req_pcie_frac = std::clamp((double) fv, 0.0, 1.0);\n5205:            drive.d.pcie_num = std::max(0, std::min(256, (int) (req_pcie_frac * 256.0 + 0.5)));\n5208:                split_drive.pcie_num[st] = (st == 0 || split_same || req_pcie_frac != o.pcie_frac)\n5209:                                               ? drive.d.pcie_num : pcie_num_of(stages[(size_t) st - 1]->pcie_frac);\n6017:        drive.d.pcie_num = (int) (o.pcie_frac * 256.0 + 0.5);\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 533787,
+        "completion_tokens": 216,
+        "cached_tokens": 533785,
+        "extra": {
+          "cache_creation_input_tokens": 50,
+          "cache_read_input_tokens": 533785,
+          "output_tokens_details": {
+            "thinking_tokens": 33
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 50,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 216,
+              "cache_read_input_tokens": 533785,
+              "cache_creation_input_tokens": 50,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 50
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "    // STRATA_EARLY_REMOTE_CONTEXTS=1: create EVERY secondary context here, like CUDA1's.  Under WSL2 the driver's\n    // pinned/mapped host budget (dxg gpadl, ~1 GiB) is spent by CUDA0's weights and MTP before the later loop runs,\n    // and a new context then fails with cudaErrorMemoryAllocation (CUDA2: \"cudaSetDevice(2) failed: out of memory\").\n    const char* early_env = std::getenv(\"STRATA_EARLY_REMOTE_CONTEXTS\");\n    const bool early_remote = early_env && early_env[0] == '1';\n    for (int r = 0; r < 3; ++r) if (o.expert_cache_remote[(size_t) r] > 0 && (r == 0 || early_remote)) {\n        // Keep CUDA1's proven startup order: initialise its context before\n        // allocating GPU0 weights or mapping the large host expert arena.\n        double free_gib = 0;\n        if (!strata::core::RemoteExperts::preflight(remote_dev[r], free_gib, err)) {\n            std::fprintf(stderr, \"strata generate: %s\\n\", err.c_str());\n            return 1;\n        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n2233:        st.pcie_frac = o.pcie_frac;\n2236:            if (bw > 0.0) st.pcie_frac = bw >= 20.0 ? 0.55 : bw < 4.0 ? 0.0 : std::min(0.55, std::max(0.05, 0.55 * (bw / 26.0)));\n2237:            std::fprintf(stderr, \"strata generate: layer split: CUDA%d PCIe probe %.1f GB/s -> pcie_frac %.2f\\n\", st.dev,\n2238:                         bw, st.pcie_frac);\n4174:                split_drive.pcie_num[st] = pcie_num_of(o.pcie_frac);\n4192:                    split_drive.pcie_num[st] = pcie_num_of(gs.pcie_frac);\n4423:        drive.d.pcie_num = std::max(0, std::min(256, (int) (o.pcie_frac * 256.0 + 0.5)));\n4615:                        \"mtp_max=%d lookup=%d vram_free_mib=%lld cvec=%s arena_mib=%lld pool_workers=%d pcie_frac=%.2f \"\n4626:                        pool.workers(), o.pcie_frac,\n4702:            double req_pcie_frac = o.pcie_frac, req_spec_min_p = o.spec_min_p;\n4725:                    else if (key == \"pcie_frac\") req_pcie_frac = std::clamp((double) fv, 0.0, 1.0);\n5205:            drive.d.pcie_num = std::max(0, std::min(256, (int) (req_pcie_frac * 256.0 + 0.5)));\n5208:                split_drive.pcie_num[st] = (st == 0 || split_same || req_pcie_frac != o.pcie_frac)\n5209:                                               ? drive.d.pcie_num : pcie_num_of(stages[(size_t) st - 1]->pcie_frac);\n6017:        drive.d.pcie_num = (int) (o.pcie_frac * 256.0 + 0.5);",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01LVY4BPqAENqULDrJsvEDQs",
+            "type": "tool_result",
+            "content": "    // STRATA_EARLY_REMOTE_CONTEXTS=1: create EVERY secondary context here, like CUDA1's.  Under WSL2 the driver's\n    // pinned/mapped host budget (dxg gpadl, ~1 GiB) is spent by CUDA0's weights and MTP before the later loop runs,\n    // and a new context then fails with cudaErrorMemoryAllocation (CUDA2: \"cudaSetDevice(2) failed: out of memory\").\n    const char* early_env = std::getenv(\"STRATA_EARLY_REMOTE_CONTEXTS\");\n    const bool early_remote = early_env && early_env[0] == '1';\n    for (int r = 0; r < 3; ++r) if (o.expert_cache_remote[(size_t) r] > 0 && (r == 0 || early_remote)) {\n        // Keep CUDA1's proven startup order: initialise its context before\n        // allocating GPU0 weights or mapping the large host expert arena.\n        double free_gib = 0;\n        if (!strata::core::RemoteExperts::preflight(remote_dev[r], free_gib, err)) {\n            std::fprintf(stderr, \"strata generate: %s\\n\", err.c_str());\n            return 1;\n        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n2233:        st.pcie_frac = o.pcie_frac;\n2236:            if (bw > 0.0) st.pcie_frac = bw >= 20.0 ? 0.55 : bw < 4.0 ? 0.0 : std::min(0.55, std::max(0.05, 0.55 * (bw / 26.0)));\n2237:            std::fprintf(stderr, \"strata generate: layer split: CUDA%d PCIe probe %.1f GB/s -> pcie_frac %.2f\\n\", st.dev,\n2238:                         bw, st.pcie_frac);\n4174:                split_drive.pcie_num[st] = pcie_num_of(o.pcie_frac);\n4192:                    split_drive.pcie_num[st] = pcie_num_of(gs.pcie_frac);\n4423:        drive.d.pcie_num = std::max(0, std::min(256, (int) (o.pcie_frac * 256.0 + 0.5)));\n4615:                        \"mtp_max=%d lookup=%d vram_free_mib=%lld cvec=%s arena_mib=%lld pool_workers=%d pcie_frac=%.2f \"\n4626:                        pool.workers(), o.pcie_frac,\n4702:            double req_pcie_frac = o.pcie_frac, req_spec_min_p = o.spec_min_p;\n4725:                    else if (key == \"pcie_frac\") req_pcie_frac = std::clamp((double) fv, 0.0, 1.0);\n5205:            drive.d.pcie_num = std::max(0, std::min(256, (int) (req_pcie_frac * 256.0 + 0.5)));\n5208:                split_drive.pcie_num[st] = (st == 0 || split_same || req_pcie_frac != o.pcie_frac)\n5209:                                               ? drive.d.pcie_num : pcie_num_of(stages[(size_t) st - 1]->pcie_frac);\n6017:        drive.d.pcie_num = (int) (o.pcie_frac * 256.0 + 0.5);",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "    // STRATA_EARLY_REMOTE_CONTEXTS=1: create EVERY secondary context here, like CUDA1's.  Under WSL2 the driver's\n    // pinned/mapped host budget (dxg gpadl, ~1 GiB) is spent by CUDA0's weights and MTP before the later loop runs,\n    // and a new context then fails with cudaErrorMemoryAllocation (CUDA2: \"cudaSetDevice(2) failed: out of memory\").\n    const char* early_env = std::getenv(\"STRATA_EARLY_REMOTE_CONTEXTS\");\n    const bool early_remote = early_env && early_env[0] == '1';\n    for (int r = 0; r < 3; ++r) if (o.expert_cache_remote[(size_t) r] > 0 && (r == 0 || early_remote)) {\n        // Keep CUDA1's proven startup order: initialise its context before\n        // allocating GPU0 weights or mapping the large host expert arena.\n        double free_gib = 0;\n        if (!strata::core::RemoteExperts::preflight(remote_dev[r], free_gib, err)) {\n            std::fprintf(stderr, \"strata generate: %s\\n\", err.c_str());\n            return 1;\n        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n2233:        st.pcie_frac = o.pcie_frac;\n2236:            if (bw > 0.0) st.pcie_frac = bw >= 20.0 ? 0.55 : bw < 4.0 ? 0.0 : std::min(0.55, std::max(0.05, 0.55 * (bw / 26.0)));\n2237:            std::fprintf(stderr, \"strata generate: layer split: CUDA%d PCIe probe %.1f GB/s -> pcie_frac %.2f\\n\", st.dev,\n2238:                         bw, st.pcie_frac);\n4174:                split_drive.pcie_num[st] = pcie_num_of(o.pcie_frac);\n4192:                    split_drive.pcie_num[st] = pcie_num_of(gs.pcie_frac);\n4423:        drive.d.pcie_num = std::max(0, std::min(256, (int) (o.pcie_frac * 256.0 + 0.5)));\n4615:                        \"mtp_max=%d lookup=%d vram_free_mib=%lld cvec=%s arena_mib=%lld pool_workers=%d pcie_frac=%.2f \"\n4626:                        pool.workers(), o.pcie_frac,\n4702:            double req_pcie_frac = o.pcie_frac, req_spec_min_p = o.spec_min_p;\n4725:                    else if (key == \"pcie_frac\") req_pcie_frac = std::clamp((double) fv, 0.0, 1.0);\n5205:            drive.d.pcie_num = std::max(0, std::min(256, (int) (req_pcie_frac * 256.0 + 0.5)));\n5208:                split_drive.pcie_num[st] = (st == 0 || split_same || req_pcie_frac != o.pcie_frac)\n5209:                                               ? drive.d.pcie_num : pcie_num_of(stages[(size_t) st - 1]->pcie_frac);\n6017:        drive.d.pcie_num = (int) (o.pcie_frac * 256.0 + 0.5);",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01LVY4BPqAENqULDrJsvEDQs",
+            "type": "tool_result",
+            "content": "    // STRATA_EARLY_REMOTE_CONTEXTS=1: create EVERY secondary context here, like CUDA1's.  Under WSL2 the driver's\n    // pinned/mapped host budget (dxg gpadl, ~1 GiB) is spent by CUDA0's weights and MTP before the later loop runs,\n    // and a new context then fails with cudaErrorMemoryAllocation (CUDA2: \"cudaSetDevice(2) failed: out of memory\").\n    const char* early_env = std::getenv(\"STRATA_EARLY_REMOTE_CONTEXTS\");\n    const bool early_remote = early_env && early_env[0] == '1';\n    for (int r = 0; r < 3; ++r) if (o.expert_cache_remote[(size_t) r] > 0 && (r == 0 || early_remote)) {\n        // Keep CUDA1's proven startup order: initialise its context before\n        // allocating GPU0 weights or mapping the large host expert arena.\n        double free_gib = 0;\n        if (!strata::core::RemoteExperts::preflight(remote_dev[r], free_gib, err)) {\n            std::fprintf(stderr, \"strata generate: %s\\n\", err.c_str());\n            return 1;\n        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n2233:        st.pcie_frac = o.pcie_frac;\n2236:            if (bw > 0.0) st.pcie_frac = bw >= 20.0 ? 0.55 : bw < 4.0 ? 0.0 : std::min(0.55, std::max(0.05, 0.55 * (bw / 26.0)));\n2237:            std::fprintf(stderr, \"strata generate: layer split: CUDA%d PCIe probe %.1f GB/s -> pcie_frac %.2f\\n\", st.dev,\n2238:                         bw, st.pcie_frac);\n4174:                split_drive.pcie_num[st] = pcie_num_of(o.pcie_frac);\n4192:                    split_drive.pcie_num[st] = pcie_num_of(gs.pcie_frac);\n4423:        drive.d.pcie_num = std::max(0, std::min(256, (int) (o.pcie_frac * 256.0 + 0.5)));\n4615:                        \"mtp_max=%d lookup=%d vram_free_mib=%lld cvec=%s arena_mib=%lld pool_workers=%d pcie_frac=%.2f \"\n4626:                        pool.workers(), o.pcie_frac,\n4702:            double req_pcie_frac = o.pcie_frac, req_spec_min_p = o.spec_min_p;\n4725:                    else if (key == \"pcie_frac\") req_pcie_frac = std::clamp((double) fv, 0.0, 1.0);\n5205:            drive.d.pcie_num = std::max(0, std::min(256, (int) (req_pcie_frac * 256.0 + 0.5)));\n5208:                split_drive.pcie_num[st] = (st == 0 || split_same || req_pcie_frac != o.pcie_frac)\n5209:                                               ? drive.d.pcie_num : pcie_num_of(stages[(size_t) st - 1]->pcie_frac);\n6017:        drive.d.pcie_num = (int) (o.pcie_frac * 256.0 + 0.5);",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; sed -n 1700,1740p src/program/generate.cpp; grep -n \"pcie_frac\" src/program/generate.cpp | sed -n 1,40p | awk -F: '$1>2200' | head -15",
+          "description": "Read the pcie_frac selection code"
+        }
+      }
+    },
+    {
+      "step_id": 944,
+      "timestamp": "2026-10-04T18:48:11.438Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 533837,
+        "completion_tokens": 1338,
+        "cached_tokens": 533835,
+        "extra": {
+          "cache_creation_input_tokens": 2197,
+          "cache_read_input_tokens": 533835,
+          "output_tokens_details": {
+            "thinking_tokens": 1218
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2197,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1338,
+              "cache_read_input_tokens": 533835,
+              "cache_creation_input_tokens": 2197,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2197
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 945,
+      "timestamp": "2026-10-04T18:48:11.440Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "The formula matches its comment, so the issue isn't an arithmetic bug but a narrow default rule that doesn't suit this PC. I'll check what `tools/calibrate.py` would try next, since that's pointed to as the real fix.",
+      "metrics": {
+        "prompt_tokens": 533837,
+        "completion_tokens": 1338,
+        "cached_tokens": 533835,
+        "extra": {
+          "cache_creation_input_tokens": 2197,
+          "cache_read_input_tokens": 533835,
+          "output_tokens_details": {
+            "thinking_tokens": 1218
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2197,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1338,
+              "cache_read_input_tokens": 533835,
+              "cache_creation_input_tokens": 2197,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2197
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 946,
+      "timestamp": "2026-10-04T18:48:11.448Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01UKDcgkj9CV42tRiT9s3Xhz",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01UKDcgkj9CV42tRiT9s3Xhz",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; grep -n \"pcie\" tools/calibrate.py | head -20",
+            "description": "See which pcie-frac values calibrate tries"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01UKDcgkj9CV42tRiT9s3Xhz",
+            "content": "5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice\n\n[stdout]\n5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 533837,
+        "completion_tokens": 1338,
+        "cached_tokens": 533835,
+        "extra": {
+          "cache_creation_input_tokens": 2197,
+          "cache_read_input_tokens": 533835,
+          "output_tokens_details": {
+            "thinking_tokens": 1218
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2197,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1338,
+              "cache_read_input_tokens": 533835,
+              "cache_creation_input_tokens": 2197,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2197
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01UKDcgkj9CV42tRiT9s3Xhz",
+            "type": "tool_result",
+            "content": "5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01UKDcgkj9CV42tRiT9s3Xhz",
+            "type": "tool_result",
+            "content": "5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; grep -n \"pcie\" tools/calibrate.py | head -20",
+          "description": "See which pcie-frac values calibrate tries"
+        }
+      }
+    },
+    {
+      "step_id": 947,
+      "timestamp": "2026-10-04T18:48:16.808Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 536034,
+        "completion_tokens": 334,
+        "cached_tokens": 536032,
+        "extra": {
+          "cache_creation_input_tokens": 2480,
+          "cache_read_input_tokens": 536032,
+          "output_tokens_details": {
+            "thinking_tokens": 192
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2480,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 334,
+              "cache_read_input_tokens": 536032,
+              "cache_creation_input_tokens": 2480,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2480
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 948,
+      "timestamp": "2026-10-04T18:48:16.812Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "The monitor's \"failed\" status is just cosmetic—grep returning exit code 1 for zero matches is expected, and the resume state looks fine (10 kept, 390 remaining, running with --pcie-frac 0.2). Next I'll check calibrate's candidate values.",
+      "metrics": {
+        "prompt_tokens": 536034,
+        "completion_tokens": 334,
+        "cached_tokens": 536032,
+        "extra": {
+          "cache_creation_input_tokens": 2480,
+          "cache_read_input_tokens": 536032,
+          "output_tokens_details": {
+            "thinking_tokens": 192
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2480,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 334,
+              "cache_read_input_tokens": 536032,
+              "cache_creation_input_tokens": 2480,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2480
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 949,
+      "timestamp": "2026-10-04T18:48:16.832Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01VQxqP9nfvJmiLBubN9UCBU",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01VQxqP9nfvJmiLBubN9UCBU",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; grep -n \"^PCIE_FRACS\\|^MINP\\|PCIE_FRACS =\" tools/calibrate.py",
+            "description": "Read calibrate's pcie-frac candidates"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01VQxqP9nfvJmiLBubN9UCBU",
+            "content": "33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)\n\n[stdout]\n33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 536034,
+        "completion_tokens": 334,
+        "cached_tokens": 536032,
+        "extra": {
+          "cache_creation_input_tokens": 2480,
+          "cache_read_input_tokens": 536032,
+          "output_tokens_details": {
+            "thinking_tokens": 192
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2480,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 334,
+              "cache_read_input_tokens": 536032,
+              "cache_creation_input_tokens": 2480,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2480
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01VQxqP9nfvJmiLBubN9UCBU",
+            "type": "tool_result",
+            "content": "33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01VQxqP9nfvJmiLBubN9UCBU",
+            "type": "tool_result",
+            "content": "33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; grep -n \"^PCIE_FRACS\\|^MINP\\|PCIE_FRACS =\" tools/calibrate.py",
+          "description": "Read calibrate's pcie-frac candidates"
+        }
+      }
+    },
+    {
+      "step_id": 950,
+      "timestamp": "2026-10-04T18:48:25.455Z",
+      "source": "user",
+      "message": "[Request interrupted by user]"
+    },
+    {
+      "step_id": 951,
+      "timestamp": "2026-10-04T18:48:53.356Z",
+      "source": "user",
+      "message": "所以strata代码计算最优pcie-frac或设置默认值的方式有问题吗？",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 952,
+      "timestamp": "2026-10-04T18:48:59.348Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 533787,
+        "completion_tokens": 473,
+        "cached_tokens": 533785,
+        "extra": {
+          "cache_creation_input_tokens": 58,
+          "cache_read_input_tokens": 533785,
+          "output_tokens_details": {
+            "thinking_tokens": 293
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 58,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 473,
+              "cache_read_input_tokens": 533785,
+              "cache_creation_input_tokens": 58,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 58
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 953,
+      "timestamp": "2026-10-04T18:48:59.742Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "I'll read the code that picks the value, and what Strata's calibration tool tries, before answering:",
+      "metrics": {
+        "prompt_tokens": 533787,
+        "completion_tokens": 473,
+        "cached_tokens": 533785,
+        "extra": {
+          "cache_creation_input_tokens": 58,
+          "cache_read_input_tokens": 533785,
+          "output_tokens_details": {
+            "thinking_tokens": 293
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 58,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 473,
+              "cache_read_input_tokens": 533785,
+              "cache_creation_input_tokens": 58,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 58
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 954,
+      "timestamp": "2026-10-04T18:49:00.716Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01WWLQxk3i9v375WnoRSoxnQ",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01WWLQxk3i9v375WnoRSoxnQ",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; sed -n 1712,1740p src/program/generate.cpp; grep -n \"pcie\" tools/calibrate.py | head -20",
+            "description": "Read the pcie_frac default logic and calibrate's candidates"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01WWLQxk3i9v375WnoRSoxnQ",
+            "content": "}\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice\n\n[stdout]\n        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 533787,
+        "completion_tokens": 473,
+        "cached_tokens": 533785,
+        "extra": {
+          "cache_creation_input_tokens": 58,
+          "cache_read_input_tokens": 533785,
+          "output_tokens_details": {
+            "thinking_tokens": 293
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 58,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 473,
+              "cache_read_input_tokens": 533785,
+              "cache_creation_input_tokens": 58,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 58
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01WWLQxk3i9v375WnoRSoxnQ",
+            "type": "tool_result",
+            "content": "        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01WWLQxk3i9v375WnoRSoxnQ",
+            "type": "tool_result",
+            "content": "        }\n        std::fprintf(stderr, \"strata generate: CUDA%d context ready, %.2f GiB free before expert arena registration\\n\",\n                     remote_dev[r], free_gib);\n    }\n    // plan v0.3 P6: the PCIe share of the missed experts, measured per kind of pack (the paper, finding on PCIe).\n    // PR #44: a x8 link carries half of what the native default assumes - the GPU's SMs read that share over the\n    // link (the copy kernel, since 0.1.14), so on a slower link it must shrink or the window waits for it.  The\n    // real H2D bandwidth is probed once; from 20 GB/s up (x16 PCIe 4/5) the measured default stays.  The canonical\n    // pack's 0.2 was never measured against the link, so it is left alone.  `--calibrate` measures it outright.\n    if (o.pcie_frac < 0.0) {\n        const double base = native_pack ? 0.55 : 0.2;\n        const double bw = native_pack ? probe_pcie_h2d_gbps() : -1.0;\n        if (!native_pack) {\n            o.pcie_frac = base;\n        } else if (bw > 0.0) {\n            // below ~4 GB/s (an x1 link: ~0.9 GB/s) a missed expert's 1.4 MB takes longer to cross than the CPU\n            // pool takes to compute it, so none of them go over the link\n            o.pcie_frac = bw >= 20.0 ? base : bw < 4.0 ? 0.0 : std::min(base, std::max(0.05, base * (bw / 26.0)));\n            std::fprintf(stderr, \"strata generate: PCIe probe: %.1f GB/s host->device -> pcie_frac %.2f (default %.2f)\\n\",\n                         bw, o.pcie_frac, base);\n        } else {\n            o.pcie_frac = base;\n            std::fprintf(stderr, \"strata generate: PCIe probe failed -> pcie_frac default %.2f\\n\", base);\n        }\n    }\n    // the canonical Q2_0 pack's CPU kernels are AVX-512 only; a native pack runs on AVX2 CPUs as well\n    if (!native_pack) strata::kernels::cpu::cpu_require_expert_support();\n    else if (!strata::kernels::cpu::cpu_avx512_ok())\n        std::fprintf(stderr, \"strata generate: this CPU has no AVX-512: the expert kernels run on %s \"\n5:  --pcie-frac     the share of the experts missing from VRAM that are copied over PCIe and run on the GPU instead of\n136:        d_pcie = float(info.get(\"pcie_frac\", 0.55))\n142:        by_pcie = {}\n143:        for f in sorted(set(PCIE_FRACS) | {round(d_pcie, 2)}):\n144:            by_pcie[f] = [s.rate({\"pcie_frac\": f, \"spec_min_p\": d_minp})]\n145:            say(f\"    PCIe share {f:.2f}: {by_pcie[f][0]:.1f} tok/s\")\n146:        best_pcie = max(by_pcie, key=lambda k: by_pcie[k][0])\n150:            by_minp[p] = [s.rate({\"pcie_frac\": best_pcie, \"spec_min_p\": p})]\n154:        dflt, cand = (round(d_pcie, 2), round(d_minp, 2)), (best_pcie, best_minp)\n159:                    confirm[k].append(s.rate({\"pcie_frac\": k[0], \"spec_min_p\": k[1]}))\n161:        report.update(default={\"pcie_frac\": dflt[0], \"spec_min_p\": dflt[1], \"pool_workers\": d_workers},\n162:                      pcie_sweep={str(k): v for k, v in by_pcie.items()},\n169:        settings[\"--pcie-frac\"] = f\"{chosen[0]:.2f}\"\n174:        tuned = with_arg(with_arg(base_args, \"--pcie-frac\", f\"{chosen[0]:.2f}\"), \"--spec-min-p\", f\"{chosen[1]:.2f}\")\n211:DEFAULTS = {\"--pcie-frac\": None, \"--spec-min-p\": \"0.5\", \"--pool-workers\": None}   # None: the engine's own choice",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; sed -n 1712,1740p src/program/generate.cpp; grep -n \"pcie\" tools/calibrate.py | head -20",
+          "description": "Read the pcie_frac default logic and calibrate's candidates"
+        }
+      }
+    },
+    {
+      "step_id": 955,
+      "timestamp": "2026-10-04T18:49:04.150Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01AWDTEcnYDnr81NBnFLpGAz",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01AWDTEcnYDnr81NBnFLpGAz",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; grep -n \"^PCIE_FRACS\" tools/calibrate.py; grep -n -iE \"pcie.?frac|0\\.55\" docs/DETAILS.md | head -8; grep -rn \"calibrat\" setup.py | grep -iE \"ask|offer|def calibrate_config\" | head -4",
+            "description": "Check calibrate's candidate values and the docs"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01AWDTEcnYDnr81NBnFLpGAz",
+            "content": "33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)\n87:decode path. For byte-identical repeats add `--prompt-cache 0 --adapt-swaps 0 --pcie-frac 0` to the engine's args\n90:three switches 1 answer of 4, without `--pcie-frac 0` 2 of 4 (the first one differs), with the defaults 2 of 4.\n91:`--pcie-frac 0` costs decode speed (the missed experts all run on the CPU), so keep it for A/B runs.\n123:  copy the GPU also takes its usual share of the misses over PCIe (`--pcie-frac`), as with enough RAM; `--pcie-frac 0`\n323:  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\nsetup.py:2249:def calibrate_config(cfg_path: Path) -> bool:\n\n[stdout]\n33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)\n87:decode path. For byte-identical repeats add `--prompt-cache 0 --adapt-swaps 0 --pcie-frac 0` to the engine's args\n90:three switches 1 answer of 4, without `--pcie-frac 0` 2 of 4 (the first one differs), with the defaults 2 of 4.\n91:`--pcie-frac 0` costs decode speed (the missed experts all run on the CPU), so keep it for A/B runs.\n123:  copy the GPU also takes its usual share of the misses over PCIe (`--pcie-frac`), as with enough RAM; `--pcie-frac 0`\n323:  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\nsetup.py:2249:def calibrate_config(cfg_path: Path) -> bool:\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 533845,
+        "completion_tokens": 201,
+        "cached_tokens": 533843,
+        "extra": {
+          "cache_creation_input_tokens": 1958,
+          "cache_read_input_tokens": 533843,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1958,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 201,
+              "cache_read_input_tokens": 533843,
+              "cache_creation_input_tokens": 1958,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1958
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)\n87:decode path. For byte-identical repeats add `--prompt-cache 0 --adapt-swaps 0 --pcie-frac 0` to the engine's args\n90:three switches 1 answer of 4, without `--pcie-frac 0` 2 of 4 (the first one differs), with the defaults 2 of 4.\n91:`--pcie-frac 0` costs decode speed (the missed experts all run on the CPU), so keep it for A/B runs.\n123:  copy the GPU also takes its usual share of the misses over PCIe (`--pcie-frac`), as with enough RAM; `--pcie-frac 0`\n323:  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\nsetup.py:2249:def calibrate_config(cfg_path: Path) -> bool:",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01AWDTEcnYDnr81NBnFLpGAz",
+            "type": "tool_result",
+            "content": "33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)\n87:decode path. For byte-identical repeats add `--prompt-cache 0 --adapt-swaps 0 --pcie-frac 0` to the engine's args\n90:three switches 1 answer of 4, without `--pcie-frac 0` 2 of 4 (the first one differs), with the defaults 2 of 4.\n91:`--pcie-frac 0` costs decode speed (the missed experts all run on the CPU), so keep it for A/B runs.\n123:  copy the GPU also takes its usual share of the misses over PCIe (`--pcie-frac`), as with enough RAM; `--pcie-frac 0`\n323:  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\nsetup.py:2249:def calibrate_config(cfg_path: Path) -> bool:",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)\n87:decode path. For byte-identical repeats add `--prompt-cache 0 --adapt-swaps 0 --pcie-frac 0` to the engine's args\n90:three switches 1 answer of 4, without `--pcie-frac 0` 2 of 4 (the first one differs), with the defaults 2 of 4.\n91:`--pcie-frac 0` costs decode speed (the missed experts all run on the CPU), so keep it for A/B runs.\n123:  copy the GPU also takes its usual share of the misses over PCIe (`--pcie-frac`), as with enough RAM; `--pcie-frac 0`\n323:  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\nsetup.py:2249:def calibrate_config(cfg_path: Path) -> bool:",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01AWDTEcnYDnr81NBnFLpGAz",
+            "type": "tool_result",
+            "content": "33:PCIE_FRACS = (0.0, 0.2, 0.35, 0.55, 0.75)\n87:decode path. For byte-identical repeats add `--prompt-cache 0 --adapt-swaps 0 --pcie-frac 0` to the engine's args\n90:three switches 1 answer of 4, without `--pcie-frac 0` 2 of 4 (the first one differs), with the defaults 2 of 4.\n91:`--pcie-frac 0` costs decode speed (the missed experts all run on the CPU), so keep it for A/B runs.\n123:  copy the GPU also takes its usual share of the misses over PCIe (`--pcie-frac`), as with enough RAM; `--pcie-frac 0`\n323:  (`--pcie-frac`: a fast PCIe link and a slower CPU want more, a laptop's narrower link less);\nsetup.py:2249:def calibrate_config(cfg_path: Path) -> bool:",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; grep -n \"^PCIE_FRACS\" tools/calibrate.py; grep -n -iE \"pcie.?frac|0\\.55\" docs/DETAILS.md | head -8; grep -rn \"calibrat\" setup.py | grep -iE \"ask|offer|def calibrate_config\" | head -4",
+          "description": "Check calibrate's candidate values and the docs"
+        }
+      }
+    },
+    {
+      "step_id": 956,
+      "timestamp": "2026-10-04T18:49:23.233Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 535803,
+        "completion_tokens": 2153,
+        "cached_tokens": 535801,
+        "extra": {
+          "cache_creation_input_tokens": 551,
+          "cache_read_input_tokens": 535801,
+          "output_tokens_details": {
+            "thinking_tokens": 963
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 551,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2153,
+              "cache_read_input_tokens": 535801,
+              "cache_creation_input_tokens": 551,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 551
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 957,
+      "timestamp": "2026-10-04T18:49:27.461Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Partly. The value it picks is wrong for this PC, because the rule looks at only one side of the trade-off. But Strata already has a tool that measures the right value per PC; this install simply never ran it.\n\n**What the code does** (`src/program/generate.cpp:1721–1735`):\n```cpp\nconst double base = native_pack ? 0.55 : 0.2;          // \"measured\" default\no.pcie_frac = bw >= 20.0 ? base                         // a fast link keeps 0.55\n            : bw < 4.0 ? 0.0\n            : min(base, max(0.05, base * (bw / 26.0))); // a slow link scales it down\n```\n- **0.55 is a fixed default** for native packs like these. The comment says it was measured, and DETAILS.md says the defaults come from a Ryzen 5 7600 with an RTX 5070.\n- **The probe only ever lowers it, and only on slow links** below 20 GB/s, such as x8 or x1. From 20 GB/s up the default stays, so this PC's 26.8 GB/s keeps 0.55.\n\n**What the rule misses:** the right split depends on how fast the link is *compared with the CPU's own path to the experts*, not on the link alone.\n- On this PC the CPU reads RAM at about 55 GB/s, roughly twice the link's 26.8. The copies are also read from that same RAM, so they take bandwidth away from the CPU workers.\n- According to the code comment, the GPU's own cores do the copying (the copy kernel), so a larger share also takes GPU time.\n- The rule never measures the CPU side, so it can't tell \"slow link, slow RAM\" apart from \"medium link, fast RAM\". This PC is the second case.\n- Our measurement: 0–0.25 is 20–25% faster at decode than 0.55, and 0.75 is slower still.\n\n**Strata does have the fix, but only through setup:**\n- `tools/calibrate.py` measures decode at `--pcie-frac` 0, 0.2, 0.35, 0.55 and 0.75 and keeps the fastest. On this PC it would have chosen 0 or 0.2.\n- Setup offers it after an install, but not with `--yes`, and this manual install skipped setup altogether. Anyone who installs with `--yes`, or whose PC differs a lot from the reference one, keeps 0.55 unless they run `--calibrate` themselves.\n\n**Two concrete issues worth fixing:**\n1. **The default could take the CPU side into account.** The engine could also measure RAM read bandwidth at start (a fraction of a second) and choose a share from both links, roughly `pcie_bw / (pcie_bw + cpu_bw)` minus something for the shared RAM. That would give about 0.2–0.3 here, close to the measured optimum. Or the rule could at least not keep 0.55 for a PCIe 4.0 link without such a check.\n2. **One docs claim is wrong for this PC.** `docs/DETAILS.md:91` says \"`--pcie-frac 0` costs decode speed (the missed experts all run on the CPU)\". Here 0 was the fastest setting measured. It needs \"on the reference PC\" or similar.\n\n**How far this evidence goes:** this is one PC. I haven't measured the reference machine, so I can't say how far 0.55 is from the best value there; the code only says it was measured. To be sure the CPU-side rule generalizes, it should be checked against one or two other machines, or against existing `--calibrate` results if any users have shared them.\n\nWant me to draft the probe change, or just fix the DETAILS.md sentence?",
+      "metrics": {
+        "prompt_tokens": 535803,
+        "completion_tokens": 2153,
+        "cached_tokens": 535801,
+        "extra": {
+          "cache_creation_input_tokens": 551,
+          "cache_read_input_tokens": 535801,
+          "output_tokens_details": {
+            "thinking_tokens": 963
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 551,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2153,
+              "cache_read_input_tokens": 535801,
+              "cache_creation_input_tokens": 551,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 551
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 245640287,
-    "total_completion_tokens": 635187,
-    "total_cached_tokens": 245638407,
-    "total_steps": 939,
+    "total_prompt_tokens": 253658073,
+    "total_completion_tokens": 646777,
+    "total_cached_tokens": 253656163,
+    "total_steps": 957,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 8377453,
-      "total_cache_read_input_tokens": 245638407
+      "total_cache_creation_input_tokens": 8394868,
+      "total_cache_read_input_tokens": 253656163
     }
   }
 }
