@@ -48860,19 +48860,438 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 555,
+      "timestamp": "2026-10-05T14:38:19.779Z",
+      "source": "user",
+      "message": "把TODO.md中完成的项目移入DONE.md",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 556,
+      "timestamp": "2026-10-05T14:38:23.432Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01Vj7P223sugQGxepedTvxMb",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01Vj7P223sugQGxepedTvxMb",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "grep -n \"^[0-9]*\\. \\|^## \\|^# \" docs/TODO.md | cut -c1-120 && sed -n \"$(grep -n '^1\\. ~~' docs/TODO.md | cut -d: -f1),+8p\" docs/TODO.md",
+            "description": "List TODO.md's items and show the completed one"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01Vj7P223sugQGxepedTvxMb",
+            "content": "1:# TODO: the Strix Halo (gfx1151) port, after 2026-10-05\n7:## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\n9:1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n17:2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows \n21:3. **`hip_prefill_mmq_parity` fails on gfx1151** (\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\").\n25:4. **The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and\n29:5. **The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card\n31:6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any\n34:## Decode\n36:7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does\n40:8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes\n44:## Memory and setup on an APU\n46:9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:\n50:10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident\n53:11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU\n56:12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip\n61:13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off\n65:## Housekeeping\n67:14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with\n70:15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it\n72:16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as\n1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\n   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\n   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\n   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\n   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\n   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\n   K8V4 pools.\n2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at\n\n[stdout]\n1:# TODO: the Strix Halo (gfx1151) port, after 2026-10-05\n7:## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\n9:1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n17:2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows \n21:3. **`hip_prefill_mmq_parity` fails on gfx1151** (\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\").\n25:4. **The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and\n29:5. **The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card\n31:6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any\n34:## Decode\n36:7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does\n40:8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes\n44:## Memory and setup on an APU\n46:9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:\n50:10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident\n53:11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU\n56:12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip\n61:13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off\n65:## Housekeeping\n67:14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with\n70:15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it\n72:16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as\n1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\n   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\n   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\n   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\n   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\n   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\n   K8V4 pools.\n2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [], \"moreFiles\": 0, \"unavailable\": true}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 645432,
+        "completion_tokens": 185,
+        "cached_tokens": 645430,
+        "extra": {
+          "cache_creation_input_tokens": 46,
+          "cache_read_input_tokens": 645430,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 46,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 185,
+              "cache_read_input_tokens": 645430,
+              "cache_creation_input_tokens": 46,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 46
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "1:# TODO: the Strix Halo (gfx1151) port, after 2026-10-05\n7:## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\n9:1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n17:2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows \n21:3. **`hip_prefill_mmq_parity` fails on gfx1151** (\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\").\n25:4. **The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and\n29:5. **The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card\n31:6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any\n34:## Decode\n36:7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does\n40:8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes\n44:## Memory and setup on an APU\n46:9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:\n50:10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident\n53:11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU\n56:12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip\n61:13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off\n65:## Housekeeping\n67:14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with\n70:15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it\n72:16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as\n1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\n   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\n   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\n   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\n   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\n   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\n   K8V4 pools.\n2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [],
+              "moreFiles": 0,
+              "unavailable": true
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Vj7P223sugQGxepedTvxMb",
+            "type": "tool_result",
+            "content": "1:# TODO: the Strix Halo (gfx1151) port, after 2026-10-05\n7:## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\n9:1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n17:2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows \n21:3. **`hip_prefill_mmq_parity` fails on gfx1151** (\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\").\n25:4. **The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and\n29:5. **The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card\n31:6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any\n34:## Decode\n36:7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does\n40:8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes\n44:## Memory and setup on an APU\n46:9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:\n50:10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident\n53:11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU\n56:12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip\n61:13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off\n65:## Housekeeping\n67:14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with\n70:15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it\n72:16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as\n1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\n   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\n   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\n   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\n   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\n   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\n   K8V4 pools.\n2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "1:# TODO: the Strix Halo (gfx1151) port, after 2026-10-05\n7:## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\n9:1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n17:2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows \n21:3. **`hip_prefill_mmq_parity` fails on gfx1151** (\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\").\n25:4. **The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and\n29:5. **The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card\n31:6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any\n34:## Decode\n36:7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does\n40:8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes\n44:## Memory and setup on an APU\n46:9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:\n50:10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident\n53:11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU\n56:12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip\n61:13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off\n65:## Housekeeping\n67:14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with\n70:15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it\n72:16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as\n1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\n   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\n   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\n   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\n   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\n   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\n   K8V4 pools.\n2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [],
+              "moreFiles": 0,
+              "unavailable": true
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Vj7P223sugQGxepedTvxMb",
+            "type": "tool_result",
+            "content": "1:# TODO: the Strix Halo (gfx1151) port, after 2026-10-05\n7:## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\n9:1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n17:2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows \n21:3. **`hip_prefill_mmq_parity` fails on gfx1151** (\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\").\n25:4. **The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and\n29:5. **The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card\n31:6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any\n34:## Decode\n36:7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does\n40:8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes\n44:## Memory and setup on an APU\n46:9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:\n50:10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident\n53:11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU\n56:12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip\n61:13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off\n65:## Housekeeping\n67:14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with\n70:15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it\n72:16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as\n1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\n   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\n   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\n   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\n   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\n   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\n   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\n   K8V4 pools.\n2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "grep -n \"^[0-9]*\\. \\|^## \\|^# \" docs/TODO.md | cut -c1-120 && sed -n \"$(grep -n '^1\\. ~~' docs/TODO.md | cut -d: -f1),+8p\" docs/TODO.md",
+          "description": "List TODO.md's items and show the completed one"
+        }
+      }
+    },
+    {
+      "step_id": 557,
+      "timestamp": "2026-10-05T14:38:32.785Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 645508,
+        "completion_tokens": 2023,
+        "cached_tokens": 645476,
+        "extra": {
+          "cache_creation_input_tokens": 1788,
+          "cache_read_input_tokens": 645476,
+          "output_tokens_details": {
+            "thinking_tokens": 323
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1788,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 2023,
+              "cache_read_input_tokens": 645476,
+              "cache_creation_input_tokens": 1788,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1788
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 558,
+      "timestamp": "2026-10-05T14:38:48.672Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01SwR2uD38WmsPpZLT3k1wd6",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01SwR2uD38WmsPpZLT3k1wd6",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "/c/conda_envs/strata/python.exe - <<'EOF'\nimport pathlib, re\ntodo = pathlib.Path(\"docs/TODO.md\"); s = todo.read_text(encoding=\"utf-8\")\nstart = s.index(\"1. ~~**The FP32 prompt attention\"); end = s.index(\"2. **The expert GEMMs\")\nitem1 = s[start:end]\nresidual = \"\"\"1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from\n   it: the PR is not upstream (the maintainer asked for a rebase on 0.1.39 and per-arch guards for mixed builds), the\n   gfx11 attention kernel has no path for K8V4 pools (`--kv k8v4` falls back to the FP32 kernel), and its WMMA GEMM\n   declines the expert shapes and loses to the calibrated hipBLASLt table on gfx1151 (left off; not re-measured on\n   gfx1100, where the PR measured it at +25%).\n\"\"\"\ns = s[:start] + residual + s[end:]\ns = s.replace(\"## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\",\n              \"## Prompt speed (the Coder's 4K prompt: 7.7 s of GPU time, 517-543 t/s)\")\ns = s.replace(\"What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake.\",\n              \"What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake; finished items\\nmove to [DONE.md](DONE.md).\")\ntodo.write_text(s, encoding=\"utf-8\", newline=\"\\n\")\n\ndone_text = \"\"\"# DONE: the Strix Halo (gfx1151) port\n\nFinished items of [TODO.md](TODO.md), newest first, each with where the record is. The port itself (the day's work\nbefore the TODO list existed) is in [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md).\n\n## 2026-10-05\n\n**TODO 1 - the FP32 prompt attention, 2.0 s (22%) of a 4K prompt.** Port Strata's PR #313 (branch `wmma-optin`:\ngfx11 WMMA prompt attention + dense WMMA GEMM, opt-in `STRATA_PA_WMMA=1` / `STRATA_WMMA_GEMM=1`) to gfx1151.\nDone on branch `wmma-gfx1151`\n([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\nthe PR merged onto 0.1.34 with its device guards extended to gfx1150/gfx1151 (the gfx12 and gfx11 kernels coexist as\n`prompt_attn_wmma_kernel` / `prompt_attn_wmma11_kernel`); the existing attention parity test\n(`src/kernels/qsa_prompt_attn_parity.cpp`, ctest `hip_prompt_attn_wmma`) now drives the gfx11 kernel with both KV\nformats instead of skipping: 4 of 4 pass, 3.9e-6 of FP64, 2.9-3.4x per chunk; the PR's GEMM parity test passes its\n3,520 cases (max abs 2.4e-7); `STRATA_PA_WMMA=1` is in `strata-coder-iq1_m.json`: pp4096 452 -> 517-543 t/s, the\nattention phase 2,034 -> 611 ms, decode unchanged (37-41 t/s), the same `is_prime`. The PR's WMMA GEMM is slower\nthan the calibrated hipBLASLt table on this card and declines the expert shapes: left off (its follow-ups stay as\nTODO 1). Raw results: `benchmarks/2026-10-05-halo-coder-iq1_m-arena-lt-table-pa-wmma.json`, ctest log\n`build-hip-win/ctest-wmma.log`.\n\"\"\"\npathlib.Path(\"docs/DONE.md\").write_text(done_text, encoding=\"utf-8\", newline=\"\\n\")\nprint(\"DONE.md written;\", \"TODO item 1 now:\", s[s.index(\"1. **PR #313\"):s.index(\"1. **PR #313\")+60])\nEOF\ngrep -n \"DONE.md\" docs/TODO.md | head -3; head -3 docs/DONE.md",
+            "description": "Move the finished TODO item into a new docs/DONE.md and leave its residue as the new item 1"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01SwR2uD38WmsPpZLT3k1wd6",
+            "content": "DONE.md written; TODO item 1 now: 1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention i\r\n4:move to [DONE.md](DONE.md). Every item names\n10:1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from\n# DONE: the Strix Halo (gfx1151) port\n\nFinished items of [TODO.md](TODO.md), newest first, each with where the record is. The port itself (the day's work\n\n[stdout]\nDONE.md written; TODO item 1 now: 1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention i\r\n4:move to [DONE.md](DONE.md). Every item names\n10:1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from\n# DONE: the Strix Halo (gfx1151) port\n\nFinished items of [TODO.md](TODO.md), newest first, each with where the record is. The port itself (the day's work\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\TODO.md\", \"hunks\": [{\"oldStart\": 1, \"oldLines\": 19, \"newStart\": 1, \"newLines\": 17, \"lines\": [\" # TODO: the Strix Halo (gfx1151) port, after 2026-10-05\", \" \", \"-What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names\", \"+What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake; finished items\", \"+move to [DONE.md](DONE.md). Every item names\", \" the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to\", \" `docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).\", \" \", \"-## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\", \"+## Prompt speed (the Coder's 4K prompt: 7.7 s of GPU time, 517-543 t/s)\", \" \", \"-1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\", \"-   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\", \"-   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\", \"-   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\", \"-   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\", \"-   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\", \"-   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\", \"-   K8V4 pools.\", \"+1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from\", \"+   it: the PR is not upstream (the maintainer asked for a rebase on 0.1.39 and per-arch guards for mixed builds), the\", \"+   gfx11 attention kernel has no path for K8V4 pools (`--kv k8v4` falls back to the FP32 kernel), and its WMMA GEMM\", \"+   declines the expert shapes and loses to the calibrated hipBLASLt table on gfx1151 (left off; not re-measured on\", \"+   gfx1100, where the PR measured it at +25%).\", \" 2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at\", \"    3.5-3.7 TFLOP/s; the same shape with a 16-bit output runs at 18.7. Decide between: a 16-bit output for these two\", \"    GEMMs only (consumers `swiglu_interleaved`, `moe_combine`; needs the parity tests), a WMMA kernel with FP32\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\TODO.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 645508,
+        "completion_tokens": 2023,
+        "cached_tokens": 645476,
+        "extra": {
+          "cache_creation_input_tokens": 1788,
+          "cache_read_input_tokens": 645476,
+          "output_tokens_details": {
+            "thinking_tokens": 323
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1788,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 2023,
+              "cache_read_input_tokens": 645476,
+              "cache_creation_input_tokens": 1788,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1788
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "DONE.md written; TODO item 1 now: 1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention i\r\n4:move to [DONE.md](DONE.md). Every item names\n10:1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from\n# DONE: the Strix Halo (gfx1151) port\n\nFinished items of [TODO.md](TODO.md), newest first, each with where the record is. The port itself (the day's work",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\docs\\TODO.md",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 19,
+                      "newStart": 1,
+                      "newLines": 17,
+                      "lines": [
+                        " # TODO: the Strix Halo (gfx1151) port, after 2026-10-05",
+                        " ",
+                        "-What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names",
+                        "+What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake; finished items",
+                        "+move to [DONE.md](DONE.md). Every item names",
+                        " the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to",
+                        " `docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).",
+                        " ",
+                        "-## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)",
+                        "+## Prompt speed (the Coder's 4K prompt: 7.7 s of GPU time, 517-543 t/s)",
+                        " ",
+                        "-1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch",
+                        "-   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):",
+                        "-   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now",
+                        "-   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543",
+                        "-   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated",
+                        "-   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the",
+                        "-   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for",
+                        "-   K8V4 pools.",
+                        "+1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from",
+                        "+   it: the PR is not upstream (the maintainer asked for a rebase on 0.1.39 and per-arch guards for mixed builds), the",
+                        "+   gfx11 attention kernel has no path for K8V4 pools (`--kv k8v4` falls back to the FP32 kernel), and its WMMA GEMM",
+                        "+   declines the expert shapes and loses to the calibrated hipBLASLt table on gfx1151 (left off; not re-measured on",
+                        "+   gfx1100, where the PR measured it at +25%).",
+                        " 2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at",
+                        "    3.5-3.7 TFLOP/s; the same shape with a 16-bit output runs at 18.7. Decide between: a 16-bit output for these two",
+                        "    GEMMs only (consumers `swiglu_interleaved`, `moe_combine`; needs the parity tests), a WMMA kernel with FP32"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\TODO.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01SwR2uD38WmsPpZLT3k1wd6",
+            "type": "tool_result",
+            "content": "DONE.md written; TODO item 1 now: 1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention i\r\n4:move to [DONE.md](DONE.md). Every item names\n10:1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from\n# DONE: the Strix Halo (gfx1151) port\n\nFinished items of [TODO.md](TODO.md), newest first, each with where the record is. The port itself (the day's work",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "DONE.md written; TODO item 1 now: 1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention i\r\n4:move to [DONE.md](DONE.md). Every item names\n10:1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from\n# DONE: the Strix Halo (gfx1151) port\n\nFinished items of [TODO.md](TODO.md), newest first, each with where the record is. The port itself (the day's work",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\docs\\TODO.md",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 19,
+                      "newStart": 1,
+                      "newLines": 17,
+                      "lines": [
+                        " # TODO: the Strix Halo (gfx1151) port, after 2026-10-05",
+                        " ",
+                        "-What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names",
+                        "+What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake; finished items",
+                        "+move to [DONE.md](DONE.md). Every item names",
+                        " the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to",
+                        " `docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).",
+                        " ",
+                        "-## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)",
+                        "+## Prompt speed (the Coder's 4K prompt: 7.7 s of GPU time, 517-543 t/s)",
+                        " ",
+                        "-1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch",
+                        "-   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):",
+                        "-   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now",
+                        "-   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543",
+                        "-   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated",
+                        "-   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the",
+                        "-   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for",
+                        "-   K8V4 pools.",
+                        "+1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from",
+                        "+   it: the PR is not upstream (the maintainer asked for a rebase on 0.1.39 and per-arch guards for mixed builds), the",
+                        "+   gfx11 attention kernel has no path for K8V4 pools (`--kv k8v4` falls back to the FP32 kernel), and its WMMA GEMM",
+                        "+   declines the expert shapes and loses to the calibrated hipBLASLt table on gfx1151 (left off; not re-measured on",
+                        "+   gfx1100, where the PR measured it at +25%).",
+                        " 2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at",
+                        "    3.5-3.7 TFLOP/s; the same shape with a 16-bit output runs at 18.7. Decide between: a 16-bit output for these two",
+                        "    GEMMs only (consumers `swiglu_interleaved`, `moe_combine`; needs the parity tests), a WMMA kernel with FP32"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\TODO.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01SwR2uD38WmsPpZLT3k1wd6",
+            "type": "tool_result",
+            "content": "DONE.md written; TODO item 1 now: 1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention i\r\n4:move to [DONE.md](DONE.md). Every item names\n10:1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from\n# DONE: the Strix Halo (gfx1151) port\n\nFinished items of [TODO.md](TODO.md), newest first, each with where the record is. The port itself (the day's work",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "/c/conda_envs/strata/python.exe - <<'EOF'\nimport pathlib, re\ntodo = pathlib.Path(\"docs/TODO.md\"); s = todo.read_text(encoding=\"utf-8\")\nstart = s.index(\"1. ~~**The FP32 prompt attention\"); end = s.index(\"2. **The expert GEMMs\")\nitem1 = s[start:end]\nresidual = \"\"\"1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from\n   it: the PR is not upstream (the maintainer asked for a rebase on 0.1.39 and per-arch guards for mixed builds), the\n   gfx11 attention kernel has no path for K8V4 pools (`--kv k8v4` falls back to the FP32 kernel), and its WMMA GEMM\n   declines the expert shapes and loses to the calibrated hipBLASLt table on gfx1151 (left off; not re-measured on\n   gfx1100, where the PR measured it at +25%).\n\"\"\"\ns = s[:start] + residual + s[end:]\ns = s.replace(\"## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\",\n              \"## Prompt speed (the Coder's 4K prompt: 7.7 s of GPU time, 517-543 t/s)\")\ns = s.replace(\"What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake.\",\n              \"What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake; finished items\\nmove to [DONE.md](DONE.md).\")\ntodo.write_text(s, encoding=\"utf-8\", newline=\"\\n\")\n\ndone_text = \"\"\"# DONE: the Strix Halo (gfx1151) port\n\nFinished items of [TODO.md](TODO.md), newest first, each with where the record is. The port itself (the day's work\nbefore the TODO list existed) is in [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md).\n\n## 2026-10-05\n\n**TODO 1 - the FP32 prompt attention, 2.0 s (22%) of a 4K prompt.** Port Strata's PR #313 (branch `wmma-optin`:\ngfx11 WMMA prompt attention + dense WMMA GEMM, opt-in `STRATA_PA_WMMA=1` / `STRATA_WMMA_GEMM=1`) to gfx1151.\nDone on branch `wmma-gfx1151`\n([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\nthe PR merged onto 0.1.34 with its device guards extended to gfx1150/gfx1151 (the gfx12 and gfx11 kernels coexist as\n`prompt_attn_wmma_kernel` / `prompt_attn_wmma11_kernel`); the existing attention parity test\n(`src/kernels/qsa_prompt_attn_parity.cpp`, ctest `hip_prompt_attn_wmma`) now drives the gfx11 kernel with both KV\nformats instead of skipping: 4 of 4 pass, 3.9e-6 of FP64, 2.9-3.4x per chunk; the PR's GEMM parity test passes its\n3,520 cases (max abs 2.4e-7); `STRATA_PA_WMMA=1` is in `strata-coder-iq1_m.json`: pp4096 452 -> 517-543 t/s, the\nattention phase 2,034 -> 611 ms, decode unchanged (37-41 t/s), the same `is_prime`. The PR's WMMA GEMM is slower\nthan the calibrated hipBLASLt table on this card and declines the expert shapes: left off (its follow-ups stay as\nTODO 1). Raw results: `benchmarks/2026-10-05-halo-coder-iq1_m-arena-lt-table-pa-wmma.json`, ctest log\n`build-hip-win/ctest-wmma.log`.\n\"\"\"\npathlib.Path(\"docs/DONE.md\").write_text(done_text, encoding=\"utf-8\", newline=\"\\n\")\nprint(\"DONE.md written;\", \"TODO item 1 now:\", s[s.index(\"1. **PR #313\"):s.index(\"1. **PR #313\")+60])\nEOF\ngrep -n \"DONE.md\" docs/TODO.md | head -3; head -3 docs/DONE.md",
+          "description": "Move the finished TODO item into a new docs/DONE.md and leave its residue as the new item 1"
+        }
+      }
+    },
+    {
+      "step_id": 559,
+      "timestamp": "2026-10-05T14:38:54.809Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "已完成。\n\n- **`docs/DONE.md`**（新建）：按日期记录已完成项，现在只有 2026-10-05 的 TODO 1——PR #313 的 gfx11 WMMA 注意力移植到 gfx1151，含分支、parity 结果、测速、配置开关和原始数据位置。\n- **`docs/TODO.md`**：第 1 项换成它的残留事项\"PR #313 follow-ups\"（PR 未进上游、gfx11 kernel 不支持 K8V4、其 WMMA GEMM 在本卡上慢于调优表且不接专家形状），编号不变；节标题的基线更新为 7.7 s / 517-543 t/s；开头加了一句\"完成项移入 DONE.md\"。",
+      "metrics": {
+        "prompt_tokens": 647296,
+        "completion_tokens": 257,
+        "cached_tokens": 647264,
+        "extra": {
+          "cache_creation_input_tokens": 2395,
+          "cache_read_input_tokens": 647264,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2395,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 257,
+              "cache_read_input_tokens": 647264,
+              "cache_creation_input_tokens": 2395,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2395
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 187324982,
-    "total_completion_tokens": 1058301,
-    "total_cached_tokens": 187311572,
-    "total_steps": 554,
+    "total_prompt_tokens": 189908726,
+    "total_completion_tokens": 1062789,
+    "total_cached_tokens": 189895218,
+    "total_steps": 559,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1929529,
-      "total_cache_read_input_tokens": 187311572
+      "total_cache_creation_input_tokens": 1935546,
+      "total_cache_read_input_tokens": 189895218
     }
   }
 }
