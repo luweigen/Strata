@@ -25633,19 +25633,433 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 306,
+      "timestamp": "2026-10-05T11:03:14.306Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>brlvo7l60</task-id>\n<tool-use-id>toolu_01FagtLyhvqt7nSw5PjiCZ7B</tool-use-id>\n<output-file>C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\brlvo7l60.output</output-file>\n<status>completed</status>\n<summary>Background command \"Run the 3060M benchmark sequence against the 3060-style placement (2,666 experts on the GPU, CPU computes the rest)\" completed (exit code 0)</summary>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 307,
+      "timestamp": "2026-10-05T11:03:20.557Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01HiHwsu8ifKzAMo5notpuac",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01HiHwsu8ifKzAMo5notpuac",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "/c/conda_envs/strata/python.exe - <<'EOF' 2>&1\nimport json\nd=json.load(open('docs/benchmarks/2026-10-05-halo-coder-iq1_m-like3060.json', encoding='utf-8')); print('==', d['label'])\nfor r in d['rows']:\n    print('  %-50s prompt %6s %7s t/s | pred %4s %6s t/s | acc %5s | wall %7s' % (r['test'][:50], r.get('prompt_n'), r.get('prompt_per_second'), r.get('predicted_n'), r.get('predicted_per_second'), r.get('accept_pct'), r.get('wall_s')))\nEOF\ngrep -E \"hit rate|expert tiers\" strata-coder-iq1_m-like3060.log | tail -4 | cut -c1-220; grep \"strata prefill timing: 4[01][0-9][0-9] tokens\" strata-coder-iq1_m-like3060.log | tail -1 | tr ')' ')\\n' | sed 's/^ *//' | grep -E \"timeline|wait copy|gather|gemm|hc read|gdn |qsa attn\"",
+            "description": "Show the pcie-frac 0.55 results, the cache hit rate and the prompt phase timing"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01HiHwsu8ifKzAMo5notpuac",
+            "content": "== halo-8060S-coder-iq1_m-like3060-cache2666-pcie055\r\n  server: cold first request (short code prompt)     prompt    314    96.0 t/s | pred  400   29.0 t/s | acc  91.8 | wall   17.12\r\n  server: fresh code prompt                          prompt    218    90.5 t/s | pred  400   28.5 t/s | acc  84.2 | wall   16.46\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   253.4 t/s | pred  400   24.2 t/s | acc  74.3 | wall   35.32\r\n  server: repeated first prompt (reference only)     prompt    314   119.8 t/s | pred  400   30.5 t/s | acc  91.7 | wall   15.74\r\n  pp4096 @ d0                                        prompt   4085   256.7 t/s | pred    1   18.3 t/s | acc  None | wall   16.01\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   23.3 t/s | acc  68.1 | wall    7.12\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   265.3 t/s | pred    1   18.3 t/s | acc  None | wall   61.89\r\n  pp4096 @ d16384                                    prompt  20421   260.8 t/s | pred    1   18.8 t/s | acc  None | wall   78.45\r\n  tg128 @ d16384                                     prompt  16401   270.7 t/s | pred  128   21.1 t/s | acc  58.6 | wall   66.73\r\nstrata serve: decode expert cache hit rate: 81.5% (54929 hits / 67438 lookups)\nstrata serve: decode expert cache hit rate: 60.6% (218 hits / 360 lookups)\nstrata serve: decode expert cache hit rate: 70.0% (273 hits / 390 lookups)\nstrata serve: decode expert cache hit rate: 84.4% (63837 hits / 75610 lookups)\nstrata prefill timing: 4080 tokens, GPU timeline 15684 ms, wall 15737 ms, host staging 84 ms: embed+steps 138 (0.9%) hc read 1817 (11.6%) gdn 3329 (21.2%) qsa proj 1458 (9.3%) qsa indexer 0 (0.0%) qsa select 34 (0.2%) qsa attn 1959 (12.5%) router+shared 592 (3.8%) host grouping 38 (0.2%) gather 91 (0.6%) wait copy 318 (2.0%) dequant 862 (5.5%) gemm gate/up 1736 (11.1%) gemm down 787 (5.0%) combine 220 (1.4%) ple 83 (0.5%) gdn conv+gates 99 (0.6%) gdn recurrence 801 (5.1%) gdn out proj 1323 (8.4%)\n\n[stdout]\n== halo-8060S-coder-iq1_m-like3060-cache2666-pcie055\r\n  server: cold first request (short code prompt)     prompt    314    96.0 t/s | pred  400   29.0 t/s | acc  91.8 | wall   17.12\r\n  server: fresh code prompt                          prompt    218    90.5 t/s | pred  400   28.5 t/s | acc  84.2 | wall   16.46\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   253.4 t/s | pred  400   24.2 t/s | acc  74.3 | wall   35.32\r\n  server: repeated first prompt (reference only)     prompt    314   119.8 t/s | pred  400   30.5 t/s | acc  91.7 | wall   15.74\r\n  pp4096 @ d0                                        prompt   4085   256.7 t/s | pred    1   18.3 t/s | acc  None | wall   16.01\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   23.3 t/s | acc  68.1 | wall    7.12\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   265.3 t/s | pred    1   18.3 t/s | acc  None | wall   61.89\r\n  pp4096 @ d16384                                    prompt  20421   260.8 t/s | pred    1   18.8 t/s | acc  None | wall   78.45\r\n  tg128 @ d16384                                     prompt  16401   270.7 t/s | pred  128   21.1 t/s | acc  58.6 | wall   66.73\r\nstrata serve: decode expert cache hit rate: 81.5% (54929 hits / 67438 lookups)\nstrata serve: decode expert cache hit rate: 60.6% (218 hits / 360 lookups)\nstrata serve: decode expert cache hit rate: 70.0% (273 hits / 390 lookups)\nstrata serve: decode expert cache hit rate: 84.4% (63837 hits / 75610 lookups)\nstrata prefill timing: 4080 tokens, GPU timeline 15684 ms, wall 15737 ms, host staging 84 ms: embed+steps 138 (0.9%) hc read 1817 (11.6%) gdn 3329 (21.2%) qsa proj 1458 (9.3%) qsa indexer 0 (0.0%) qsa select 34 (0.2%) qsa attn 1959 (12.5%) router+shared 592 (3.8%) host grouping 38 (0.2%) gather 91 (0.6%) wait copy 318 (2.0%) dequant 862 (5.5%) gemm gate/up 1736 (11.1%) gemm down 787 (5.0%) combine 220 (1.4%) ple 83 (0.5%) gdn conv+gates 99 (0.6%) gdn recurrence 801 (5.1%) gdn out proj 1323 (8.4%)\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 390495,
+        "completion_tokens": 503,
+        "cached_tokens": 390491,
+        "extra": {
+          "cache_creation_input_tokens": 412,
+          "cache_read_input_tokens": 390491,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 412,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 503,
+              "cache_read_input_tokens": 390491,
+              "cache_creation_input_tokens": 412,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 412
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "== halo-8060S-coder-iq1_m-like3060-cache2666-pcie055\r\n  server: cold first request (short code prompt)     prompt    314    96.0 t/s | pred  400   29.0 t/s | acc  91.8 | wall   17.12\r\n  server: fresh code prompt                          prompt    218    90.5 t/s | pred  400   28.5 t/s | acc  84.2 | wall   16.46\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   253.4 t/s | pred  400   24.2 t/s | acc  74.3 | wall   35.32\r\n  server: repeated first prompt (reference only)     prompt    314   119.8 t/s | pred  400   30.5 t/s | acc  91.7 | wall   15.74\r\n  pp4096 @ d0                                        prompt   4085   256.7 t/s | pred    1   18.3 t/s | acc  None | wall   16.01\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   23.3 t/s | acc  68.1 | wall    7.12\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   265.3 t/s | pred    1   18.3 t/s | acc  None | wall   61.89\r\n  pp4096 @ d16384                                    prompt  20421   260.8 t/s | pred    1   18.8 t/s | acc  None | wall   78.45\r\n  tg128 @ d16384                                     prompt  16401   270.7 t/s | pred  128   21.1 t/s | acc  58.6 | wall   66.73\r\nstrata serve: decode expert cache hit rate: 81.5% (54929 hits / 67438 lookups)\nstrata serve: decode expert cache hit rate: 60.6% (218 hits / 360 lookups)\nstrata serve: decode expert cache hit rate: 70.0% (273 hits / 390 lookups)\nstrata serve: decode expert cache hit rate: 84.4% (63837 hits / 75610 lookups)\nstrata prefill timing: 4080 tokens, GPU timeline 15684 ms, wall 15737 ms, host staging 84 ms: embed+steps 138 (0.9%) hc read 1817 (11.6%) gdn 3329 (21.2%) qsa proj 1458 (9.3%) qsa indexer 0 (0.0%) qsa select 34 (0.2%) qsa attn 1959 (12.5%) router+shared 592 (3.8%) host grouping 38 (0.2%) gather 91 (0.6%) wait copy 318 (2.0%) dequant 862 (5.5%) gemm gate/up 1736 (11.1%) gemm down 787 (5.0%) combine 220 (1.4%) ple 83 (0.5%) gdn conv+gates 99 (0.6%) gdn recurrence 801 (5.1%) gdn out proj 1323 (8.4%)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01HiHwsu8ifKzAMo5notpuac",
+            "type": "tool_result",
+            "content": "== halo-8060S-coder-iq1_m-like3060-cache2666-pcie055\r\n  server: cold first request (short code prompt)     prompt    314    96.0 t/s | pred  400   29.0 t/s | acc  91.8 | wall   17.12\r\n  server: fresh code prompt                          prompt    218    90.5 t/s | pred  400   28.5 t/s | acc  84.2 | wall   16.46\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   253.4 t/s | pred  400   24.2 t/s | acc  74.3 | wall   35.32\r\n  server: repeated first prompt (reference only)     prompt    314   119.8 t/s | pred  400   30.5 t/s | acc  91.7 | wall   15.74\r\n  pp4096 @ d0                                        prompt   4085   256.7 t/s | pred    1   18.3 t/s | acc  None | wall   16.01\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   23.3 t/s | acc  68.1 | wall    7.12\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   265.3 t/s | pred    1   18.3 t/s | acc  None | wall   61.89\r\n  pp4096 @ d16384                                    prompt  20421   260.8 t/s | pred    1   18.8 t/s | acc  None | wall   78.45\r\n  tg128 @ d16384                                     prompt  16401   270.7 t/s | pred  128   21.1 t/s | acc  58.6 | wall   66.73\r\nstrata serve: decode expert cache hit rate: 81.5% (54929 hits / 67438 lookups)\nstrata serve: decode expert cache hit rate: 60.6% (218 hits / 360 lookups)\nstrata serve: decode expert cache hit rate: 70.0% (273 hits / 390 lookups)\nstrata serve: decode expert cache hit rate: 84.4% (63837 hits / 75610 lookups)\nstrata prefill timing: 4080 tokens, GPU timeline 15684 ms, wall 15737 ms, host staging 84 ms: embed+steps 138 (0.9%) hc read 1817 (11.6%) gdn 3329 (21.2%) qsa proj 1458 (9.3%) qsa indexer 0 (0.0%) qsa select 34 (0.2%) qsa attn 1959 (12.5%) router+shared 592 (3.8%) host grouping 38 (0.2%) gather 91 (0.6%) wait copy 318 (2.0%) dequant 862 (5.5%) gemm gate/up 1736 (11.1%) gemm down 787 (5.0%) combine 220 (1.4%) ple 83 (0.5%) gdn conv+gates 99 (0.6%) gdn recurrence 801 (5.1%) gdn out proj 1323 (8.4%)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "== halo-8060S-coder-iq1_m-like3060-cache2666-pcie055\r\n  server: cold first request (short code prompt)     prompt    314    96.0 t/s | pred  400   29.0 t/s | acc  91.8 | wall   17.12\r\n  server: fresh code prompt                          prompt    218    90.5 t/s | pred  400   28.5 t/s | acc  84.2 | wall   16.46\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   253.4 t/s | pred  400   24.2 t/s | acc  74.3 | wall   35.32\r\n  server: repeated first prompt (reference only)     prompt    314   119.8 t/s | pred  400   30.5 t/s | acc  91.7 | wall   15.74\r\n  pp4096 @ d0                                        prompt   4085   256.7 t/s | pred    1   18.3 t/s | acc  None | wall   16.01\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   23.3 t/s | acc  68.1 | wall    7.12\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   265.3 t/s | pred    1   18.3 t/s | acc  None | wall   61.89\r\n  pp4096 @ d16384                                    prompt  20421   260.8 t/s | pred    1   18.8 t/s | acc  None | wall   78.45\r\n  tg128 @ d16384                                     prompt  16401   270.7 t/s | pred  128   21.1 t/s | acc  58.6 | wall   66.73\r\nstrata serve: decode expert cache hit rate: 81.5% (54929 hits / 67438 lookups)\nstrata serve: decode expert cache hit rate: 60.6% (218 hits / 360 lookups)\nstrata serve: decode expert cache hit rate: 70.0% (273 hits / 390 lookups)\nstrata serve: decode expert cache hit rate: 84.4% (63837 hits / 75610 lookups)\nstrata prefill timing: 4080 tokens, GPU timeline 15684 ms, wall 15737 ms, host staging 84 ms: embed+steps 138 (0.9%) hc read 1817 (11.6%) gdn 3329 (21.2%) qsa proj 1458 (9.3%) qsa indexer 0 (0.0%) qsa select 34 (0.2%) qsa attn 1959 (12.5%) router+shared 592 (3.8%) host grouping 38 (0.2%) gather 91 (0.6%) wait copy 318 (2.0%) dequant 862 (5.5%) gemm gate/up 1736 (11.1%) gemm down 787 (5.0%) combine 220 (1.4%) ple 83 (0.5%) gdn conv+gates 99 (0.6%) gdn recurrence 801 (5.1%) gdn out proj 1323 (8.4%)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01HiHwsu8ifKzAMo5notpuac",
+            "type": "tool_result",
+            "content": "== halo-8060S-coder-iq1_m-like3060-cache2666-pcie055\r\n  server: cold first request (short code prompt)     prompt    314    96.0 t/s | pred  400   29.0 t/s | acc  91.8 | wall   17.12\r\n  server: fresh code prompt                          prompt    218    90.5 t/s | pred  400   28.5 t/s | acc  84.2 | wall   16.46\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   253.4 t/s | pred  400   24.2 t/s | acc  74.3 | wall   35.32\r\n  server: repeated first prompt (reference only)     prompt    314   119.8 t/s | pred  400   30.5 t/s | acc  91.7 | wall   15.74\r\n  pp4096 @ d0                                        prompt   4085   256.7 t/s | pred    1   18.3 t/s | acc  None | wall   16.01\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   23.3 t/s | acc  68.1 | wall    7.12\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   265.3 t/s | pred    1   18.3 t/s | acc  None | wall   61.89\r\n  pp4096 @ d16384                                    prompt  20421   260.8 t/s | pred    1   18.8 t/s | acc  None | wall   78.45\r\n  tg128 @ d16384                                     prompt  16401   270.7 t/s | pred  128   21.1 t/s | acc  58.6 | wall   66.73\r\nstrata serve: decode expert cache hit rate: 81.5% (54929 hits / 67438 lookups)\nstrata serve: decode expert cache hit rate: 60.6% (218 hits / 360 lookups)\nstrata serve: decode expert cache hit rate: 70.0% (273 hits / 390 lookups)\nstrata serve: decode expert cache hit rate: 84.4% (63837 hits / 75610 lookups)\nstrata prefill timing: 4080 tokens, GPU timeline 15684 ms, wall 15737 ms, host staging 84 ms: embed+steps 138 (0.9%) hc read 1817 (11.6%) gdn 3329 (21.2%) qsa proj 1458 (9.3%) qsa indexer 0 (0.0%) qsa select 34 (0.2%) qsa attn 1959 (12.5%) router+shared 592 (3.8%) host grouping 38 (0.2%) gather 91 (0.6%) wait copy 318 (2.0%) dequant 862 (5.5%) gemm gate/up 1736 (11.1%) gemm down 787 (5.0%) combine 220 (1.4%) ple 83 (0.5%) gdn conv+gates 99 (0.6%) gdn recurrence 801 (5.1%) gdn out proj 1323 (8.4%)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "/c/conda_envs/strata/python.exe - <<'EOF' 2>&1\nimport json\nd=json.load(open('docs/benchmarks/2026-10-05-halo-coder-iq1_m-like3060.json', encoding='utf-8')); print('==', d['label'])\nfor r in d['rows']:\n    print('  %-50s prompt %6s %7s t/s | pred %4s %6s t/s | acc %5s | wall %7s' % (r['test'][:50], r.get('prompt_n'), r.get('prompt_per_second'), r.get('predicted_n'), r.get('predicted_per_second'), r.get('accept_pct'), r.get('wall_s')))\nEOF\ngrep -E \"hit rate|expert tiers\" strata-coder-iq1_m-like3060.log | tail -4 | cut -c1-220; grep \"strata prefill timing: 4[01][0-9][0-9] tokens\" strata-coder-iq1_m-like3060.log | tail -1 | tr ')' ')\\n' | sed 's/^ *//' | grep -E \"timeline|wait copy|gather|gemm|hc read|gdn |qsa attn\"",
+          "description": "Show the pcie-frac 0.55 results, the cache hit rate and the prompt phase timing"
+        }
+      }
+    },
+    {
+      "step_id": 308,
+      "timestamp": "2026-10-05T11:03:26.761Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 390935,
+        "completion_tokens": 1662,
+        "cached_tokens": 390903,
+        "extra": {
+          "cache_creation_input_tokens": 1574,
+          "cache_read_input_tokens": 390903,
+          "output_tokens_details": {
+            "thinking_tokens": 272
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1574,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1662,
+              "cache_read_input_tokens": 390903,
+              "cache_creation_input_tokens": 1574,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1574
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 309,
+      "timestamp": "2026-10-05T11:03:41.606Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Edit toolu_015DFMWfFchnUo1HGSB1g85D",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_015DFMWfFchnUo1HGSB1g85D",
+          "function_name": "Edit",
+          "arguments": {
+            "replace_all": false,
+            "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "old_string": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "new_string": "## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\n\nThis BIOS offers 32, 64 and 96 GiB for the GPU, nothing between. The user set **32/96** (Windows sees 95.6 GiB,\nHIP 89.4 GiB), and the Coder was run the way the 3060M PC runs it: the arena pinned in RAM, `--expert-cache 2666`\n(the 3060's 2,666 resident experts; the engine made it 3,465 slots, 6.6 GiB, adding the slots the prompt path\nborrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-frac 0.2` (the value its\n`--pcie-frac` section found best there). hipBLASLt routing on; configs `strata-coder-iq1_m-like3060.json` and\n`...-pcie02.json`; the same benchmark; the engine's 15 expert-pool workers compute the misses.\n\n| | **32/96, cache 3,465, pcie 0.55** | 32/96, cache 3,465, pcie 0.2 | 64/64, all 12,288 on the GPU | RTX 3060 Laptop (cache 2,666, pcie 0.55) |\n|---|---|---|---|---|\n| model load to listening | 15 s | | 15 s | 11.5 s |\n| cold first request, decode | **29.0 t/s**, 91.8% acc | | 38.6 | 43.3 |\n| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | | 35.1 | 42.1 |\n| prefill @ ~4.75K | 253.4 t/s | | 274.0 | 961.3 |\n| decode tail after it | **24.2 t/s**, 74.3% acc | | 34.7 | 39.3 |\n| repeated prompt (reference) | 30.5 t/s | | 39.5 | 45.1 |\n| pp4096 @ d0 | 256.7 t/s | | 268.4 | 926.9 |\n| tg128 @ d0 | **23.3 t/s**, 68.1% acc | | 28.5 | 36.2 |\n| 16,384-token prefix | 265.3 t/s | | 277.1 | ~1,065 |\n| pp4096 @ d16384 | 260.8 over 20,421 | | 273.7 | ~1,126 (derived) |\n| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | | 28.8 | 37.4 |\n| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | | 100% | 64.6% |\n\nAt `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /\n34.7) with 82-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than\nits 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert\neither way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on\ndecode with the same placement. The misses cost more here than there, on a CPU of the same core count: the 16\nZen 5 cores read their experts from the memory the GPU is using at the same time, and the copies (`--pcie-frac`)\ncome out of the same 236 GB/s.\n\n## The RTX 5090 over Thunderbolt (not pursued)"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_015DFMWfFchnUo1HGSB1g85D",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully.\n\n[metadata] {\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"oldString\": \"## The RTX 5090 over Thunderbolt (not pursued)\", \"newString\": \"## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\\n\\nThis BIOS offers 32, 64 and 96 GiB for the GPU, nothing between. The user set **32/96** (Windows sees 95.6 GiB,\\nHIP 89.4 GiB), and the Coder was run the way the 3060M PC runs it: the arena pinned in RAM, `--expert-cache 2666`\\n(the 3060's 2,666 resident experts; the engine made it 3,465 slots, 6.6 GiB, adding the slots the prompt path\\nborrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-frac 0.2` (the value its\\n`--pcie-frac` section found best there). hipBLASLt routing on; configs `strata-coder-iq1_m-like3060.json` and\\n`...-pcie02.json`; the same benchmark; the engine's 15 expert-pool workers compute the misses.\\n\\n| | **32/96, cache 3,465, pcie 0.55** | 32/96, cache 3,465, pcie 0.2 | 64/64, all 12,288 on the GPU | RTX 3060 Laptop (cache 2,666, pcie 0.55) |\\n|---|---|---|---|---|\\n| model load to listening | 15 s | | 15 s | 11.5 s |\\n| cold first request, decode | **29.0 t/s**, 91.8% acc | | 38.6 | 43.3 |\\n| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | | 35.1 | 42.1 |\\n| prefill @ ~4.75K | 253.4 t/s | | 274.0 | 961.3 |\\n| decode tail after it | **24.2 t/s**, 74.3% acc | | 34.7 | 39.3 |\\n| repeated prompt (reference) | 30.5 t/s | | 39.5 | 45.1 |\\n| pp4096 @ d0 | 256.7 t/s | | 268.4 | 926.9 |\\n| tg128 @ d0 | **23.3 t/s**, 68.1% acc | | 28.5 | 36.2 |\\n| 16,384-token prefix | 265.3 t/s | | 277.1 | ~1,065 |\\n| pp4096 @ d16384 | 260.8 over 20,421 | | 273.7 | ~1,126 (derived) |\\n| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | | 28.8 | 37.4 |\\n| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | | 100% | 64.6% |\\n\\nAt `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /\\n34.7) with 82-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than\\nits 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert\\neither way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on\\ndecode with the same placement. The misses cost more here than there, on a CPU of the same core count: the 16\\nZen 5 cores read their experts from the memory the GPU is using at the same time, and the copies (`--pcie-frac`)\\ncome out of the same 236 GB/s.\\n\\n## The RTX 5090 over Thunderbolt (not pursued)\", \"originalFile\": null, \"structuredPatch\": [{\"oldStart\": 495, \"oldLines\": 6, \"newStart\": 495, \"newLines\": 38, \"lines\": [\" - The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata\", \"   on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.\", \" \", \"+## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\", \"+\", \"+This BIOS offers 32, 64 and 96 GiB for the GPU, nothing between. The user set **32/96** (Windows sees 95.6 GiB,\", \"+HIP 89.4 GiB), and the Coder was run the way the 3060M PC runs it: the arena pinned in RAM, `--expert-cache 2666`\", \"+(the 3060's 2,666 resident experts; the engine made it 3,465 slots, 6.6 GiB, adding the slots the prompt path\", \"+borrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-frac 0.2` (the value its\", \"+`--pcie-frac` section found best there). hipBLASLt routing on; configs `strata-coder-iq1_m-like3060.json` and\", \"+`...-pcie02.json`; the same benchmark; the engine's 15 expert-pool workers compute the misses.\", \"+\", \"+| | **32/96, cache 3,465, pcie 0.55** | 32/96, cache 3,465, pcie 0.2 | 64/64, all 12,288 on the GPU | RTX 3060 Laptop (cache 2,666, pcie 0.55) |\", \"+|---|---|---|---|---|\", \"+| model load to listening | 15 s | | 15 s | 11.5 s |\", \"+| cold first request, decode | **29.0 t/s**, 91.8% acc | | 38.6 | 43.3 |\", \"+| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | | 35.1 | 42.1 |\", \"+| prefill @ ~4.75K | 253.4 t/s | | 274.0 | 961.3 |\", \"+| decode tail after it | **24.2 t/s**, 74.3% acc | | 34.7 | 39.3 |\", \"+| repeated prompt (reference) | 30.5 t/s | | 39.5 | 45.1 |\", \"+| pp4096 @ d0 | 256.7 t/s | | 268.4 | 926.9 |\", \"+| tg128 @ d0 | **23.3 t/s**, 68.1% acc | | 28.5 | 36.2 |\", \"+| 16,384-token prefix | 265.3 t/s | | 277.1 | ~1,065 |\", \"+| pp4096 @ d16384 | 260.8 over 20,421 | | 273.7 | ~1,126 (derived) |\", \"+| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | | 28.8 | 37.4 |\", \"+| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | | 100% | 64.6% |\", \"+\", \"+At `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /\", \"+34.7) with 82-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than\", \"+its 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert\", \"+either way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on\", \"+decode with the same placement. The misses cost more here than there, on a CPU of the same core count: the 16\", \"+Zen 5 cores read their experts from the memory the GPU is using at the same time, and the copies (`--pcie-frac`)\", \"+come out of the same 236 GB/s.\", \"+\", \" ## The RTX 5090 over Thunderbolt (not pursued)\", \" \", \" Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's\"]}], \"userModified\": false, \"replaceAll\": false, \"contentNotInModelContext\": true}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 390935,
+        "completion_tokens": 1662,
+        "cached_tokens": 390903,
+        "extra": {
+          "cache_creation_input_tokens": 1574,
+          "cache_read_input_tokens": 390903,
+          "output_tokens_details": {
+            "thinking_tokens": 272
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1574,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1662,
+              "cache_read_input_tokens": 390903,
+              "cache_creation_input_tokens": 1574,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1574
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Edit",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "newString": "## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\n\nThis BIOS offers 32, 64 and 96 GiB for the GPU, nothing between. The user set **32/96** (Windows sees 95.6 GiB,\nHIP 89.4 GiB), and the Coder was run the way the 3060M PC runs it: the arena pinned in RAM, `--expert-cache 2666`\n(the 3060's 2,666 resident experts; the engine made it 3,465 slots, 6.6 GiB, adding the slots the prompt path\nborrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-frac 0.2` (the value its\n`--pcie-frac` section found best there). hipBLASLt routing on; configs `strata-coder-iq1_m-like3060.json` and\n`...-pcie02.json`; the same benchmark; the engine's 15 expert-pool workers compute the misses.\n\n| | **32/96, cache 3,465, pcie 0.55** | 32/96, cache 3,465, pcie 0.2 | 64/64, all 12,288 on the GPU | RTX 3060 Laptop (cache 2,666, pcie 0.55) |\n|---|---|---|---|---|\n| model load to listening | 15 s | | 15 s | 11.5 s |\n| cold first request, decode | **29.0 t/s**, 91.8% acc | | 38.6 | 43.3 |\n| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | | 35.1 | 42.1 |\n| prefill @ ~4.75K | 253.4 t/s | | 274.0 | 961.3 |\n| decode tail after it | **24.2 t/s**, 74.3% acc | | 34.7 | 39.3 |\n| repeated prompt (reference) | 30.5 t/s | | 39.5 | 45.1 |\n| pp4096 @ d0 | 256.7 t/s | | 268.4 | 926.9 |\n| tg128 @ d0 | **23.3 t/s**, 68.1% acc | | 28.5 | 36.2 |\n| 16,384-token prefix | 265.3 t/s | | 277.1 | ~1,065 |\n| pp4096 @ d16384 | 260.8 over 20,421 | | 273.7 | ~1,126 (derived) |\n| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | | 28.8 | 37.4 |\n| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | | 100% | 64.6% |\n\nAt `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /\n34.7) with 82-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than\nits 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert\neither way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on\ndecode with the same placement. The misses cost more here than there, on a CPU of the same core count: the 16\nZen 5 cores read their experts from the memory the GPU is using at the same time, and the copies (`--pcie-frac`)\ncome out of the same 236 GB/s.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 495,
+                "oldLines": 6,
+                "newStart": 495,
+                "newLines": 38,
+                "lines": [
+                  " - The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata",
+                  "   on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.",
+                  " ",
+                  "+## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest",
+                  "+",
+                  "+This BIOS offers 32, 64 and 96 GiB for the GPU, nothing between. The user set **32/96** (Windows sees 95.6 GiB,",
+                  "+HIP 89.4 GiB), and the Coder was run the way the 3060M PC runs it: the arena pinned in RAM, `--expert-cache 2666`",
+                  "+(the 3060's 2,666 resident experts; the engine made it 3,465 slots, 6.6 GiB, adding the slots the prompt path",
+                  "+borrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-frac 0.2` (the value its",
+                  "+`--pcie-frac` section found best there). hipBLASLt routing on; configs `strata-coder-iq1_m-like3060.json` and",
+                  "+`...-pcie02.json`; the same benchmark; the engine's 15 expert-pool workers compute the misses.",
+                  "+",
+                  "+| | **32/96, cache 3,465, pcie 0.55** | 32/96, cache 3,465, pcie 0.2 | 64/64, all 12,288 on the GPU | RTX 3060 Laptop (cache 2,666, pcie 0.55) |",
+                  "+|---|---|---|---|---|",
+                  "+| model load to listening | 15 s | | 15 s | 11.5 s |",
+                  "+| cold first request, decode | **29.0 t/s**, 91.8% acc | | 38.6 | 43.3 |",
+                  "+| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | | 35.1 | 42.1 |",
+                  "+| prefill @ ~4.75K | 253.4 t/s | | 274.0 | 961.3 |",
+                  "+| decode tail after it | **24.2 t/s**, 74.3% acc | | 34.7 | 39.3 |",
+                  "+| repeated prompt (reference) | 30.5 t/s | | 39.5 | 45.1 |",
+                  "+| pp4096 @ d0 | 256.7 t/s | | 268.4 | 926.9 |",
+                  "+| tg128 @ d0 | **23.3 t/s**, 68.1% acc | | 28.5 | 36.2 |",
+                  "+| 16,384-token prefix | 265.3 t/s | | 277.1 | ~1,065 |",
+                  "+| pp4096 @ d16384 | 260.8 over 20,421 | | 273.7 | ~1,126 (derived) |",
+                  "+| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | | 28.8 | 37.4 |",
+                  "+| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | | 100% | 64.6% |",
+                  "+",
+                  "+At `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /",
+                  "+34.7) with 82-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than",
+                  "+its 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert",
+                  "+either way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on",
+                  "+decode with the same placement. The misses cost more here than there, on a CPU of the same core count: the 16",
+                  "+Zen 5 cores read their experts from the memory the GPU is using at the same time, and the copies (`--pcie-frac`)",
+                  "+come out of the same 236 GB/s.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_015DFMWfFchnUo1HGSB1g85D",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "newString": "## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\n\nThis BIOS offers 32, 64 and 96 GiB for the GPU, nothing between. The user set **32/96** (Windows sees 95.6 GiB,\nHIP 89.4 GiB), and the Coder was run the way the 3060M PC runs it: the arena pinned in RAM, `--expert-cache 2666`\n(the 3060's 2,666 resident experts; the engine made it 3,465 slots, 6.6 GiB, adding the slots the prompt path\nborrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-frac 0.2` (the value its\n`--pcie-frac` section found best there). hipBLASLt routing on; configs `strata-coder-iq1_m-like3060.json` and\n`...-pcie02.json`; the same benchmark; the engine's 15 expert-pool workers compute the misses.\n\n| | **32/96, cache 3,465, pcie 0.55** | 32/96, cache 3,465, pcie 0.2 | 64/64, all 12,288 on the GPU | RTX 3060 Laptop (cache 2,666, pcie 0.55) |\n|---|---|---|---|---|\n| model load to listening | 15 s | | 15 s | 11.5 s |\n| cold first request, decode | **29.0 t/s**, 91.8% acc | | 38.6 | 43.3 |\n| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | | 35.1 | 42.1 |\n| prefill @ ~4.75K | 253.4 t/s | | 274.0 | 961.3 |\n| decode tail after it | **24.2 t/s**, 74.3% acc | | 34.7 | 39.3 |\n| repeated prompt (reference) | 30.5 t/s | | 39.5 | 45.1 |\n| pp4096 @ d0 | 256.7 t/s | | 268.4 | 926.9 |\n| tg128 @ d0 | **23.3 t/s**, 68.1% acc | | 28.5 | 36.2 |\n| 16,384-token prefix | 265.3 t/s | | 277.1 | ~1,065 |\n| pp4096 @ d16384 | 260.8 over 20,421 | | 273.7 | ~1,126 (derived) |\n| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | | 28.8 | 37.4 |\n| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | | 100% | 64.6% |\n\nAt `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /\n34.7) with 82-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than\nits 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert\neither way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on\ndecode with the same placement. The misses cost more here than there, on a CPU of the same core count: the 16\nZen 5 cores read their experts from the memory the GPU is using at the same time, and the copies (`--pcie-frac`)\ncome out of the same 236 GB/s.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 495,
+                "oldLines": 6,
+                "newStart": 495,
+                "newLines": 38,
+                "lines": [
+                  " - The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata",
+                  "   on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.",
+                  " ",
+                  "+## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest",
+                  "+",
+                  "+This BIOS offers 32, 64 and 96 GiB for the GPU, nothing between. The user set **32/96** (Windows sees 95.6 GiB,",
+                  "+HIP 89.4 GiB), and the Coder was run the way the 3060M PC runs it: the arena pinned in RAM, `--expert-cache 2666`",
+                  "+(the 3060's 2,666 resident experts; the engine made it 3,465 slots, 6.6 GiB, adding the slots the prompt path",
+                  "+borrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-frac 0.2` (the value its",
+                  "+`--pcie-frac` section found best there). hipBLASLt routing on; configs `strata-coder-iq1_m-like3060.json` and",
+                  "+`...-pcie02.json`; the same benchmark; the engine's 15 expert-pool workers compute the misses.",
+                  "+",
+                  "+| | **32/96, cache 3,465, pcie 0.55** | 32/96, cache 3,465, pcie 0.2 | 64/64, all 12,288 on the GPU | RTX 3060 Laptop (cache 2,666, pcie 0.55) |",
+                  "+|---|---|---|---|---|",
+                  "+| model load to listening | 15 s | | 15 s | 11.5 s |",
+                  "+| cold first request, decode | **29.0 t/s**, 91.8% acc | | 38.6 | 43.3 |",
+                  "+| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | | 35.1 | 42.1 |",
+                  "+| prefill @ ~4.75K | 253.4 t/s | | 274.0 | 961.3 |",
+                  "+| decode tail after it | **24.2 t/s**, 74.3% acc | | 34.7 | 39.3 |",
+                  "+| repeated prompt (reference) | 30.5 t/s | | 39.5 | 45.1 |",
+                  "+| pp4096 @ d0 | 256.7 t/s | | 268.4 | 926.9 |",
+                  "+| tg128 @ d0 | **23.3 t/s**, 68.1% acc | | 28.5 | 36.2 |",
+                  "+| 16,384-token prefix | 265.3 t/s | | 277.1 | ~1,065 |",
+                  "+| pp4096 @ d16384 | 260.8 over 20,421 | | 273.7 | ~1,126 (derived) |",
+                  "+| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | | 28.8 | 37.4 |",
+                  "+| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | | 100% | 64.6% |",
+                  "+",
+                  "+At `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /",
+                  "+34.7) with 82-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than",
+                  "+its 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert",
+                  "+either way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on",
+                  "+decode with the same placement. The misses cost more here than there, on a CPU of the same core count: the 16",
+                  "+Zen 5 cores read their experts from the memory the GPU is using at the same time, and the copies (`--pcie-frac`)",
+                  "+come out of the same 236 GB/s.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_015DFMWfFchnUo1HGSB1g85D",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "raw_arguments": {
+          "replace_all": false,
+          "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+          "old_string": "## The RTX 5090 over Thunderbolt (not pursued)",
+          "new_string": "## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\n\nThis BIOS offers 32, 64 and 96 GiB for the GPU, nothing between. The user set **32/96** (Windows sees 95.6 GiB,\nHIP 89.4 GiB), and the Coder was run the way the 3060M PC runs it: the arena pinned in RAM, `--expert-cache 2666`\n(the 3060's 2,666 resident experts; the engine made it 3,465 slots, 6.6 GiB, adding the slots the prompt path\nborrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-frac 0.2` (the value its\n`--pcie-frac` section found best there). hipBLASLt routing on; configs `strata-coder-iq1_m-like3060.json` and\n`...-pcie02.json`; the same benchmark; the engine's 15 expert-pool workers compute the misses.\n\n| | **32/96, cache 3,465, pcie 0.55** | 32/96, cache 3,465, pcie 0.2 | 64/64, all 12,288 on the GPU | RTX 3060 Laptop (cache 2,666, pcie 0.55) |\n|---|---|---|---|---|\n| model load to listening | 15 s | | 15 s | 11.5 s |\n| cold first request, decode | **29.0 t/s**, 91.8% acc | | 38.6 | 43.3 |\n| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | | 35.1 | 42.1 |\n| prefill @ ~4.75K | 253.4 t/s | | 274.0 | 961.3 |\n| decode tail after it | **24.2 t/s**, 74.3% acc | | 34.7 | 39.3 |\n| repeated prompt (reference) | 30.5 t/s | | 39.5 | 45.1 |\n| pp4096 @ d0 | 256.7 t/s | | 268.4 | 926.9 |\n| tg128 @ d0 | **23.3 t/s**, 68.1% acc | | 28.5 | 36.2 |\n| 16,384-token prefix | 265.3 t/s | | 277.1 | ~1,065 |\n| pp4096 @ d16384 | 260.8 over 20,421 | | 273.7 | ~1,126 (derived) |\n| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | | 28.8 | 37.4 |\n| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | | 100% | 64.6% |\n\nAt `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /\n34.7) with 82-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than\nits 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert\neither way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on\ndecode with the same placement. The misses cost more here than there, on a CPU of the same core count: the 16\nZen 5 cores read their experts from the memory the GPU is using at the same time, and the copies (`--pcie-frac`)\ncome out of the same 236 GB/s.\n\n## The RTX 5090 over Thunderbolt (not pursued)"
+        }
+      }
+    },
+    {
+      "step_id": 310,
+      "timestamp": "2026-10-05T11:03:44.264Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "That is the 0.55 server being stopped by the chained job, as planned; the 0.2 server is starting and its benchmark follows. The 0.55 results are already in the document. Waiting for the 0.2 run's notification.",
+      "metrics": {
+        "prompt_tokens": 392479,
+        "completion_tokens": 73,
+        "cached_tokens": 392477,
+        "extra": {
+          "cache_creation_input_tokens": 2137,
+          "cache_read_input_tokens": 392477,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2137,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 73,
+              "cache_read_input_tokens": 392477,
+              "cache_creation_input_tokens": 2137,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2137
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 71247469,
-    "total_completion_tokens": 587130,
-    "total_cached_tokens": 71240259,
-    "total_steps": 305,
+    "total_prompt_tokens": 72812313,
+    "total_completion_tokens": 591030,
+    "total_cached_tokens": 72805033,
+    "total_steps": 310,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1251124,
-      "total_cache_read_input_tokens": 71240259
+      "total_cache_creation_input_tokens": 1256821,
+      "total_cache_read_input_tokens": 72805033
     }
   }
 }

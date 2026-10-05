@@ -495,6 +495,38 @@ The numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on b
 - The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata
   on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.
 
+## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest
+
+This BIOS offers 32, 64 and 96 GiB for the GPU, nothing between. The user set **32/96** (Windows sees 95.6 GiB,
+HIP 89.4 GiB), and the Coder was run the way the 3060M PC runs it: the arena pinned in RAM, `--expert-cache 2666`
+(the 3060's 2,666 resident experts; the engine made it 3,465 slots, 6.6 GiB, adding the slots the prompt path
+borrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-frac 0.2` (the value its
+`--pcie-frac` section found best there). hipBLASLt routing on; configs `strata-coder-iq1_m-like3060.json` and
+`...-pcie02.json`; the same benchmark; the engine's 15 expert-pool workers compute the misses.
+
+| | **32/96, cache 3,465, pcie 0.55** | 32/96, cache 3,465, pcie 0.2 | 64/64, all 12,288 on the GPU | RTX 3060 Laptop (cache 2,666, pcie 0.55) |
+|---|---|---|---|---|
+| model load to listening | 15 s | | 15 s | 11.5 s |
+| cold first request, decode | **29.0 t/s**, 91.8% acc | | 38.6 | 43.3 |
+| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | | 35.1 | 42.1 |
+| prefill @ ~4.75K | 253.4 t/s | | 274.0 | 961.3 |
+| decode tail after it | **24.2 t/s**, 74.3% acc | | 34.7 | 39.3 |
+| repeated prompt (reference) | 30.5 t/s | | 39.5 | 45.1 |
+| pp4096 @ d0 | 256.7 t/s | | 268.4 | 926.9 |
+| tg128 @ d0 | **23.3 t/s**, 68.1% acc | | 28.5 | 36.2 |
+| 16,384-token prefix | 265.3 t/s | | 277.1 | ~1,065 |
+| pp4096 @ d16384 | 260.8 over 20,421 | | 273.7 | ~1,126 (derived) |
+| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | | 28.8 | 37.4 |
+| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | | 100% | 64.6% |
+
+At `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /
+34.7) with 82-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than
+its 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert
+either way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on
+decode with the same placement. The misses cost more here than there, on a CPU of the same core count: the 16
+Zen 5 cores read their experts from the memory the GPU is using at the same time, and the copies (`--pcie-frac`)
+come out of the same 236 GB/s.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's
