@@ -553,6 +553,42 @@ So for 32/96: `STRATA_ARENA_PIN_GIB=24` (costing 48 of the 89.4 GiB figure) and 
 slots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the
 dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.
 
+Both started (35 s and 25 s to listening; the arena "locked 33053 MiB via working-set minimum + VirtualLock,
+cudaHostRegister limited to 24 GiB"; with the cap the PCIe probe read a real number, 68.8 GB/s, where the fully
+mapped arena had given it 8-16 TB/s). The engine made the caches **14,358 slots (32.4 GiB, 1.3 GiB of VRAM left)**
+and **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrowable slots. The same benchmark
+(`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json`, `...-cache1864.json`):
+
+| UD-IQ4_XS, MTP on | **32/96, 14,358 slots** | **32/96, 2,683 slots, pcie 0.55** | RTX 3060 Laptop (1,864 slots) | 8060S llama.cpp (windows.md) |
+|---|---|---|---|---|
+| model load to listening | 35 s | 25 s | 42 s | 83 s |
+| cold first request, decode | 31.4 t/s, 91.8% acc | 32.5 t/s, 93.3% acc | 37.6 t/s, 87.9% acc | 28.2 t/s |
+| fresh code prompt, decode | 27.2 t/s, 84.8% acc | 25.1 t/s, 77.0% acc | 38.7 t/s, 87.1% acc | 25.1 t/s |
+| prefill @ ~4.75K | 210.5 t/s | 213.7 t/s | 662.8 t/s | 277.2 t/s |
+| decode tail after it | 22.1 t/s, 70.3% acc | 22.6 t/s, 72.9% acc | 33.1 t/s, 76.9% acc | 23.0 t/s |
+| repeated prompt (reference) | 30.1 t/s | 31.1 t/s | 42.6 t/s | 58.6 t/s |
+| pp4096 @ d0 | 210.4 t/s | 208.4 t/s | 819.4 t/s | 339.5 |
+| tg128 @ d0 | 20.6 t/s, 59.6% acc | 21.3 t/s, 62.0% acc | 32.2 t/s, 71.4% acc | 21.83 (plain) |
+| 16,384-token prefix | 230.2 t/s | 231.7 t/s | | |
+| pp4096 @ d16384 | 228.7 over 20,421 | 228.0 over 20,421 | ~949 (derived) | 244.1 |
+| tg128 @ d16384 | 20.2 t/s, 60.6% acc | 19.8 t/s, 55.4% acc | 31.7 t/s, 67.4% acc | 16.25 (plain) |
+| decode expert-cache hit rate | **96.8-98.3%** | **59-72%** | 48.3% | |
+
+**Reading it.**
+
+- UD-IQ4_XS decodes at 22-32 t/s here against 33-39 on the 3060 PC (0.67-0.84x) and 23-28 for llama.cpp on
+  this same PC (about even to 1.1x; llama.cpp's repeated-prompt row, 58.6, is its n-gram speculator). Prefill
+  210-236 t/s is 0.24-0.32x the 3060 PC and 0.75-0.95x llama.cpp here.
+- **The cache size made no difference to decode**: 14,358 resident experts with 97-98% hits and 2,683 with 59-72%
+  hits give the same tokens/s on every row (31.4 vs 32.5, 27.2 vs 25.1, 22.1 vs 22.6; tg128 20.6 vs 21.3). With
+  the Coder on this PC the hit rate did matter (100%: 35-39 t/s; 82%: 24-29). So UD-IQ4_XS's decode on the 8060S
+  is bound by something the GPU-resident path and the CPU path share, not by where the experts are: a candidate
+  is the GPU's own expert kernels for this file's formats (IQ3_S, IQ4_NL and Q8_0 blobs, 2.4 MB per pair against
+  the Coder's 2.0 MB) on RDNA 3.5, another the per-token PLE rows (read from shard 2 on the NVMe by both paths).
+  `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.
+- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path
+  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's

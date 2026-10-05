@@ -28669,19 +28669,593 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 345,
+      "timestamp": "2026-10-05T11:36:14.531Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>btreezkpk</task-id>\n<tool-use-id>toolu_01Bu8i26TuaxhGbdXWmDPZdN</tool-use-id>\n<output-file>C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\btreezkpk.output</output-file>\n<status>completed</status>\n<summary>Background command \"Run UD-IQ4_XS twice on the 32/96 split with the pinned arena capped at 24 GiB: a 10,000-expert cache, then 1,864 like the 3060; full benchmark each\" completed (exit code 0)</summary>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 346,
+      "timestamp": "2026-10-05T11:36:25.513Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01Uko8FgpPQ2hsqqiXmrfS26",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01Uko8FgpPQ2hsqqiXmrfS26",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "grep -E \"ready=|bench exit\" \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/tasks/btreezkpk.output\"; /c/conda_envs/strata/python.exe - <<'EOF' 2>&1\nimport json, os\nfor f in ('docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json','docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-cache1864.json'):\n    if not os.path.exists(f): print('missing', f); continue\n    d=json.load(open(f, encoding='utf-8')); print('==', d['label'])\n    for r in d['rows']:\n        print('  %-50s prompt %6s %7s t/s | pred %4s %6s t/s | acc %5s | wall %7s' % (r['test'][:50], r.get('prompt_n'), r.get('prompt_per_second'), r.get('predicted_n'), r.get('predicted_per_second'), r.get('accept_pct'), r.get('wall_s')))\nEOF\nfor l in strata-unsloth-ud-iq4_xs.log strata-unsloth-ud-iq4_xs-cache1864.log; do echo \"== $l\"; grep -E \"expert cache [0-9]+ slots|loaded .* GiB|VRAM free|hit rate\" $l | grep -v \"hits / [0-9]\\{3\\} lookups\" | tail -5 | cut -c1-130; grep -E \"answer_tail\" docs/benchmarks/2026-10-05-${l%.log}.json >/dev/null; done; /c/conda_envs/strata/python.exe -c \"\nimport json; d=json.load(open('docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json', encoding='utf-8')); print(d['rows'][0]['answer_tail'][-200:].replace(chr(10),' '))\"",
+            "description": "Show both UD-IQ4_XS benchmark runs, their cache sizes, hit rates and an answer tail"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01Uko8FgpPQ2hsqqiXmrfS26",
+            "content": "strata-unsloth-ud-iq4_xs: ready=True after 35 s\nbench exit 0\nstrata-unsloth-ud-iq4_xs-cache1864: ready=True after 25 s\nbench exit 0\n== halo-8060S-ud-iq4_xs-32-96-cache10000-pin24\r\n  server: cold first request (short code prompt)     prompt    314    89.6 t/s | pred  400   31.4 t/s | acc  91.8 | wall   16.29\r\n  server: fresh code prompt                          prompt    218    95.3 t/s | pred  400   27.2 t/s | acc  84.8 | wall   17.02\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   210.5 t/s | pred  400   22.1 t/s | acc  70.3 | wall   40.74\r\n  server: repeated first prompt (reference only)     prompt    314   113.7 t/s | pred  400   30.1 t/s | acc  92.3 | wall   16.09\r\n  pp4096 @ d0                                        prompt   4085   210.4 t/s | pred    1   16.8 t/s | acc  None | wall   19.51\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   20.6 t/s | acc  59.6 | wall    7.84\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   230.2 t/s | pred    1   17.1 t/s | acc  None | wall   71.31\r\n  pp4096 @ d16384                                    prompt  20421   228.7 t/s | pred    1   16.6 t/s | acc  None | wall   89.43\r\n  tg128 @ d16384                                     prompt  16401   235.5 t/s | pred  128   20.2 t/s | acc  60.6 | wall   76.04\r\n== halo-8060S-ud-iq4_xs-32-96-cache1864-pcie055-pin24\r\n  server: cold first request (short code prompt)     prompt    314    76.7 t/s | pred  400   32.5 t/s | acc  93.3 | wall   16.45\r\n  server: fresh code prompt                          prompt    218    73.5 t/s | pred  400   25.1 t/s | acc  77.0 | wall   18.95\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   213.7 t/s | pred  400   22.6 t/s | acc  72.9 | wall   39.94\r\n  server: repeated first prompt (reference only)     prompt    314    87.8 t/s | pred  400   31.1 t/s | acc  88.1 | wall   16.45\r\n  pp4096 @ d0                                        prompt   4085   208.4 t/s | pred    1   17.1 t/s | acc  None | wall   19.69\r\n  tg128 @ d0                                         prompt     68    41.3 t/s | pred  128   21.3 t/s | acc  62.0 | wall    7.68\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   231.7 t/s | pred    1   17.5 t/s | acc  None | wall   70.86\r\n  pp4096 @ d16384                                    prompt  20421   228.0 t/s | pred    1   17.3 t/s | acc  None | wall   89.69\r\n  tg128 @ d16384                                     prompt  16401   236.2 t/s | pred  128   19.8 t/s | acc  55.4 | wall   75.99\r\n== strata-unsloth-ud-iq4_xs.log\nstrata serve: decode expert cache hit rate: 96.8% (206681 hits / 213444 lookups)\nstrata serve: decode expert cache hit rate: 97.5% (230238 hits / 236240 lookups)\nstrata serve: decode expert cache hit rate: 96.8% (194807 hits / 201316 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (80527 hits / 82287 lookups)\nstrata serve: decode expert cache hit rate: 98.3% (78560 hits / 79946 lookups)\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata serve: decode expert cache hit rate: 65.9% (135218 hits / 205128 lookups)\nstrata serve: decode expert cache hit rate: 61.3% (126451 hits / 206251 lookups)\nstrata serve: decode expert cache hit rate: 59.3% (112240 hits / 189178 lookups)\nstrata serve: decode expert cache hit rate: 64.6% (46099 hits / 71363 lookups)\nstrata serve: decode expert cache hit rate: 72.0% (55450 hits / 76963 lookups)\ns n_split if positive. - Avoid vector<char> zero initialization? vector<char> buf(llama_path_max(), 0) zero fills. Could use std::array? llama_path_max() maybe runtime? Could use std::vector<char> buf\n\n[stdout]\nstrata-unsloth-ud-iq4_xs: ready=True after 35 s\nbench exit 0\nstrata-unsloth-ud-iq4_xs-cache1864: ready=True after 25 s\nbench exit 0\n== halo-8060S-ud-iq4_xs-32-96-cache10000-pin24\r\n  server: cold first request (short code prompt)     prompt    314    89.6 t/s | pred  400   31.4 t/s | acc  91.8 | wall   16.29\r\n  server: fresh code prompt                          prompt    218    95.3 t/s | pred  400   27.2 t/s | acc  84.8 | wall   17.02\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   210.5 t/s | pred  400   22.1 t/s | acc  70.3 | wall   40.74\r\n  server: repeated first prompt (reference only)     prompt    314   113.7 t/s | pred  400   30.1 t/s | acc  92.3 | wall   16.09\r\n  pp4096 @ d0                                        prompt   4085   210.4 t/s | pred    1   16.8 t/s | acc  None | wall   19.51\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   20.6 t/s | acc  59.6 | wall    7.84\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   230.2 t/s | pred    1   17.1 t/s | acc  None | wall   71.31\r\n  pp4096 @ d16384                                    prompt  20421   228.7 t/s | pred    1   16.6 t/s | acc  None | wall   89.43\r\n  tg128 @ d16384                                     prompt  16401   235.5 t/s | pred  128   20.2 t/s | acc  60.6 | wall   76.04\r\n== halo-8060S-ud-iq4_xs-32-96-cache1864-pcie055-pin24\r\n  server: cold first request (short code prompt)     prompt    314    76.7 t/s | pred  400   32.5 t/s | acc  93.3 | wall   16.45\r\n  server: fresh code prompt                          prompt    218    73.5 t/s | pred  400   25.1 t/s | acc  77.0 | wall   18.95\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   213.7 t/s | pred  400   22.6 t/s | acc  72.9 | wall   39.94\r\n  server: repeated first prompt (reference only)     prompt    314    87.8 t/s | pred  400   31.1 t/s | acc  88.1 | wall   16.45\r\n  pp4096 @ d0                                        prompt   4085   208.4 t/s | pred    1   17.1 t/s | acc  None | wall   19.69\r\n  tg128 @ d0                                         prompt     68    41.3 t/s | pred  128   21.3 t/s | acc  62.0 | wall    7.68\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   231.7 t/s | pred    1   17.5 t/s | acc  None | wall   70.86\r\n  pp4096 @ d16384                                    prompt  20421   228.0 t/s | pred    1   17.3 t/s | acc  None | wall   89.69\r\n  tg128 @ d16384                                     prompt  16401   236.2 t/s | pred  128   19.8 t/s | acc  55.4 | wall   75.99\r\n== strata-unsloth-ud-iq4_xs.log\nstrata serve: decode expert cache hit rate: 96.8% (206681 hits / 213444 lookups)\nstrata serve: decode expert cache hit rate: 97.5% (230238 hits / 236240 lookups)\nstrata serve: decode expert cache hit rate: 96.8% (194807 hits / 201316 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (80527 hits / 82287 lookups)\nstrata serve: decode expert cache hit rate: 98.3% (78560 hits / 79946 lookups)\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata serve: decode expert cache hit rate: 65.9% (135218 hits / 205128 lookups)\nstrata serve: decode expert cache hit rate: 61.3% (126451 hits / 206251 lookups)\nstrata serve: decode expert cache hit rate: 59.3% (112240 hits / 189178 lookups)\nstrata serve: decode expert cache hit rate: 64.6% (46099 hits / 71363 lookups)\nstrata serve: decode expert cache hit rate: 72.0% (55450 hits / 76963 lookups)\ns n_split if positive. - Avoid vector<char> zero initialization? vector<char> buf(llama_path_max(), 0) zero fills. Could use std::array? llama_path_max() maybe runtime? Could use std::vector<char> buf\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 421856,
+        "completion_tokens": 813,
+        "cached_tokens": 421852,
+        "extra": {
+          "cache_creation_input_tokens": 433,
+          "cache_read_input_tokens": 421852,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 433,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 813,
+              "cache_read_input_tokens": 421852,
+              "cache_creation_input_tokens": 433,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 433
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "strata-unsloth-ud-iq4_xs: ready=True after 35 s\nbench exit 0\nstrata-unsloth-ud-iq4_xs-cache1864: ready=True after 25 s\nbench exit 0\n== halo-8060S-ud-iq4_xs-32-96-cache10000-pin24\r\n  server: cold first request (short code prompt)     prompt    314    89.6 t/s | pred  400   31.4 t/s | acc  91.8 | wall   16.29\r\n  server: fresh code prompt                          prompt    218    95.3 t/s | pred  400   27.2 t/s | acc  84.8 | wall   17.02\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   210.5 t/s | pred  400   22.1 t/s | acc  70.3 | wall   40.74\r\n  server: repeated first prompt (reference only)     prompt    314   113.7 t/s | pred  400   30.1 t/s | acc  92.3 | wall   16.09\r\n  pp4096 @ d0                                        prompt   4085   210.4 t/s | pred    1   16.8 t/s | acc  None | wall   19.51\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   20.6 t/s | acc  59.6 | wall    7.84\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   230.2 t/s | pred    1   17.1 t/s | acc  None | wall   71.31\r\n  pp4096 @ d16384                                    prompt  20421   228.7 t/s | pred    1   16.6 t/s | acc  None | wall   89.43\r\n  tg128 @ d16384                                     prompt  16401   235.5 t/s | pred  128   20.2 t/s | acc  60.6 | wall   76.04\r\n== halo-8060S-ud-iq4_xs-32-96-cache1864-pcie055-pin24\r\n  server: cold first request (short code prompt)     prompt    314    76.7 t/s | pred  400   32.5 t/s | acc  93.3 | wall   16.45\r\n  server: fresh code prompt                          prompt    218    73.5 t/s | pred  400   25.1 t/s | acc  77.0 | wall   18.95\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   213.7 t/s | pred  400   22.6 t/s | acc  72.9 | wall   39.94\r\n  server: repeated first prompt (reference only)     prompt    314    87.8 t/s | pred  400   31.1 t/s | acc  88.1 | wall   16.45\r\n  pp4096 @ d0                                        prompt   4085   208.4 t/s | pred    1   17.1 t/s | acc  None | wall   19.69\r\n  tg128 @ d0                                         prompt     68    41.3 t/s | pred  128   21.3 t/s | acc  62.0 | wall    7.68\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   231.7 t/s | pred    1   17.5 t/s | acc  None | wall   70.86\r\n  pp4096 @ d16384                                    prompt  20421   228.0 t/s | pred    1   17.3 t/s | acc  None | wall   89.69\r\n  tg128 @ d16384                                     prompt  16401   236.2 t/s | pred  128   19.8 t/s | acc  55.4 | wall   75.99\r\n== strata-unsloth-ud-iq4_xs.log\nstrata serve: decode expert cache hit rate: 96.8% (206681 hits / 213444 lookups)\nstrata serve: decode expert cache hit rate: 97.5% (230238 hits / 236240 lookups)\nstrata serve: decode expert cache hit rate: 96.8% (194807 hits / 201316 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (80527 hits / 82287 lookups)\nstrata serve: decode expert cache hit rate: 98.3% (78560 hits / 79946 lookups)\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata serve: decode expert cache hit rate: 65.9% (135218 hits / 205128 lookups)\nstrata serve: decode expert cache hit rate: 61.3% (126451 hits / 206251 lookups)\nstrata serve: decode expert cache hit rate: 59.3% (112240 hits / 189178 lookups)\nstrata serve: decode expert cache hit rate: 64.6% (46099 hits / 71363 lookups)\nstrata serve: decode expert cache hit rate: 72.0% (55450 hits / 76963 lookups)\ns n_split if positive. - Avoid vector<char> zero initialization? vector<char> buf(llama_path_max(), 0) zero fills. Could use std::array? llama_path_max() maybe runtime? Could use std::vector<char> buf",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Uko8FgpPQ2hsqqiXmrfS26",
+            "type": "tool_result",
+            "content": "strata-unsloth-ud-iq4_xs: ready=True after 35 s\nbench exit 0\nstrata-unsloth-ud-iq4_xs-cache1864: ready=True after 25 s\nbench exit 0\n== halo-8060S-ud-iq4_xs-32-96-cache10000-pin24\r\n  server: cold first request (short code prompt)     prompt    314    89.6 t/s | pred  400   31.4 t/s | acc  91.8 | wall   16.29\r\n  server: fresh code prompt                          prompt    218    95.3 t/s | pred  400   27.2 t/s | acc  84.8 | wall   17.02\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   210.5 t/s | pred  400   22.1 t/s | acc  70.3 | wall   40.74\r\n  server: repeated first prompt (reference only)     prompt    314   113.7 t/s | pred  400   30.1 t/s | acc  92.3 | wall   16.09\r\n  pp4096 @ d0                                        prompt   4085   210.4 t/s | pred    1   16.8 t/s | acc  None | wall   19.51\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   20.6 t/s | acc  59.6 | wall    7.84\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   230.2 t/s | pred    1   17.1 t/s | acc  None | wall   71.31\r\n  pp4096 @ d16384                                    prompt  20421   228.7 t/s | pred    1   16.6 t/s | acc  None | wall   89.43\r\n  tg128 @ d16384                                     prompt  16401   235.5 t/s | pred  128   20.2 t/s | acc  60.6 | wall   76.04\r\n== halo-8060S-ud-iq4_xs-32-96-cache1864-pcie055-pin24\r\n  server: cold first request (short code prompt)     prompt    314    76.7 t/s | pred  400   32.5 t/s | acc  93.3 | wall   16.45\r\n  server: fresh code prompt                          prompt    218    73.5 t/s | pred  400   25.1 t/s | acc  77.0 | wall   18.95\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   213.7 t/s | pred  400   22.6 t/s | acc  72.9 | wall   39.94\r\n  server: repeated first prompt (reference only)     prompt    314    87.8 t/s | pred  400   31.1 t/s | acc  88.1 | wall   16.45\r\n  pp4096 @ d0                                        prompt   4085   208.4 t/s | pred    1   17.1 t/s | acc  None | wall   19.69\r\n  tg128 @ d0                                         prompt     68    41.3 t/s | pred  128   21.3 t/s | acc  62.0 | wall    7.68\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   231.7 t/s | pred    1   17.5 t/s | acc  None | wall   70.86\r\n  pp4096 @ d16384                                    prompt  20421   228.0 t/s | pred    1   17.3 t/s | acc  None | wall   89.69\r\n  tg128 @ d16384                                     prompt  16401   236.2 t/s | pred  128   19.8 t/s | acc  55.4 | wall   75.99\r\n== strata-unsloth-ud-iq4_xs.log\nstrata serve: decode expert cache hit rate: 96.8% (206681 hits / 213444 lookups)\nstrata serve: decode expert cache hit rate: 97.5% (230238 hits / 236240 lookups)\nstrata serve: decode expert cache hit rate: 96.8% (194807 hits / 201316 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (80527 hits / 82287 lookups)\nstrata serve: decode expert cache hit rate: 98.3% (78560 hits / 79946 lookups)\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata serve: decode expert cache hit rate: 65.9% (135218 hits / 205128 lookups)\nstrata serve: decode expert cache hit rate: 61.3% (126451 hits / 206251 lookups)\nstrata serve: decode expert cache hit rate: 59.3% (112240 hits / 189178 lookups)\nstrata serve: decode expert cache hit rate: 64.6% (46099 hits / 71363 lookups)\nstrata serve: decode expert cache hit rate: 72.0% (55450 hits / 76963 lookups)\ns n_split if positive. - Avoid vector<char> zero initialization? vector<char> buf(llama_path_max(), 0) zero fills. Could use std::array? llama_path_max() maybe runtime? Could use std::vector<char> buf",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "strata-unsloth-ud-iq4_xs: ready=True after 35 s\nbench exit 0\nstrata-unsloth-ud-iq4_xs-cache1864: ready=True after 25 s\nbench exit 0\n== halo-8060S-ud-iq4_xs-32-96-cache10000-pin24\r\n  server: cold first request (short code prompt)     prompt    314    89.6 t/s | pred  400   31.4 t/s | acc  91.8 | wall   16.29\r\n  server: fresh code prompt                          prompt    218    95.3 t/s | pred  400   27.2 t/s | acc  84.8 | wall   17.02\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   210.5 t/s | pred  400   22.1 t/s | acc  70.3 | wall   40.74\r\n  server: repeated first prompt (reference only)     prompt    314   113.7 t/s | pred  400   30.1 t/s | acc  92.3 | wall   16.09\r\n  pp4096 @ d0                                        prompt   4085   210.4 t/s | pred    1   16.8 t/s | acc  None | wall   19.51\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   20.6 t/s | acc  59.6 | wall    7.84\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   230.2 t/s | pred    1   17.1 t/s | acc  None | wall   71.31\r\n  pp4096 @ d16384                                    prompt  20421   228.7 t/s | pred    1   16.6 t/s | acc  None | wall   89.43\r\n  tg128 @ d16384                                     prompt  16401   235.5 t/s | pred  128   20.2 t/s | acc  60.6 | wall   76.04\r\n== halo-8060S-ud-iq4_xs-32-96-cache1864-pcie055-pin24\r\n  server: cold first request (short code prompt)     prompt    314    76.7 t/s | pred  400   32.5 t/s | acc  93.3 | wall   16.45\r\n  server: fresh code prompt                          prompt    218    73.5 t/s | pred  400   25.1 t/s | acc  77.0 | wall   18.95\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   213.7 t/s | pred  400   22.6 t/s | acc  72.9 | wall   39.94\r\n  server: repeated first prompt (reference only)     prompt    314    87.8 t/s | pred  400   31.1 t/s | acc  88.1 | wall   16.45\r\n  pp4096 @ d0                                        prompt   4085   208.4 t/s | pred    1   17.1 t/s | acc  None | wall   19.69\r\n  tg128 @ d0                                         prompt     68    41.3 t/s | pred  128   21.3 t/s | acc  62.0 | wall    7.68\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   231.7 t/s | pred    1   17.5 t/s | acc  None | wall   70.86\r\n  pp4096 @ d16384                                    prompt  20421   228.0 t/s | pred    1   17.3 t/s | acc  None | wall   89.69\r\n  tg128 @ d16384                                     prompt  16401   236.2 t/s | pred  128   19.8 t/s | acc  55.4 | wall   75.99\r\n== strata-unsloth-ud-iq4_xs.log\nstrata serve: decode expert cache hit rate: 96.8% (206681 hits / 213444 lookups)\nstrata serve: decode expert cache hit rate: 97.5% (230238 hits / 236240 lookups)\nstrata serve: decode expert cache hit rate: 96.8% (194807 hits / 201316 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (80527 hits / 82287 lookups)\nstrata serve: decode expert cache hit rate: 98.3% (78560 hits / 79946 lookups)\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata serve: decode expert cache hit rate: 65.9% (135218 hits / 205128 lookups)\nstrata serve: decode expert cache hit rate: 61.3% (126451 hits / 206251 lookups)\nstrata serve: decode expert cache hit rate: 59.3% (112240 hits / 189178 lookups)\nstrata serve: decode expert cache hit rate: 64.6% (46099 hits / 71363 lookups)\nstrata serve: decode expert cache hit rate: 72.0% (55450 hits / 76963 lookups)\ns n_split if positive. - Avoid vector<char> zero initialization? vector<char> buf(llama_path_max(), 0) zero fills. Could use std::array? llama_path_max() maybe runtime? Could use std::vector<char> buf",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Uko8FgpPQ2hsqqiXmrfS26",
+            "type": "tool_result",
+            "content": "strata-unsloth-ud-iq4_xs: ready=True after 35 s\nbench exit 0\nstrata-unsloth-ud-iq4_xs-cache1864: ready=True after 25 s\nbench exit 0\n== halo-8060S-ud-iq4_xs-32-96-cache10000-pin24\r\n  server: cold first request (short code prompt)     prompt    314    89.6 t/s | pred  400   31.4 t/s | acc  91.8 | wall   16.29\r\n  server: fresh code prompt                          prompt    218    95.3 t/s | pred  400   27.2 t/s | acc  84.8 | wall   17.02\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   210.5 t/s | pred  400   22.1 t/s | acc  70.3 | wall   40.74\r\n  server: repeated first prompt (reference only)     prompt    314   113.7 t/s | pred  400   30.1 t/s | acc  92.3 | wall   16.09\r\n  pp4096 @ d0                                        prompt   4085   210.4 t/s | pred    1   16.8 t/s | acc  None | wall   19.51\r\n  tg128 @ d0                                         prompt     68    42.0 t/s | pred  128   20.6 t/s | acc  59.6 | wall    7.84\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   230.2 t/s | pred    1   17.1 t/s | acc  None | wall   71.31\r\n  pp4096 @ d16384                                    prompt  20421   228.7 t/s | pred    1   16.6 t/s | acc  None | wall   89.43\r\n  tg128 @ d16384                                     prompt  16401   235.5 t/s | pred  128   20.2 t/s | acc  60.6 | wall   76.04\r\n== halo-8060S-ud-iq4_xs-32-96-cache1864-pcie055-pin24\r\n  server: cold first request (short code prompt)     prompt    314    76.7 t/s | pred  400   32.5 t/s | acc  93.3 | wall   16.45\r\n  server: fresh code prompt                          prompt    218    73.5 t/s | pred  400   25.1 t/s | acc  77.0 | wall   18.95\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   213.7 t/s | pred  400   22.6 t/s | acc  72.9 | wall   39.94\r\n  server: repeated first prompt (reference only)     prompt    314    87.8 t/s | pred  400   31.1 t/s | acc  88.1 | wall   16.45\r\n  pp4096 @ d0                                        prompt   4085   208.4 t/s | pred    1   17.1 t/s | acc  None | wall   19.69\r\n  tg128 @ d0                                         prompt     68    41.3 t/s | pred  128   21.3 t/s | acc  62.0 | wall    7.68\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   231.7 t/s | pred    1   17.5 t/s | acc  None | wall   70.86\r\n  pp4096 @ d16384                                    prompt  20421   228.0 t/s | pred    1   17.3 t/s | acc  None | wall   89.69\r\n  tg128 @ d16384                                     prompt  16401   236.2 t/s | pred  128   19.8 t/s | acc  55.4 | wall   75.99\r\n== strata-unsloth-ud-iq4_xs.log\nstrata serve: decode expert cache hit rate: 96.8% (206681 hits / 213444 lookups)\nstrata serve: decode expert cache hit rate: 97.5% (230238 hits / 236240 lookups)\nstrata serve: decode expert cache hit rate: 96.8% (194807 hits / 201316 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (80527 hits / 82287 lookups)\nstrata serve: decode expert cache hit rate: 98.3% (78560 hits / 79946 lookups)\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata serve: decode expert cache hit rate: 65.9% (135218 hits / 205128 lookups)\nstrata serve: decode expert cache hit rate: 61.3% (126451 hits / 206251 lookups)\nstrata serve: decode expert cache hit rate: 59.3% (112240 hits / 189178 lookups)\nstrata serve: decode expert cache hit rate: 64.6% (46099 hits / 71363 lookups)\nstrata serve: decode expert cache hit rate: 72.0% (55450 hits / 76963 lookups)\ns n_split if positive. - Avoid vector<char> zero initialization? vector<char> buf(llama_path_max(), 0) zero fills. Could use std::array? llama_path_max() maybe runtime? Could use std::vector<char> buf",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "grep -E \"ready=|bench exit\" \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/tasks/btreezkpk.output\"; /c/conda_envs/strata/python.exe - <<'EOF' 2>&1\nimport json, os\nfor f in ('docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json','docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-cache1864.json'):\n    if not os.path.exists(f): print('missing', f); continue\n    d=json.load(open(f, encoding='utf-8')); print('==', d['label'])\n    for r in d['rows']:\n        print('  %-50s prompt %6s %7s t/s | pred %4s %6s t/s | acc %5s | wall %7s' % (r['test'][:50], r.get('prompt_n'), r.get('prompt_per_second'), r.get('predicted_n'), r.get('predicted_per_second'), r.get('accept_pct'), r.get('wall_s')))\nEOF\nfor l in strata-unsloth-ud-iq4_xs.log strata-unsloth-ud-iq4_xs-cache1864.log; do echo \"== $l\"; grep -E \"expert cache [0-9]+ slots|loaded .* GiB|VRAM free|hit rate\" $l | grep -v \"hits / [0-9]\\{3\\} lookups\" | tail -5 | cut -c1-130; grep -E \"answer_tail\" docs/benchmarks/2026-10-05-${l%.log}.json >/dev/null; done; /c/conda_envs/strata/python.exe -c \"\nimport json; d=json.load(open('docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json', encoding='utf-8')); print(d['rows'][0]['answer_tail'][-200:].replace(chr(10),' '))\"",
+          "description": "Show both UD-IQ4_XS benchmark runs, their cache sizes, hit rates and an answer tail"
+        }
+      }
+    },
+    {
+      "step_id": 347,
+      "timestamp": "2026-10-05T11:36:49.035Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 422317,
+        "completion_tokens": 1499,
+        "cached_tokens": 422285,
+        "extra": {
+          "cache_creation_input_tokens": 2553,
+          "cache_read_input_tokens": 422285,
+          "output_tokens_details": {
+            "thinking_tokens": 1213
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2553,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1499,
+              "cache_read_input_tokens": 422285,
+              "cache_creation_input_tokens": 2553,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2553
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 348,
+      "timestamp": "2026-10-05T11:36:51.947Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01CeQTyPWQKTSpjwf3eELkbr",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01CeQTyPWQKTSpjwf3eELkbr",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "for l in strata-unsloth-ud-iq4_xs.log strata-unsloth-ud-iq4_xs-cache1864.log; do echo \"== $l\"; grep -E \"PCIe probe|expert cache [0-9]+ slots|pinned|arena:|borrows|VRAM free\" $l | cut -c1-200; grep -E \"expert tiers\" $l | tail -2 | cut -c1-260; grep -E \"strata serve: prompt 218 \" $l | tail -1 | cut -c1-200; done",
+            "description": "Read the two runs' cache sizes, pinning notes, expert tier lines and one decode summary"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01CeQTyPWQKTSpjwf3eELkbr",
+            "content": "== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: PCIe probe: 68.8 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1679 CUDA0 cache slots (3.80 GiB)\nstrata serve: 1295 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2287 ms (95.3 tok/s), 400 generated in 14721 ms (27.2 tok/s), drafts accepted 256 of 302, 1 checkpoints\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 2683 slots, 6.04 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1684 CUDA0 cache slots (3.80 GiB)\nstrata serve: 29088 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2967 ms (73.5 tok/s), 400 generated in 15951 ms (25.1 tok/s), drafts accepted 224 of 291, 1 checkpoints\n\n[stdout]\n== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: PCIe probe: 68.8 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1679 CUDA0 cache slots (3.80 GiB)\nstrata serve: 1295 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2287 ms (95.3 tok/s), 400 generated in 14721 ms (27.2 tok/s), drafts accepted 256 of 302, 1 checkpoints\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 2683 slots, 6.04 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1684 CUDA0 cache slots (3.80 GiB)\nstrata serve: 29088 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2967 ms (73.5 tok/s), 400 generated in 15951 ms (25.1 tok/s), drafts accepted 224 of 291, 1 checkpoints\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 422317,
+        "completion_tokens": 1499,
+        "cached_tokens": 422285,
+        "extra": {
+          "cache_creation_input_tokens": 2553,
+          "cache_read_input_tokens": 422285,
+          "output_tokens_details": {
+            "thinking_tokens": 1213
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2553,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1499,
+              "cache_read_input_tokens": 422285,
+              "cache_creation_input_tokens": 2553,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2553
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: PCIe probe: 68.8 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1679 CUDA0 cache slots (3.80 GiB)\nstrata serve: 1295 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2287 ms (95.3 tok/s), 400 generated in 14721 ms (27.2 tok/s), drafts accepted 256 of 302, 1 checkpoints\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 2683 slots, 6.04 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1684 CUDA0 cache slots (3.80 GiB)\nstrata serve: 29088 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2967 ms (73.5 tok/s), 400 generated in 15951 ms (25.1 tok/s), drafts accepted 224 of 291, 1 checkpoints",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01CeQTyPWQKTSpjwf3eELkbr",
+            "type": "tool_result",
+            "content": "== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: PCIe probe: 68.8 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1679 CUDA0 cache slots (3.80 GiB)\nstrata serve: 1295 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2287 ms (95.3 tok/s), 400 generated in 14721 ms (27.2 tok/s), drafts accepted 256 of 302, 1 checkpoints\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 2683 slots, 6.04 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1684 CUDA0 cache slots (3.80 GiB)\nstrata serve: 29088 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2967 ms (73.5 tok/s), 400 generated in 15951 ms (25.1 tok/s), drafts accepted 224 of 291, 1 checkpoints",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: PCIe probe: 68.8 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1679 CUDA0 cache slots (3.80 GiB)\nstrata serve: 1295 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2287 ms (95.3 tok/s), 400 generated in 14721 ms (27.2 tok/s), drafts accepted 256 of 302, 1 checkpoints\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 2683 slots, 6.04 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1684 CUDA0 cache slots (3.80 GiB)\nstrata serve: 29088 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2967 ms (73.5 tok/s), 400 generated in 15951 ms (25.1 tok/s), drafts accepted 224 of 291, 1 checkpoints",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01CeQTyPWQKTSpjwf3eELkbr",
+            "type": "tool_result",
+            "content": "== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: PCIe probe: 68.8 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1679 CUDA0 cache slots (3.80 GiB)\nstrata serve: 1295 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2287 ms (95.3 tok/s), 400 generated in 14721 ms (27.2 tok/s), drafts accepted 256 of 302, 1 checkpoints\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: expert arena: locked 33053 MiB via working-set minimum + VirtualLock; cudaHostRegister limited to 24 GiB by the engine (multi-GPU under WDDM, or remote experts); 20 slices pinned (23 \nstrata generate: expert cache 2683 slots, 6.04 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1684 CUDA0 cache slots (3.80 GiB)\nstrata serve: 29088 MiB of VRAM free with everything loaded\nstrata serve: prompt 218 tokens = 0 reused + 218 read in 2967 ms (73.5 tok/s), 400 generated in 15951 ms (25.1 tok/s), drafts accepted 224 of 291, 1 checkpoints",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "for l in strata-unsloth-ud-iq4_xs.log strata-unsloth-ud-iq4_xs-cache1864.log; do echo \"== $l\"; grep -E \"PCIe probe|expert cache [0-9]+ slots|pinned|arena:|borrows|VRAM free\" $l | cut -c1-200; grep -E \"expert tiers\" $l | tail -2 | cut -c1-260; grep -E \"strata serve: prompt 218 \" $l | tail -1 | cut -c1-200; done",
+          "description": "Read the two runs' cache sizes, pinning notes, expert tier lines and one decode summary"
+        }
+      }
+    },
+    {
+      "step_id": 349,
+      "timestamp": "2026-10-05T11:37:07.354Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 424870,
+        "completion_tokens": 2540,
+        "cached_tokens": 424838,
+        "extra": {
+          "cache_creation_input_tokens": 2432,
+          "cache_read_input_tokens": 424838,
+          "output_tokens_details": {
+            "thinking_tokens": 660
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2432,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 2540,
+              "cache_read_input_tokens": 424838,
+              "cache_creation_input_tokens": 2432,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2432
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 350,
+      "timestamp": "2026-10-05T11:37:30.904Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Edit toolu_01MRvbmFwkWQoKS7fLSxYcTY",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01MRvbmFwkWQoKS7fLSxYcTY",
+          "function_name": "Edit",
+          "arguments": {
+            "replace_all": false,
+            "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "old_string": "dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "new_string": "dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\nBoth started (35 s and 25 s to listening; the arena \"locked 33053 MiB via working-set minimum + VirtualLock,\ncudaHostRegister limited to 24 GiB\"; with the cap the PCIe probe read a real number, 68.8 GB/s, where the fully\nmapped arena had given it 8-16 TB/s). The engine made the caches **14,358 slots (32.4 GiB, 1.3 GiB of VRAM left)**\nand **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrowable slots. The same benchmark\n(`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json`, `...-cache1864.json`):\n\n| UD-IQ4_XS, MTP on | **32/96, 14,358 slots** | **32/96, 2,683 slots, pcie 0.55** | RTX 3060 Laptop (1,864 slots) | 8060S llama.cpp (windows.md) |\n|---|---|---|---|---|\n| model load to listening | 35 s | 25 s | 42 s | 83 s |\n| cold first request, decode | 31.4 t/s, 91.8% acc | 32.5 t/s, 93.3% acc | 37.6 t/s, 87.9% acc | 28.2 t/s |\n| fresh code prompt, decode | 27.2 t/s, 84.8% acc | 25.1 t/s, 77.0% acc | 38.7 t/s, 87.1% acc | 25.1 t/s |\n| prefill @ ~4.75K | 210.5 t/s | 213.7 t/s | 662.8 t/s | 277.2 t/s |\n| decode tail after it | 22.1 t/s, 70.3% acc | 22.6 t/s, 72.9% acc | 33.1 t/s, 76.9% acc | 23.0 t/s |\n| repeated prompt (reference) | 30.1 t/s | 31.1 t/s | 42.6 t/s | 58.6 t/s |\n| pp4096 @ d0 | 210.4 t/s | 208.4 t/s | 819.4 t/s | 339.5 |\n| tg128 @ d0 | 20.6 t/s, 59.6% acc | 21.3 t/s, 62.0% acc | 32.2 t/s, 71.4% acc | 21.83 (plain) |\n| 16,384-token prefix | 230.2 t/s | 231.7 t/s | | |\n| pp4096 @ d16384 | 228.7 over 20,421 | 228.0 over 20,421 | ~949 (derived) | 244.1 |\n| tg128 @ d16384 | 20.2 t/s, 60.6% acc | 19.8 t/s, 55.4% acc | 31.7 t/s, 67.4% acc | 16.25 (plain) |\n| decode expert-cache hit rate | **96.8-98.3%** | **59-72%** | 48.3% | |\n\n**Reading it.**\n\n- UD-IQ4_XS decodes at 22-32 t/s here against 33-39 on the 3060 PC (0.67-0.84x) and 23-28 for llama.cpp on\n  this same PC (about even to 1.1x; llama.cpp's repeated-prompt row, 58.6, is its n-gram speculator). Prefill\n  210-236 t/s is 0.24-0.32x the 3060 PC and 0.75-0.95x llama.cpp here.\n- **The cache size made no difference to decode**: 14,358 resident experts with 97-98% hits and 2,683 with 59-72%\n  hits give the same tokens/s on every row (31.4 vs 32.5, 27.2 vs 25.1, 22.1 vs 22.6; tg128 20.6 vs 21.3). With\n  the Coder on this PC the hit rate did matter (100%: 35-39 t/s; 82%: 24-29). So UD-IQ4_XS's decode on the 8060S\n  is bound by something the GPU-resident path and the CPU path share, not by where the experts are: a candidate\n  is the GPU's own expert kernels for this file's formats (IQ3_S, IQ4_NL and Q8_0 blobs, 2.4 MB per pair against\n  the Coder's 2.0 MB) on RDNA 3.5, another the per-token PLE rows (read from shard 2 on the NVMe by both paths).\n  `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.\n- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path\n  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.\n\n## The RTX 5090 over Thunderbolt (not pursued)"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01MRvbmFwkWQoKS7fLSxYcTY",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully.\n\n[metadata] {\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"oldString\": \"dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\\n\\n## The RTX 5090 over Thunderbolt (not pursued)\", \"newString\": \"dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\\n\\nBoth started (35 s and 25 s to listening; the arena \\\"locked 33053 MiB via working-set minimum + VirtualLock,\\ncudaHostRegister limited to 24 GiB\\\"; with the cap the PCIe probe read a real number, 68.8 GB/s, where the fully\\nmapped arena had given it 8-16 TB/s). The engine made the caches **14,358 slots (32.4 GiB, 1.3 GiB of VRAM left)**\\nand **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrowable slots. The same benchmark\\n(`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json`, `...-cache1864.json`):\\n\\n| UD-IQ4_XS, MTP on | **32/96, 14,358 slots** | **32/96, 2,683 slots, pcie 0.55** | RTX 3060 Laptop (1,864 slots) | 8060S llama.cpp (windows.md) |\\n|---|---|---|---|---|\\n| model load to listening | 35 s | 25 s | 42 s | 83 s |\\n| cold first request, decode | 31.4 t/s, 91.8% acc | 32.5 t/s, 93.3% acc | 37.6 t/s, 87.9% acc | 28.2 t/s |\\n| fresh code prompt, decode | 27.2 t/s, 84.8% acc | 25.1 t/s, 77.0% acc | 38.7 t/s, 87.1% acc | 25.1 t/s |\\n| prefill @ ~4.75K | 210.5 t/s | 213.7 t/s | 662.8 t/s | 277.2 t/s |\\n| decode tail after it | 22.1 t/s, 70.3% acc | 22.6 t/s, 72.9% acc | 33.1 t/s, 76.9% acc | 23.0 t/s |\\n| repeated prompt (reference) | 30.1 t/s | 31.1 t/s | 42.6 t/s | 58.6 t/s |\\n| pp4096 @ d0 | 210.4 t/s | 208.4 t/s | 819.4 t/s | 339.5 |\\n| tg128 @ d0 | 20.6 t/s, 59.6% acc | 21.3 t/s, 62.0% acc | 32.2 t/s, 71.4% acc | 21.83 (plain) |\\n| 16,384-token prefix | 230.2 t/s | 231.7 t/s | | |\\n| pp4096 @ d16384 | 228.7 over 20,421 | 228.0 over 20,421 | ~949 (derived) | 244.1 |\\n| tg128 @ d16384 | 20.2 t/s, 60.6% acc | 19.8 t/s, 55.4% acc | 31.7 t/s, 67.4% acc | 16.25 (plain) |\\n| decode expert-cache hit rate | **96.8-98.3%** | **59-72%** | 48.3% | |\\n\\n**Reading it.**\\n\\n- UD-IQ4_XS decodes at 22-32 t/s here against 33-39 on the 3060 PC (0.67-0.84x) and 23-28 for llama.cpp on\\n  this same PC (about even to 1.1x; llama.cpp's repeated-prompt row, 58.6, is its n-gram speculator). Prefill\\n  210-236 t/s is 0.24-0.32x the 3060 PC and 0.75-0.95x llama.cpp here.\\n- **The cache size made no difference to decode**: 14,358 resident experts with 97-98% hits and 2,683 with 59-72%\\n  hits give the same tokens/s on every row (31.4 vs 32.5, 27.2 vs 25.1, 22.1 vs 22.6; tg128 20.6 vs 21.3). With\\n  the Coder on this PC the hit rate did matter (100%: 35-39 t/s; 82%: 24-29). So UD-IQ4_XS's decode on the 8060S\\n  is bound by something the GPU-resident path and the CPU path share, not by where the experts are: a candidate\\n  is the GPU's own expert kernels for this file's formats (IQ3_S, IQ4_NL and Q8_0 blobs, 2.4 MB per pair against\\n  the Coder's 2.0 MB) on RDNA 3.5, another the per-token PLE rows (read from shard 2 on the NVMe by both paths).\\n  `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.\\n- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path\\n  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.\\n\\n## The RTX 5090 over Thunderbolt (not pursued)\", \"originalFile\": null, \"structuredPatch\": [{\"oldStart\": 553, \"oldLines\": 6, \"newStart\": 553, \"newLines\": 42, \"lines\": [\" slots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the\", \" dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\", \" \", \"+Both started (35 s and 25 s to listening; the arena \\\"locked 33053 MiB via working-set minimum + VirtualLock,\", \"+cudaHostRegister limited to 24 GiB\\\"; with the cap the PCIe probe read a real number, 68.8 GB/s, where the fully\", \"+mapped arena had given it 8-16 TB/s). The engine made the caches **14,358 slots (32.4 GiB, 1.3 GiB of VRAM left)**\", \"+and **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrowable slots. The same benchmark\", \"+(`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json`, `...-cache1864.json`):\", \"+\", \"+| UD-IQ4_XS, MTP on | **32/96, 14,358 slots** | **32/96, 2,683 slots, pcie 0.55** | RTX 3060 Laptop (1,864 slots) | 8060S llama.cpp (windows.md) |\", \"+|---|---|---|---|---|\", \"+| model load to listening | 35 s | 25 s | 42 s | 83 s |\", \"+| cold first request, decode | 31.4 t/s, 91.8% acc | 32.5 t/s, 93.3% acc | 37.6 t/s, 87.9% acc | 28.2 t/s |\", \"+| fresh code prompt, decode | 27.2 t/s, 84.8% acc | 25.1 t/s, 77.0% acc | 38.7 t/s, 87.1% acc | 25.1 t/s |\", \"+| prefill @ ~4.75K | 210.5 t/s | 213.7 t/s | 662.8 t/s | 277.2 t/s |\", \"+| decode tail after it | 22.1 t/s, 70.3% acc | 22.6 t/s, 72.9% acc | 33.1 t/s, 76.9% acc | 23.0 t/s |\", \"+| repeated prompt (reference) | 30.1 t/s | 31.1 t/s | 42.6 t/s | 58.6 t/s |\", \"+| pp4096 @ d0 | 210.4 t/s | 208.4 t/s | 819.4 t/s | 339.5 |\", \"+| tg128 @ d0 | 20.6 t/s, 59.6% acc | 21.3 t/s, 62.0% acc | 32.2 t/s, 71.4% acc | 21.83 (plain) |\", \"+| 16,384-token prefix | 230.2 t/s | 231.7 t/s | | |\", \"+| pp4096 @ d16384 | 228.7 over 20,421 | 228.0 over 20,421 | ~949 (derived) | 244.1 |\", \"+| tg128 @ d16384 | 20.2 t/s, 60.6% acc | 19.8 t/s, 55.4% acc | 31.7 t/s, 67.4% acc | 16.25 (plain) |\", \"+| decode expert-cache hit rate | **96.8-98.3%** | **59-72%** | 48.3% | |\", \"+\", \"+**Reading it.**\", \"+\", \"+- UD-IQ4_XS decodes at 22-32 t/s here against 33-39 on the 3060 PC (0.67-0.84x) and 23-28 for llama.cpp on\", \"+  this same PC (about even to 1.1x; llama.cpp's repeated-prompt row, 58.6, is its n-gram speculator). Prefill\", \"+  210-236 t/s is 0.24-0.32x the 3060 PC and 0.75-0.95x llama.cpp here.\", \"+- **The cache size made no difference to decode**: 14,358 resident experts with 97-98% hits and 2,683 with 59-72%\", \"+  hits give the same tokens/s on every row (31.4 vs 32.5, 27.2 vs 25.1, 22.1 vs 22.6; tg128 20.6 vs 21.3). With\", \"+  the Coder on this PC the hit rate did matter (100%: 35-39 t/s; 82%: 24-29). So UD-IQ4_XS's decode on the 8060S\", \"+  is bound by something the GPU-resident path and the CPU path share, not by where the experts are: a candidate\", \"+  is the GPU's own expert kernels for this file's formats (IQ3_S, IQ4_NL and Q8_0 blobs, 2.4 MB per pair against\", \"+  the Coder's 2.0 MB) on RDNA 3.5, another the per-token PLE rows (read from shard 2 on the NVMe by both paths).\", \"+  `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.\", \"+- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path\", \"+  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.\", \"+\", \" ## The RTX 5090 over Thunderbolt (not pursued)\", \" \", \" Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's\"]}], \"userModified\": false, \"replaceAll\": false, \"contentNotInModelContext\": true}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 424870,
+        "completion_tokens": 2540,
+        "cached_tokens": 424838,
+        "extra": {
+          "cache_creation_input_tokens": 2432,
+          "cache_read_input_tokens": 424838,
+          "output_tokens_details": {
+            "thinking_tokens": 660
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2432,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 2540,
+              "cache_read_input_tokens": 424838,
+              "cache_creation_input_tokens": 2432,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2432
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Edit",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "newString": "dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\nBoth started (35 s and 25 s to listening; the arena \"locked 33053 MiB via working-set minimum + VirtualLock,\ncudaHostRegister limited to 24 GiB\"; with the cap the PCIe probe read a real number, 68.8 GB/s, where the fully\nmapped arena had given it 8-16 TB/s). The engine made the caches **14,358 slots (32.4 GiB, 1.3 GiB of VRAM left)**\nand **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrowable slots. The same benchmark\n(`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json`, `...-cache1864.json`):\n\n| UD-IQ4_XS, MTP on | **32/96, 14,358 slots** | **32/96, 2,683 slots, pcie 0.55** | RTX 3060 Laptop (1,864 slots) | 8060S llama.cpp (windows.md) |\n|---|---|---|---|---|\n| model load to listening | 35 s | 25 s | 42 s | 83 s |\n| cold first request, decode | 31.4 t/s, 91.8% acc | 32.5 t/s, 93.3% acc | 37.6 t/s, 87.9% acc | 28.2 t/s |\n| fresh code prompt, decode | 27.2 t/s, 84.8% acc | 25.1 t/s, 77.0% acc | 38.7 t/s, 87.1% acc | 25.1 t/s |\n| prefill @ ~4.75K | 210.5 t/s | 213.7 t/s | 662.8 t/s | 277.2 t/s |\n| decode tail after it | 22.1 t/s, 70.3% acc | 22.6 t/s, 72.9% acc | 33.1 t/s, 76.9% acc | 23.0 t/s |\n| repeated prompt (reference) | 30.1 t/s | 31.1 t/s | 42.6 t/s | 58.6 t/s |\n| pp4096 @ d0 | 210.4 t/s | 208.4 t/s | 819.4 t/s | 339.5 |\n| tg128 @ d0 | 20.6 t/s, 59.6% acc | 21.3 t/s, 62.0% acc | 32.2 t/s, 71.4% acc | 21.83 (plain) |\n| 16,384-token prefix | 230.2 t/s | 231.7 t/s | | |\n| pp4096 @ d16384 | 228.7 over 20,421 | 228.0 over 20,421 | ~949 (derived) | 244.1 |\n| tg128 @ d16384 | 20.2 t/s, 60.6% acc | 19.8 t/s, 55.4% acc | 31.7 t/s, 67.4% acc | 16.25 (plain) |\n| decode expert-cache hit rate | **96.8-98.3%** | **59-72%** | 48.3% | |\n\n**Reading it.**\n\n- UD-IQ4_XS decodes at 22-32 t/s here against 33-39 on the 3060 PC (0.67-0.84x) and 23-28 for llama.cpp on\n  this same PC (about even to 1.1x; llama.cpp's repeated-prompt row, 58.6, is its n-gram speculator). Prefill\n  210-236 t/s is 0.24-0.32x the 3060 PC and 0.75-0.95x llama.cpp here.\n- **The cache size made no difference to decode**: 14,358 resident experts with 97-98% hits and 2,683 with 59-72%\n  hits give the same tokens/s on every row (31.4 vs 32.5, 27.2 vs 25.1, 22.1 vs 22.6; tg128 20.6 vs 21.3). With\n  the Coder on this PC the hit rate did matter (100%: 35-39 t/s; 82%: 24-29). So UD-IQ4_XS's decode on the 8060S\n  is bound by something the GPU-resident path and the CPU path share, not by where the experts are: a candidate\n  is the GPU's own expert kernels for this file's formats (IQ3_S, IQ4_NL and Q8_0 blobs, 2.4 MB per pair against\n  the Coder's 2.0 MB) on RDNA 3.5, another the per-token PLE rows (read from shard 2 on the NVMe by both paths).\n  `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.\n- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path\n  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 553,
+                "oldLines": 6,
+                "newStart": 553,
+                "newLines": 42,
+                "lines": [
+                  " slots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the",
+                  " dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.",
+                  " ",
+                  "+Both started (35 s and 25 s to listening; the arena \"locked 33053 MiB via working-set minimum + VirtualLock,",
+                  "+cudaHostRegister limited to 24 GiB\"; with the cap the PCIe probe read a real number, 68.8 GB/s, where the fully",
+                  "+mapped arena had given it 8-16 TB/s). The engine made the caches **14,358 slots (32.4 GiB, 1.3 GiB of VRAM left)**",
+                  "+and **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrowable slots. The same benchmark",
+                  "+(`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json`, `...-cache1864.json`):",
+                  "+",
+                  "+| UD-IQ4_XS, MTP on | **32/96, 14,358 slots** | **32/96, 2,683 slots, pcie 0.55** | RTX 3060 Laptop (1,864 slots) | 8060S llama.cpp (windows.md) |",
+                  "+|---|---|---|---|---|",
+                  "+| model load to listening | 35 s | 25 s | 42 s | 83 s |",
+                  "+| cold first request, decode | 31.4 t/s, 91.8% acc | 32.5 t/s, 93.3% acc | 37.6 t/s, 87.9% acc | 28.2 t/s |",
+                  "+| fresh code prompt, decode | 27.2 t/s, 84.8% acc | 25.1 t/s, 77.0% acc | 38.7 t/s, 87.1% acc | 25.1 t/s |",
+                  "+| prefill @ ~4.75K | 210.5 t/s | 213.7 t/s | 662.8 t/s | 277.2 t/s |",
+                  "+| decode tail after it | 22.1 t/s, 70.3% acc | 22.6 t/s, 72.9% acc | 33.1 t/s, 76.9% acc | 23.0 t/s |",
+                  "+| repeated prompt (reference) | 30.1 t/s | 31.1 t/s | 42.6 t/s | 58.6 t/s |",
+                  "+| pp4096 @ d0 | 210.4 t/s | 208.4 t/s | 819.4 t/s | 339.5 |",
+                  "+| tg128 @ d0 | 20.6 t/s, 59.6% acc | 21.3 t/s, 62.0% acc | 32.2 t/s, 71.4% acc | 21.83 (plain) |",
+                  "+| 16,384-token prefix | 230.2 t/s | 231.7 t/s | | |",
+                  "+| pp4096 @ d16384 | 228.7 over 20,421 | 228.0 over 20,421 | ~949 (derived) | 244.1 |",
+                  "+| tg128 @ d16384 | 20.2 t/s, 60.6% acc | 19.8 t/s, 55.4% acc | 31.7 t/s, 67.4% acc | 16.25 (plain) |",
+                  "+| decode expert-cache hit rate | **96.8-98.3%** | **59-72%** | 48.3% | |",
+                  "+",
+                  "+**Reading it.**",
+                  "+",
+                  "+- UD-IQ4_XS decodes at 22-32 t/s here against 33-39 on the 3060 PC (0.67-0.84x) and 23-28 for llama.cpp on",
+                  "+  this same PC (about even to 1.1x; llama.cpp's repeated-prompt row, 58.6, is its n-gram speculator). Prefill",
+                  "+  210-236 t/s is 0.24-0.32x the 3060 PC and 0.75-0.95x llama.cpp here.",
+                  "+- **The cache size made no difference to decode**: 14,358 resident experts with 97-98% hits and 2,683 with 59-72%",
+                  "+  hits give the same tokens/s on every row (31.4 vs 32.5, 27.2 vs 25.1, 22.1 vs 22.6; tg128 20.6 vs 21.3). With",
+                  "+  the Coder on this PC the hit rate did matter (100%: 35-39 t/s; 82%: 24-29). So UD-IQ4_XS's decode on the 8060S",
+                  "+  is bound by something the GPU-resident path and the CPU path share, not by where the experts are: a candidate",
+                  "+  is the GPU's own expert kernels for this file's formats (IQ3_S, IQ4_NL and Q8_0 blobs, 2.4 MB per pair against",
+                  "+  the Coder's 2.0 MB) on RDNA 3.5, another the per-token PLE rows (read from shard 2 on the NVMe by both paths).",
+                  "+  `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.",
+                  "+- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path",
+                  "+  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01MRvbmFwkWQoKS7fLSxYcTY",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "newString": "dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\nBoth started (35 s and 25 s to listening; the arena \"locked 33053 MiB via working-set minimum + VirtualLock,\ncudaHostRegister limited to 24 GiB\"; with the cap the PCIe probe read a real number, 68.8 GB/s, where the fully\nmapped arena had given it 8-16 TB/s). The engine made the caches **14,358 slots (32.4 GiB, 1.3 GiB of VRAM left)**\nand **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrowable slots. The same benchmark\n(`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json`, `...-cache1864.json`):\n\n| UD-IQ4_XS, MTP on | **32/96, 14,358 slots** | **32/96, 2,683 slots, pcie 0.55** | RTX 3060 Laptop (1,864 slots) | 8060S llama.cpp (windows.md) |\n|---|---|---|---|---|\n| model load to listening | 35 s | 25 s | 42 s | 83 s |\n| cold first request, decode | 31.4 t/s, 91.8% acc | 32.5 t/s, 93.3% acc | 37.6 t/s, 87.9% acc | 28.2 t/s |\n| fresh code prompt, decode | 27.2 t/s, 84.8% acc | 25.1 t/s, 77.0% acc | 38.7 t/s, 87.1% acc | 25.1 t/s |\n| prefill @ ~4.75K | 210.5 t/s | 213.7 t/s | 662.8 t/s | 277.2 t/s |\n| decode tail after it | 22.1 t/s, 70.3% acc | 22.6 t/s, 72.9% acc | 33.1 t/s, 76.9% acc | 23.0 t/s |\n| repeated prompt (reference) | 30.1 t/s | 31.1 t/s | 42.6 t/s | 58.6 t/s |\n| pp4096 @ d0 | 210.4 t/s | 208.4 t/s | 819.4 t/s | 339.5 |\n| tg128 @ d0 | 20.6 t/s, 59.6% acc | 21.3 t/s, 62.0% acc | 32.2 t/s, 71.4% acc | 21.83 (plain) |\n| 16,384-token prefix | 230.2 t/s | 231.7 t/s | | |\n| pp4096 @ d16384 | 228.7 over 20,421 | 228.0 over 20,421 | ~949 (derived) | 244.1 |\n| tg128 @ d16384 | 20.2 t/s, 60.6% acc | 19.8 t/s, 55.4% acc | 31.7 t/s, 67.4% acc | 16.25 (plain) |\n| decode expert-cache hit rate | **96.8-98.3%** | **59-72%** | 48.3% | |\n\n**Reading it.**\n\n- UD-IQ4_XS decodes at 22-32 t/s here against 33-39 on the 3060 PC (0.67-0.84x) and 23-28 for llama.cpp on\n  this same PC (about even to 1.1x; llama.cpp's repeated-prompt row, 58.6, is its n-gram speculator). Prefill\n  210-236 t/s is 0.24-0.32x the 3060 PC and 0.75-0.95x llama.cpp here.\n- **The cache size made no difference to decode**: 14,358 resident experts with 97-98% hits and 2,683 with 59-72%\n  hits give the same tokens/s on every row (31.4 vs 32.5, 27.2 vs 25.1, 22.1 vs 22.6; tg128 20.6 vs 21.3). With\n  the Coder on this PC the hit rate did matter (100%: 35-39 t/s; 82%: 24-29). So UD-IQ4_XS's decode on the 8060S\n  is bound by something the GPU-resident path and the CPU path share, not by where the experts are: a candidate\n  is the GPU's own expert kernels for this file's formats (IQ3_S, IQ4_NL and Q8_0 blobs, 2.4 MB per pair against\n  the Coder's 2.0 MB) on RDNA 3.5, another the per-token PLE rows (read from shard 2 on the NVMe by both paths).\n  `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.\n- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path\n  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 553,
+                "oldLines": 6,
+                "newStart": 553,
+                "newLines": 42,
+                "lines": [
+                  " slots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the",
+                  " dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.",
+                  " ",
+                  "+Both started (35 s and 25 s to listening; the arena \"locked 33053 MiB via working-set minimum + VirtualLock,",
+                  "+cudaHostRegister limited to 24 GiB\"; with the cap the PCIe probe read a real number, 68.8 GB/s, where the fully",
+                  "+mapped arena had given it 8-16 TB/s). The engine made the caches **14,358 slots (32.4 GiB, 1.3 GiB of VRAM left)**",
+                  "+and **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrowable slots. The same benchmark",
+                  "+(`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json`, `...-cache1864.json`):",
+                  "+",
+                  "+| UD-IQ4_XS, MTP on | **32/96, 14,358 slots** | **32/96, 2,683 slots, pcie 0.55** | RTX 3060 Laptop (1,864 slots) | 8060S llama.cpp (windows.md) |",
+                  "+|---|---|---|---|---|",
+                  "+| model load to listening | 35 s | 25 s | 42 s | 83 s |",
+                  "+| cold first request, decode | 31.4 t/s, 91.8% acc | 32.5 t/s, 93.3% acc | 37.6 t/s, 87.9% acc | 28.2 t/s |",
+                  "+| fresh code prompt, decode | 27.2 t/s, 84.8% acc | 25.1 t/s, 77.0% acc | 38.7 t/s, 87.1% acc | 25.1 t/s |",
+                  "+| prefill @ ~4.75K | 210.5 t/s | 213.7 t/s | 662.8 t/s | 277.2 t/s |",
+                  "+| decode tail after it | 22.1 t/s, 70.3% acc | 22.6 t/s, 72.9% acc | 33.1 t/s, 76.9% acc | 23.0 t/s |",
+                  "+| repeated prompt (reference) | 30.1 t/s | 31.1 t/s | 42.6 t/s | 58.6 t/s |",
+                  "+| pp4096 @ d0 | 210.4 t/s | 208.4 t/s | 819.4 t/s | 339.5 |",
+                  "+| tg128 @ d0 | 20.6 t/s, 59.6% acc | 21.3 t/s, 62.0% acc | 32.2 t/s, 71.4% acc | 21.83 (plain) |",
+                  "+| 16,384-token prefix | 230.2 t/s | 231.7 t/s | | |",
+                  "+| pp4096 @ d16384 | 228.7 over 20,421 | 228.0 over 20,421 | ~949 (derived) | 244.1 |",
+                  "+| tg128 @ d16384 | 20.2 t/s, 60.6% acc | 19.8 t/s, 55.4% acc | 31.7 t/s, 67.4% acc | 16.25 (plain) |",
+                  "+| decode expert-cache hit rate | **96.8-98.3%** | **59-72%** | 48.3% | |",
+                  "+",
+                  "+**Reading it.**",
+                  "+",
+                  "+- UD-IQ4_XS decodes at 22-32 t/s here against 33-39 on the 3060 PC (0.67-0.84x) and 23-28 for llama.cpp on",
+                  "+  this same PC (about even to 1.1x; llama.cpp's repeated-prompt row, 58.6, is its n-gram speculator). Prefill",
+                  "+  210-236 t/s is 0.24-0.32x the 3060 PC and 0.75-0.95x llama.cpp here.",
+                  "+- **The cache size made no difference to decode**: 14,358 resident experts with 97-98% hits and 2,683 with 59-72%",
+                  "+  hits give the same tokens/s on every row (31.4 vs 32.5, 27.2 vs 25.1, 22.1 vs 22.6; tg128 20.6 vs 21.3). With",
+                  "+  the Coder on this PC the hit rate did matter (100%: 35-39 t/s; 82%: 24-29). So UD-IQ4_XS's decode on the 8060S",
+                  "+  is bound by something the GPU-resident path and the CPU path share, not by where the experts are: a candidate",
+                  "+  is the GPU's own expert kernels for this file's formats (IQ3_S, IQ4_NL and Q8_0 blobs, 2.4 MB per pair against",
+                  "+  the Coder's 2.0 MB) on RDNA 3.5, another the per-token PLE rows (read from shard 2 on the NVMe by both paths).",
+                  "+  `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.",
+                  "+- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path",
+                  "+  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01MRvbmFwkWQoKS7fLSxYcTY",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "raw_arguments": {
+          "replace_all": false,
+          "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+          "old_string": "dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+          "new_string": "dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\nBoth started (35 s and 25 s to listening; the arena \"locked 33053 MiB via working-set minimum + VirtualLock,\ncudaHostRegister limited to 24 GiB\"; with the cap the PCIe probe read a real number, 68.8 GB/s, where the fully\nmapped arena had given it 8-16 TB/s). The engine made the caches **14,358 slots (32.4 GiB, 1.3 GiB of VRAM left)**\nand **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrowable slots. The same benchmark\n(`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json`, `...-cache1864.json`):\n\n| UD-IQ4_XS, MTP on | **32/96, 14,358 slots** | **32/96, 2,683 slots, pcie 0.55** | RTX 3060 Laptop (1,864 slots) | 8060S llama.cpp (windows.md) |\n|---|---|---|---|---|\n| model load to listening | 35 s | 25 s | 42 s | 83 s |\n| cold first request, decode | 31.4 t/s, 91.8% acc | 32.5 t/s, 93.3% acc | 37.6 t/s, 87.9% acc | 28.2 t/s |\n| fresh code prompt, decode | 27.2 t/s, 84.8% acc | 25.1 t/s, 77.0% acc | 38.7 t/s, 87.1% acc | 25.1 t/s |\n| prefill @ ~4.75K | 210.5 t/s | 213.7 t/s | 662.8 t/s | 277.2 t/s |\n| decode tail after it | 22.1 t/s, 70.3% acc | 22.6 t/s, 72.9% acc | 33.1 t/s, 76.9% acc | 23.0 t/s |\n| repeated prompt (reference) | 30.1 t/s | 31.1 t/s | 42.6 t/s | 58.6 t/s |\n| pp4096 @ d0 | 210.4 t/s | 208.4 t/s | 819.4 t/s | 339.5 |\n| tg128 @ d0 | 20.6 t/s, 59.6% acc | 21.3 t/s, 62.0% acc | 32.2 t/s, 71.4% acc | 21.83 (plain) |\n| 16,384-token prefix | 230.2 t/s | 231.7 t/s | | |\n| pp4096 @ d16384 | 228.7 over 20,421 | 228.0 over 20,421 | ~949 (derived) | 244.1 |\n| tg128 @ d16384 | 20.2 t/s, 60.6% acc | 19.8 t/s, 55.4% acc | 31.7 t/s, 67.4% acc | 16.25 (plain) |\n| decode expert-cache hit rate | **96.8-98.3%** | **59-72%** | 48.3% | |\n\n**Reading it.**\n\n- UD-IQ4_XS decodes at 22-32 t/s here against 33-39 on the 3060 PC (0.67-0.84x) and 23-28 for llama.cpp on\n  this same PC (about even to 1.1x; llama.cpp's repeated-prompt row, 58.6, is its n-gram speculator). Prefill\n  210-236 t/s is 0.24-0.32x the 3060 PC and 0.75-0.95x llama.cpp here.\n- **The cache size made no difference to decode**: 14,358 resident experts with 97-98% hits and 2,683 with 59-72%\n  hits give the same tokens/s on every row (31.4 vs 32.5, 27.2 vs 25.1, 22.1 vs 22.6; tg128 20.6 vs 21.3). With\n  the Coder on this PC the hit rate did matter (100%: 35-39 t/s; 82%: 24-29). So UD-IQ4_XS's decode on the 8060S\n  is bound by something the GPU-resident path and the CPU path share, not by where the experts are: a candidate\n  is the GPU's own expert kernels for this file's formats (IQ3_S, IQ4_NL and Q8_0 blobs, 2.4 MB per pair against\n  the Coder's 2.0 MB) on RDNA 3.5, another the per-token PLE rows (read from shard 2 on the NVMe by both paths).\n  `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.\n- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path\n  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.\n\n## The RTX 5090 over Thunderbolt (not pursued)"
+        }
+      }
+    },
+    {
+      "step_id": 351,
+      "timestamp": "2026-10-05T11:37:49.317Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "UD-IQ4_XS 两组都测完，结果在文档新一节 \"UD-IQ4_XS on the 32/96 split\"。服务已停。\n\n**先说第一次启动失败的原因**（值得知道）：在这台 APU 上，每钉住 1 GiB 主机内存，HIP 报告的\"空闲显存\"就少 2 GiB（探针实测：钉 16 GiB → 少 32，钉 40 → 少 80）。55.4 GiB 专家区一钉，空闲变 0，引擎把专家缓存设成 0 槽退出。这个数字只是 WDDM 预算，不是真内存（\"空闲\" 9 GiB 时仍能 hipMalloc 20 GiB 并跑 kernel）。引擎在 #243 里已有应对：`STRATA_ARENA_PIN_GIB=24` 只钉 24 GiB，其余可分页。重跑成功。\n\n| UD-IQ4_XS，MTP 开 | 本机，缓存 14,358 槽（32.4 GiB） | 本机，缓存 2,683 槽（3060 的放法） | RTX 3060 Laptop（1,864 槽） | 本机 llama.cpp |\n|---|---|---|---|---|\n| 启动到就绪 | 35 s | 25 s | 42 s | 83 s |\n| 冷启动首请求解码 | 31.4 t/s | 32.5 t/s | 37.6 | 28.2 |\n| 新代码提示解码 | 27.2 | 25.1 | 38.7 | 25.1 |\n| 4.75K 后解码 | 22.1 | 22.6 | 33.1 | 23.0 |\n| tg128 @ d0 / d16K | 20.6 / 20.2 | 21.3 / 19.8 | 32.2 / 31.7 | 21.8 / 16.3（无 MTP） |\n| 预填充 4.75K / 16K | 210 / 230 | 214 / 232 | 663 / ~949 | 277 / 244 |\n| 缓存命中率 | **97-98%** | **59-72%** | 48% | |\n\n**解读**\n\n- 解码是 3060 那台的 0.67-0.84 倍，与本机 llama.cpp 持平到 1.1 倍；预填充是 3060 的 0.24-0.32 倍、llama.cpp 的 0.75-0.95 倍。\n- **意外：缓存大小对解码没有影响。** 14,358 个专家驻留（97% 命中）和 2,683 个（60-72% 命中）每一行都一样快。Coder 在本机不是这样（100% 命中 35-39 t/s，82% 命中 24-29）。说明 UD-IQ4_XS 在 8060S 上的解码被 GPU 路径和 CPU 路径共有的某个环节卡住，而不是专家在哪。候选：GPU 上这个文件的专家格式（IQ3_S / IQ4_NL / Q8_0 混合，每对 2.4 MB）的 kernel 在 RDNA 3.5 上慢；或每 token 从 NVMe 读的 PLE 行。下一步用 `STRATA_DECODE_TIMING=1` 看解码分阶段计时，这次没跑。\n- 预填充比同划分下的 Coder 慢 15-20%：每块要流式送 55.4 GB 而非 23.4，且 `--compat-bf16` 的稠密投影是 BF16 GEMM。\n\n另一个顺带发现：钉住量受限后，引擎的 PCIe 探测给出了真实数字 68.8 GB/s（之前全映射时是 8-16 TB/s 的假数）。",
+      "metrics": {
+        "prompt_tokens": 427302,
+        "completion_tokens": 1251,
+        "cached_tokens": 427270,
+        "extra": {
+          "cache_creation_input_tokens": 2608,
+          "cache_read_input_tokens": 427270,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2608,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1251,
+              "cache_read_input_tokens": 427270,
+              "cache_creation_input_tokens": 2608,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2608
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 85413128,
-    "total_completion_tokens": 642860,
-    "total_cached_tokens": 85405002,
-    "total_steps": 344,
+    "total_prompt_tokens": 87956660,
+    "total_completion_tokens": 653002,
+    "total_cached_tokens": 87948370,
+    "total_steps": 351,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1321742,
-      "total_cache_read_input_tokens": 85405002
+      "total_cache_creation_input_tokens": 1334753,
+      "total_cache_read_input_tokens": 87948370
     }
   }
 }
