@@ -68411,19 +68411,904 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 994,
+      "timestamp": "2026-10-05T06:36:24.269Z",
+      "source": "user",
+      "message": "is 400 items at 64K with the Halo's v22.4 template done?",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 995,
+      "timestamp": "2026-10-05T06:36:29.725Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01Bf1rnu6aRbm4eWiG7bb18F",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01Bf1rnu6aRbm4eWiG7bb18F",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "R=$(ls -d ~/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-* | grep -v \"\\.log$\"); tr '\\r' '\\n' < $R/detached.log | grep -oE \"[0-9]+/390 \\[[^]]*\\]\" | tail -1; tr '\\r' '\\n' < $R/detached.log | grep -E \"Accuracy|done:|server stopped|exited\" | tail -4; ls $R; ps -eo pid,args | grep -E \"run-bfcl.sh|engine/strata\" | grep -v grep | cut -c1-60; date",
+            "description": "Check whether the v22.4 run has finished"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01Bf1rnu6aRbm4eWiG7bb18F",
+            "content": "390/390 [8:12:24<00:00, 75.76s/it]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 37.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1  (generate 492 min)\nserver stopped\ndetached.log\nevaluate.log\ngenerate.log\nresult\nrun.json\nscore\nserver.log\nMon Oct  5 06:36:31 AM UTC 2026\n\n[stdout]\n390/390 [8:12:24<00:00, 75.76s/it]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 37.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1  (generate 492 min)\nserver stopped\ndetached.log\nevaluate.log\ngenerate.log\nresult\nrun.json\nscore\nserver.log\nMon Oct  5 06:36:31 AM UTC 2026\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 22425,
+        "completion_tokens": 284,
+        "cached_tokens": 22423,
+        "extra": {
+          "cache_creation_input_tokens": 543536,
+          "cache_read_input_tokens": 22423,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 543536,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 284,
+              "cache_read_input_tokens": 22423,
+              "cache_creation_input_tokens": 543536,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 543536
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "390/390 [8:12:24<00:00, 75.76s/it]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 37.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1  (generate 492 min)\nserver stopped\ndetached.log\nevaluate.log\ngenerate.log\nresult\nrun.json\nscore\nserver.log\nMon Oct  5 06:36:31 AM UTC 2026",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Bf1rnu6aRbm4eWiG7bb18F",
+            "type": "tool_result",
+            "content": "390/390 [8:12:24<00:00, 75.76s/it]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 37.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1  (generate 492 min)\nserver stopped\ndetached.log\nevaluate.log\ngenerate.log\nresult\nrun.json\nscore\nserver.log\nMon Oct  5 06:36:31 AM UTC 2026",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "390/390 [8:12:24<00:00, 75.76s/it]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 37.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1  (generate 492 min)\nserver stopped\ndetached.log\nevaluate.log\ngenerate.log\nresult\nrun.json\nscore\nserver.log\nMon Oct  5 06:36:31 AM UTC 2026",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Bf1rnu6aRbm4eWiG7bb18F",
+            "type": "tool_result",
+            "content": "390/390 [8:12:24<00:00, 75.76s/it]\n✅ Test completed: multi_turn_miss_param. 🎯 Accuracy: 37.50%\n⚠️  Partial evaluation for a single category is enabled (--partial-run flag is set). Accuracy scores are computed only on the subset of entries present in the model result files, which may differ from a full evaluation and from the official leaderboard score.\ndone: /home/luwei/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1  (generate 492 min)\nserver stopped\ndetached.log\nevaluate.log\ngenerate.log\nresult\nrun.json\nscore\nserver.log\nMon Oct  5 06:36:31 AM UTC 2026",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "R=$(ls -d ~/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-* | grep -v \"\\.log$\"); tr '\\r' '\\n' < $R/detached.log | grep -oE \"[0-9]+/390 \\[[^]]*\\]\" | tail -1; tr '\\r' '\\n' < $R/detached.log | grep -E \"Accuracy|done:|server stopped|exited\" | tail -4; ls $R; ps -eo pid,args | grep -E \"run-bfcl.sh|engine/strata\" | grep -v grep | cut -c1-60; date",
+          "description": "Check whether the v22.4 run has finished"
+        }
+      }
+    },
+    {
+      "step_id": 996,
+      "timestamp": "2026-10-05T06:36:35.883Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 565961,
+        "completion_tokens": 1470,
+        "cached_tokens": 565959,
+        "extra": {
+          "cache_creation_input_tokens": 586,
+          "cache_read_input_tokens": 565959,
+          "output_tokens_details": {
+            "thinking_tokens": 131
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 586,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1470,
+              "cache_read_input_tokens": 565959,
+              "cache_creation_input_tokens": 586,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 586
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 997,
+      "timestamp": "2026-10-05T06:36:35.889Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "The run completed and was scored, with miss_param at 37.5; the server's been stopped. Now I'll compare the three runs item by item: Strata with its own template (32K plus the 64K refusal redo), Strata with v22.4, and Halo with v22.4.",
+      "metrics": {
+        "prompt_tokens": 565961,
+        "completion_tokens": 1470,
+        "cached_tokens": 565959,
+        "extra": {
+          "cache_creation_input_tokens": 586,
+          "cache_read_input_tokens": 565959,
+          "output_tokens_details": {
+            "thinking_tokens": 131
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 586,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1470,
+              "cache_read_input_tokens": 565959,
+              "cache_creation_input_tokens": 586,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 586
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 998,
+      "timestamp": "2026-10-05T06:36:43.458Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01XL1oGBhD6tSG1fBYY7guAB",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01XL1oGBhD6tSG1fBYY7guAB",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd ~/work/AI/bfcl; ~/miniconda3/envs/bfcl-py312/bin/python summarize-bfcl.py runs 2>&1 | grep -E \"v224.*think1 \\||refusals64k \\|\" | head -2; python3 - <<'EOF'\nimport json, glob, math, collections\nruns = {\"Halo llama.cpp, v22.4\": glob.glob(\"/mnt/evox2/large/work/AI/freetoken/bfcl/runs/gsq-hip-A-on-*\")[0],\n        \"Strata, own template\": glob.glob(\"/home/luwei/work/AI/bfcl/runs/strata-gsq-64k-A-on-*-refusals64k\")[0],\n        \"Strata, v22.4\": [d for d in glob.glob(\"/home/luwei/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-*\") if not d.endswith(\".log\")][0]}\nflat = lambda x: [z for y in x for z in flat(y)] if isinstance(x, list) else [x]\ndef mc(b, c):\n    n = b + c; return min(1.0, 2 * sum(math.comb(n, k) for k in range(min(b, c) + 1)) / 2**n)\nok, types, speed = {}, {}, {}\nfor name, run in runs.items():\n    bad = {}\n    for f in glob.glob(run + \"/score/**/BFCL_v4_multi_turn_*_score.json\", recursive=True):\n        for l in list(open(f, encoding=\"utf-8-sig\"))[1:]:\n            if l.strip(): r = json.loads(l); bad[r[\"id\"]] = r[\"error\"].get(\"error_type\", \"?\").replace(\"multi_turn:\", \"\")\n    ids = [f\"multi_turn_{c}_{i}\" for c in (\"base\", \"miss_param\") for i in range(200)]\n    ok[name] = {i for i in ids if i not in bad}; types[name] = collections.Counter(bad.values())\n    lat = calls = out = n = err = 0\n    for f in glob.glob(run + \"/result/**/*_result.json\", recursive=True):\n        for l in open(f, encoding=\"utf-8-sig\"):\n            r = json.loads(l); n += 1\n            if \"latency\" not in r: err += 1; continue\n            ls = flat(r[\"latency\"]); lat += sum(ls); calls += len(ls); out += sum(flat(r[\"output_token_count\"]))\n    speed[name] = (lat / n, calls / n, lat / calls, out / calls, err)\nfor name in runs:\n    b = sum(1 for i in ok[name] if \"base\" in i) / 2; m = sum(1 for i in ok[name] if \"miss_param\" in i) / 2\n    s = speed[name]\n    print(f\"{name:22s} overall {len(ok[name])/4:5.1f}  base {b:5.1f}  miss_param {m:5.1f} | {s[0]:5.1f} s/entry {s[1]:4.1f} calls {s[2]:4.2f} s/call {s[3]:4.0f} tok/call, errors {s[4]}\")\n    print(f\"{'':22s} failures: {dict(types[name].most_common())}\")\nfor x, y in ((\"Strata, v22.4\", \"Strata, own template\"), (\"Strata, v22.4\", \"Halo llama.cpp, v22.4\")):\n    for cat in (\"base\", \"miss_param\", \"\"):\n        a = {i for i in ok[x] if cat in i}; c = {i for i in ok[y] if cat in i}\n        print(f\"{x} vs {y} [{cat or 'both'}]: only first {len(a - c)}, only second {len(c - a)}, McNemar p {mc(len(a - c), len(c - a)):.3f}\")\nEOF",
+            "description": "Compare the v22.4 run with the other two"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01XL1oGBhD6tSG1fBYY7guAB",
+            "content": "| strata-gsq-64k-A-on-multi_turn_base+multi_turn_miss_param-20261004-refusals64k | strata-gsq-64k | A | on | 52.5 [48,57] n=400 | 66.0 [59,72] n=200 |  | 39.0 [33,46] n=200 |  | 400 | 13.7 | 186 | 12.09 | 8.62 | 0 | multi_turn:instance_state_mismatch:138, multi_turn:empty_turn_model_response:28, multi_turn:execution_response_mismatch:18, multi_turn:force_terminated:6 |\n| strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1 | strata-gsq-64k-v224 | A | on | 51.8 [47,57] n=400 | 66.0 [59,72] n=200 |  | 37.5 [31,44] n=200 |  | 400 | 13.9 | 230 | 9.26 | 8.15 | 0 | multi_turn:instance_state_mismatch:116, multi_turn:empty_turn_model_response:33, multi_turn:execution_response_mismatch:22, multi_turn:force_terminated:21 |\nHalo llama.cpp, v22.4  overall  60.2  base  79.0  miss_param  41.5 |  97.5 s/entry 12.4 calls 7.87 s/call  160 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 101, 'empty_turn_model_response': 35, 'execution_response_mismatch': 16, 'force_terminated': 7}\nStrata, own template   overall  52.5  base  66.0  miss_param  39.0 |  77.6 s/entry 13.7 calls 5.66 s/call  186 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 138, 'empty_turn_model_response': 28, 'execution_response_mismatch': 18, 'force_terminated': 6}\nStrata, v22.4          overall  51.8  base  66.0  miss_param  37.5 |  73.3 s/entry 13.9 calls 5.29 s/call  230 tok/call, errors 1\n                       failures: {'instance_state_mismatch': 116, 'empty_turn_model_response': 33, 'execution_response_mismatch': 22, 'force_terminated': 21, 'inference_error': 1}\nStrata, v22.4 vs Strata, own template [base]: only first 17, only second 17, McNemar p 1.000\nStrata, v22.4 vs Strata, own template [miss_param]: only first 21, only second 24, McNemar p 0.766\nStrata, v22.4 vs Strata, own template [both]: only first 38, only second 41, McNemar p 0.822\nStrata, v22.4 vs Halo llama.cpp, v22.4 [base]: only first 9, only second 35, McNemar p 0.000\nStrata, v22.4 vs Halo llama.cpp, v22.4 [miss_param]: only first 14, only second 22, McNemar p 0.243\nStrata, v22.4 vs Halo llama.cpp, v22.4 [both]: only first 23, only second 57, McNemar p 0.000\nShell cwd was reset to /home/luwei/work/AI/Strata\n\n[stdout]\n| strata-gsq-64k-A-on-multi_turn_base+multi_turn_miss_param-20261004-refusals64k | strata-gsq-64k | A | on | 52.5 [48,57] n=400 | 66.0 [59,72] n=200 |  | 39.0 [33,46] n=200 |  | 400 | 13.7 | 186 | 12.09 | 8.62 | 0 | multi_turn:instance_state_mismatch:138, multi_turn:empty_turn_model_response:28, multi_turn:execution_response_mismatch:18, multi_turn:force_terminated:6 |\n| strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1 | strata-gsq-64k-v224 | A | on | 51.8 [47,57] n=400 | 66.0 [59,72] n=200 |  | 37.5 [31,44] n=200 |  | 400 | 13.9 | 230 | 9.26 | 8.15 | 0 | multi_turn:instance_state_mismatch:116, multi_turn:empty_turn_model_response:33, multi_turn:execution_response_mismatch:22, multi_turn:force_terminated:21 |\nHalo llama.cpp, v22.4  overall  60.2  base  79.0  miss_param  41.5 |  97.5 s/entry 12.4 calls 7.87 s/call  160 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 101, 'empty_turn_model_response': 35, 'execution_response_mismatch': 16, 'force_terminated': 7}\nStrata, own template   overall  52.5  base  66.0  miss_param  39.0 |  77.6 s/entry 13.7 calls 5.66 s/call  186 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 138, 'empty_turn_model_response': 28, 'execution_response_mismatch': 18, 'force_terminated': 6}\nStrata, v22.4          overall  51.8  base  66.0  miss_param  37.5 |  73.3 s/entry 13.9 calls 5.29 s/call  230 tok/call, errors 1\n                       failures: {'instance_state_mismatch': 116, 'empty_turn_model_response': 33, 'execution_response_mismatch': 22, 'force_terminated': 21, 'inference_error': 1}\nStrata, v22.4 vs Strata, own template [base]: only first 17, only second 17, McNemar p 1.000\nStrata, v22.4 vs Strata, own template [miss_param]: only first 21, only second 24, McNemar p 0.766\nStrata, v22.4 vs Strata, own template [both]: only first 38, only second 41, McNemar p 0.822\nStrata, v22.4 vs Halo llama.cpp, v22.4 [base]: only first 9, only second 35, McNemar p 0.000\nStrata, v22.4 vs Halo llama.cpp, v22.4 [miss_param]: only first 14, only second 22, McNemar p 0.243\nStrata, v22.4 vs Halo llama.cpp, v22.4 [both]: only first 23, only second 57, McNemar p 0.000\n[stderr]\n\nShell cwd was reset to /home/luwei/work/AI/Strata\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 565961,
+        "completion_tokens": 1470,
+        "cached_tokens": 565959,
+        "extra": {
+          "cache_creation_input_tokens": 586,
+          "cache_read_input_tokens": 565959,
+          "output_tokens_details": {
+            "thinking_tokens": 131
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 586,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1470,
+              "cache_read_input_tokens": 565959,
+              "cache_creation_input_tokens": 586,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 586
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "| strata-gsq-64k-A-on-multi_turn_base+multi_turn_miss_param-20261004-refusals64k | strata-gsq-64k | A | on | 52.5 [48,57] n=400 | 66.0 [59,72] n=200 |  | 39.0 [33,46] n=200 |  | 400 | 13.7 | 186 | 12.09 | 8.62 | 0 | multi_turn:instance_state_mismatch:138, multi_turn:empty_turn_model_response:28, multi_turn:execution_response_mismatch:18, multi_turn:force_terminated:6 |\n| strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1 | strata-gsq-64k-v224 | A | on | 51.8 [47,57] n=400 | 66.0 [59,72] n=200 |  | 37.5 [31,44] n=200 |  | 400 | 13.9 | 230 | 9.26 | 8.15 | 0 | multi_turn:instance_state_mismatch:116, multi_turn:empty_turn_model_response:33, multi_turn:execution_response_mismatch:22, multi_turn:force_terminated:21 |\nHalo llama.cpp, v22.4  overall  60.2  base  79.0  miss_param  41.5 |  97.5 s/entry 12.4 calls 7.87 s/call  160 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 101, 'empty_turn_model_response': 35, 'execution_response_mismatch': 16, 'force_terminated': 7}\nStrata, own template   overall  52.5  base  66.0  miss_param  39.0 |  77.6 s/entry 13.7 calls 5.66 s/call  186 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 138, 'empty_turn_model_response': 28, 'execution_response_mismatch': 18, 'force_terminated': 6}\nStrata, v22.4          overall  51.8  base  66.0  miss_param  37.5 |  73.3 s/entry 13.9 calls 5.29 s/call  230 tok/call, errors 1\n                       failures: {'instance_state_mismatch': 116, 'empty_turn_model_response': 33, 'execution_response_mismatch': 22, 'force_terminated': 21, 'inference_error': 1}\nStrata, v22.4 vs Strata, own template [base]: only first 17, only second 17, McNemar p 1.000\nStrata, v22.4 vs Strata, own template [miss_param]: only first 21, only second 24, McNemar p 0.766\nStrata, v22.4 vs Strata, own template [both]: only first 38, only second 41, McNemar p 0.822\nStrata, v22.4 vs Halo llama.cpp, v22.4 [base]: only first 9, only second 35, McNemar p 0.000\nStrata, v22.4 vs Halo llama.cpp, v22.4 [miss_param]: only first 14, only second 22, McNemar p 0.243\nStrata, v22.4 vs Halo llama.cpp, v22.4 [both]: only first 23, only second 57, McNemar p 0.000",
+            "stderr": "\nShell cwd was reset to /home/luwei/work/AI/Strata",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01XL1oGBhD6tSG1fBYY7guAB",
+            "type": "tool_result",
+            "content": "| strata-gsq-64k-A-on-multi_turn_base+multi_turn_miss_param-20261004-refusals64k | strata-gsq-64k | A | on | 52.5 [48,57] n=400 | 66.0 [59,72] n=200 |  | 39.0 [33,46] n=200 |  | 400 | 13.7 | 186 | 12.09 | 8.62 | 0 | multi_turn:instance_state_mismatch:138, multi_turn:empty_turn_model_response:28, multi_turn:execution_response_mismatch:18, multi_turn:force_terminated:6 |\n| strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1 | strata-gsq-64k-v224 | A | on | 51.8 [47,57] n=400 | 66.0 [59,72] n=200 |  | 37.5 [31,44] n=200 |  | 400 | 13.9 | 230 | 9.26 | 8.15 | 0 | multi_turn:instance_state_mismatch:116, multi_turn:empty_turn_model_response:33, multi_turn:execution_response_mismatch:22, multi_turn:force_terminated:21 |\nHalo llama.cpp, v22.4  overall  60.2  base  79.0  miss_param  41.5 |  97.5 s/entry 12.4 calls 7.87 s/call  160 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 101, 'empty_turn_model_response': 35, 'execution_response_mismatch': 16, 'force_terminated': 7}\nStrata, own template   overall  52.5  base  66.0  miss_param  39.0 |  77.6 s/entry 13.7 calls 5.66 s/call  186 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 138, 'empty_turn_model_response': 28, 'execution_response_mismatch': 18, 'force_terminated': 6}\nStrata, v22.4          overall  51.8  base  66.0  miss_param  37.5 |  73.3 s/entry 13.9 calls 5.29 s/call  230 tok/call, errors 1\n                       failures: {'instance_state_mismatch': 116, 'empty_turn_model_response': 33, 'execution_response_mismatch': 22, 'force_terminated': 21, 'inference_error': 1}\nStrata, v22.4 vs Strata, own template [base]: only first 17, only second 17, McNemar p 1.000\nStrata, v22.4 vs Strata, own template [miss_param]: only first 21, only second 24, McNemar p 0.766\nStrata, v22.4 vs Strata, own template [both]: only first 38, only second 41, McNemar p 0.822\nStrata, v22.4 vs Halo llama.cpp, v22.4 [base]: only first 9, only second 35, McNemar p 0.000\nStrata, v22.4 vs Halo llama.cpp, v22.4 [miss_param]: only first 14, only second 22, McNemar p 0.243\nStrata, v22.4 vs Halo llama.cpp, v22.4 [both]: only first 23, only second 57, McNemar p 0.000\nShell cwd was reset to /home/luwei/work/AI/Strata",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "| strata-gsq-64k-A-on-multi_turn_base+multi_turn_miss_param-20261004-refusals64k | strata-gsq-64k | A | on | 52.5 [48,57] n=400 | 66.0 [59,72] n=200 |  | 39.0 [33,46] n=200 |  | 400 | 13.7 | 186 | 12.09 | 8.62 | 0 | multi_turn:instance_state_mismatch:138, multi_turn:empty_turn_model_response:28, multi_turn:execution_response_mismatch:18, multi_turn:force_terminated:6 |\n| strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1 | strata-gsq-64k-v224 | A | on | 51.8 [47,57] n=400 | 66.0 [59,72] n=200 |  | 37.5 [31,44] n=200 |  | 400 | 13.9 | 230 | 9.26 | 8.15 | 0 | multi_turn:instance_state_mismatch:116, multi_turn:empty_turn_model_response:33, multi_turn:execution_response_mismatch:22, multi_turn:force_terminated:21 |\nHalo llama.cpp, v22.4  overall  60.2  base  79.0  miss_param  41.5 |  97.5 s/entry 12.4 calls 7.87 s/call  160 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 101, 'empty_turn_model_response': 35, 'execution_response_mismatch': 16, 'force_terminated': 7}\nStrata, own template   overall  52.5  base  66.0  miss_param  39.0 |  77.6 s/entry 13.7 calls 5.66 s/call  186 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 138, 'empty_turn_model_response': 28, 'execution_response_mismatch': 18, 'force_terminated': 6}\nStrata, v22.4          overall  51.8  base  66.0  miss_param  37.5 |  73.3 s/entry 13.9 calls 5.29 s/call  230 tok/call, errors 1\n                       failures: {'instance_state_mismatch': 116, 'empty_turn_model_response': 33, 'execution_response_mismatch': 22, 'force_terminated': 21, 'inference_error': 1}\nStrata, v22.4 vs Strata, own template [base]: only first 17, only second 17, McNemar p 1.000\nStrata, v22.4 vs Strata, own template [miss_param]: only first 21, only second 24, McNemar p 0.766\nStrata, v22.4 vs Strata, own template [both]: only first 38, only second 41, McNemar p 0.822\nStrata, v22.4 vs Halo llama.cpp, v22.4 [base]: only first 9, only second 35, McNemar p 0.000\nStrata, v22.4 vs Halo llama.cpp, v22.4 [miss_param]: only first 14, only second 22, McNemar p 0.243\nStrata, v22.4 vs Halo llama.cpp, v22.4 [both]: only first 23, only second 57, McNemar p 0.000",
+            "stderr": "\nShell cwd was reset to /home/luwei/work/AI/Strata",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01XL1oGBhD6tSG1fBYY7guAB",
+            "type": "tool_result",
+            "content": "| strata-gsq-64k-A-on-multi_turn_base+multi_turn_miss_param-20261004-refusals64k | strata-gsq-64k | A | on | 52.5 [48,57] n=400 | 66.0 [59,72] n=200 |  | 39.0 [33,46] n=200 |  | 400 | 13.7 | 186 | 12.09 | 8.62 | 0 | multi_turn:instance_state_mismatch:138, multi_turn:empty_turn_model_response:28, multi_turn:execution_response_mismatch:18, multi_turn:force_terminated:6 |\n| strata-gsq-64k-v224-A-on-multi_turn_base+multi_turn_miss_param-20261004-1742-think1 | strata-gsq-64k-v224 | A | on | 51.8 [47,57] n=400 | 66.0 [59,72] n=200 |  | 37.5 [31,44] n=200 |  | 400 | 13.9 | 230 | 9.26 | 8.15 | 0 | multi_turn:instance_state_mismatch:116, multi_turn:empty_turn_model_response:33, multi_turn:execution_response_mismatch:22, multi_turn:force_terminated:21 |\nHalo llama.cpp, v22.4  overall  60.2  base  79.0  miss_param  41.5 |  97.5 s/entry 12.4 calls 7.87 s/call  160 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 101, 'empty_turn_model_response': 35, 'execution_response_mismatch': 16, 'force_terminated': 7}\nStrata, own template   overall  52.5  base  66.0  miss_param  39.0 |  77.6 s/entry 13.7 calls 5.66 s/call  186 tok/call, errors 0\n                       failures: {'instance_state_mismatch': 138, 'empty_turn_model_response': 28, 'execution_response_mismatch': 18, 'force_terminated': 6}\nStrata, v22.4          overall  51.8  base  66.0  miss_param  37.5 |  73.3 s/entry 13.9 calls 5.29 s/call  230 tok/call, errors 1\n                       failures: {'instance_state_mismatch': 116, 'empty_turn_model_response': 33, 'execution_response_mismatch': 22, 'force_terminated': 21, 'inference_error': 1}\nStrata, v22.4 vs Strata, own template [base]: only first 17, only second 17, McNemar p 1.000\nStrata, v22.4 vs Strata, own template [miss_param]: only first 21, only second 24, McNemar p 0.766\nStrata, v22.4 vs Strata, own template [both]: only first 38, only second 41, McNemar p 0.822\nStrata, v22.4 vs Halo llama.cpp, v22.4 [base]: only first 9, only second 35, McNemar p 0.000\nStrata, v22.4 vs Halo llama.cpp, v22.4 [miss_param]: only first 14, only second 22, McNemar p 0.243\nStrata, v22.4 vs Halo llama.cpp, v22.4 [both]: only first 23, only second 57, McNemar p 0.000\nShell cwd was reset to /home/luwei/work/AI/Strata",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd ~/work/AI/bfcl; ~/miniconda3/envs/bfcl-py312/bin/python summarize-bfcl.py runs 2>&1 | grep -E \"v224.*think1 \\||refusals64k \\|\" | head -2; python3 - <<'EOF'\nimport json, glob, math, collections\nruns = {\"Halo llama.cpp, v22.4\": glob.glob(\"/mnt/evox2/large/work/AI/freetoken/bfcl/runs/gsq-hip-A-on-*\")[0],\n        \"Strata, own template\": glob.glob(\"/home/luwei/work/AI/bfcl/runs/strata-gsq-64k-A-on-*-refusals64k\")[0],\n        \"Strata, v22.4\": [d for d in glob.glob(\"/home/luwei/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-*\") if not d.endswith(\".log\")][0]}\nflat = lambda x: [z for y in x for z in flat(y)] if isinstance(x, list) else [x]\ndef mc(b, c):\n    n = b + c; return min(1.0, 2 * sum(math.comb(n, k) for k in range(min(b, c) + 1)) / 2**n)\nok, types, speed = {}, {}, {}\nfor name, run in runs.items():\n    bad = {}\n    for f in glob.glob(run + \"/score/**/BFCL_v4_multi_turn_*_score.json\", recursive=True):\n        for l in list(open(f, encoding=\"utf-8-sig\"))[1:]:\n            if l.strip(): r = json.loads(l); bad[r[\"id\"]] = r[\"error\"].get(\"error_type\", \"?\").replace(\"multi_turn:\", \"\")\n    ids = [f\"multi_turn_{c}_{i}\" for c in (\"base\", \"miss_param\") for i in range(200)]\n    ok[name] = {i for i in ids if i not in bad}; types[name] = collections.Counter(bad.values())\n    lat = calls = out = n = err = 0\n    for f in glob.glob(run + \"/result/**/*_result.json\", recursive=True):\n        for l in open(f, encoding=\"utf-8-sig\"):\n            r = json.loads(l); n += 1\n            if \"latency\" not in r: err += 1; continue\n            ls = flat(r[\"latency\"]); lat += sum(ls); calls += len(ls); out += sum(flat(r[\"output_token_count\"]))\n    speed[name] = (lat / n, calls / n, lat / calls, out / calls, err)\nfor name in runs:\n    b = sum(1 for i in ok[name] if \"base\" in i) / 2; m = sum(1 for i in ok[name] if \"miss_param\" in i) / 2\n    s = speed[name]\n    print(f\"{name:22s} overall {len(ok[name])/4:5.1f}  base {b:5.1f}  miss_param {m:5.1f} | {s[0]:5.1f} s/entry {s[1]:4.1f} calls {s[2]:4.2f} s/call {s[3]:4.0f} tok/call, errors {s[4]}\")\n    print(f\"{'':22s} failures: {dict(types[name].most_common())}\")\nfor x, y in ((\"Strata, v22.4\", \"Strata, own template\"), (\"Strata, v22.4\", \"Halo llama.cpp, v22.4\")):\n    for cat in (\"base\", \"miss_param\", \"\"):\n        a = {i for i in ok[x] if cat in i}; c = {i for i in ok[y] if cat in i}\n        print(f\"{x} vs {y} [{cat or 'both'}]: only first {len(a - c)}, only second {len(c - a)}, McNemar p {mc(len(a - c), len(c - a)):.3f}\")\nEOF",
+          "description": "Compare the v22.4 run with the other two"
+        }
+      }
+    },
+    {
+      "step_id": 999,
+      "timestamp": "2026-10-05T06:37:11.494Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 566547,
+        "completion_tokens": 520,
+        "cached_tokens": 566545,
+        "extra": {
+          "cache_creation_input_tokens": 2632,
+          "cache_read_input_tokens": 566545,
+          "output_tokens_details": {
+            "thinking_tokens": 251
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2632,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 520,
+              "cache_read_input_tokens": 566545,
+              "cache_creation_input_tokens": 2632,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2632
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 1000,
+      "timestamp": "2026-10-05T06:37:11.497Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "Ruling out the template as the cause: Strata scores nearly identically with Halo's template (51.8) versus its own (52.5), and the base model's gap to Halo remains significant (66.0 vs 79.0, p < 0.001). I'll now check the one `inference_error` that showed up.",
+      "metrics": {
+        "prompt_tokens": 566547,
+        "completion_tokens": 520,
+        "cached_tokens": 566545,
+        "extra": {
+          "cache_creation_input_tokens": 2632,
+          "cache_read_input_tokens": 566545,
+          "output_tokens_details": {
+            "thinking_tokens": 251
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2632,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 520,
+              "cache_read_input_tokens": 566545,
+              "cache_creation_input_tokens": 2632,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2632
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 1001,
+      "timestamp": "2026-10-05T06:37:11.508Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_015WmoNcdpqgy8eAfeaogMkX",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_015WmoNcdpqgy8eAfeaogMkX",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "R=$(ls -d ~/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-* | grep -v \"\\.log$\"); python3 - \"$R\" <<'EOF'\nimport json, glob, sys\nfor f in glob.glob(sys.argv[1] + \"/result/**/*_result.json\", recursive=True):\n    for l in open(f):\n        r = json.loads(l); s = json.dumps(r)\n        if \"Error during inference\" in s or \"latency\" not in r:\n            i = s.find(\"Error\"); print(r[\"id\"], s[i:i+260])\nEOF",
+            "description": "Read the one inference error"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_015WmoNcdpqgy8eAfeaogMkX",
+            "content": "multi_turn_miss_param_60 Error during inference: Error code: 400 - {'error': {'type': 'invalid_request_error', 'message': 'prompt (50955 tokens) + max tokens (16384) exceeds the context (65536); requests are never truncated'}}\", \"traceback\": \"Traceback (most recent call last):\\n  File\n\n[stdout]\nmulti_turn_miss_param_60 Error during inference: Error code: 400 - {'error': {'type': 'invalid_request_error', 'message': 'prompt (50955 tokens) + max tokens (16384) exceeds the context (65536); requests are never truncated'}}\", \"traceback\": \"Traceback (most recent call last):\\n  File\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 566547,
+        "completion_tokens": 520,
+        "cached_tokens": 566545,
+        "extra": {
+          "cache_creation_input_tokens": 2632,
+          "cache_read_input_tokens": 566545,
+          "output_tokens_details": {
+            "thinking_tokens": 251
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2632,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 520,
+              "cache_read_input_tokens": 566545,
+              "cache_creation_input_tokens": 2632,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2632
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "multi_turn_miss_param_60 Error during inference: Error code: 400 - {'error': {'type': 'invalid_request_error', 'message': 'prompt (50955 tokens) + max tokens (16384) exceeds the context (65536); requests are never truncated'}}\", \"traceback\": \"Traceback (most recent call last):\\n  File",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_015WmoNcdpqgy8eAfeaogMkX",
+            "type": "tool_result",
+            "content": "multi_turn_miss_param_60 Error during inference: Error code: 400 - {'error': {'type': 'invalid_request_error', 'message': 'prompt (50955 tokens) + max tokens (16384) exceeds the context (65536); requests are never truncated'}}\", \"traceback\": \"Traceback (most recent call last):\\n  File",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "multi_turn_miss_param_60 Error during inference: Error code: 400 - {'error': {'type': 'invalid_request_error', 'message': 'prompt (50955 tokens) + max tokens (16384) exceeds the context (65536); requests are never truncated'}}\", \"traceback\": \"Traceback (most recent call last):\\n  File",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_015WmoNcdpqgy8eAfeaogMkX",
+            "type": "tool_result",
+            "content": "multi_turn_miss_param_60 Error during inference: Error code: 400 - {'error': {'type': 'invalid_request_error', 'message': 'prompt (50955 tokens) + max tokens (16384) exceeds the context (65536); requests are never truncated'}}\", \"traceback\": \"Traceback (most recent call last):\\n  File",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "R=$(ls -d ~/work/AI/bfcl/runs/strata-gsq-64k-v224-A-on-* | grep -v \"\\.log$\"); python3 - \"$R\" <<'EOF'\nimport json, glob, sys\nfor f in glob.glob(sys.argv[1] + \"/result/**/*_result.json\", recursive=True):\n    for l in open(f):\n        r = json.loads(l); s = json.dumps(r)\n        if \"Error during inference\" in s or \"latency\" not in r:\n            i = s.find(\"Error\"); print(r[\"id\"], s[i:i+260])\nEOF",
+          "description": "Read the one inference error"
+        }
+      }
+    },
+    {
+      "step_id": 1002,
+      "timestamp": "2026-10-05T06:37:27.582Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 569179,
+        "completion_tokens": 2263,
+        "cached_tokens": 569177,
+        "extra": {
+          "cache_creation_input_tokens": 662,
+          "cache_read_input_tokens": 569177,
+          "output_tokens_details": {
+            "thinking_tokens": 968
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 662,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2263,
+              "cache_read_input_tokens": 569177,
+              "cache_creation_input_tokens": 662,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 662
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 1003,
+      "timestamp": "2026-10-05T06:37:27.587Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "I found that the error stems from a runaway conversation whose 51.0K-token prompt exceeds even the 64K context with a 16,384-token thinking budget. I'll update `docs/3060M.md` with this result, replacing the \"test is running\" note.",
+      "metrics": {
+        "prompt_tokens": 569179,
+        "completion_tokens": 2263,
+        "cached_tokens": 569177,
+        "extra": {
+          "cache_creation_input_tokens": 662,
+          "cache_read_input_tokens": 569177,
+          "output_tokens_details": {
+            "thinking_tokens": 968
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 662,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2263,
+              "cache_read_input_tokens": 569177,
+              "cache_creation_input_tokens": 662,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 662
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 1004,
+      "timestamp": "2026-10-05T06:37:36.657Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01CUwmUXp1q8WU6GCr9uynY6",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01CUwmUXp1q8WU6GCr9uynY6",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /home/luwei/work/AI/Strata; python3 - <<'PYEOF'\np = \"docs/3060M.md\"; t = open(p).read()\ns = t.index(\"That is the first suspect for the base gap. **The test is running**\")\ne = t.index(\"## Where the CPU time goes during BFCL\")\nnew = '''That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in\nStrata (2026-10-04/05; `strata-coder-iq1_m-64k-v224.json`: a copy of the tokenizer folder, `tokenizer-v22.4`, with\nv22.4 as its `chat_template.jinja`, 64K context; the first 10 entries at `--pcie-frac` 0.55, the other 390 at 0.2;\nfolder `strata-gsq-64k-v224-A-on-...-think1`):\n\n| GSQ Coder, path A, thinking on | template | overall | base | miss_param | s / entry | calls / entry | tok / call | step limit hit |\n|---|---|---|---|---|---|---|---|---|\n| llama.cpp, Strix Halo | v22.4 | **60.2** | **79.0** | 41.5 | 97.5 | 12.4 | 160 | 7 |\n| Strata (32K + the 11 refusals at 64K) | the model's own | 52.5 | 66.0 | 39.0 | 77.6 | 13.7 | 186 | 6 |\n| Strata (64K) | v22.4 | 51.8 [47,57] | 66.0 | 37.5 | 73.3 | 13.9 | 230 | 21 |\n\n- **The two Strata runs score the same**: base 66.0 in both; item by item, only v22.4 right 38, only the model's own\n  template right 41 (exact McNemar p = 0.82; base 17 and 17). The template's \"xhigh\" line and tool rules do not\n  explain the gap.\n- **The gap to the Halo stays**: Strata with v22.4 against the Halo with v22.4 - base: only Strata right 9, only the\n  Halo right 35 (p < 0.001); miss_param 14 and 22 (p = 0.24); both together 23 and 57 (p < 0.001).\n- With v22.4 Strata writes longer answers (230 output tokens per call against 186) and runs into the 20-step limit\n  more often (21 entries against 6); its wrong final states drop (116 against 138).\n- One context refusal even at 64K: `multi_turn_miss_param_60` reached a 51.0K-token prompt (+ 16384 > 65536).\n- Speed: not comparable with the runs before it (390 of its entries ran at `--pcie-frac` 0.2, see below).\n\nSo with the same weights, the same template and the same prompts from BFCL, Strata answers base entries worse than\nllama.cpp on path A with thinking on, while on path B (BFCL's own prompt and parser, thinking off) the two score the\nsame. What is left between them on path A: how each server turns its output into `reasoning_content`, `content` and\n`tool_calls`, which BFCL then sends back in the next turn's messages, and how each renders those messages; and\nthinking on vs off. Not tested yet: a 400-entry path A run with thinking off (the Halo: 48.5, base 64.5), and a\ncomparison of the messages BFCL sent each server at the first step where an entry's two runs differ (both runs kept\nthem, `--include-input-log`).\n\n'''\nt = t[:s] + new + t[e:]\nopen(p, \"w\").write(t)\nPYEOF\ngrep -n \"Tested: it is not the template\" docs/3060M.md",
+            "description": "Record the v22.4 result in the doc"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01CUwmUXp1q8WU6GCr9uynY6",
+            "content": "613:That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in\n\n[stdout]\n613:That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/3060M.md\", \"hunks\": [{\"oldStart\": 610, \"oldLines\": 10, \"newStart\": 610, \"newLines\": 35, \"lines\": [\"   one closed block per call, and shows an example; the model's own template allows \\\"optional reasoning ... BEFORE the\", \"   function call\\\".\", \" \", \"-That is the first suspect for the base gap. **The test is running**: the same 400 entries with v22.4 in Strata\", \"-(`strata-coder-iq1_m-64k-v224.json`: a copy of the tokenizer folder, `tokenizer-v22.4`, with v22.4 as its\", \"-`chat_template.jinja`; 64K, so no refusals; `--config strata-gsq-64k-v224`). Its result goes here.\", \"+That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in\", \"+Strata (2026-10-04/05; `strata-coder-iq1_m-64k-v224.json`: a copy of the tokenizer folder, `tokenizer-v22.4`, with\", \"+v22.4 as its `chat_template.jinja`, 64K context; the first 10 entries at `--pcie-frac` 0.55, the other 390 at 0.2;\", \"+folder `strata-gsq-64k-v224-A-on-...-think1`):\", \" \", \"+| GSQ Coder, path A, thinking on | template | overall | base | miss_param | s / entry | calls / entry | tok / call | step limit hit |\", \"+|---|---|---|---|---|---|---|---|---|\", \"+| llama.cpp, Strix Halo | v22.4 | **60.2** | **79.0** | 41.5 | 97.5 | 12.4 | 160 | 7 |\", \"+| Strata (32K + the 11 refusals at 64K) | the model's own | 52.5 | 66.0 | 39.0 | 77.6 | 13.7 | 186 | 6 |\", \"+| Strata (64K) | v22.4 | 51.8 [47,57] | 66.0 | 37.5 | 73.3 | 13.9 | 230 | 21 |\", \"+\", \"+- **The two Strata runs score the same**: base 66.0 in both; item by item, only v22.4 right 38, only the model's own\", \"+  template right 41 (exact McNemar p = 0.82; base 17 and 17). The template's \\\"xhigh\\\" line and tool rules do not\", \"+  explain the gap.\", \"+- **The gap to the Halo stays**: Strata with v22.4 against the Halo with v22.4 - base: only Strata right 9, only the\", \"+  Halo right 35 (p < 0.001); miss_param 14 and 22 (p = 0.24); both together 23 and 57 (p < 0.001).\", \"+- With v22.4 Strata writes longer answers (230 output tokens per call against 186) and runs into the 20-step limit\", \"+  more often (21 entries against 6); its wrong final states drop (116 against 138).\", \"+- One context refusal even at 64K: `multi_turn_miss_param_60` reached a 51.0K-token prompt (+ 16384 > 65536).\", \"+- Speed: not comparable with the runs before it (390 of its entries ran at `--pcie-frac` 0.2, see below).\", \"+\", \"+So with the same weights, the same template and the same prompts from BFCL, Strata answers base entries worse than\", \"+llama.cpp on path A with thinking on, while on path B (BFCL's own prompt and parser, thinking off) the two score the\", \"+same. What is left between them on path A: how each server turns its output into `reasoning_content`, `content` and\", \"+`tool_calls`, which BFCL then sends back in the next turn's messages, and how each renders those messages; and\", \"+thinking on vs off. Not tested yet: a 400-entry path A run with thinking off (the Halo: 48.5, base 64.5), and a\", \"+comparison of the messages BFCL sent each server at the first step where an entry's two runs differ (both runs kept\", \"+them, `--include-input-log`).\", \"+\", \" ## Where the CPU time goes during BFCL\", \" \", \" The Ryzen 9 8945HX has 16 cores on two chiplets (CCD1: cores 0-7, CCD2: 8-15) and 32 threads: logical CPUs 16-31\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/3060M.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 569179,
+        "completion_tokens": 2263,
+        "cached_tokens": 569177,
+        "extra": {
+          "cache_creation_input_tokens": 662,
+          "cache_read_input_tokens": 569177,
+          "output_tokens_details": {
+            "thinking_tokens": 968
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 662,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2263,
+              "cache_read_input_tokens": 569177,
+              "cache_creation_input_tokens": 662,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 662
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "613:That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 610,
+                      "oldLines": 10,
+                      "newStart": 610,
+                      "newLines": 35,
+                      "lines": [
+                        "   one closed block per call, and shows an example; the model's own template allows \"optional reasoning ... BEFORE the",
+                        "   function call\".",
+                        " ",
+                        "-That is the first suspect for the base gap. **The test is running**: the same 400 entries with v22.4 in Strata",
+                        "-(`strata-coder-iq1_m-64k-v224.json`: a copy of the tokenizer folder, `tokenizer-v22.4`, with v22.4 as its",
+                        "-`chat_template.jinja`; 64K, so no refusals; `--config strata-gsq-64k-v224`). Its result goes here.",
+                        "+That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in",
+                        "+Strata (2026-10-04/05; `strata-coder-iq1_m-64k-v224.json`: a copy of the tokenizer folder, `tokenizer-v22.4`, with",
+                        "+v22.4 as its `chat_template.jinja`, 64K context; the first 10 entries at `--pcie-frac` 0.55, the other 390 at 0.2;",
+                        "+folder `strata-gsq-64k-v224-A-on-...-think1`):",
+                        " ",
+                        "+| GSQ Coder, path A, thinking on | template | overall | base | miss_param | s / entry | calls / entry | tok / call | step limit hit |",
+                        "+|---|---|---|---|---|---|---|---|---|",
+                        "+| llama.cpp, Strix Halo | v22.4 | **60.2** | **79.0** | 41.5 | 97.5 | 12.4 | 160 | 7 |",
+                        "+| Strata (32K + the 11 refusals at 64K) | the model's own | 52.5 | 66.0 | 39.0 | 77.6 | 13.7 | 186 | 6 |",
+                        "+| Strata (64K) | v22.4 | 51.8 [47,57] | 66.0 | 37.5 | 73.3 | 13.9 | 230 | 21 |",
+                        "+",
+                        "+- **The two Strata runs score the same**: base 66.0 in both; item by item, only v22.4 right 38, only the model's own",
+                        "+  template right 41 (exact McNemar p = 0.82; base 17 and 17). The template's \"xhigh\" line and tool rules do not",
+                        "+  explain the gap.",
+                        "+- **The gap to the Halo stays**: Strata with v22.4 against the Halo with v22.4 - base: only Strata right 9, only the",
+                        "+  Halo right 35 (p < 0.001); miss_param 14 and 22 (p = 0.24); both together 23 and 57 (p < 0.001).",
+                        "+- With v22.4 Strata writes longer answers (230 output tokens per call against 186) and runs into the 20-step limit",
+                        "+  more often (21 entries against 6); its wrong final states drop (116 against 138).",
+                        "+- One context refusal even at 64K: `multi_turn_miss_param_60` reached a 51.0K-token prompt (+ 16384 > 65536).",
+                        "+- Speed: not comparable with the runs before it (390 of its entries ran at `--pcie-frac` 0.2, see below).",
+                        "+",
+                        "+So with the same weights, the same template and the same prompts from BFCL, Strata answers base entries worse than",
+                        "+llama.cpp on path A with thinking on, while on path B (BFCL's own prompt and parser, thinking off) the two score the",
+                        "+same. What is left between them on path A: how each server turns its output into `reasoning_content`, `content` and",
+                        "+`tool_calls`, which BFCL then sends back in the next turn's messages, and how each renders those messages; and",
+                        "+thinking on vs off. Not tested yet: a 400-entry path A run with thinking off (the Halo: 48.5, base 64.5), and a",
+                        "+comparison of the messages BFCL sent each server at the first step where an entry's two runs differ (both runs kept",
+                        "+them, `--include-input-log`).",
+                        "+",
+                        " ## Where the CPU time goes during BFCL",
+                        " ",
+                        " The Ryzen 9 8945HX has 16 cores on two chiplets (CCD1: cores 0-7, CCD2: 8-15) and 32 threads: logical CPUs 16-31"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01CUwmUXp1q8WU6GCr9uynY6",
+            "type": "tool_result",
+            "content": "613:That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "613:That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 610,
+                      "oldLines": 10,
+                      "newStart": 610,
+                      "newLines": 35,
+                      "lines": [
+                        "   one closed block per call, and shows an example; the model's own template allows \"optional reasoning ... BEFORE the",
+                        "   function call\".",
+                        " ",
+                        "-That is the first suspect for the base gap. **The test is running**: the same 400 entries with v22.4 in Strata",
+                        "-(`strata-coder-iq1_m-64k-v224.json`: a copy of the tokenizer folder, `tokenizer-v22.4`, with v22.4 as its",
+                        "-`chat_template.jinja`; 64K, so no refusals; `--config strata-gsq-64k-v224`). Its result goes here.",
+                        "+That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in",
+                        "+Strata (2026-10-04/05; `strata-coder-iq1_m-64k-v224.json`: a copy of the tokenizer folder, `tokenizer-v22.4`, with",
+                        "+v22.4 as its `chat_template.jinja`, 64K context; the first 10 entries at `--pcie-frac` 0.55, the other 390 at 0.2;",
+                        "+folder `strata-gsq-64k-v224-A-on-...-think1`):",
+                        " ",
+                        "+| GSQ Coder, path A, thinking on | template | overall | base | miss_param | s / entry | calls / entry | tok / call | step limit hit |",
+                        "+|---|---|---|---|---|---|---|---|---|",
+                        "+| llama.cpp, Strix Halo | v22.4 | **60.2** | **79.0** | 41.5 | 97.5 | 12.4 | 160 | 7 |",
+                        "+| Strata (32K + the 11 refusals at 64K) | the model's own | 52.5 | 66.0 | 39.0 | 77.6 | 13.7 | 186 | 6 |",
+                        "+| Strata (64K) | v22.4 | 51.8 [47,57] | 66.0 | 37.5 | 73.3 | 13.9 | 230 | 21 |",
+                        "+",
+                        "+- **The two Strata runs score the same**: base 66.0 in both; item by item, only v22.4 right 38, only the model's own",
+                        "+  template right 41 (exact McNemar p = 0.82; base 17 and 17). The template's \"xhigh\" line and tool rules do not",
+                        "+  explain the gap.",
+                        "+- **The gap to the Halo stays**: Strata with v22.4 against the Halo with v22.4 - base: only Strata right 9, only the",
+                        "+  Halo right 35 (p < 0.001); miss_param 14 and 22 (p = 0.24); both together 23 and 57 (p < 0.001).",
+                        "+- With v22.4 Strata writes longer answers (230 output tokens per call against 186) and runs into the 20-step limit",
+                        "+  more often (21 entries against 6); its wrong final states drop (116 against 138).",
+                        "+- One context refusal even at 64K: `multi_turn_miss_param_60` reached a 51.0K-token prompt (+ 16384 > 65536).",
+                        "+- Speed: not comparable with the runs before it (390 of its entries ran at `--pcie-frac` 0.2, see below).",
+                        "+",
+                        "+So with the same weights, the same template and the same prompts from BFCL, Strata answers base entries worse than",
+                        "+llama.cpp on path A with thinking on, while on path B (BFCL's own prompt and parser, thinking off) the two score the",
+                        "+same. What is left between them on path A: how each server turns its output into `reasoning_content`, `content` and",
+                        "+`tool_calls`, which BFCL then sends back in the next turn's messages, and how each renders those messages; and",
+                        "+thinking on vs off. Not tested yet: a 400-entry path A run with thinking off (the Halo: 48.5, base 64.5), and a",
+                        "+comparison of the messages BFCL sent each server at the first step where an entry's two runs differ (both runs kept",
+                        "+them, `--include-input-log`).",
+                        "+",
+                        " ## Where the CPU time goes during BFCL",
+                        " ",
+                        " The Ryzen 9 8945HX has 16 cores on two chiplets (CCD1: cores 0-7, CCD2: 8-15) and 32 threads: logical CPUs 16-31"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01CUwmUXp1q8WU6GCr9uynY6",
+            "type": "tool_result",
+            "content": "613:That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /home/luwei/work/AI/Strata; python3 - <<'PYEOF'\np = \"docs/3060M.md\"; t = open(p).read()\ns = t.index(\"That is the first suspect for the base gap. **The test is running**\")\ne = t.index(\"## Where the CPU time goes during BFCL\")\nnew = '''That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in\nStrata (2026-10-04/05; `strata-coder-iq1_m-64k-v224.json`: a copy of the tokenizer folder, `tokenizer-v22.4`, with\nv22.4 as its `chat_template.jinja`, 64K context; the first 10 entries at `--pcie-frac` 0.55, the other 390 at 0.2;\nfolder `strata-gsq-64k-v224-A-on-...-think1`):\n\n| GSQ Coder, path A, thinking on | template | overall | base | miss_param | s / entry | calls / entry | tok / call | step limit hit |\n|---|---|---|---|---|---|---|---|---|\n| llama.cpp, Strix Halo | v22.4 | **60.2** | **79.0** | 41.5 | 97.5 | 12.4 | 160 | 7 |\n| Strata (32K + the 11 refusals at 64K) | the model's own | 52.5 | 66.0 | 39.0 | 77.6 | 13.7 | 186 | 6 |\n| Strata (64K) | v22.4 | 51.8 [47,57] | 66.0 | 37.5 | 73.3 | 13.9 | 230 | 21 |\n\n- **The two Strata runs score the same**: base 66.0 in both; item by item, only v22.4 right 38, only the model's own\n  template right 41 (exact McNemar p = 0.82; base 17 and 17). The template's \"xhigh\" line and tool rules do not\n  explain the gap.\n- **The gap to the Halo stays**: Strata with v22.4 against the Halo with v22.4 - base: only Strata right 9, only the\n  Halo right 35 (p < 0.001); miss_param 14 and 22 (p = 0.24); both together 23 and 57 (p < 0.001).\n- With v22.4 Strata writes longer answers (230 output tokens per call against 186) and runs into the 20-step limit\n  more often (21 entries against 6); its wrong final states drop (116 against 138).\n- One context refusal even at 64K: `multi_turn_miss_param_60` reached a 51.0K-token prompt (+ 16384 > 65536).\n- Speed: not comparable with the runs before it (390 of its entries ran at `--pcie-frac` 0.2, see below).\n\nSo with the same weights, the same template and the same prompts from BFCL, Strata answers base entries worse than\nllama.cpp on path A with thinking on, while on path B (BFCL's own prompt and parser, thinking off) the two score the\nsame. What is left between them on path A: how each server turns its output into `reasoning_content`, `content` and\n`tool_calls`, which BFCL then sends back in the next turn's messages, and how each renders those messages; and\nthinking on vs off. Not tested yet: a 400-entry path A run with thinking off (the Halo: 48.5, base 64.5), and a\ncomparison of the messages BFCL sent each server at the first step where an entry's two runs differ (both runs kept\nthem, `--include-input-log`).\n\n'''\nt = t[:s] + new + t[e:]\nopen(p, \"w\").write(t)\nPYEOF\ngrep -n \"Tested: it is not the template\" docs/3060M.md",
+          "description": "Record the v22.4 result in the doc"
+        }
+      }
+    },
+    {
+      "step_id": 1005,
+      "timestamp": "2026-10-05T06:37:45.831Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Yes, it finished. It shows the template is **not** the cause of the base gap.\n\n**GSQ Coder, path A, thinking on, 400 items:**\n\n| | Template | Overall | base | miss_param |\n|---|---|---|---|---|\n| llama.cpp, Strix Halo | v22.4 | **60.2** | **79.0** | 41.5 |\n| Strata (32K + refusals redone at 64K) | the model's own | 52.5 | 66.0 | 39.0 |\n| Strata (64K) | v22.4 | 51.8 | 66.0 | 37.5 |\n\n- **The two Strata runs score the same:** base is 66.0 in both. Item by item they differ by 38 against 41 (p = 0.82). So neither the \"xhigh\" reasoning line nor the tool rules explain the gap.\n- **The gap to the Halo stays with the same template:** on base, only Strata got 9 right that the Halo missed, against 35 the other way (p < 0.001). miss_param doesn't differ significantly.\n- **Other differences with v22.4:** Strata wrote longer answers (230 output tokens per call against 186) and hit the 20-step limit more often (21 items against 6).\n- **One context refusal even at 64K:** `miss_param_60` grew to a 51K-token prompt. It is one runaway item.\n- **Speed isn't comparable** with the earlier runs, because 390 of its items ran at `--pcie-frac` 0.2.\n\n**What's left to explain the gap:**\n- Same weights, same template, same BFCL prompts, and yet Strata does worse on path A with thinking on. On path B (BFCL builds the prompt and parses the reply itself, thinking off) the two engines score the same.\n- What path A still adds is how each server splits its output into `reasoning_content`, `content` and `tool_calls`. BFCL sends those back in the next turn, and each server renders them again. Thinking on versus off also differs between the two comparisons.\n\n**Possible next steps:**\n1. **Compare the messages directly (no GPU, minutes).** Both runs saved what BFCL sent each server. For the items llama.cpp got right and Strata got wrong, find the first step where the two diverge and compare the messages up to there, especially how earlier reasoning and tool calls come back.\n2. **Run path A with thinking off, 400 items (about 4 h).** The Halo scored 48.5 there (base 64.5). This shows whether the gap needs thinking on.\n\nI've recorded the result in `docs/3060M.md`. Should I do step 1?",
+      "metrics": {
+        "prompt_tokens": 569841,
+        "completion_tokens": 848,
+        "cached_tokens": 569839,
+        "extra": {
+          "cache_creation_input_tokens": 2333,
+          "cache_read_input_tokens": 569839,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2333,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 848,
+              "cache_read_input_tokens": 569839,
+              "cache_creation_input_tokens": 2333,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2333
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 272330163,
-    "total_completion_tokens": 710555,
-    "total_cached_tokens": 272328179,
-    "total_steps": 993,
+    "total_prompt_tokens": 278027490,
+    "total_completion_tokens": 724446,
+    "total_cached_tokens": 278025484,
+    "total_steps": 1005,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 8474945,
-      "total_cache_read_input_tokens": 272328179
+      "total_cache_creation_input_tokens": 9032454,
+      "total_cache_read_input_tokens": 278025484
     }
   }
 }
