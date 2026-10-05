@@ -6,13 +6,15 @@ the measurement that decides it. Test outputs (engine logs, server output, bench
 
 ## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)
 
-1. **The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313 (branch `wmma-optin`: gfx11 WMMA prompt
-   attention + dense WMMA GEMM, opt-in `STRATA_PA_WMMA=1` / `STRATA_WMMA_GEMM=1`) to gfx1151: add
-   `defined(__gfx1151__)` (and `__gfx1150__`) to its device guards, build, run its 440-shape GEMM parity test, write
-   an attention parity test (the PR has none; `tests/hip/prefill_wmma_gemm_parity.cpp` is the model), then measure
-   with `STRATA_PREFILL_TIMING=1` and `docs/benchmarks/2026-10-05-halo-pp4k.py`. Expected from gfx1201's WMMA
-   attention: 7x on the phase.
-2. **The expert GEMMs, 2.6 s + 0.5 s dequant (34%).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at
+1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch
+   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):
+   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now
+   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543
+   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated
+   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the
+   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for
+   K8V4 pools.
+2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at
    3.5-3.7 TFLOP/s; the same shape with a 16-bit output runs at 18.7. Decide between: a 16-bit output for these two
    GEMMs only (consumers `swiglu_interleaved`, `moe_combine`; needs the parity tests), a WMMA kernel with FP32
    accumulate (PR #313's 64x64 tile, or ROCm/hip-ep#1002's gfx1151-tuned kernel), or the MMQ path (next item).

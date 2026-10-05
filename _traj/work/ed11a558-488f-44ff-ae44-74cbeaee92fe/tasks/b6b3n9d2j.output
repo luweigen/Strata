@@ -1,0 +1,45 @@
+ready=True
+bench exit 0
+{"test": "server: cold first request (short code prompt)", "wall_s": 11.58, "finish": "length", "cache_n": 0, "prompt_n": 314, "prompt_per_second": 179.5, "predicted_n": 400, "predicted_per_second": 40.8, "draft_n": 301, "draft_n_accepted": 277, "accept_pct": 92.0}
+{"test": "server: fresh code prompt", "wall_s": 12.13, "finish": "length", "cache_n": 0, "prompt_n": 218, "prompt_per_second": 166.4, "predicted_n": 400, "predicted_per_second": 37.1, "draft_n": 299, "draft_n_accepted": 251, "accept_pct": 83.9}
+{"test": "server: ~4.75K-token prompt, prefill + decode tail", "wall_s": 21.31, "finish": "length", "cache_n": 0, "prompt_n": 4749, "prompt_per_second": 528.1, "predicted_n": 400, "predicted_per_second": 32.6, "draft_n": 284, "draft_n_accepted": 224, "accept_pct": 78.9}
+{"test": "server: repeated first prompt (reference only)", "wall_s": 11.25, "finish": "length", "cache_n": 0, "prompt_n": 314, "prompt_per_second": 202.9, "predicted_n": 400, "predicted_per_second": 41.3, "draft_n": 304, "draft_n_accepted": 275, "accept_pct": 90.5}
+{"test": "pp4096 @ d0", "wall_s": 7.97, "finish": "length", "cache_n": 0, "prompt_n": 4085, "prompt_per_second": 516.8, "predicted_n": 1, "predicted_per_second": 23.5, "draft_n": 0, "draft_n_accepted": 0}
+{"test": "tg128 @ d0", "wall_s": 5.8, "finish": "length", "cache_n": 0, "prompt_n": 68, "prompt_per_second": 56.4, "predicted_n": 128, "predicted_per_second": 27.9, "draft_n": 99, "draft_n_accepted": 57, "accept_pct": 57.6}
+{"test": "depth 16384 prefix (cached for the next rows)", "wall_s": 30.32, "finish": "length", "cache_n": 0, "prompt_n": 16384, "prompt_per_second": 542.7, "predicted_n": 1, "predicted_per_second": 23.1, "draft_n": 0, "draft_n_accepted": 0}
+{"test": "pp4096 @ d16384", "wall_s": 38.34, "finish": "length", "cache_n": 0, "prompt_n": 20421, "prompt_per_second": 534.5, "predicted_n": 1, "predicted_per_second": 23.6, "draft_n": 0, "draft_n_accepted": 0}
+{"test": "tg128 @ d16384", "wall_s": 35.32, "finish": "length", "cache_n": 0, "prompt_n": 16401, "prompt_per_second": 534.1, "predicted_n": 128, "predicted_per_second": 28.2, "draft_n": 100, "draft_n_accepted": 62, "accept_pct": 62.0}
+prime: 245 tokens at 36.5 t/s, drafts 162 / 214
+def is_prime(n: int) -> bool:
+    if n < 2:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+
+    i = 3
+    while
+=== ctest
+Total Test time (real) =  90.08 sec
+
+The following tests did not run:
+	 16 - hip_prefill_hipblaslt_gemm (Skipped)
+
+The following tests FAILED:
+	 10 - hip_handoff (Failed)
+	 36 - ple_parity (Failed)
+	 52 - hip_prefill_mmq_parity (Failed)
+	 54 - expert_parity (Failed)
+	 55 - pool_test (Failed)
+ctest : Errors while running CTest
+At line:1 char:2618
++ ... ages\_rocm_sdk_devel\bin;$env:PATH"; ctest --timeout 600 2>&1 | Tee-O ...
++                                          ~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Errors while running CTest:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Output from these tests are in: E:/work/AI/Strata/build-hip-win/Testing/Temporary/LastTest.log
+Use "--rerun-failed --output-on-failure" to re-run the failed cases verbosely.
+
+[exited with code 8]
