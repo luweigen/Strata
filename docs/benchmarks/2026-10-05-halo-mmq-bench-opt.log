@@ -1,0 +1,41 @@
+device AMD Radeon(TM) 8060S Graphics gfx1151; one layer = 512 experts, 4165 x 10 routed rows; ms per layer (3 layers' distributions averaged, 5 reps each)
+== gate/up IQ3_XXS: 1.3 MB per expert, quantize 2.66 ms
+   groups of 16                        , tile for the largest:   47.75 ms/layer =   5.7 TOPS, 32 launches, J padding 98% of the rows
+   groups of 16                        , tile for the mean   :   37.12 ms/layer =   7.4 TOPS, 32 launches, J padding 51% of the rows
+   groups of 16                        , tile for the median :   34.53 ms/layer =   7.9 TOPS, 32 launches, J padding 22% of the rows
+   groups of 16, experts sorted by rows, tile for the largest:   29.34 ms/layer =   9.3 TOPS, 32 launches, J padding 16% of the rows
+== gate/up IQ2_S: 1.0 MB per expert, quantize 2.52 ms
+   groups of 16                        , tile for the largest:   50.59 ms/layer =   5.4 TOPS, 32 launches, J padding 98% of the rows
+   groups of 16                        , tile for the mean   :   41.13 ms/layer =   6.6 TOPS, 32 launches, J padding 51% of the rows
+   groups of 16                        , tile for the median :   38.09 ms/layer =   7.2 TOPS, 32 launches, J padding 22% of the rows
+   groups of 16, experts sorted by rows, tile for the largest:   31.36 ms/layer =   8.7 TOPS, 32 launches, J padding 16% of the rows
+== gate/up IQ4_XS: 1.7 MB per expert, quantize 2.43 ms
+   groups of 16                        , tile for the largest:   37.50 ms/layer =   7.3 TOPS, 32 launches, J padding 98% of the rows
+   groups of 16                        , tile for the mean   :   30.73 ms/layer =   8.9 TOPS, 32 launches, J padding 51% of the rows
+   groups of 16                        , tile for the median :   29.71 ms/layer =   9.2 TOPS, 32 launches, J padding 22% of the rows
+   groups of 16, experts sorted by rows, tile for the largest:   25.82 ms/layer =  10.6 TOPS, 32 launches, J padding 16% of the rows
+== gate/up IQ3_S: 1.4 MB per expert, quantize 2.46 ms
+   groups of 16                        , tile for the largest:   40.97 ms/layer =   6.7 TOPS, 32 launches, J padding 98% of the rows
+   groups of 16                        , tile for the mean   :   35.39 ms/layer =   7.7 TOPS, 32 launches, J padding 51% of the rows
+   groups of 16                        , tile for the median :   34.93 ms/layer =   7.8 TOPS, 32 launches, J padding 22% of the rows
+   groups of 16, experts sorted by rows, tile for the largest:   28.31 ms/layer =   9.6 TOPS, 32 launches, J padding 16% of the rows
+== down IQ4_NL: 0.9 MB per expert, quantize 0.71 ms
+   groups of 16                        , tile for the largest:   21.65 ms/layer =   6.3 TOPS, 32 launches, J padding 98% of the rows
+   groups of 16                        , tile for the mean   :   18.62 ms/layer =   7.3 TOPS, 32 launches, J padding 51% of the rows
+   groups of 16                        , tile for the median :   17.81 ms/layer =   7.7 TOPS, 32 launches, J padding 22% of the rows
+   groups of 16, experts sorted by rows, tile for the largest:   15.44 ms/layer =   8.8 TOPS, 32 launches, J padding 16% of the rows
+== down Q2_0: 0.5 MB per expert, quantize 0.73 ms
+   groups of 16                        , tile for the largest:   21.23 ms/layer =   6.4 TOPS, 32 launches, J padding 98% of the rows
+   groups of 16                        , tile for the mean   :   18.74 ms/layer =   7.3 TOPS, 32 launches, J padding 51% of the rows
+   groups of 16                        , tile for the median :   17.78 ms/layer =   7.7 TOPS, 32 launches, J padding 22% of the rows
+   groups of 16, experts sorted by rows, tile for the largest:   15.60 ms/layer =   8.7 TOPS, 32 launches, J padding 16% of the rows
+== down IQ4_XS: 0.7 MB per expert, quantize 0.72 ms
+   groups of 16                        , tile for the largest:   15.28 ms/layer =   8.9 TOPS, 32 launches, J padding 98% of the rows
+   groups of 16                        , tile for the mean   :   13.10 ms/layer =  10.4 TOPS, 32 launches, J padding 51% of the rows
+   groups of 16                        , tile for the median :   12.81 ms/layer =  10.7 TOPS, 32 launches, J padding 22% of the rows
+   groups of 16, experts sorted by rows, tile for the largest:   11.01 ms/layer =  12.4 TOPS, 32 launches, J padding 16% of the rows
+== down Q8_0: 1.7 MB per expert, quantize 0.72 ms
+   groups of 16                        , tile for the largest:   23.94 ms/layer =   5.7 TOPS, 32 launches, J padding 98% of the rows
+   groups of 16                        , tile for the mean   :   20.43 ms/layer =   6.7 TOPS, 32 launches, J padding 51% of the rows
+   groups of 16                        , tile for the median :   18.91 ms/layer =   7.2 TOPS, 32 launches, J padding 22% of the rows
+   groups of 16, experts sorted by rows, tile for the largest:   15.78 ms/layer =   8.6 TOPS, 32 launches, J padding 16% of the rows

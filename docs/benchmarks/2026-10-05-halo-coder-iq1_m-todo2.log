@@ -1,0 +1,83 @@
+strata generate: PCIe probe: 78.9 GB/s host->device, host RAM read 52.5 GB/s -> pcie_frac 0.55 (default 0.55)
+strata generate: native pack: C:\Users\Wei Lu\Documents\Strata-data\packs\coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)
+strata generate: 1406 MiB of weights loaded from C:\Users\Wei Lu\Documents\Strata-data\packs\coder-iq1_m (302 canonical tensors skipped: served natively)
+strata generate: 300 native projection matrices, 2018.88 MiB of weights
+strata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)
+strata generate: profile E:\work\AI\Strata\data\expert-profile-coder.bin: 12288 ranked pairs, built for 12288 slots
+strata generate: PLE on, table 320001536 rows of C:\Users\Wei Lu\Documents\Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF\IQ1_M\Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00002-of-00002.gguf
+strata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.25 s (3137 MiB/s)
+strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)
+strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages
+strata generate: loaded 23.42 GiB at 11.44 GiB/s
+strata generate: experimental native Q5_K head, 521472000 bytes
+strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots
+strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is
+strata generate: the GPU computes the experts in the cache; it rounds differently from the CPU,
+                 so a reply can differ slightly from a run without the cache (same quality:
+                 bench/results/2026-09-27-cache-parity).
+                 PROFILE, ranked by routing frequency, no eviction.
+strata generate: pre-filled 12288 of 12288 slots from the profile; slot 0 verified
+strata generate: R4 hit path ON - resident experts are computed on the GPU
+strata generate: 15 expert-pool workers + the host thread
+strata generate: session is up (engine 0.1.34)
+strata generate: token graph hit path: 12288 resident experts, decided on the device
+strata serve: prompt chunk auto: 8192 tokens
+strata serve: the prompt path borrows 2306 CUDA0 cache slots (4.42 GiB)
+prefill gemm: hipBLASLt tuning enabled (48 rows, gfx1151, version 100401)
+strata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)
+strata verify: window up to 6 tokens, 74.1 MiB of device buffers
+strata mtp: draft head over 106299 tokens (212.9 MiB)
+strata serve: 12061 MiB of VRAM free with everything loaded
+strata prefill timing: 309 tokens, GPU timeline 1348 ms, wall 1362 ms, host staging 1 ms: embed+steps 32 (2.4%) hc read 100 (7.4%) gdn 186 (13.8%) qsa proj 86 (6.4%) qsa indexer 0 (0.0%) qsa select 1 (0.1%) qsa attn 7 (0.5%) router+shared 49 (3.6%) host grouping 12 (0.9%) gather 7 (0.5%) wait copy 2 (0.1%) dequant 290 (21.5%) gemm gate/up 273 (20.2%) gemm down 123 (9.1%) combine 30 (2.2%) ple 2 (0.1%) gdn conv+gates 6 (0.5%) gdn recurrence 48 (3.5%) gdn out proj 95 (7.0%)
+strata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 32 ms, waiting for each chunk 13 ms, after each chunk (the draft layer, progress) 13 ms, PLE 27 ms
+strata prefill timing: experts: the loop's host time 50 ms over 48 layers (48 sorted by row count), 148320 routed rows, a J tile for each group's largest expert would pad them by 67.2%
+strata verify: captured the 4-token window (upload no error, sync no error)
+strata verify: captured the 1-token window (upload no error, sync no error)
+strata verify: captured the 6-token window (upload no error, sync no error)
+strata verify: captured the 3-token window (upload no error, sync no error)
+strata verify: captured the 2-token window (upload no error, sync no error)
+strata serve: prompt 314 tokens = 0 reused + 314 read in 1498 ms (209.6 tok/s), 400 generated in 9909 ms (40.4 tok/s), drafts accepted 277 of 304, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (204960 hits / 204960 lookups)
+strata serve: suffix drafts: 43 windows, 206 of 213 drafts accepted
+strata prefill timing: 213 tokens, GPU timeline 1029 ms, wall 1032 ms, host staging 1 ms: embed+steps 10 (0.9%) hc read 59 (5.8%) gdn 154 (14.9%) qsa proj 73 (7.1%) qsa indexer 0 (0.0%) qsa select 0 (0.0%) qsa attn 4 (0.4%) router+shared 33 (3.2%) host grouping 12 (1.1%) gather 5 (0.5%) wait copy 1 (0.1%) dequant 244 (23.7%) gemm gate/up 218 (21.2%) gemm down 94 (9.1%) combine 12 (1.2%) ple 1 (0.1%) gdn conv+gates 3 (0.3%) gdn recurrence 29 (2.8%) gdn out proj 77 (7.5%)
+strata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 10 ms, waiting for each chunk 12 ms, after each chunk (the draft layer, progress) 3 ms, PLE 35 ms
+strata prefill timing: experts: the loop's host time 18 ms over 48 layers (48 sorted by row count), 102240 routed rows, a J tile for each group's largest expert would pad them by 85.2%
+strata serve: prompt 218 tokens = 0 reused + 218 read in 1142 ms (190.9 tok/s), 400 generated in 10920 ms (36.6 tok/s), drafts accepted 251 of 299, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (215040 hits / 215040 lookups)
+strata serve: suffix drafts: 24 windows, 112 of 118 drafts accepted
+strata prefill timing: 4744 tokens, GPU timeline 8464 ms, wall 8506 ms, host staging 6 ms: embed+steps 112 (1.3%) hc read 740 (8.7%) gdn 1054 (12.5%) qsa proj 532 (6.3%) qsa indexer 0 (0.0%) qsa select 54 (0.6%) qsa attn 738 (8.7%) router+shared 263 (3.1%) host grouping 28 (0.3%) gather 82 (1.0%) wait copy 31 (0.4%) dequant 488 (5.8%) gemm gate/up 1744 (20.6%) gemm down 843 (10.0%) combine 256 (3.0%) ple 35 (0.4%) gdn conv+gates 97 (1.1%) gdn recurrence 931 (11.0%) gdn out proj 435 (5.1%)
+strata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 112 ms, waiting for each chunk 61 ms, after each chunk (the draft layer, progress) 42 ms, PLE 145 ms
+strata prefill timing: experts: the loop's host time 36 ms over 48 layers (0 sorted by row count), 2277120 routed rows, a J tile for each group's largest expert would pad them by 39.9%
+strata serve: prompt 4749 tokens = 0 reused + 4749 read in 8664 ms (548.1 tok/s), 400 generated in 12378 ms (32.3 tok/s), drafts accepted 224 of 282, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (220800 hits / 220800 lookups)
+strata serve: suffix drafts: 5 windows, 15 of 23 drafts accepted
+strata prefill timing: 309 tokens, GPU timeline 1180 ms, wall 1183 ms, host staging 7 ms: embed+steps 1 (0.1%) hc read 53 (4.5%) gdn 166 (14.1%) qsa proj 82 (7.0%) qsa indexer 0 (0.0%) qsa select 1 (0.1%) qsa attn 7 (0.6%) router+shared 37 (3.2%) host grouping 11 (1.0%) gather 6 (0.5%) wait copy 2 (0.2%) dequant 266 (22.6%) gemm gate/up 258 (21.8%) gemm down 114 (9.7%) combine 30 (2.5%) ple 2 (0.2%) gdn conv+gates 5 (0.4%) gdn recurrence 43 (3.7%) gdn out proj 95 (8.0%)
+strata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 1 ms, waiting for each chunk 14 ms, after each chunk (the draft layer, progress) 3 ms, PLE 145 ms
+strata prefill timing: experts: the loop's host time 20 ms over 48 layers (48 sorted by row count), 148320 routed rows, a J tile for each group's largest expert would pad them by 67.2%
+strata serve: prompt 314 tokens = 0 reused + 314 read in 1292 ms (243.0 tok/s), 400 generated in 9798 ms (40.8 tok/s), drafts accepted 275 of 304, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (205920 hits / 205920 lookups)
+strata serve: suffix drafts: 41 windows, 192 of 201 drafts accepted
+strata prefill timing: 4080 tokens, GPU timeline 7424 ms, wall 7463 ms, host staging 11 ms: embed+steps 111 (1.5%) hc read 663 (8.9%) gdn 920 (12.4%) qsa proj 468 (6.3%) qsa indexer 0 (0.0%) qsa select 41 (0.5%) qsa attn 606 (8.2%) router+shared 223 (3.0%) host grouping 26 (0.3%) gather 70 (0.9%) wait copy 27 (0.4%) dequant 466 (6.3%) gemm gate/up 1554 (20.9%) gemm down 751 (10.1%) combine 220 (3.0%) ple 31 (0.4%) gdn conv+gates 85 (1.1%) gdn recurrence 788 (10.6%) gdn out proj 374 (5.0%)
+strata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 111 ms, waiting for each chunk 55 ms, after each chunk (the draft layer, progress) 39 ms, PLE 253 ms
+strata prefill timing: experts: the loop's host time 32 ms over 48 layers (0 sorted by row count), 1958400 routed rows, a J tile for each group's largest expert would pad them by 47.8%
+strata serve: prompt 4085 tokens = 0 reused + 4085 read in 7613 ms (536.6 tok/s), 1 generated in 43 ms (23.3 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (480 hits / 480 lookups)
+strata serve: prompt 68 tokens = 0 reused + 68 read in 1201 ms (56.6 tok/s), 128 generated in 4622 ms (27.7 tok/s), drafts accepted 57 of 99, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (81600 hits / 81600 lookups)
+strata serve: suffix drafts: 1 windows, 2 of 5 drafts accepted
+strata prefill timing: 16379 tokens, GPU timeline 28584 ms, wall 28652 ms, host staging 28 ms: embed+steps 289 (1.0%) hc read 2462 (8.6%) gdn 3593 (12.6%) qsa proj 1801 (6.3%) qsa indexer 0 (0.0%) qsa select 633 (2.2%) qsa attn 3093 (10.8%) router+shared 820 (2.9%) host grouping 74 (0.3%) gather 296 (1.0%) wait copy 96 (0.3%) dequant 1154 (4.0%) gemm gate/up 5546 (19.4%) gemm down 2686 (9.4%) combine 890 (3.1%) ple 118 (0.4%) gdn conv+gates 333 (1.2%) gdn recurrence 3187 (11.1%) gdn out proj 1512 (5.3%)
+strata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 214 ms, waiting for each chunk 184 ms, after each chunk (the draft layer, progress) 142 ms, PLE 456 ms
+strata prefill timing: experts: the loop's host time 81 ms over 96 layers (0 sorted by row count), 7861920 routed rows, a J tile for each group's largest expert would pad them by 23.6%
+strata serve: prompt 16384 tokens = 0 reused + 16384 read in 28830 ms (568.3 tok/s), 1 generated in 49 ms (20.4 tok/s), drafts accepted 0 of 0, 1 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (480 hits / 480 lookups)
+strata prefill timing: 20416 tokens, GPU timeline 36235 ms, wall 36271 ms, host staging 54 ms: embed+steps 179 (0.5%) hc read 3098 (8.5%) gdn 4487 (12.4%) qsa proj 2235 (6.2%) qsa indexer 1 (0.0%) qsa select 1040 (2.9%) qsa attn 3921 (10.8%) router+shared 1034 (2.9%) host grouping 98 (0.3%) gather 363 (1.0%) wait copy 146 (0.4%) dequant 1689 (4.7%) gemm gate/up 7077 (19.5%) gemm down 3423 (9.4%) combine 1101 (3.0%) ple 147 (0.4%) gdn conv+gates 415 (1.1%) gdn recurrence 3912 (10.8%) gdn out proj 1872 (5.2%)
+strata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 24 ms, waiting for each chunk 242 ms, after each chunk (the draft layer, progress) 190 ms, PLE 467 ms
+strata prefill timing: experts: the loop's host time 116 ms over 144 layers (0 sorted by row count), 9799680 routed rows, a J tile for each group's largest expert would pad them by 28.8%
+strata serve: prompt 20421 tokens = 0 reused + 20421 read in 36445 ms (560.3 tok/s), 1 generated in 42 ms (23.5 tok/s), drafts accepted 0 of 0, 2 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (480 hits / 480 lookups)
+strata prefill timing: 16396 tokens, GPU timeline 28925 ms, wall 28926 ms, host staging 70 ms: embed+steps 177 (0.6%) hc read 2507 (8.7%) gdn 3726 (12.9%) qsa proj 1863 (6.4%) qsa indexer 1 (0.0%) qsa select 627 (2.2%) qsa attn 3106 (10.7%) router+shared 864 (3.0%) host grouping 83 (0.3%) gather 296 (1.0%) wait copy 101 (0.3%) dequant 1228 (4.2%) gemm gate/up 5591 (19.3%) gemm down 2703 (9.3%) combine 886 (3.1%) ple 117 (0.4%) gdn conv+gates 333 (1.2%) gdn recurrence 3147 (10.9%) gdn out proj 1571 (5.4%)
+strata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 22 ms, waiting for each chunk 185 ms, after each chunk (the draft layer, progress) 156 ms, PLE 478 ms
+strata prefill timing: experts: the loop's host time 85 ms over 144 layers (48 sorted by row count), 7870080 routed rows, a J tile for each group's largest expert would pad them by 23.8%
+strata serve: prompt 16401 tokens = 0 reused + 16401 read in 29105 ms (563.5 tok/s), 128 generated in 4588 ms (27.9 tok/s), drafts accepted 62 of 100, 2 checkpoints
+strata serve: decode expert cache hit rate: 100.0% (79680 hits / 79680 lookups)
+strata serve: suffix drafts: 3 windows, 5 of 11 drafts accepted

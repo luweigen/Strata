@@ -1,0 +1,57 @@
+device AMD Radeon(TM) 8060S Graphics gfx1151; one layer = 512 experts, 4165 x 10 routed rows; ms per layer (3 layers' distributions averaged, 5 reps each)
+== gate/up IQ3_XXS: 1.3 MB per expert, quantize 2.50 ms
+   groups of 16                        :   46.99 ms/layer =   5.8 TOPS, 32 launches, J padding 98% of the rows
+   groups of 32                        :   48.28 ms/layer =   5.7 TOPS, 16 launches, J padding 102% of the rows
+   groups of 64                        :   48.61 ms/layer =   5.6 TOPS, 8 launches, J padding 102% of the rows
+   groups of 16, experts sorted by rows:   28.87 ms/layer =   9.5 TOPS, 32 launches, J padding 16% of the rows
+   groups of 32, experts sorted by rows:   32.26 ms/layer =   8.5 TOPS, 16 launches, J padding 17% of the rows
+   groups of 64, experts sorted by rows:   34.14 ms/layer =   8.0 TOPS, 8 launches, J padding 21% of the rows
+== gate/up IQ2_S: 1.0 MB per expert, quantize 2.45 ms
+   groups of 16                        :   51.87 ms/layer =   5.3 TOPS, 32 launches, J padding 98% of the rows
+   groups of 32                        :   49.21 ms/layer =   5.5 TOPS, 16 launches, J padding 102% of the rows
+   groups of 64                        :   49.76 ms/layer =   5.5 TOPS, 8 launches, J padding 102% of the rows
+   groups of 16, experts sorted by rows:   31.16 ms/layer =   8.8 TOPS, 32 launches, J padding 16% of the rows
+   groups of 32, experts sorted by rows:   33.54 ms/layer =   8.1 TOPS, 16 launches, J padding 17% of the rows
+   groups of 64, experts sorted by rows:   35.68 ms/layer =   7.7 TOPS, 8 launches, J padding 21% of the rows
+== gate/up IQ4_XS: 1.7 MB per expert, quantize 2.46 ms
+   groups of 16                        :   37.35 ms/layer =   7.3 TOPS, 32 launches, J padding 98% of the rows
+   groups of 32                        :   36.70 ms/layer =   7.4 TOPS, 16 launches, J padding 102% of the rows
+   groups of 64                        :   35.40 ms/layer =   7.7 TOPS, 8 launches, J padding 102% of the rows
+   groups of 16, experts sorted by rows:   25.51 ms/layer =  10.7 TOPS, 32 launches, J padding 16% of the rows
+   groups of 32, experts sorted by rows:   26.52 ms/layer =  10.3 TOPS, 16 launches, J padding 17% of the rows
+   groups of 64, experts sorted by rows:   27.11 ms/layer =  10.1 TOPS, 8 launches, J padding 21% of the rows
+== gate/up IQ3_S: 1.4 MB per expert, quantize 2.43 ms
+   groups of 16                        :   40.54 ms/layer =   6.7 TOPS, 32 launches, J padding 98% of the rows
+   groups of 32                        :   40.08 ms/layer =   6.8 TOPS, 16 launches, J padding 102% of the rows
+   groups of 64                        :   38.04 ms/layer =   7.2 TOPS, 8 launches, J padding 102% of the rows
+   groups of 16, experts sorted by rows:   28.45 ms/layer =   9.6 TOPS, 32 launches, J padding 16% of the rows
+   groups of 32, experts sorted by rows:   30.41 ms/layer =   9.0 TOPS, 16 launches, J padding 17% of the rows
+   groups of 64, experts sorted by rows:   30.54 ms/layer =   8.9 TOPS, 8 launches, J padding 21% of the rows
+== down IQ4_NL: 0.9 MB per expert, quantize 0.69 ms
+   groups of 16                        :   21.88 ms/layer =   6.2 TOPS, 32 launches, J padding 98% of the rows
+   groups of 32                        :   23.22 ms/layer =   5.9 TOPS, 16 launches, J padding 102% of the rows
+   groups of 64                        :   23.16 ms/layer =   5.9 TOPS, 8 launches, J padding 102% of the rows
+   groups of 16, experts sorted by rows:   15.26 ms/layer =   8.9 TOPS, 32 launches, J padding 16% of the rows
+   groups of 32, experts sorted by rows:   16.44 ms/layer =   8.3 TOPS, 16 launches, J padding 17% of the rows
+   groups of 64, experts sorted by rows:   16.37 ms/layer =   8.3 TOPS, 8 launches, J padding 21% of the rows
+== down Q2_0: 0.5 MB per expert, quantize 0.73 ms
+   groups of 16                        :   21.01 ms/layer =   6.5 TOPS, 32 launches, J padding 98% of the rows
+   groups of 32                        :   21.61 ms/layer =   6.3 TOPS, 16 launches, J padding 102% of the rows
+   groups of 64                        :   22.20 ms/layer =   6.1 TOPS, 8 launches, J padding 102% of the rows
+   groups of 16, experts sorted by rows:   15.08 ms/layer =   9.0 TOPS, 32 launches, J padding 16% of the rows
+   groups of 32, experts sorted by rows:   15.40 ms/layer =   8.9 TOPS, 16 launches, J padding 17% of the rows
+   groups of 64, experts sorted by rows:   16.03 ms/layer =   8.5 TOPS, 8 launches, J padding 21% of the rows
+== down IQ4_XS: 0.7 MB per expert, quantize 0.70 ms
+   groups of 16                        :   15.66 ms/layer =   8.7 TOPS, 32 launches, J padding 98% of the rows
+   groups of 32                        :   16.68 ms/layer =   8.2 TOPS, 16 launches, J padding 102% of the rows
+   groups of 64                        :   17.36 ms/layer =   7.9 TOPS, 8 launches, J padding 102% of the rows
+   groups of 16, experts sorted by rows:   11.23 ms/layer =  12.2 TOPS, 32 launches, J padding 16% of the rows
+   groups of 32, experts sorted by rows:   12.16 ms/layer =  11.2 TOPS, 16 launches, J padding 17% of the rows
+   groups of 64, experts sorted by rows:   12.25 ms/layer =  11.1 TOPS, 8 launches, J padding 21% of the rows
+== down Q8_0: 1.7 MB per expert, quantize 0.74 ms
+   groups of 16                        :   23.53 ms/layer =   5.8 TOPS, 32 launches, J padding 98% of the rows
+   groups of 32                        :   24.42 ms/layer =   5.6 TOPS, 16 launches, J padding 102% of the rows
+   groups of 64                        :   24.87 ms/layer =   5.5 TOPS, 8 launches, J padding 102% of the rows
+   groups of 16, experts sorted by rows:   15.55 ms/layer =   8.8 TOPS, 32 launches, J padding 16% of the rows
+   groups of 32, experts sorted by rows:   16.35 ms/layer =   8.3 TOPS, 16 launches, J padding 17% of the rows
+   groups of 64, experts sorted by rows:   16.94 ms/layer =   8.1 TOPS, 8 launches, J padding 21% of the rows

@@ -1,0 +1,21 @@
+{
+ "label": "mmq-default",
+ "env": {},
+ "server_up_s": 12.1,
+ "request_s": 5.05,
+ "prompt_tokens": 1173,
+ "completion_tokens": 64,
+ "text": "```python\n            else script)]\n        self.n = 0\n\n    def generate(self, ids: list[int], max_new: int, sampling: dict, cancel: threading.Event) -> Iterator[int]:\n        script = self.scripts[min(self.n, len(self.scripts) - 1)]\n"
+}
+{
+ "label": "mmq-off",
+ "env": {
+  "STRATA_PREFILL_MMQ": "0"
+ },
+ "server_up_s": 12.2,
+ "request_s": 5.34,
+ "prompt_tokens": 1173,
+ "completion_tokens": 64,
+ "text": "```python\n                                   else script)]\n        self.n = 0\n\n    def generate(self, ids: list[int], max_new: int, sampling: dict, cancel: threading.Event) -> Iterator[int]:\n        script = self.scripts[min(self.n, len(self.scripts) - 1)]\n"
+}
+{"identical": false, "common_prefix_chars": 22, "len_default": 234, "len_off": 257}

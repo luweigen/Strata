@@ -1,0 +1,10 @@
+device AMD Radeon(TM) 8060S Graphics gfx1151: glue cc 0x1151 (RDNA3 1, RDNA3_5 1, RDNA4 0), host warp 32, smpbo 65536, nsm 20, host use_mma_data_layout 1
+device compile: warp 32, macros: RDNA3 1 RDNA3_5 1 RDNA4 0 AMD_WMMA_AVAILABLE 1 __gfx1151__ 1 __GFX11__ 1 GGML_USE_HIP 1 __HIP_DEVICE_COMPILE__ 1 __CUDA_ARCH__ 1; device use_mma_data_layout 1
+Q2_0 non-fallback rows per J (nthreads/I/J, k = stream-k, - = no entry):
+host     8:-  16:128/64/16  24:-  32:128/64/32  40:-  48:256/128/48  56:-  64:256/128/64  72:-  80:256/128/80  88:-  96:256/128/96 104:- 112:256/128/112 120:- 128:256/128/128
+device   8:-  16:128/64/16  24:-  32:128/64/32  40:-  48:256/128/48  56:-  64:256/128/64  72:-  80:256/128/80  88:-  96:256/128/96 104:- 112:256/128/112 120:- 128:256/128/128
+IQ3_XXS non-fallback rows per J:
+host     8:-  16:128/64/16  24:-  32:128/64/32  40:-  48:256/128/48  56:-  64:256/128/64  72:-  80:256/128/80  88:-  96:256/128/96 104:- 112:256/128/112 120:- 128:256/128/128
+device   8:-  16:128/64/16  24:-  32:128/64/32  40:-  48:256/128/48  56:-  64:256/128/64  72:-  80:256/128/80  88:-  96:256/128/96 104:- 112:256/128/112 120:- 128:256/128/128
+docs/benchmarks/2026-10-05-halo-mmq-config-probe.hip:71: ERROR: HIP kernel trap_test has no device code compatible with HIP arch 1300.
+NO_DEVICE_CODE: launch no error, sync no error, out[0]=43 out[1]=256 (stopped the thread)

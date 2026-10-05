@@ -1,0 +1,39 @@
+﻿device AMD Radeon(TM) 8060S Graphics gfx1151, hipBLASLt 100401, ROCBLAS_USE_HIPBLASLT=1
+
+== gate/up: N=1280 K=2560, us per GEMM (20 back-to-back) and TFLOP/s; relerr = max relative error vs double
+    T |    blas32 |      lt<best id> |    blas16 |      wmma | lt/blas32
+   16 |    43  2.5 |    35  3.0 lt2537 |    51  2.1 |    31  3.3 | 1.22x   relerr 7.3e-06 / 7.3e-06 / 2.8e-04 / 7.3e-06
+   32 |    56  3.7 |    47  4.5 lt2551 |    65  3.2 |    71  2.9 | 1.21x   relerr 7.3e-06 / 7.3e-06 / 2.8e-04 / 7.3e-06
+   48 |    96  3.3 |    51  6.2 lt2538 |    66  4.8 |    67  4.7 | 1.90x   relerr 7.3e-06 / 7.3e-06 / 2.8e-04 / 8.3e-06
+   64 |   108  3.9 |    55  7.6 lt2537 |    67  6.3 |    83  5.1 | 1.95x   relerr 7.9e-06 / 7.9e-06 / 2.8e-04 / 8.3e-06
+   96 |   148  4.3 |    62 10.2 lt2538 |    65  9.7 |    73  8.6 | 2.41x   relerr 7.9e-06 / 7.9e-06 / 2.8e-04 / 8.3e-06
+  128 |   183  4.6 |    80 10.5 lt2539 |    66 12.8 |   100  8.4 | 2.30x   relerr 7.9e-06 / 8.3e-06 / 2.8e-04 / 8.3e-06
+  192 |   331  3.8 |    91 13.9 lt2539 |    71 17.6 |   108 11.6 | 3.65x   relerr 7.9e-06 / 8.3e-06 / 2.8e-04 / 8.3e-06
+  256 |   402  4.2 |    98 17.0 lt2539 |    66 25.4 |   145 11.6 | 4.08x   relerr 7.9e-06 / 8.3e-06 / 2.8e-04 / 8.3e-06
+  384 |   613  4.1 |    89 28.3 lt2539 |    83 30.4 |   270  9.3 | 6.89x   relerr 9.1e-06 / 9.2e-06 / 2.9e-04 / 8.3e-06
+  512 |   911  3.7 |   191 17.5 lt2539 |   174 19.3 |   414  8.1 | 4.76x   relerr 8.1e-06 / 8.1e-06 / 2.5e-04 / 7.4e-06
+-- one layer: 512 experts with rows, 39665 rows in all (max 1536), weights cycling over 16 sets; ms per layer, GPU (events) and wall
+   blas32     95.85 ms GPU,   96.21 ms wall,   2.7 TFLOP/s
+   lt         44.91 ms GPU,   52.78 ms wall,   5.8 TFLOP/s
+   blas16     20.95 ms GPU,   32.80 ms wall,  12.4 TFLOP/s
+   wmma       81.48 ms GPU,   81.84 ms wall,   3.2 TFLOP/s
+   grouped: hipBLASLt grouped GEMM unsupported at group 0
+
+== down: N=2560 K=640, us per GEMM (20 back-to-back) and TFLOP/s; relerr = max relative error vs double
+    T |    blas32 |      lt<best id> |    blas16 |      wmma | lt/blas32
+   16 |    33  1.6 |    22  2.4 lt2538 |    26  2.0 |     9  6.0 | 1.54x   relerr 2.4e-06 / 2.4e-06 / 2.8e-04 / 2.4e-06
+   32 |    36  2.9 |    12  8.4 lt2538 |    21  4.9 |    18  5.8 | 2.87x   relerr 2.4e-06 / 2.4e-06 / 2.8e-04 / 2.4e-06
+   48 |    57  2.8 |    28  5.6 lt2539 |    27  5.9 |    18  8.9 | 2.03x   relerr 2.4e-06 / 2.4e-06 / 2.8e-04 / 2.4e-06
+   64 |    62  3.4 |    45  4.6 lt2538 |    27  7.7 |    22  9.5 | 1.37x   relerr 2.4e-06 / 2.4e-06 / 2.8e-04 / 2.4e-06
+   96 |   122  2.6 |    45  7.1 lt2539 |    65  4.8 |    45  7.0 | 2.74x   relerr 2.4e-06 / 2.4e-06 / 2.8e-04 / 2.4e-06
+  128 |    95  4.4 |    52  8.1 lt2539 |    64  6.6 |    49  8.6 | 1.82x   relerr 2.3e-06 / 2.3e-06 / 2.8e-04 / 2.3e-06
+  192 |   142  4.4 |    66  9.6 lt2539 |    56 11.1 |    54 11.7 | 2.17x   relerr 2.3e-06 / 2.3e-06 / 2.7e-04 / 2.3e-06
+  256 |   185  4.5 |    72 11.6 lt2538 |    50 16.9 |    56 14.9 | 2.56x   relerr 2.3e-06 / 2.3e-06 / 2.7e-04 / 2.3e-06
+  384 |   302  4.2 |    67 18.8 lt2539 |    70 18.0 |    60 21.1 | 4.51x   relerr 2.0e-06 / 1.9e-06 / 2.2e-04 / 2.3e-06
+  512 |   411  4.1 |    81 20.7 lt2539 |    62 27.0 |   102 16.4 | 5.07x   relerr 2.0e-06 / 1.9e-06 / 2.2e-04 / 2.3e-06
+-- one layer: 512 experts with rows, 39665 rows in all (max 1536), weights cycling over 16 sets; ms per layer, GPU (events) and wall
+   blas32     47.04 ms GPU,   47.33 ms wall,   2.8 TFLOP/s
+   lt         19.54 ms GPU,   19.75 ms wall,   6.7 TFLOP/s
+   blas16     17.60 ms GPU,   17.77 ms wall,   7.4 TFLOP/s
+   wmma       20.10 ms GPU,   20.30 ms wall,   6.5 TFLOP/s
+   grouped: hipBLASLt grouped GEMM unsupported at group 0
