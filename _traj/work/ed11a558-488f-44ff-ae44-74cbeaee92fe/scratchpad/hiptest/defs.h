@@ -1,0 +1,2 @@
+#define STRATA_HIP_ARCHS "gfx1151"
+#define STRATA_VERSION "0.1.34"
