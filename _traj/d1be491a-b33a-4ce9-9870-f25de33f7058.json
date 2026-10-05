@@ -10858,19 +10858,689 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 123,
+      "timestamp": "2026-10-05T21:24:16.021Z",
+      "source": "user",
+      "message": "re-run the one-table\n  benchmark",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 124,
+      "timestamp": "2026-10-05T21:24:18.740Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01SUuQcYfYTBBDXmRkdsLwnT",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01SUuQcYfYTBBDXmRkdsLwnT",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "sed -n 1,40p docs/benchmarks/2026-10-05-halo-onetable-run.py; git show --stat 8a0c139 | head -20",
+            "description": "Read one-table runner and prior table commit"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01SUuQcYfYTBBDXmRkdsLwnT",
+            "content": "\"\"\"The one table's runs: for each config, start the server, time its start to the first /v1/models answer (the table's\n\"model load to listening\"), run 2026-10-02-3060m-bench_halo.py against it, stop the server tree.\nUsage (repository root, the strata conda env's python, STRATA_ENGRAM_SRC set):\n  python docs/benchmarks/2026-10-05-halo-onetable-run.py <suffix> [config.json:label ...]\nDefault: strata-coder-iq1_m.json as halo-8060S-coder-iq1_m-arena-<suffix> and strata-unsloth-ud-iq4_xs.json as\nhalo-8060S-ud-iq4_xs-32-96-cache10000-<suffix>.  Writes docs/benchmarks/2026-10-05-halo-<short>-<suffix>.{json,log}\n(the benchmark's rows plus \"load_s\"; the engine log) and ...-server.log.\n\"\"\"\nimport json, os, subprocess, sys, tempfile, time, urllib.request\nfrom pathlib import Path\n\nROOT = Path(__file__).resolve().parent.parent.parent\nB = ROOT / \"docs\" / \"benchmarks\"\nSUFFIX = sys.argv[1]\nRUNS = [a.split(\":\", 1) for a in sys.argv[2:]] or [\n    [\"strata-coder-iq1_m.json\", \"coder-iq1_m\"], [\"strata-unsloth-ud-iq4_xs.json\", \"ud-iq4_xs\"]]\nLABELS = {\"coder-iq1_m\": \"halo-8060S-coder-iq1_m-arena\", \"ud-iq4_xs\": \"halo-8060S-ud-iq4_xs-32-96-cache10000\"}\n\n\ndef up():\n    try:\n        with urllib.request.urlopen(\"http://127.0.0.1:8080/v1/models\", timeout=5) as r:\n            return r.status == 200\n    except Exception:\n        return False\n\n\nfor cfg_name, short in RUNS:\n    cfg = json.loads((ROOT / cfg_name).read_text(encoding=\"utf-8\"))\n    engine_log = B / f\"2026-10-05-halo-{short}-{SUFFIX}.log\"\n    cfg[\"log\"] = str(engine_log)\n    tmp = Path(tempfile.gettempdir()) / f\"strata-onetable-{short}.json\"\n    tmp.write_text(json.dumps(cfg, indent=1), encoding=\"utf-8\")\n    server_log = open(B / f\"2026-10-05-halo-{short}-{SUFFIX}-server.log\", \"w\", encoding=\"utf-8\")\n    t0 = time.time()\n    proc = subprocess.Popen([sys.executable, str(ROOT / \"serve\" / \"server.py\"), \"--engine\", \"strata\", \"--config\", str(tmp),\n                             \"--port\", \"8080\"], cwd=ROOT, stdout=server_log, stderr=subprocess.STDOUT)\n    try:\n        while not up():\n            if proc.poll() is not None:\ncommit 8a0c139a9fffab8c04d961ec70f65f5f3be55093\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Mon Oct 5 23:47:31 2026 +0300\n\n    an updated table like \"E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md\" line 949-983\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: 6102077a-2453-4770-ad42-4711a9d06172\n    Agent-Ext-Snapshot: 0b31163c813030bd7e4f142f225c1b60b8451cbe\n\n _traj/6102077a-2453-4770-ad42-4711a9d06172.json   | 1691 ++++++++++++++++++++-\n _traj/INDEX.tsv                                   |    2 +-\n _traj/idx/6102077a-2453-4770-ad42-4711a9d06172.md |   30 +-\n 3 files changed, 1715 insertions(+), 8 deletions(-)\n\n[stdout]\n\"\"\"The one table's runs: for each config, start the server, time its start to the first /v1/models answer (the table's\n\"model load to listening\"), run 2026-10-02-3060m-bench_halo.py against it, stop the server tree.\nUsage (repository root, the strata conda env's python, STRATA_ENGRAM_SRC set):\n  python docs/benchmarks/2026-10-05-halo-onetable-run.py <suffix> [config.json:label ...]\nDefault: strata-coder-iq1_m.json as halo-8060S-coder-iq1_m-arena-<suffix> and strata-unsloth-ud-iq4_xs.json as\nhalo-8060S-ud-iq4_xs-32-96-cache10000-<suffix>.  Writes docs/benchmarks/2026-10-05-halo-<short>-<suffix>.{json,log}\n(the benchmark's rows plus \"load_s\"; the engine log) and ...-server.log.\n\"\"\"\nimport json, os, subprocess, sys, tempfile, time, urllib.request\nfrom pathlib import Path\n\nROOT = Path(__file__).resolve().parent.parent.parent\nB = ROOT / \"docs\" / \"benchmarks\"\nSUFFIX = sys.argv[1]\nRUNS = [a.split(\":\", 1) for a in sys.argv[2:]] or [\n    [\"strata-coder-iq1_m.json\", \"coder-iq1_m\"], [\"strata-unsloth-ud-iq4_xs.json\", \"ud-iq4_xs\"]]\nLABELS = {\"coder-iq1_m\": \"halo-8060S-coder-iq1_m-arena\", \"ud-iq4_xs\": \"halo-8060S-ud-iq4_xs-32-96-cache10000\"}\n\n\ndef up():\n    try:\n        with urllib.request.urlopen(\"http://127.0.0.1:8080/v1/models\", timeout=5) as r:\n            return r.status == 200\n    except Exception:\n        return False\n\n\nfor cfg_name, short in RUNS:\n    cfg = json.loads((ROOT / cfg_name).read_text(encoding=\"utf-8\"))\n    engine_log = B / f\"2026-10-05-halo-{short}-{SUFFIX}.log\"\n    cfg[\"log\"] = str(engine_log)\n    tmp = Path(tempfile.gettempdir()) / f\"strata-onetable-{short}.json\"\n    tmp.write_text(json.dumps(cfg, indent=1), encoding=\"utf-8\")\n    server_log = open(B / f\"2026-10-05-halo-{short}-{SUFFIX}-server.log\", \"w\", encoding=\"utf-8\")\n    t0 = time.time()\n    proc = subprocess.Popen([sys.executable, str(ROOT / \"serve\" / \"server.py\"), \"--engine\", \"strata\", \"--config\", str(tmp),\n                             \"--port\", \"8080\"], cwd=ROOT, stdout=server_log, stderr=subprocess.STDOUT)\n    try:\n        while not up():\n            if proc.poll() is not None:\ncommit 8a0c139a9fffab8c04d961ec70f65f5f3be55093\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Mon Oct 5 23:47:31 2026 +0300\n\n    an updated table like \"E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md\" line 949-983\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: 6102077a-2453-4770-ad42-4711a9d06172\n    Agent-Ext-Snapshot: 0b31163c813030bd7e4f142f225c1b60b8451cbe\n\n _traj/6102077a-2453-4770-ad42-4711a9d06172.json   | 1691 ++++++++++++++++++++-\n _traj/INDEX.tsv                                   |    2 +-\n _traj/idx/6102077a-2453-4770-ad42-4711a9d06172.md |   30 +-\n 3 files changed, 1715 insertions(+), 8 deletions(-)\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 190484,
+        "completion_tokens": 145,
+        "cached_tokens": 190482,
+        "extra": {
+          "cache_creation_input_tokens": 40,
+          "cache_read_input_tokens": 190482,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 40,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 145,
+              "cache_read_input_tokens": 190482,
+              "cache_creation_input_tokens": 40,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 40
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "\"\"\"The one table's runs: for each config, start the server, time its start to the first /v1/models answer (the table's\n\"model load to listening\"), run 2026-10-02-3060m-bench_halo.py against it, stop the server tree.\nUsage (repository root, the strata conda env's python, STRATA_ENGRAM_SRC set):\n  python docs/benchmarks/2026-10-05-halo-onetable-run.py <suffix> [config.json:label ...]\nDefault: strata-coder-iq1_m.json as halo-8060S-coder-iq1_m-arena-<suffix> and strata-unsloth-ud-iq4_xs.json as\nhalo-8060S-ud-iq4_xs-32-96-cache10000-<suffix>.  Writes docs/benchmarks/2026-10-05-halo-<short>-<suffix>.{json,log}\n(the benchmark's rows plus \"load_s\"; the engine log) and ...-server.log.\n\"\"\"\nimport json, os, subprocess, sys, tempfile, time, urllib.request\nfrom pathlib import Path\n\nROOT = Path(__file__).resolve().parent.parent.parent\nB = ROOT / \"docs\" / \"benchmarks\"\nSUFFIX = sys.argv[1]\nRUNS = [a.split(\":\", 1) for a in sys.argv[2:]] or [\n    [\"strata-coder-iq1_m.json\", \"coder-iq1_m\"], [\"strata-unsloth-ud-iq4_xs.json\", \"ud-iq4_xs\"]]\nLABELS = {\"coder-iq1_m\": \"halo-8060S-coder-iq1_m-arena\", \"ud-iq4_xs\": \"halo-8060S-ud-iq4_xs-32-96-cache10000\"}\n\n\ndef up():\n    try:\n        with urllib.request.urlopen(\"http://127.0.0.1:8080/v1/models\", timeout=5) as r:\n            return r.status == 200\n    except Exception:\n        return False\n\n\nfor cfg_name, short in RUNS:\n    cfg = json.loads((ROOT / cfg_name).read_text(encoding=\"utf-8\"))\n    engine_log = B / f\"2026-10-05-halo-{short}-{SUFFIX}.log\"\n    cfg[\"log\"] = str(engine_log)\n    tmp = Path(tempfile.gettempdir()) / f\"strata-onetable-{short}.json\"\n    tmp.write_text(json.dumps(cfg, indent=1), encoding=\"utf-8\")\n    server_log = open(B / f\"2026-10-05-halo-{short}-{SUFFIX}-server.log\", \"w\", encoding=\"utf-8\")\n    t0 = time.time()\n    proc = subprocess.Popen([sys.executable, str(ROOT / \"serve\" / \"server.py\"), \"--engine\", \"strata\", \"--config\", str(tmp),\n                             \"--port\", \"8080\"], cwd=ROOT, stdout=server_log, stderr=subprocess.STDOUT)\n    try:\n        while not up():\n            if proc.poll() is not None:\ncommit 8a0c139a9fffab8c04d961ec70f65f5f3be55093\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Mon Oct 5 23:47:31 2026 +0300\n\n    an updated table like \"E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md\" line 949-983\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: 6102077a-2453-4770-ad42-4711a9d06172\n    Agent-Ext-Snapshot: 0b31163c813030bd7e4f142f225c1b60b8451cbe\n\n _traj/6102077a-2453-4770-ad42-4711a9d06172.json   | 1691 ++++++++++++++++++++-\n _traj/INDEX.tsv                                   |    2 +-\n _traj/idx/6102077a-2453-4770-ad42-4711a9d06172.md |   30 +-\n 3 files changed, 1715 insertions(+), 8 deletions(-)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01SUuQcYfYTBBDXmRkdsLwnT",
+            "type": "tool_result",
+            "content": "\"\"\"The one table's runs: for each config, start the server, time its start to the first /v1/models answer (the table's\n\"model load to listening\"), run 2026-10-02-3060m-bench_halo.py against it, stop the server tree.\nUsage (repository root, the strata conda env's python, STRATA_ENGRAM_SRC set):\n  python docs/benchmarks/2026-10-05-halo-onetable-run.py <suffix> [config.json:label ...]\nDefault: strata-coder-iq1_m.json as halo-8060S-coder-iq1_m-arena-<suffix> and strata-unsloth-ud-iq4_xs.json as\nhalo-8060S-ud-iq4_xs-32-96-cache10000-<suffix>.  Writes docs/benchmarks/2026-10-05-halo-<short>-<suffix>.{json,log}\n(the benchmark's rows plus \"load_s\"; the engine log) and ...-server.log.\n\"\"\"\nimport json, os, subprocess, sys, tempfile, time, urllib.request\nfrom pathlib import Path\n\nROOT = Path(__file__).resolve().parent.parent.parent\nB = ROOT / \"docs\" / \"benchmarks\"\nSUFFIX = sys.argv[1]\nRUNS = [a.split(\":\", 1) for a in sys.argv[2:]] or [\n    [\"strata-coder-iq1_m.json\", \"coder-iq1_m\"], [\"strata-unsloth-ud-iq4_xs.json\", \"ud-iq4_xs\"]]\nLABELS = {\"coder-iq1_m\": \"halo-8060S-coder-iq1_m-arena\", \"ud-iq4_xs\": \"halo-8060S-ud-iq4_xs-32-96-cache10000\"}\n\n\ndef up():\n    try:\n        with urllib.request.urlopen(\"http://127.0.0.1:8080/v1/models\", timeout=5) as r:\n            return r.status == 200\n    except Exception:\n        return False\n\n\nfor cfg_name, short in RUNS:\n    cfg = json.loads((ROOT / cfg_name).read_text(encoding=\"utf-8\"))\n    engine_log = B / f\"2026-10-05-halo-{short}-{SUFFIX}.log\"\n    cfg[\"log\"] = str(engine_log)\n    tmp = Path(tempfile.gettempdir()) / f\"strata-onetable-{short}.json\"\n    tmp.write_text(json.dumps(cfg, indent=1), encoding=\"utf-8\")\n    server_log = open(B / f\"2026-10-05-halo-{short}-{SUFFIX}-server.log\", \"w\", encoding=\"utf-8\")\n    t0 = time.time()\n    proc = subprocess.Popen([sys.executable, str(ROOT / \"serve\" / \"server.py\"), \"--engine\", \"strata\", \"--config\", str(tmp),\n                             \"--port\", \"8080\"], cwd=ROOT, stdout=server_log, stderr=subprocess.STDOUT)\n    try:\n        while not up():\n            if proc.poll() is not None:\ncommit 8a0c139a9fffab8c04d961ec70f65f5f3be55093\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Mon Oct 5 23:47:31 2026 +0300\n\n    an updated table like \"E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md\" line 949-983\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: 6102077a-2453-4770-ad42-4711a9d06172\n    Agent-Ext-Snapshot: 0b31163c813030bd7e4f142f225c1b60b8451cbe\n\n _traj/6102077a-2453-4770-ad42-4711a9d06172.json   | 1691 ++++++++++++++++++++-\n _traj/INDEX.tsv                                   |    2 +-\n _traj/idx/6102077a-2453-4770-ad42-4711a9d06172.md |   30 +-\n 3 files changed, 1715 insertions(+), 8 deletions(-)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "\"\"\"The one table's runs: for each config, start the server, time its start to the first /v1/models answer (the table's\n\"model load to listening\"), run 2026-10-02-3060m-bench_halo.py against it, stop the server tree.\nUsage (repository root, the strata conda env's python, STRATA_ENGRAM_SRC set):\n  python docs/benchmarks/2026-10-05-halo-onetable-run.py <suffix> [config.json:label ...]\nDefault: strata-coder-iq1_m.json as halo-8060S-coder-iq1_m-arena-<suffix> and strata-unsloth-ud-iq4_xs.json as\nhalo-8060S-ud-iq4_xs-32-96-cache10000-<suffix>.  Writes docs/benchmarks/2026-10-05-halo-<short>-<suffix>.{json,log}\n(the benchmark's rows plus \"load_s\"; the engine log) and ...-server.log.\n\"\"\"\nimport json, os, subprocess, sys, tempfile, time, urllib.request\nfrom pathlib import Path\n\nROOT = Path(__file__).resolve().parent.parent.parent\nB = ROOT / \"docs\" / \"benchmarks\"\nSUFFIX = sys.argv[1]\nRUNS = [a.split(\":\", 1) for a in sys.argv[2:]] or [\n    [\"strata-coder-iq1_m.json\", \"coder-iq1_m\"], [\"strata-unsloth-ud-iq4_xs.json\", \"ud-iq4_xs\"]]\nLABELS = {\"coder-iq1_m\": \"halo-8060S-coder-iq1_m-arena\", \"ud-iq4_xs\": \"halo-8060S-ud-iq4_xs-32-96-cache10000\"}\n\n\ndef up():\n    try:\n        with urllib.request.urlopen(\"http://127.0.0.1:8080/v1/models\", timeout=5) as r:\n            return r.status == 200\n    except Exception:\n        return False\n\n\nfor cfg_name, short in RUNS:\n    cfg = json.loads((ROOT / cfg_name).read_text(encoding=\"utf-8\"))\n    engine_log = B / f\"2026-10-05-halo-{short}-{SUFFIX}.log\"\n    cfg[\"log\"] = str(engine_log)\n    tmp = Path(tempfile.gettempdir()) / f\"strata-onetable-{short}.json\"\n    tmp.write_text(json.dumps(cfg, indent=1), encoding=\"utf-8\")\n    server_log = open(B / f\"2026-10-05-halo-{short}-{SUFFIX}-server.log\", \"w\", encoding=\"utf-8\")\n    t0 = time.time()\n    proc = subprocess.Popen([sys.executable, str(ROOT / \"serve\" / \"server.py\"), \"--engine\", \"strata\", \"--config\", str(tmp),\n                             \"--port\", \"8080\"], cwd=ROOT, stdout=server_log, stderr=subprocess.STDOUT)\n    try:\n        while not up():\n            if proc.poll() is not None:\ncommit 8a0c139a9fffab8c04d961ec70f65f5f3be55093\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Mon Oct 5 23:47:31 2026 +0300\n\n    an updated table like \"E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md\" line 949-983\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: 6102077a-2453-4770-ad42-4711a9d06172\n    Agent-Ext-Snapshot: 0b31163c813030bd7e4f142f225c1b60b8451cbe\n\n _traj/6102077a-2453-4770-ad42-4711a9d06172.json   | 1691 ++++++++++++++++++++-\n _traj/INDEX.tsv                                   |    2 +-\n _traj/idx/6102077a-2453-4770-ad42-4711a9d06172.md |   30 +-\n 3 files changed, 1715 insertions(+), 8 deletions(-)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01SUuQcYfYTBBDXmRkdsLwnT",
+            "type": "tool_result",
+            "content": "\"\"\"The one table's runs: for each config, start the server, time its start to the first /v1/models answer (the table's\n\"model load to listening\"), run 2026-10-02-3060m-bench_halo.py against it, stop the server tree.\nUsage (repository root, the strata conda env's python, STRATA_ENGRAM_SRC set):\n  python docs/benchmarks/2026-10-05-halo-onetable-run.py <suffix> [config.json:label ...]\nDefault: strata-coder-iq1_m.json as halo-8060S-coder-iq1_m-arena-<suffix> and strata-unsloth-ud-iq4_xs.json as\nhalo-8060S-ud-iq4_xs-32-96-cache10000-<suffix>.  Writes docs/benchmarks/2026-10-05-halo-<short>-<suffix>.{json,log}\n(the benchmark's rows plus \"load_s\"; the engine log) and ...-server.log.\n\"\"\"\nimport json, os, subprocess, sys, tempfile, time, urllib.request\nfrom pathlib import Path\n\nROOT = Path(__file__).resolve().parent.parent.parent\nB = ROOT / \"docs\" / \"benchmarks\"\nSUFFIX = sys.argv[1]\nRUNS = [a.split(\":\", 1) for a in sys.argv[2:]] or [\n    [\"strata-coder-iq1_m.json\", \"coder-iq1_m\"], [\"strata-unsloth-ud-iq4_xs.json\", \"ud-iq4_xs\"]]\nLABELS = {\"coder-iq1_m\": \"halo-8060S-coder-iq1_m-arena\", \"ud-iq4_xs\": \"halo-8060S-ud-iq4_xs-32-96-cache10000\"}\n\n\ndef up():\n    try:\n        with urllib.request.urlopen(\"http://127.0.0.1:8080/v1/models\", timeout=5) as r:\n            return r.status == 200\n    except Exception:\n        return False\n\n\nfor cfg_name, short in RUNS:\n    cfg = json.loads((ROOT / cfg_name).read_text(encoding=\"utf-8\"))\n    engine_log = B / f\"2026-10-05-halo-{short}-{SUFFIX}.log\"\n    cfg[\"log\"] = str(engine_log)\n    tmp = Path(tempfile.gettempdir()) / f\"strata-onetable-{short}.json\"\n    tmp.write_text(json.dumps(cfg, indent=1), encoding=\"utf-8\")\n    server_log = open(B / f\"2026-10-05-halo-{short}-{SUFFIX}-server.log\", \"w\", encoding=\"utf-8\")\n    t0 = time.time()\n    proc = subprocess.Popen([sys.executable, str(ROOT / \"serve\" / \"server.py\"), \"--engine\", \"strata\", \"--config\", str(tmp),\n                             \"--port\", \"8080\"], cwd=ROOT, stdout=server_log, stderr=subprocess.STDOUT)\n    try:\n        while not up():\n            if proc.poll() is not None:\ncommit 8a0c139a9fffab8c04d961ec70f65f5f3be55093\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Mon Oct 5 23:47:31 2026 +0300\n\n    an updated table like \"E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md\" line 949-983\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: 6102077a-2453-4770-ad42-4711a9d06172\n    Agent-Ext-Snapshot: 0b31163c813030bd7e4f142f225c1b60b8451cbe\n\n _traj/6102077a-2453-4770-ad42-4711a9d06172.json   | 1691 ++++++++++++++++++++-\n _traj/INDEX.tsv                                   |    2 +-\n _traj/idx/6102077a-2453-4770-ad42-4711a9d06172.md |   30 +-\n 3 files changed, 1715 insertions(+), 8 deletions(-)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "sed -n 1,40p docs/benchmarks/2026-10-05-halo-onetable-run.py; git show --stat 8a0c139 | head -20",
+          "description": "Read one-table runner and prior table commit"
+        }
+      }
+    },
+    {
+      "step_id": 125,
+      "timestamp": "2026-10-05T21:24:30.887Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01Y5zXxwpttvejpjAXB4H9ix",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01Y5zXxwpttvejpjAXB4H9ix",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "ls docs/benchmarks/ | grep todo5; echo $STRATA_ENGRAM_SRC; ls /e/work/AI/EngramHalo.cpp/src | head -2",
+            "description": "Check previous outputs and engram source"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01Y5zXxwpttvejpjAXB4H9ix",
+            "content": "2026-10-05-halo-coder-iq1_m-todo5.json\n2026-10-05-halo-coder-iq1_m-todo5.log\n2026-10-05-halo-coder-iq1_m-todo5-server.log\n2026-10-05-halo-onetable-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5.json\n2026-10-05-halo-ud-iq4_xs-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5-server.log\n\nCMakeLists.txt\nllama.cpp\n\n[stdout]\n2026-10-05-halo-coder-iq1_m-todo5.json\n2026-10-05-halo-coder-iq1_m-todo5.log\n2026-10-05-halo-coder-iq1_m-todo5-server.log\n2026-10-05-halo-onetable-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5.json\n2026-10-05-halo-ud-iq4_xs-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5-server.log\n\nCMakeLists.txt\nllama.cpp\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 190524,
+        "completion_tokens": 155,
+        "cached_tokens": 190522,
+        "extra": {
+          "cache_creation_input_tokens": 1586,
+          "cache_read_input_tokens": 190522,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1586,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 155,
+              "cache_read_input_tokens": 190522,
+              "cache_creation_input_tokens": 1586,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1586
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "2026-10-05-halo-coder-iq1_m-todo5.json\n2026-10-05-halo-coder-iq1_m-todo5.log\n2026-10-05-halo-coder-iq1_m-todo5-server.log\n2026-10-05-halo-onetable-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5.json\n2026-10-05-halo-ud-iq4_xs-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5-server.log\n\nCMakeLists.txt\nllama.cpp",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Y5zXxwpttvejpjAXB4H9ix",
+            "type": "tool_result",
+            "content": "2026-10-05-halo-coder-iq1_m-todo5.json\n2026-10-05-halo-coder-iq1_m-todo5.log\n2026-10-05-halo-coder-iq1_m-todo5-server.log\n2026-10-05-halo-onetable-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5.json\n2026-10-05-halo-ud-iq4_xs-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5-server.log\n\nCMakeLists.txt\nllama.cpp",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "2026-10-05-halo-coder-iq1_m-todo5.json\n2026-10-05-halo-coder-iq1_m-todo5.log\n2026-10-05-halo-coder-iq1_m-todo5-server.log\n2026-10-05-halo-onetable-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5.json\n2026-10-05-halo-ud-iq4_xs-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5-server.log\n\nCMakeLists.txt\nllama.cpp",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Y5zXxwpttvejpjAXB4H9ix",
+            "type": "tool_result",
+            "content": "2026-10-05-halo-coder-iq1_m-todo5.json\n2026-10-05-halo-coder-iq1_m-todo5.log\n2026-10-05-halo-coder-iq1_m-todo5-server.log\n2026-10-05-halo-onetable-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5.json\n2026-10-05-halo-ud-iq4_xs-todo5.log\n2026-10-05-halo-ud-iq4_xs-todo5-server.log\n\nCMakeLists.txt\nllama.cpp",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "ls docs/benchmarks/ | grep todo5; echo $STRATA_ENGRAM_SRC; ls /e/work/AI/EngramHalo.cpp/src | head -2",
+          "description": "Check previous outputs and engram source"
+        }
+      }
+    },
+    {
+      "step_id": 126,
+      "timestamp": "2026-10-05T21:24:34.567Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 192110,
+        "completion_tokens": 340,
+        "cached_tokens": 192108,
+        "extra": {
+          "cache_creation_input_tokens": 377,
+          "cache_read_input_tokens": 192108,
+          "output_tokens_details": {
+            "thinking_tokens": 38
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 377,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 340,
+              "cache_read_input_tokens": 192108,
+              "cache_creation_input_tokens": 377,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 377
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 127,
+      "timestamp": "2026-10-05T21:24:34.572Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Running the one-table benchmark with the TODO 2a engine (both models), suffix `todo2a`.",
+      "metrics": {
+        "prompt_tokens": 192110,
+        "completion_tokens": 340,
+        "cached_tokens": 192108,
+        "extra": {
+          "cache_creation_input_tokens": 377,
+          "cache_read_input_tokens": 192108,
+          "output_tokens_details": {
+            "thinking_tokens": 38
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 377,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 340,
+              "cache_read_input_tokens": 192108,
+              "cache_creation_input_tokens": 377,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 377
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 128,
+      "timestamp": "2026-10-05T21:24:36.215Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01YNXfQgLKqp3fB14Gv9e3u6",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01YNXfQgLKqp3fB14Gv9e3u6",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "STRATA_ENGRAM_SRC=E:/work/AI/EngramHalo.cpp/src /c/conda_envs/strata/python.exe docs/benchmarks/2026-10-05-halo-onetable-run.py todo2a > docs/benchmarks/2026-10-05-halo-onetable-todo2a.log 2>&1; tail -5 docs/benchmarks/2026-10-05-halo-onetable-todo2a.log",
+            "description": "Run the one-table benchmark",
+            "run_in_background": true
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01YNXfQgLKqp3fB14Gv9e3u6",
+            "content": "Command running in background with ID: bwz3up38a. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\d1be491a-b33a-4ce9-9870-f25de33f7058\\tasks\\bwz3up38a.output. You will be notified when it completes. To check interim output, use Read on that file path.\n\n[metadata] {\"noOutputExpected\": false, \"backgroundTaskId\": \"bwz3up38a\"}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 192110,
+        "completion_tokens": 340,
+        "cached_tokens": 192108,
+        "extra": {
+          "cache_creation_input_tokens": 377,
+          "cache_read_input_tokens": 192108,
+          "output_tokens_details": {
+            "thinking_tokens": 38
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 377,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 340,
+              "cache_read_input_tokens": 192108,
+              "cache_creation_input_tokens": 377,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 377
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "backgroundTaskId": "bwz3up38a"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01YNXfQgLKqp3fB14Gv9e3u6",
+            "type": "tool_result",
+            "content": "Command running in background with ID: bwz3up38a. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\d1be491a-b33a-4ce9-9870-f25de33f7058\\tasks\\bwz3up38a.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "backgroundTaskId": "bwz3up38a"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01YNXfQgLKqp3fB14Gv9e3u6",
+            "type": "tool_result",
+            "content": "Command running in background with ID: bwz3up38a. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\d1be491a-b33a-4ce9-9870-f25de33f7058\\tasks\\bwz3up38a.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "STRATA_ENGRAM_SRC=E:/work/AI/EngramHalo.cpp/src /c/conda_envs/strata/python.exe docs/benchmarks/2026-10-05-halo-onetable-run.py todo2a > docs/benchmarks/2026-10-05-halo-onetable-todo2a.log 2>&1; tail -5 docs/benchmarks/2026-10-05-halo-onetable-todo2a.log",
+          "description": "Run the one-table benchmark",
+          "run_in_background": true
+        }
+      }
+    },
+    {
+      "step_id": 129,
+      "timestamp": "2026-10-05T21:24:38.047Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Meanwhile, reading how TODO 5's table was derived from its JSON.",
+      "metrics": {
+        "prompt_tokens": 192487,
+        "completion_tokens": 274,
+        "cached_tokens": 192485,
+        "extra": {
+          "cache_creation_input_tokens": 495,
+          "cache_read_input_tokens": 192485,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 495,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 274,
+              "cache_read_input_tokens": 192485,
+              "cache_creation_input_tokens": 495,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 495
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 130,
+      "timestamp": "2026-10-05T21:24:39.608Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01RnBt3NmvQKCNi3KmrZcaH1",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01RnBt3NmvQKCNi3KmrZcaH1",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cat docs/benchmarks/2026-10-05-halo-onetable-todo5.log | head -40; /c/conda_envs/strata/python.exe -c \"\nimport json;d=json.load(open('docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo5.json',encoding='utf-8'));print(type(d), list(d)[:20] if isinstance(d,dict) else d[:2])\" | cut -c1-3000",
+            "description": "Inspect TODO 5 one-table outputs"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01RnBt3NmvQKCNi3KmrZcaH1",
+            "content": "{\"config\": \"strata-coder-iq1_m.json\", \"load_s\": 11.7}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 11.79, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 224.5, \"predicted_n\": 400, \"predicted_per_second\": 38.6, \"draft_n\": 316, \"draft_n_accepted\": 273, \"accept_pct\": 86.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 11.91, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 204.1, \"predicted_n\": 400, \"predicted_per_second\": 36.9, \"draft_n\": 300, \"draft_n_accepted\": 258, \"accept_pct\": 86.0}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 20.21, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 573.0, \"predicted_n\": 400, \"predicted_per_second\": 33.6, \"draft_n\": 289, \"draft_n_accepted\": 234, \"accept_pct\": 81.0}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 11.44, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 262.9, \"predicted_n\": 400, \"predicted_per_second\": 39.1, \"draft_n\": 317, \"draft_n_accepted\": 270, \"accept_pct\": 85.2}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 7.41, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 557.5, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 5.84, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 55.5, \"predicted_n\": 128, \"predicted_per_second\": 27.9, \"draft_n\": 99, \"draft_n_accepted\": 57, \"accept_pct\": 57.6}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 27.77, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 592.7, \"predicted_n\": 1, \"predicted_per_second\": 23.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 35.24, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 581.7, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 32.56, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 587.1, \"predicted_n\": 128, \"predicted_per_second\": 28.1, \"draft_n\": 101, \"draft_n_accepted\": 64, \"accept_pct\": 63.4}\r\n{\"config\": \"strata-unsloth-ud-iq4_xs.json\", \"load_s\": 36.1}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 16.02, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 128.1, \"predicted_n\": 400, \"predicted_per_second\": 29.5, \"draft_n\": 303, \"draft_n_accepted\": 280, \"accept_pct\": 92.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 16.73, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 137.9, \"predicted_n\": 400, \"predicted_per_second\": 26.5, \"draft_n\": 293, \"draft_n_accepted\": 253, \"accept_pct\": 86.3}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 31.88, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 341.3, \"predicted_n\": 400, \"predicted_per_second\": 22.3, \"draft_n\": 286, \"draft_n_accepted\": 214, \"accept_pct\": 74.8}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 14.97, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 173.6, \"predicted_n\": 400, \"predicted_per_second\": 30.4, \"draft_n\": 316, \"draft_n_accepted\": 289, \"accept_pct\": 91.5}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 12.29, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 335.0, \"predicted_n\": 1, \"predicted_per_second\": 15.7, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 7.72, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 41.5, \"predicted_n\": 128, \"predicted_per_second\": 21.1, \"draft_n\": 95, \"draft_n_accepted\": 62, \"accept_pct\": 65.3}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 46.13, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 356.2, \"predicted_n\": 1, \"predicted_per_second\": 15.3, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 58.3, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 351.2, \"predicted_n\": 1, \"predicted_per_second\": 17.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 53.11, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 354.1, \"predicted_n\": 128, \"predicted_per_second\": 19.1, \"draft_n\": 96, \"draft_n_accepted\": 56, \"accept_pct\": 58.3}\r\n<class 'dict'> ['label', 'rows', 'load_s']\n\n[stdout]\n{\"config\": \"strata-coder-iq1_m.json\", \"load_s\": 11.7}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 11.79, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 224.5, \"predicted_n\": 400, \"predicted_per_second\": 38.6, \"draft_n\": 316, \"draft_n_accepted\": 273, \"accept_pct\": 86.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 11.91, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 204.1, \"predicted_n\": 400, \"predicted_per_second\": 36.9, \"draft_n\": 300, \"draft_n_accepted\": 258, \"accept_pct\": 86.0}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 20.21, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 573.0, \"predicted_n\": 400, \"predicted_per_second\": 33.6, \"draft_n\": 289, \"draft_n_accepted\": 234, \"accept_pct\": 81.0}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 11.44, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 262.9, \"predicted_n\": 400, \"predicted_per_second\": 39.1, \"draft_n\": 317, \"draft_n_accepted\": 270, \"accept_pct\": 85.2}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 7.41, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 557.5, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 5.84, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 55.5, \"predicted_n\": 128, \"predicted_per_second\": 27.9, \"draft_n\": 99, \"draft_n_accepted\": 57, \"accept_pct\": 57.6}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 27.77, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 592.7, \"predicted_n\": 1, \"predicted_per_second\": 23.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 35.24, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 581.7, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 32.56, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 587.1, \"predicted_n\": 128, \"predicted_per_second\": 28.1, \"draft_n\": 101, \"draft_n_accepted\": 64, \"accept_pct\": 63.4}\r\n{\"config\": \"strata-unsloth-ud-iq4_xs.json\", \"load_s\": 36.1}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 16.02, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 128.1, \"predicted_n\": 400, \"predicted_per_second\": 29.5, \"draft_n\": 303, \"draft_n_accepted\": 280, \"accept_pct\": 92.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 16.73, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 137.9, \"predicted_n\": 400, \"predicted_per_second\": 26.5, \"draft_n\": 293, \"draft_n_accepted\": 253, \"accept_pct\": 86.3}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 31.88, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 341.3, \"predicted_n\": 400, \"predicted_per_second\": 22.3, \"draft_n\": 286, \"draft_n_accepted\": 214, \"accept_pct\": 74.8}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 14.97, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 173.6, \"predicted_n\": 400, \"predicted_per_second\": 30.4, \"draft_n\": 316, \"draft_n_accepted\": 289, \"accept_pct\": 91.5}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 12.29, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 335.0, \"predicted_n\": 1, \"predicted_per_second\": 15.7, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 7.72, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 41.5, \"predicted_n\": 128, \"predicted_per_second\": 21.1, \"draft_n\": 95, \"draft_n_accepted\": 62, \"accept_pct\": 65.3}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 46.13, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 356.2, \"predicted_n\": 1, \"predicted_per_second\": 15.3, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 58.3, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 351.2, \"predicted_n\": 1, \"predicted_per_second\": 17.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 53.11, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 354.1, \"predicted_n\": 128, \"predicted_per_second\": 19.1, \"draft_n\": 96, \"draft_n_accepted\": 56, \"accept_pct\": 58.3}\r\n<class 'dict'> ['label', 'rows', 'load_s']\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 192487,
+        "completion_tokens": 274,
+        "cached_tokens": 192485,
+        "extra": {
+          "cache_creation_input_tokens": 495,
+          "cache_read_input_tokens": 192485,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 495,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 274,
+              "cache_read_input_tokens": 192485,
+              "cache_creation_input_tokens": 495,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 495
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "{\"config\": \"strata-coder-iq1_m.json\", \"load_s\": 11.7}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 11.79, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 224.5, \"predicted_n\": 400, \"predicted_per_second\": 38.6, \"draft_n\": 316, \"draft_n_accepted\": 273, \"accept_pct\": 86.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 11.91, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 204.1, \"predicted_n\": 400, \"predicted_per_second\": 36.9, \"draft_n\": 300, \"draft_n_accepted\": 258, \"accept_pct\": 86.0}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 20.21, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 573.0, \"predicted_n\": 400, \"predicted_per_second\": 33.6, \"draft_n\": 289, \"draft_n_accepted\": 234, \"accept_pct\": 81.0}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 11.44, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 262.9, \"predicted_n\": 400, \"predicted_per_second\": 39.1, \"draft_n\": 317, \"draft_n_accepted\": 270, \"accept_pct\": 85.2}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 7.41, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 557.5, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 5.84, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 55.5, \"predicted_n\": 128, \"predicted_per_second\": 27.9, \"draft_n\": 99, \"draft_n_accepted\": 57, \"accept_pct\": 57.6}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 27.77, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 592.7, \"predicted_n\": 1, \"predicted_per_second\": 23.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 35.24, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 581.7, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 32.56, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 587.1, \"predicted_n\": 128, \"predicted_per_second\": 28.1, \"draft_n\": 101, \"draft_n_accepted\": 64, \"accept_pct\": 63.4}\r\n{\"config\": \"strata-unsloth-ud-iq4_xs.json\", \"load_s\": 36.1}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 16.02, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 128.1, \"predicted_n\": 400, \"predicted_per_second\": 29.5, \"draft_n\": 303, \"draft_n_accepted\": 280, \"accept_pct\": 92.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 16.73, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 137.9, \"predicted_n\": 400, \"predicted_per_second\": 26.5, \"draft_n\": 293, \"draft_n_accepted\": 253, \"accept_pct\": 86.3}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 31.88, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 341.3, \"predicted_n\": 400, \"predicted_per_second\": 22.3, \"draft_n\": 286, \"draft_n_accepted\": 214, \"accept_pct\": 74.8}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 14.97, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 173.6, \"predicted_n\": 400, \"predicted_per_second\": 30.4, \"draft_n\": 316, \"draft_n_accepted\": 289, \"accept_pct\": 91.5}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 12.29, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 335.0, \"predicted_n\": 1, \"predicted_per_second\": 15.7, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 7.72, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 41.5, \"predicted_n\": 128, \"predicted_per_second\": 21.1, \"draft_n\": 95, \"draft_n_accepted\": 62, \"accept_pct\": 65.3}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 46.13, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 356.2, \"predicted_n\": 1, \"predicted_per_second\": 15.3, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 58.3, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 351.2, \"predicted_n\": 1, \"predicted_per_second\": 17.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 53.11, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 354.1, \"predicted_n\": 128, \"predicted_per_second\": 19.1, \"draft_n\": 96, \"draft_n_accepted\": 56, \"accept_pct\": 58.3}\r\n<class 'dict'> ['label', 'rows', 'load_s']",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01RnBt3NmvQKCNi3KmrZcaH1",
+            "type": "tool_result",
+            "content": "{\"config\": \"strata-coder-iq1_m.json\", \"load_s\": 11.7}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 11.79, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 224.5, \"predicted_n\": 400, \"predicted_per_second\": 38.6, \"draft_n\": 316, \"draft_n_accepted\": 273, \"accept_pct\": 86.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 11.91, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 204.1, \"predicted_n\": 400, \"predicted_per_second\": 36.9, \"draft_n\": 300, \"draft_n_accepted\": 258, \"accept_pct\": 86.0}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 20.21, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 573.0, \"predicted_n\": 400, \"predicted_per_second\": 33.6, \"draft_n\": 289, \"draft_n_accepted\": 234, \"accept_pct\": 81.0}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 11.44, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 262.9, \"predicted_n\": 400, \"predicted_per_second\": 39.1, \"draft_n\": 317, \"draft_n_accepted\": 270, \"accept_pct\": 85.2}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 7.41, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 557.5, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 5.84, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 55.5, \"predicted_n\": 128, \"predicted_per_second\": 27.9, \"draft_n\": 99, \"draft_n_accepted\": 57, \"accept_pct\": 57.6}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 27.77, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 592.7, \"predicted_n\": 1, \"predicted_per_second\": 23.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 35.24, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 581.7, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 32.56, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 587.1, \"predicted_n\": 128, \"predicted_per_second\": 28.1, \"draft_n\": 101, \"draft_n_accepted\": 64, \"accept_pct\": 63.4}\r\n{\"config\": \"strata-unsloth-ud-iq4_xs.json\", \"load_s\": 36.1}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 16.02, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 128.1, \"predicted_n\": 400, \"predicted_per_second\": 29.5, \"draft_n\": 303, \"draft_n_accepted\": 280, \"accept_pct\": 92.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 16.73, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 137.9, \"predicted_n\": 400, \"predicted_per_second\": 26.5, \"draft_n\": 293, \"draft_n_accepted\": 253, \"accept_pct\": 86.3}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 31.88, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 341.3, \"predicted_n\": 400, \"predicted_per_second\": 22.3, \"draft_n\": 286, \"draft_n_accepted\": 214, \"accept_pct\": 74.8}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 14.97, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 173.6, \"predicted_n\": 400, \"predicted_per_second\": 30.4, \"draft_n\": 316, \"draft_n_accepted\": 289, \"accept_pct\": 91.5}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 12.29, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 335.0, \"predicted_n\": 1, \"predicted_per_second\": 15.7, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 7.72, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 41.5, \"predicted_n\": 128, \"predicted_per_second\": 21.1, \"draft_n\": 95, \"draft_n_accepted\": 62, \"accept_pct\": 65.3}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 46.13, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 356.2, \"predicted_n\": 1, \"predicted_per_second\": 15.3, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 58.3, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 351.2, \"predicted_n\": 1, \"predicted_per_second\": 17.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 53.11, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 354.1, \"predicted_n\": 128, \"predicted_per_second\": 19.1, \"draft_n\": 96, \"draft_n_accepted\": 56, \"accept_pct\": 58.3}\r\n<class 'dict'> ['label', 'rows', 'load_s']",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "{\"config\": \"strata-coder-iq1_m.json\", \"load_s\": 11.7}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 11.79, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 224.5, \"predicted_n\": 400, \"predicted_per_second\": 38.6, \"draft_n\": 316, \"draft_n_accepted\": 273, \"accept_pct\": 86.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 11.91, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 204.1, \"predicted_n\": 400, \"predicted_per_second\": 36.9, \"draft_n\": 300, \"draft_n_accepted\": 258, \"accept_pct\": 86.0}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 20.21, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 573.0, \"predicted_n\": 400, \"predicted_per_second\": 33.6, \"draft_n\": 289, \"draft_n_accepted\": 234, \"accept_pct\": 81.0}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 11.44, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 262.9, \"predicted_n\": 400, \"predicted_per_second\": 39.1, \"draft_n\": 317, \"draft_n_accepted\": 270, \"accept_pct\": 85.2}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 7.41, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 557.5, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 5.84, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 55.5, \"predicted_n\": 128, \"predicted_per_second\": 27.9, \"draft_n\": 99, \"draft_n_accepted\": 57, \"accept_pct\": 57.6}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 27.77, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 592.7, \"predicted_n\": 1, \"predicted_per_second\": 23.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 35.24, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 581.7, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 32.56, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 587.1, \"predicted_n\": 128, \"predicted_per_second\": 28.1, \"draft_n\": 101, \"draft_n_accepted\": 64, \"accept_pct\": 63.4}\r\n{\"config\": \"strata-unsloth-ud-iq4_xs.json\", \"load_s\": 36.1}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 16.02, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 128.1, \"predicted_n\": 400, \"predicted_per_second\": 29.5, \"draft_n\": 303, \"draft_n_accepted\": 280, \"accept_pct\": 92.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 16.73, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 137.9, \"predicted_n\": 400, \"predicted_per_second\": 26.5, \"draft_n\": 293, \"draft_n_accepted\": 253, \"accept_pct\": 86.3}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 31.88, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 341.3, \"predicted_n\": 400, \"predicted_per_second\": 22.3, \"draft_n\": 286, \"draft_n_accepted\": 214, \"accept_pct\": 74.8}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 14.97, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 173.6, \"predicted_n\": 400, \"predicted_per_second\": 30.4, \"draft_n\": 316, \"draft_n_accepted\": 289, \"accept_pct\": 91.5}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 12.29, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 335.0, \"predicted_n\": 1, \"predicted_per_second\": 15.7, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 7.72, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 41.5, \"predicted_n\": 128, \"predicted_per_second\": 21.1, \"draft_n\": 95, \"draft_n_accepted\": 62, \"accept_pct\": 65.3}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 46.13, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 356.2, \"predicted_n\": 1, \"predicted_per_second\": 15.3, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 58.3, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 351.2, \"predicted_n\": 1, \"predicted_per_second\": 17.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 53.11, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 354.1, \"predicted_n\": 128, \"predicted_per_second\": 19.1, \"draft_n\": 96, \"draft_n_accepted\": 56, \"accept_pct\": 58.3}\r\n<class 'dict'> ['label', 'rows', 'load_s']",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01RnBt3NmvQKCNi3KmrZcaH1",
+            "type": "tool_result",
+            "content": "{\"config\": \"strata-coder-iq1_m.json\", \"load_s\": 11.7}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 11.79, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 224.5, \"predicted_n\": 400, \"predicted_per_second\": 38.6, \"draft_n\": 316, \"draft_n_accepted\": 273, \"accept_pct\": 86.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 11.91, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 204.1, \"predicted_n\": 400, \"predicted_per_second\": 36.9, \"draft_n\": 300, \"draft_n_accepted\": 258, \"accept_pct\": 86.0}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 20.21, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 573.0, \"predicted_n\": 400, \"predicted_per_second\": 33.6, \"draft_n\": 289, \"draft_n_accepted\": 234, \"accept_pct\": 81.0}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 11.44, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 262.9, \"predicted_n\": 400, \"predicted_per_second\": 39.1, \"draft_n\": 317, \"draft_n_accepted\": 270, \"accept_pct\": 85.2}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 7.41, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 557.5, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 5.84, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 55.5, \"predicted_n\": 128, \"predicted_per_second\": 27.9, \"draft_n\": 99, \"draft_n_accepted\": 57, \"accept_pct\": 57.6}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 27.77, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 592.7, \"predicted_n\": 1, \"predicted_per_second\": 23.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 35.24, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 581.7, \"predicted_n\": 1, \"predicted_per_second\": 22.8, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 32.56, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 587.1, \"predicted_n\": 128, \"predicted_per_second\": 28.1, \"draft_n\": 101, \"draft_n_accepted\": 64, \"accept_pct\": 63.4}\r\n{\"config\": \"strata-unsloth-ud-iq4_xs.json\", \"load_s\": 36.1}\r\n{\"test\": \"server: cold first request (short code prompt)\", \"wall_s\": 16.02, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 128.1, \"predicted_n\": 400, \"predicted_per_second\": 29.5, \"draft_n\": 303, \"draft_n_accepted\": 280, \"accept_pct\": 92.4}\r\n{\"test\": \"server: fresh code prompt\", \"wall_s\": 16.73, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 218, \"prompt_per_second\": 137.9, \"predicted_n\": 400, \"predicted_per_second\": 26.5, \"draft_n\": 293, \"draft_n_accepted\": 253, \"accept_pct\": 86.3}\r\n{\"test\": \"server: ~4.75K-token prompt, prefill + decode tail\", \"wall_s\": 31.88, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4749, \"prompt_per_second\": 341.3, \"predicted_n\": 400, \"predicted_per_second\": 22.3, \"draft_n\": 286, \"draft_n_accepted\": 214, \"accept_pct\": 74.8}\r\n{\"test\": \"server: repeated first prompt (reference only)\", \"wall_s\": 14.97, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 314, \"prompt_per_second\": 173.6, \"predicted_n\": 400, \"predicted_per_second\": 30.4, \"draft_n\": 316, \"draft_n_accepted\": 289, \"accept_pct\": 91.5}\r\n{\"test\": \"pp4096 @ d0\", \"wall_s\": 12.29, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 4085, \"prompt_per_second\": 335.0, \"predicted_n\": 1, \"predicted_per_second\": 15.7, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d0\", \"wall_s\": 7.72, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 68, \"prompt_per_second\": 41.5, \"predicted_n\": 128, \"predicted_per_second\": 21.1, \"draft_n\": 95, \"draft_n_accepted\": 62, \"accept_pct\": 65.3}\r\n{\"test\": \"depth 16384 prefix (cached for the next rows)\", \"wall_s\": 46.13, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16384, \"prompt_per_second\": 356.2, \"predicted_n\": 1, \"predicted_per_second\": 15.3, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"pp4096 @ d16384\", \"wall_s\": 58.3, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 20421, \"prompt_per_second\": 351.2, \"predicted_n\": 1, \"predicted_per_second\": 17.0, \"draft_n\": 0, \"draft_n_accepted\": 0}\r\n{\"test\": \"tg128 @ d16384\", \"wall_s\": 53.11, \"finish\": \"length\", \"cache_n\": 0, \"prompt_n\": 16401, \"prompt_per_second\": 354.1, \"predicted_n\": 128, \"predicted_per_second\": 19.1, \"draft_n\": 96, \"draft_n_accepted\": 56, \"accept_pct\": 58.3}\r\n<class 'dict'> ['label', 'rows', 'load_s']",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cat docs/benchmarks/2026-10-05-halo-onetable-todo5.log | head -40; /c/conda_envs/strata/python.exe -c \"\nimport json;d=json.load(open('docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo5.json',encoding='utf-8'));print(type(d), list(d)[:20] if isinstance(d,dict) else d[:2])\" | cut -c1-3000",
+          "description": "Inspect TODO 5 one-table outputs"
+        }
+      }
+    },
+    {
+      "step_id": 131,
+      "timestamp": "2026-10-05T21:24:41.539Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 192982,
+        "completion_tokens": 48,
+        "cached_tokens": 192980,
+        "extra": {
+          "cache_creation_input_tokens": 2642,
+          "cache_read_input_tokens": 192980,
+          "output_tokens_details": {
+            "thinking_tokens": 16
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2642,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 48,
+              "cache_read_input_tokens": 192980,
+              "cache_creation_input_tokens": 2642,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2642
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 132,
+      "timestamp": "2026-10-05T21:24:41.550Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "The run is going (both models, roughly 10 minutes). I'll write the table when it finishes.",
+      "metrics": {
+        "prompt_tokens": 192982,
+        "completion_tokens": 48,
+        "cached_tokens": 192980,
+        "extra": {
+          "cache_creation_input_tokens": 2642,
+          "cache_read_input_tokens": 192980,
+          "output_tokens_details": {
+            "thinking_tokens": 16
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2642,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 48,
+              "cache_read_input_tokens": 192980,
+              "cache_creation_input_tokens": 2642,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2642
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 16152748,
-    "total_completion_tokens": 120439,
-    "total_cached_tokens": 16152506,
-    "total_steps": 122,
+    "total_prompt_tokens": 17881024,
+    "total_completion_tokens": 122403,
+    "total_cached_tokens": 17880764,
+    "total_steps": 132,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 353147,
-      "total_cache_read_input_tokens": 16152506
+      "total_cache_creation_input_tokens": 362178,
+      "total_cache_read_input_tokens": 17880764
     }
   }
 }
