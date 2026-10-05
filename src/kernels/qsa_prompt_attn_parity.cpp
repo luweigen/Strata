@@ -198,20 +198,27 @@ int run(int fmt, int64_t ctx, int64_t nq, int reps) {   // fmt 1 int8, 0 fp16
 }  // namespace
 
 int main(int argc, char** argv) {
+    bool gfx11 = false;   // AMD: the gfx11 kernel also takes FP16 KV pools (fmt 0)
 #if defined(__HIP_PLATFORM_AMD__)
     // S6: on AMD the kernel under test is the RDNA4 matrix-core one (opt-in in the engine); other cards skip
     {
         int dev = 0;
         hipDeviceProp_t prop{};
         if (hipGetDevice(&dev) != hipSuccess || hipGetDeviceProperties(&prop, dev) != hipSuccess) return 2;
-        if (std::strncmp(prop.gcnArchName, "gfx12", 5) != 0) {
-            std::printf("SKIP: %s is not gfx12 (the matrix-core prompt attention is RDNA4 only)\n", prop.gcnArchName);
+        // gfx12: the S6 kernel (STRATA_HIP_WMMA, int8 KV only); gfx11 / gfx11.5: PR #313's kernel (STRATA_PA_WMMA, int8
+        // and FP16 KV); anything else skips
+        const char* sw = std::strncmp(prop.gcnArchName, "gfx12", 5) == 0 ? "STRATA_HIP_WMMA"
+                       : std::strncmp(prop.gcnArchName, "gfx11", 5) == 0 ? "STRATA_PA_WMMA" : nullptr;
+        if (sw == nullptr) {
+            std::printf("SKIP: %s is neither gfx12 nor gfx11 (no matrix-core prompt attention for it)\n", prop.gcnArchName);
             return 77;
         }
+        gfx11 = sw[7] == 'P';
+        std::printf("matrix-core prompt attention under test: %s=1 on %s\n", sw, prop.gcnArchName);
 #if defined(_WIN32)
-        _putenv_s("STRATA_HIP_WMMA", "1");
+        _putenv_s(sw, "1");
 #else
-        setenv("STRATA_HIP_WMMA", "1", 1);
+        setenv(sw, "1", 1);
 #endif
     }
 #endif
@@ -221,7 +228,9 @@ int main(int argc, char** argv) {
     int fails = 0;
     fails += run(1, ctx, nq, reps);
 #if !defined(__HIP_PLATFORM_AMD__)
-    fails += run(0, ctx, nq, reps);   // FP16 KV: the RDNA4 kernel takes int8 KV only
+    fails += run(0, ctx, nq, reps);   // FP16 KV
+#else
+    if (gfx11) fails += run(0, ctx, nq, reps);   // FP16 KV: the RDNA4 kernel takes int8 KV only, the gfx11 one both
 #endif
     fails += run(1, 1500, std::min<int64_t>(nq, 1500), reps);   // short context: the selection is every cell
     fails += run(1, 2100, std::min<int64_t>(nq, 256), reps);    // the identity-to-sparse edge

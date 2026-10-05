@@ -1291,7 +1291,6 @@ bool launch_wmma(const float* q, const QsaAttnPools& pools, const int32_t* ids, 
 }
 #endif
 
-}  // namespace
 
 #if defined(STRATA_WMMA_GFX11) && STRATA_WMMA_GFX11
 template <int KV_MODE>
