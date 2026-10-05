@@ -1,0 +1,15 @@
+{"label": "one-class", "env": {"STRATA_PREFILL_MMQ_CLASSES": "0"}, "server_up_s": 15.2}
+{"label": "one-class", "text_request": true, "wall_s": 3.5, "prompt_n": 1213, "prompt_per_second": 354.1, "predicted_per_second": 19.7}
+[one-class] text:
+We
+
+[one-class] strata prefill timing: 1208 tokens, GPU timeline 3132 ms, wall 3152 ms, host staging 5 ms: embed+steps 122 (3.9%) hc read 272 (8.7%) gdn 369 (11.8%) qsa proj 169 (5.4%) qsa indexer 0 (0.0%) qsa select 5 (0.2%) qsa attn 89 (2.9%) router+shared 74 (2.4%) host grouping 21 (0.7%) gather 25 (0.8%) wait copy 13 (0.4%) dequant 409 (13.1%) gemm gate/up 754 (24.1%) gemm down 348 (11.1%) combine 67 (2.1%) ple 9 (0.3%) gdn conv+gates 24 (0.8%) gdn recurrence 195 (6.2%) gdn out proj 168 (5.4%)
+[one-class] strata prefill timing: experts: the loop's host time 95 ms over 48 layers (0 sorted by row count, 0 grouped by row-count class), 579840 routed rows, a J tile for each group's largest expert would pad them by 169.0%
+{"label": "shipped", "env": {}, "server_up_s": 12.1}
+{"label": "shipped", "text_request": true, "wall_s": 3.11, "prompt_n": 1213, "prompt_per_second": 398.8, "predicted_per_second": 21.1}
+[shipped] text:
+We
+
+[shipped] strata prefill timing: 1208 tokens, GPU timeline 2744 ms, wall 2770 ms, host staging 15 ms: embed+steps 77 (2.8%) hc read 260 (9.5%) gdn 350 (12.8%) qsa proj 166 (6.1%) qsa indexer 0 (0.0%) qsa select 4 (0.2%) qsa attn 88 (3.2%) router+shared 70 (2.5%) host grouping 16 (0.6%) gather 23 (0.9%) wait copy 19 (0.7%) dequant 389 (14.2%) gemm gate/up 563 (20.5%) gemm down 268 (9.8%) combine 65 (2.4%) ple 9 (0.3%) gdn conv+gates 23 (0.8%) gdn recurrence 187 (6.8%) gdn out proj 165 (6.0%)
+[shipped] strata prefill timing: experts: the loop's host time 72 ms over 48 layers (0 sorted by row count, 48 grouped by row-count class), 579840 routed rows, a J tile for each group's largest expert would pad them by 28.5%
+texts: one-class == shipped: True

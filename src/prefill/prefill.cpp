@@ -35,6 +35,7 @@
 #include <atomic>
 #include <condition_variable>
 #include <cstring>
+#include <numeric>
 #include <future>
 #include <memory>
 #include <mutex>
@@ -329,6 +330,8 @@ struct Prefill::Impl {
     float* H = nullptr;
     int32_t *ids_identity = nullptr, *bounds_dev = nullptr;
     uint8_t *grp_gu = nullptr, *grp_d = nullptr;
+    int n_cls = 1;                           // TODO 2a: group buffers, one per row-count class (mmq_classes)
+    size_t grp_gu_stride = 0, grp_d_stride = 0;
     std::vector<int32_t> bounds_host;
     std::unique_ptr<mmq::Context> mmq_ctx;
     std::vector<int32_t> ids_host, slot_host, src_host, cnt, off;
@@ -464,6 +467,42 @@ constexpr int MMQ_GROUP = 16;                  // experts per MMQ launch (the ga
 // product: 640 values).  Those bytes meet zero activations, which is harmless only if they decode to finite numbers -
 // llama.cpp zero-pads after every tensor, and so does a group buffer: this many zeroed bytes follow its last expert.
 constexpr size_t MMQ_TAIL = 4096;
+// TODO 2a: a streamed layer's MMQ groups by row count.  The streamed walk consumes the ring in expert-id order, so
+// the experts cannot be sorted; instead each one is gathered, as it arrives, into the group buffer of its row-count
+// class, and a class's group of MMQ_GROUP is multiplied when its last member lands (the rows are laid out class-major
+// at routing time, so a group's experts stay contiguous).  A group then pads its rows only to a tile of its own
+// class.  The classes' upper bounds, ascending; the last class takes the rest.  STRATA_PREFILL_MMQ_CLASSES="a,b,..."
+// sets them, =0 one class (id order, the walk before).  Each class costs a group buffer (16 experts' gate/up + down,
+// ~35 MB on the Coder).  The default is one class per J tile MMQ has for these shapes on RDNA 3.5: gfx1151, Coder
+// IQ1_M, a 4,17x-token chunk: gate/up 1,594-1,640 -> 1,439-1,472 ms, down 763-785 -> 691-711 ms, the same text out;
+// "16,32,64,128" gave 1,492-1,504 / 721-729 (docs/benchmarks/2026-10-06-halo-mmq-classes-ab.py).
+const std::vector<int32_t>& mmq_class_bounds() {
+    static const std::vector<int32_t> b = [] {
+        std::vector<int32_t> v;
+        const char* e = std::getenv("STRATA_PREFILL_MMQ_CLASSES");
+        std::string s = e ? e : "16,32,48,64,80,96,112,128";
+        for (size_t p = 0; p < s.size();) {
+            const size_t q = s.find(',', p);
+            const int x = std::atoi(s.substr(p, q == std::string::npos ? std::string::npos : q - p).c_str());
+            if (x > 0 && (v.empty() || x > v.back())) v.push_back(x);
+            if (q == std::string::npos) break;
+            p = q + 1;
+        }
+        return v;
+    }();
+    return b;
+}
+constexpr int MMQ_CLASS_MAX = 16;
+// the classes a chunk of T tokens carves group buffers for: only a chunk that streams its experts has use for them
+inline int mmq_classes(size_t T) {
+    if (ring_slots(T) <= STAGE || (int64_t) T < stream_all_min()) return 1;
+    return std::min<int>(MMQ_CLASS_MAX, (int) mmq_class_bounds().size() + 1);
+}
+// the MMQ bounds: the layer's absolute row bounds (n_expert + 1), then each group's relative ones (MMQ_GROUP + 1),
+// for at most n_expert / MMQ_GROUP groups plus a partial one per class
+inline size_t mmq_bounds_ints(int64_t n_expert) {
+    return (size_t) (n_expert + 1) + (size_t) (n_expert / MMQ_GROUP + MMQ_CLASS_MAX + 1) * (MMQ_GROUP + 1);
+}
 struct MmqPlan {
     bool any = false, fallback = true;
     std::vector<char> layer;                   // per layer: MMQ
@@ -565,7 +604,7 @@ bool Prefill::init(const core::WeightTable& wt, const core::ModelGeometry& g, co
     m.steps_host.resize(T * strata::kernels::kStepCount);
     m.ids_host.resize(T * K); m.slot_host.resize(T * K); m.src_host.resize(T * K); m.cnt.resize(m.g->n_expert); m.off.resize(m.g->n_expert + 1);
     {
-        const size_t need = 3 * T * K + (size_t) (2 * (m.g->n_expert + m.g->n_expert / MMQ_GROUP + 2));
+        const size_t need = 3 * T * K + mmq_bounds_ints(m.g->n_expert);
         const char* gc = std::getenv("STRATA_GROUP_COPY");
         if (m.grp_n < need && !(gc && gc[0] == '1')) {
             if (m.grp_host) cudaFreeHost(m.grp_host);
@@ -688,9 +727,12 @@ bool Prefill::carve(size_t T, void* alloc) {
     if (mmq_plan().any) {
         const MmqPlan& mp = mmq_plan();
         m.ids_identity = o.take<int32_t>(T * K, ok);
-        m.bounds_dev = o.take<int32_t>((size_t) (2 * (m.g->n_expert + m.g->n_expert / MMQ_GROUP + 2)), ok);
-        m.grp_gu = o.take<uint8_t>(MMQ_GROUP * mp.gu_max + MMQ_TAIL, ok);
-        m.grp_d = o.take<uint8_t>(MMQ_GROUP * mp.d_max + MMQ_TAIL, ok);
+        m.bounds_dev = o.take<int32_t>(mmq_bounds_ints(m.g->n_expert), ok);
+        m.n_cls = mmq_classes(T);
+        m.grp_gu_stride = MMQ_GROUP * mp.gu_max + MMQ_TAIL;
+        m.grp_d_stride = MMQ_GROUP * mp.d_max + MMQ_TAIL;
+        m.grp_gu = o.take<uint8_t>((size_t) m.n_cls * m.grp_gu_stride, ok);
+        m.grp_d = o.take<uint8_t>((size_t) m.n_cls * m.grp_d_stride, ok);
         // (written at every run's start, not here: when serving, these are live expert-cache slots until a request
         // lends them - a write now would corrupt a resident expert)
         if (!m.mmq_ctx) m.mmq_ctx = std::make_unique<mmq::Context>();
@@ -909,9 +951,9 @@ uint64_t Prefill::bytes_needed(const core::ModelGeometry& g, const core::Session
     if (mmq_plan().any) {
         const MmqPlan& mp = mmq_plan();
         o.take<int32_t>(T * K, ok);
-        o.take<int32_t>((size_t) (2 * (g.n_expert + g.n_expert / MMQ_GROUP + 2)), ok);
-        o.take<uint8_t>(MMQ_GROUP * mp.gu_max + MMQ_TAIL, ok);
-        o.take<uint8_t>(MMQ_GROUP * mp.d_max + MMQ_TAIL, ok);
+        o.take<int32_t>(mmq_bounds_ints(g.n_expert), ok);
+        o.take<uint8_t>((size_t) mmq_classes(T) * (MMQ_GROUP * mp.gu_max + MMQ_TAIL), ok);
+        o.take<uint8_t>((size_t) mmq_classes(T) * (MMQ_GROUP * mp.d_max + MMQ_TAIL), ok);
     }
     for (int i = 0; i < ring_slots(T); ++i) o.take<uint8_t>((size_t) MAXBLOB(), ok);
     f(T * N);
@@ -1008,7 +1050,7 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
     // STRATA_PREFILL_TIMING: the expert loop's host time (issuing the gathers, products and their kernels; it
     // blocks only on streamed blobs), the MoE rows and the rows MMQ's J tile pads them to, the layers sorted by count
     double host_moe_ms = 0;
-    int64_t moe_rows = 0, moe_padded = 0, moe_layers = 0, moe_sorted = 0;
+    int64_t moe_rows = 0, moe_padded = 0, moe_layers = 0, moe_sorted = 0, moe_classed = 0;
     strata::kernels::QsaShapes s = strata::kernels::qsa_real_shapes();
     s.n_head = g.n_head; s.n_head_kv = g.n_head_kv; s.head_dim = g.head_dim; s.idx_n_head = g.idx_q_heads;
     s.idx_dim = g.idx_key_dim;
@@ -1603,9 +1645,9 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                         if (e < 0 || e >= m.g->n_expert) { err = "prefill: routed id out of range"; return false; }
                         ++m.cnt[(size_t) e];
                     }
-                    // The experts with rows, and the order the layer computes them in: id order when this layer
-                    // streams blobs through the ring (the streamed walk below consumes them in id order), otherwise
-                    // sorted by row count, largest first (STRATA_PREFILL_SORT_EXPERTS=0 keeps id order).  The MMQ
+                    // The experts with rows, and the order the layer lays out their rows in: by row-count class when
+                    // this layer streams blobs through the ring (the streamed walk below consumes them in id order;
+                    // TODO 2a), otherwise sorted by row count, largest first (STRATA_PREFILL_SORT_EXPERTS=0 keeps id order).  The MMQ
                     // path multiplies MMQ_GROUP consecutive experts in one launch with one J tile chosen from the
                     // group's largest count, and every expert in the group pads its rows to that tile: in id order a
                     // 4K chunk's groups mix experts of 1 and 1,000 rows and the padding about doubles the kernel's
@@ -1615,20 +1657,48 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                     for (int32_t e = 0; e < m.g->n_expert; ++e) if (m.cnt[(size_t) e] > 0) order.push_back(e);
                     static const bool sort_experts = [] { const char* v = std::getenv("STRATA_PREFILL_SORT_EXPERTS"); return !v || std::atoi(v) != 0; }();
                     const bool streams = stream_all && !seq_start.empty() && seq_start[(size_t) l] != seq_start[(size_t) l + 1];
-                    if (sort_experts && !streams) {
+                    const strata::kernels::cpu::ExpertLayout& lay = strata::kernels::cpu::expert_layout();
+                    const bool use_mmq = mmq_plan().any && mmq_plan().layer[(size_t) l];
+                    // TODO 2a: a streamed MMQ layer is laid out class-major (each class in id order) and its groups
+                    // are formed within a class; the walk below still goes in id order (see mmq_class_bounds)
+                    const int ncls = use_mmq && streams ? m.n_cls : 1;
+                    std::vector<uint8_t> cls_of(ncls > 1 ? (size_t) m.g->n_expert : 0, 0);
+                    if (ncls > 1) {
+                        const std::vector<int32_t>& cb = mmq_class_bounds();
+                        for (int32_t e : order) {
+                            int c = 0;
+                            while (c < ncls - 1 && m.cnt[(size_t) e] > cb[(size_t) c]) ++c;
+                            cls_of[(size_t) e] = (uint8_t) c;
+                        }
+                        std::stable_sort(order.begin(), order.end(),
+                                         [&](int32_t a, int32_t b) { return cls_of[(size_t) a] < cls_of[(size_t) b]; });
+                        ++moe_classed;
+                    } else if (sort_experts && !streams) {
                         std::stable_sort(order.begin(), order.end(),
                                          [&](int32_t a, int32_t b) { return m.cnt[(size_t) a] > m.cnt[(size_t) b]; });
                         ++moe_sorted;
                     }
+                    // the MMQ groups: up to MMQ_GROUP consecutive experts of `order` of one class; group g is
+                    // [gstart[g], gstart[g + 1]) and multiplies from class gcls[g]'s buffer
+                    std::vector<int32_t> gstart, gcls, gidx(order.size());
+                    for (size_t j = 0; j < order.size(); ++j) {
+                        const int c = ncls > 1 ? cls_of[(size_t) order[j]] : 0;
+                        if (gstart.empty() || (int) j - gstart.back() == MMQ_GROUP || gcls.back() != c) {
+                            gstart.push_back((int32_t) j);
+                            gcls.push_back(c);
+                        }
+                        gidx[j] = (int32_t) gstart.size() - 1;
+                    }
+                    const size_t ngrp = gstart.size();
+                    gstart.push_back((int32_t) order.size());
                     ++moe_layers;
                     moe_rows += T * K;
-                    for (size_t j0 = 0; j0 < order.size(); j0 += MMQ_GROUP) {   // the J-tile padding of this grouping
-                        const size_t j1 = std::min(order.size(), j0 + MMQ_GROUP);
+                    for (size_t gi = 0; gi < ngrp; ++gi) {   // the J-tile padding of this grouping
                         int32_t maxr = 0;
-                        for (size_t j = j0; j < j1; ++j) maxr = std::max(maxr, m.cnt[(size_t) order[j]]);
+                        for (int32_t j = gstart[gi]; j < gstart[gi + 1]; ++j) maxr = std::max(maxr, m.cnt[(size_t) order[(size_t) j]]);
                         const int32_t J = std::min<int32_t>(128, (maxr + 7) / 8 * 8);
-                        for (size_t j = j0; j < j1; ++j) {
-                            const int32_t c = m.cnt[(size_t) order[j]];
+                        for (int32_t j = gstart[gi]; j < gstart[gi + 1]; ++j) {
+                            const int32_t c = m.cnt[(size_t) order[(size_t) j]];
                             moe_padded += (c + J - 1) / J * J - c;
                         }
                     }
@@ -1652,8 +1722,6 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                         cudaMemcpyAsync(m.src_dev, m.src_host.data(), (size_t) T * K * 4, cudaMemcpyHostToDevice, m.cs);
                     }
                     // the experts in `order`: resident ones from VRAM, the others through the staging ring
-                    const strata::kernels::cpu::ExpertLayout& lay = strata::kernels::cpu::expert_layout();
-                    const bool use_mmq = mmq_plan().any && mmq_plan().layer[(size_t) l];
                     const int mmq_gt = lay.native ? lay.fmt[(size_t) l].gu_type : 42;
                     const int mmq_dt = lay.native ? lay.fmt[(size_t) l].d_type : 42;
                     const size_t mmq_gub = use_mmq ? mmq::matrix_bytes(mmq_gt, 1280, N) : 0;
@@ -1664,14 +1732,14 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                         mmq::quantize(m.mixed, m.src_dev, m.Xq, mmq_gt, N, N, T * K, m.cs);
                         // each group's rows: absolute bounds (gate/up reads the layer's rows), relative ones (down
                         // reads the group's own quantized H)
-                        const size_t n = order.size(), ng = (n + MMQ_GROUP - 1) / MMQ_GROUP;
-                        m.bounds_host.resize(n + 1 + ng * (MMQ_GROUP + 1));
+                        const size_t n = order.size();
+                        m.bounds_host.resize(n + 1 + ngrp * (MMQ_GROUP + 1));
                         for (size_t j = 0; j < n; ++j) m.bounds_host[j] = m.off[(size_t) order[j]];
                         m.bounds_host[n] = (int32_t) (T * K);
-                        for (size_t g = 0; g < ng; ++g)
+                        for (size_t g = 0; g < ngrp; ++g)
                             for (size_t i = 0; i <= MMQ_GROUP; ++i)
                                 m.bounds_host[n + 1 + g * (MMQ_GROUP + 1) + i] =
-                                    m.bounds_host[std::min(n, g * MMQ_GROUP + i)] - m.bounds_host[g * MMQ_GROUP];
+                                    m.bounds_host[std::min<size_t>(gstart[g + 1], gstart[g] + i)] - m.bounds_host[gstart[g]];
                         if (grp_mapped) {
                             int32_t* bh = m.grp_host + 3 * m.grp_tk;
                             std::memcpy(bh, m.bounds_host.data(), m.bounds_host.size() * 4);
@@ -1742,18 +1810,21 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                         pt.mark(kPfDequant, cs);
                         if (use_mmq) {
                             // gather the expert into its group slot (GGUF blocks, unchanged or converted)
-                            const size_t q = j % MMQ_GROUP;
+                            // (a group's members arrive in id order, which is their order in the group: its last
+                            // member gathered is its last position)
+                            const size_t g = (size_t) gidx[j], j0 = (size_t) gstart[g], q = j - j0, n = order.size();
+                            uint8_t* const bgu = m.grp_gu + (size_t) gcls[g] * m.grp_gu_stride;
+                            uint8_t* const bd = m.grp_d + (size_t) gcls[g] * m.grp_d_stride;
                             if (lay.native) {
                                 const auto& f = lay.fmt[(size_t) l];
                                 mmq::gather_native(blob_dev, blob_dev + f.up_off, mmq_gub / 2, blob_dev + f.down_off,
-                                                   mmq_db, m.grp_gu + q * mmq_gub, m.grp_d + q * mmq_db, m.cs);
+                                                   mmq_db, bgu + q * mmq_gub, bd + q * mmq_db, m.cs);
                             } else {
-                                mmq::gather_strata_q2(blob_dev, m.grp_gu + q * mmq_gub, m.grp_d + q * mmq_db, m.cs);
+                                mmq::gather_strata_q2(blob_dev, bgu + q * mmq_gub, bd + q * mmq_db, m.cs);
                             }
                             if (slot >= 0) cudaEventRecord(m.used[slot], m.cs);
-                            if (q + 1 < MMQ_GROUP && j + 1 < order.size()) return true;
+                            if ((int32_t) j + 1 < gstart[g + 1]) return true;
                             // the group's products: gate/up, swiglu, the group's H to q8_1, down
-                            const size_t j0 = j - q, g = j0 / MMQ_GROUP, n = order.size();
                             const int ngx = (int) (q + 1);
                             const int64_t r0 = m.bounds_host[j0], nr = m.bounds_host[j + 1] - r0;
                             // the launch grid covers the group's largest expert; the J tile is chosen for its median
@@ -1777,10 +1848,10 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                             const int64_t optr = opt_mode == 2 ? rows_of[ngx / 2] : opt_mode == 1 ? (sumr + ngx - 1) / ngx : maxr;
                             pt.mark(kPfGemmGU, cs);
                             // the zeroed tail after the group's last expert (see MMQ_TAIL)
-                            cudaMemsetAsync(m.grp_gu + (size_t) ngx * mmq_gub, 0, MMQ_TAIL, m.cs);
-                            cudaMemsetAsync(m.grp_d + (size_t) ngx * mmq_db, 0, MMQ_TAIL, m.cs);
+                            cudaMemsetAsync(bgu + (size_t) ngx * mmq_gub, 0, MMQ_TAIL, m.cs);
+                            cudaMemsetAsync(bd + (size_t) ngx * mmq_db, 0, MMQ_TAIL, m.cs);
                             mmq::Product gu;
-                            gu.w = m.grp_gu; gu.type = mmq_gt; gu.w_rows = 1280; gu.w_cols = N; gu.expert_bytes = mmq_gub;
+                            gu.w = bgu; gu.type = mmq_gt; gu.w_rows = 1280; gu.w_cols = N; gu.expert_bytes = mmq_gub;
                             gu.n = ngx; gu.xq = m.Xq; gu.bounds = m.bounds_dev + j0; gu.ids = m.ids_identity;
                             gu.total_rows = T * K; gu.max_rows = maxr; gu.opt_rows = optr; gu.dst = m.GU; gu.ld_dst = 1280;
                             m.mmq_ctx->run(gu, m.cs);
@@ -1788,7 +1859,7 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                             pt.mark(kPfGemmD, cs);
                             mmq::quantize(m.H + r0 * 640, nullptr, m.Hq, mmq_dt, 640, 640, nr, m.cs);
                             mmq::Product dn;
-                            dn.w = m.grp_d; dn.type = mmq_dt; dn.w_rows = N; dn.w_cols = 640; dn.expert_bytes = mmq_db;
+                            dn.w = bd; dn.type = mmq_dt; dn.w_rows = N; dn.w_cols = 640; dn.expert_bytes = mmq_db;
                             dn.n = ngx; dn.xq = m.Hq; dn.bounds = m.bounds_dev + n + 1 + g * (MMQ_GROUP + 1);
                             dn.ids = m.ids_identity; dn.total_rows = nr; dn.max_rows = maxr; dn.opt_rows = optr; dn.dst = m.Dm + r0 * N;
                             dn.ld_dst = N;
@@ -1845,7 +1916,12 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                                 give_back(consumed);
                             }
                         };
-                        for (size_t j = 0; j < order.size(); ++j) {
+                        // id order; with row-count classes `order` is class-major, so walk it through the ids
+                        std::vector<int32_t> walk(order.size());
+                        std::iota(walk.begin(), walk.end(), 0);
+                        if (ncls > 1) std::sort(walk.begin(), walk.end(), [&](int32_t a, int32_t b) { return order[(size_t) a] < order[(size_t) b]; });
+                        for (size_t i = 0; i < walk.size(); ++i) {
+                            const size_t j = (size_t) walk[i];
                             const int32_t e = order[j];
                             release_to(e);
                             if (k < kend && seq[k].e == e) {
@@ -2012,8 +2088,9 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                              "waiting for each chunk %.0f ms, after each chunk (the draft layer, progress) %.0f ms, "
                              "PLE %.0f ms\n", host_setup_ms, host_sync_ms, host_chunk_ms, stats_.ms_ple);
         std::fprintf(stderr, "strata prefill timing: experts: the loop's host time %.0f ms over %lld layers (%lld sorted by "
-                             "row count), %lld routed rows, a J tile for each group's largest expert would pad them by %.1f%%\n", host_moe_ms,
-                     (long long) moe_layers, (long long) moe_sorted, (long long) moe_rows,
+                             "row count, %lld grouped by row-count class), %lld routed rows, a J tile for each group's largest "
+                             "expert would pad them by %.1f%%\n", host_moe_ms,
+                     (long long) moe_layers, (long long) moe_sorted, (long long) moe_classed, (long long) moe_rows,
                      moe_rows > 0 ? 100.0 * (double) moe_padded / (double) moe_rows : 0.0);
     }
     if (std::getenv("STRATA_STATE_HASH_GDN") != nullptr) {   // debug: the GDN states as the prompt path leaves them

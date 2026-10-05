@@ -1177,6 +1177,79 @@ down (Coder cold 91.1 -> 86.4%, UD-IQ4_XS tg128 @ d16384 73.9 -> 58.3%), the pro
 slightly different and the text drafted along a different path; the decode rows stay within the spread of the
 earlier tables. The day's prompt speed for the Coder at 4.75K: 146 -> 209 -> 274 -> 451 -> 528 -> 548 -> 573 t/s.
 
+## TODO 2a done: streamed experts grouped by row-count class (2026-10-06)
+
+[TODO.md](TODO.md) item 2a: the MMQ products pad each expert's rows to the J tile of its group of 16. Since TODO 2
+the tile is sized for the group's median expert, and below 1,024 tokens the experts are sorted by row count first. A
+chunk of 1,024 tokens or more streams its experts through the ring in id order, so it could not sort. Its groups
+still mixed experts of 2 and 300 rows. The engine's own count for a tile sized to each group's largest expert: 46%
+of a 4K chunk's rows padded, 128% of a 1.66K chunk's, 169% of a 1.2K chunk's.
+
+**What changed** (`src/prefill/prefill.cpp`, the MoE half). At routing time each expert with rows gets a class by
+its row count, and the layer's rows are laid out class-major (id order within a class). Groups of up to 16 are
+formed within a class. The walk still consumes the ring in id order. Each expert is gathered, as it arrives, into
+its class's own group buffer, and a group is multiplied when its last member lands. The products, the rows they
+read and write, and the combine are the same; only which experts share a launch (and so a J tile) changes. Each
+class costs one group buffer (16 experts' gate/up and down, ~35 MB on the Coder, ~56 MB on UD-IQ4_XS). The buffers
+are carved only for a chunk that streams, from the borrowed cache slots like the rest of the prompt path's
+buffers. `STRATA_PREFILL_MMQ_CLASSES` takes the classes' upper bounds; `=0` gives one class, the walk before. The
+timing line now also counts the layers grouped by class.
+
+**Which classes** (`docs/benchmarks/2026-10-06-halo-mmq-classes-ab.py`: one server start per mode,
+`strata-coder-iq1_m.json` at 32/96 with every expert resident, three ~4,17x-token requests, three ~1,66x-token
+requests, one 1,213-token code continuation at temperature 0; `STRATA_PREFILL_TIMING=1`; the outputs
+`...-classes-ab.out` and `...-classes-ab-every-tile.out`, the engine logs beside them):
+
+| Coder IQ1_M, per chunk | one class (id order, the engine before) | 16,32,64,128 | 16,32,48,64,96,128 | **16,32,48,64,80,96,112,128 (one per J tile, shipped)** |
+|---|---|---|---|---|
+| lent cache slots | 2,306 (4.42 GiB) | 2,389 | 2,433 | 2,480 (4.74 GiB) |
+| 4K: padding (tile for the largest) | 46.1-46.2% | 23.2-23.4% | 20.4-20.6% | 19.3-19.4% |
+| 4K: gemm gate/up / gemm down, ms | 1,594-1,640 / 763-785 | 1,492-1,504 / 721-729 | 1,468-1,491 / 708-720 | **1,439-1,472 / 691-711** |
+| 4K: pp4096, requests 2-3 (first) | 561-565 t/s (536) | 572-574 (556) | 575-576 (558) | **578-581 (556)** |
+| 1.66K: gemm gate/up / gemm down, ms | 836-854 / 397-405 | 710-717 / 338-341 | 694-707 / 331-336 | 679-706 / 321-334 (765 / 363 first) |
+| 1.66K: prompt t/s | 460-468 | 487-494 | 486-496 | 478-497 (441 first) |
+| 1,213-token continuation: gate/up / down, ms; t/s | 683 / 322; 414 | 573 / 272; 436 | 549 / 262; 444 | 541 / 258; 439 |
+
+Each finer set of classes was a little faster on the 4K chunks. The last one gives each J tile that MMQ has for
+these shapes on RDNA 3.5 (16 to 128 in steps of 16) its own class: an expert is then padded to its own tile or
+the next one up. It lends 174 more cache slots (0.32 GiB) during a prompt than one class. The harness's "sorted"
+column (TODO 2: 29.3 against 34.5 ms per layer for IQ3_XXS gate/up) promised -15%; the engine got -9 to -10% on a
+4K chunk and -19 to -22% on the shorter ones, where padding was the larger share.
+
+**The shipped default against one class**, the same build, back to back (`...-classes-final-{coder,udiq4xs}.out`;
+UD-IQ4_XS from `strata-unsloth-ud-iq4_xs.json`, 32/96, `STRATA_ARENA_PIN_GIB=24`, a partial cache):
+
+| per chunk | Coder: one class | **Coder: classes** | UD-IQ4_XS: one class | **UD-IQ4_XS: classes** |
+|---|---|---|---|---|
+| lent cache slots | 2,306 (4.42 GiB) | 2,480 (4.74 GiB) | 1,679 (3.80 GiB) | 1,861 (4.22 GiB) |
+| 4K: padding | 46.2% | 19.4-19.5% | 103.1-103.5% | 23.3-23.4% |
+| 4K: gemm gate/up / down, ms | 1,603-1,632 / 765-780 | **1,447-1,467 / 705-706** | 2,502-2,583 / 1,126-1,256 | **1,803-1,831 / 942-975** |
+| 4K: GPU timeline, ms | 7,216-7,505 | **7,059-7,242** | 12,079-12,931 | 12,131-12,707 |
+| pp4096, requests 2-3 (first) | 558-563 t/s (540) | **571-574 (559)** | 331-336 (312) | 332-333 (316) |
+| 1.66K: gemm gate/up / down, ms | 846-849 / 401-402 | **681-686 / 324-328** | 1,420-1,429 / 593-597 | **1,007-1,012 / 483-484** |
+| 1.66K: GPU timeline, ms; prompt t/s | 3,438-3,451; 460-462 | **3,205-3,219; 492-495** | 6,142-6,191; 258-260 | **5,659-5,661; 280-281** |
+| 1,213 tokens: gate/up / down, ms; t/s | 689 / 325; 409 | **538 / 258; 444** | 1,148 / 480; 230 | **843 / 399; 244** |
+
+On the Coder the prompt gains +2% at 4K and +7-9% at 1.2-1.7K. UD-IQ4_XS's products lose 0.9 s per 4K chunk (its
+IQ4_XS / Q8_0 experts padded twice as much as the Coder's), but its 4K chunks do not get faster: they wait on the
+arena staging (TODO items 10 and 11), so the products only had to wait less. Its shorter chunks gain +8% (1.66K)
+and +6% (1.2K).
+
+**The same results.** The Coder's continuation (64 tokens, temperature 0) is the same text in all six runs (the five modes). The
+GDN state hash after the 1,213-token prompt (`STRATA_STATE_HASH_GDN=1`, the state of every GDN layer after the
+prompt path, which depends on every earlier layer's MoE output) is the same with one class and with classes, on
+both models (`...-classes-hash-{coder,udiq4xs}-*.log`). UD-IQ4_XS's continuations differ after ~30 tokens. But two
+runs of the same build with one class also differ (`...-classes-repeat-udiq4xs.out`, first difference at character
+100). Its decode is not repeatable from run to run at 32/96: a partial cache, the misses computed on the CPU, MTP.
+So that difference is not the prompt path.
+
+`ctest` on this build: 56 tests (`hip_handoff` left out, the known Windows hang), the 3 known failures
+(`ple_parity`, `expert_parity`, `pool_test`), `hip_prefill_hipblaslt_gemm` skipped without
+`STRATA_HIPBLASLT_TUNING`, `hip_prefill_mmq_parity` passes (`docs/benchmarks/2026-10-06-halo-mmq-classes-ctest.log`).
+The engine was copied into `engine\`; the previous one is `engine\strata-0.1.34-todo5.exe`. Not measured: a CUDA
+card. There the J tiles differ (`mmq-config-*.cuh`) and the lent slots come out of a smaller cache. The classes
+are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's

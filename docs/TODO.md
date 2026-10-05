@@ -29,13 +29,19 @@ the measurement that decides it. Test outputs (engine logs, server output, bench
    before grouping where the chunk does not stream (below `STRATA_PREFILL_STREAM_MIN` = 1,024 tokens: 1,001-token
    prompts 360-388 -> 388-428 t/s; in arena mode every expert is staged from the arena in id order, so 4K chunks
    keep id order). Left open, in the next two items.
-2a. **Group the experts by row count while they stream.** The MMQ products pay for the J tile the group's experts
-   pad to: a tile for the largest pads 46% of a 4K chunk's rows and 161% of a 1.3K chunk's (the engine's own count,
-   `STRATA_PREFILL_TIMING=1`); the median tile recovers part, sorted groups all of it (the harness
-   `docs/benchmarks/2026-10-05-halo-mmq-bench.cpp`: gate/up IQ3_XXS 47.8 -> 34.5 ms per layer with the median,
-   29.3 sorted). The streamed walk consumes ring slots in id order, so sorting needs the gathers to land in
-   per-size-class group buffers (one group buffer per class, rows laid out class-major at routing time), or a prompt
-   path that computes resident experts from their cache slots without staging (items 10, 11).
+2a. ~~**Group the experts by row count while they stream.** The MMQ products pay for the J tile the group's experts
+   pad to: a tile for the largest pads 46% of a 4K chunk's rows and 161% of a 1.3K chunk's ... per-size-class group
+   buffers (one group buffer per class, rows laid out class-major at routing time)~~ **Done 2026-10-06**
+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2a-done-streamed-experts-grouped-by-row-count-class-2026-10-06)):
+   a streamed MMQ layer's rows are laid out class-major by row count, each expert is gathered as it arrives (the
+   ring still in id order) into its class's own group buffer, and a group is multiplied when its last member lands.
+   Shipped with one class per RDNA 3.5 J tile (`STRATA_PREFILL_MMQ_CLASSES`, default `16,32,48,64,80,96,112,128`;
+   `=0` the old walk), measured against 3 coarser sets. Coder, against one class: padding 46% -> 19% of a 4K chunk's
+   rows, gate/up 1,603-1,632 -> 1,447-1,467 ms, down 765-780 -> 705-706 ms, pp4096 558-563 -> 571-574 t/s; 1.66K
+   prompts 460-462 -> 492-495 t/s, 1.2K 409 -> 444; the same text out. UD-IQ4_XS: its products lose 0.9 s per 4K
+   chunk (padding 103% -> 23%), but its 4K chunks are bound by the arena staging and do not move (331-336 -> 332-333
+   t/s); 1.66K 258-260 -> 280-281 t/s. The prompt path's GDN state hash is unchanged on both models. Costs 174-182
+   more lent cache slots (0.32-0.42 GiB) during a prompt. Not measured on a CUDA card (other J tiles).
 2b. **The MMQ kernels themselves: 6-12 TOPS at the expert shapes** (the harness, sorted groups: 8.7-12.4), against
    the card's int8 dot peak. The vendored ggml already has the RDNA 3.5 tile tables (`mmq-config-rdna3-5.cuh`: 256
    threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles (128
