@@ -7,8 +7,10 @@ pinned host memory, and hipBLAS kernels for gfx1151 in the ROCm wheels already i
 the engine's kernel files were compiled for gfx1151 unchanged, and small programs checked each of those
 assumptions on the card ([What was checked](#what-was-checked-on-this-pc-2026-10-05)). What stops it today is a
 list of places where Strata names its supported architectures and does not know gfx1151
-([What stops it today](#what-stops-it-today)), and that no model has been run yet: this page has no token/s of
-Strata on this PC. Nothing here is a speed claim.
+([What stops it today](#what-stops-it-today)). **Later the same day the port was made, built and run** (the
+[Execution log](#execution-log-2026-10-05-the-same-afternoon)): the Coder IQ1_M serves on the 8060S with every
+expert on the GPU, decodes 1.3-1.6x faster than llama.cpp on this same PC (35-37 vs 22-26 tokens/s with MTP), and
+reads prompts 2.2x slower (146 vs 321 tokens/s) for a reason the log shows and a BIOS setting should fix.
 
 The analysis is the record of one afternoon's checks, in the order they were made. The three probe programs are in
 `docs/benchmarks/2026-10-05-halo-*`.
@@ -189,8 +191,10 @@ on the card, 45-60 tok/s decode on a 640 GB/s card). Four details:
   experts.
 
 The BIOS carve-out could be changed (64/64, or a smaller GPU share), and the engine would then split the experts
-between the cache and RAM as it does on a discrete card. There is no reason to: the experts are read by the GPU
-either way, and the 96 GiB side is the one that holds every model.
+between the cache and RAM as it does on a discrete card. Written before the run: "there is no reason to". The run
+showed one: the prompt path streams the experts from the host-side source for every chunk, and on 31.6 GiB that
+source has no file cache (see [Step 5](#execution-log-2026-10-05-the-same-afternoon)). For decode the reasoning
+holds.
 
 **What bounds decode.** The GPU's 235 GB/s read bandwidth is the ceiling for a memory-bound decode: at that rate
 every token can read at most ~10 GB of weights at 23 t/s, ~5 GB at 47 t/s. The Coder's per-token expert bytes
@@ -286,6 +290,79 @@ prefill kernels, compiled for gfx1151, do not write their output here. The engin
 are not affected; it is the first gfx1151-specific defect, to be looked at after the baseline. Everything else -
 the HIP intrinsics, the router, the native QSA score, the expert cache staging, the hipBLAS prefill batch, the
 sampler, the KV cache modes, the GDN and GR kernels - passes on the 8060S.
+
+**Step 4, the Coder end to end** (by hand, the [3060M.md](3060M.md) route, with the `strata` conda env; not
+`START-HERE.bat`, which would make a `.venv` here). The pack from the GGUF already on C:
+(`tools/iq_pack.py`, 4 s: 1079 tensors, 302 served natively, arena 1.37 GiB) into
+`C:\Users\Wei Lu\Documents\Strata-data\packs\coder-iq1_m`; the MTP draft layer (`tools/mtp_fetch.py`, 4.9 GB
+from the original checkpoint, then `mtp_pack.py --experts q2_0` and `mtp_rt.py`) into `...\Strata-data\mtp\rt`;
+the config `strata-coder-iq1_m.json` (32K context, 8-bit KV, `--expert-cache auto`, `--prefill auto`, MTP with
+`--spec 4`, and `--mmap-experts` with no `experts.bin`: the GGUF read in place) and `run-coder-iq1_m.ps1`.
+The first start answered on `/v1/models` after 45 s. The engine's log:
+
+- `expert cache auto: 101.40 GiB free ... -> 12288 slots`; `expert cache 12288 slots, 23.42 GiB of VRAM`;
+  `pre-filled 12288 of 12288 slots from the profile`: **every expert of the Coder on the GPU**, as the memory
+  section predicted; `78112 MiB of VRAM free with everything loaded`.
+- `experts via mmap (--mmap-experts; the GGUF shards in place, no experts.bin)`; the prompt path borrows 1945
+  cache slots (3.71 GiB); prompt chunk auto: 8192 tokens.
+- `PCIe probe: 8666.2 GB/s host->device, host RAM read 54.0 GB/s -> pcie_frac 0.55`: the host-to-device figure is
+  the APU artifact seen in the bandwidth probe (a copy the events cannot time). It does not matter here: every
+  decode request logged `decode expert cache hit rate: 100.0%`, so no expert is ever computed by the CPU or
+  copied in.
+
+The test request of 3060M.md ("Write a Python function that checks whether a number is prime. Code only.",
+temperature 0, `max_tokens` 600) gave a correct `is_prime` (trial division by odd numbers up to the square root)
+after a short reasoning: 67 prompt tokens in 1.38 s, **245 tokens out in 6.83 s = 35.8 tokens/s**, 162 of 210
+drafts accepted (77%), `finish_reason` stop. The RTX 3060 Laptop PC did this request at 41.0 tokens/s.
+
+**Step 5, the same prompts as the llama.cpp measurement on this very PC**
+(`benchmarks/2026-10-02-3060m-bench_halo.py`, now taking the EngramHalo.cpp checkout from `STRATA_ENGRAM_SRC`
+and reading its sources as UTF-8; raw results `benchmarks/2026-10-05-halo-coder-iq1_m.json`, one session, n=1
+per row, the server started once, temperature 0, 400 tokens out in the server rows). The Halo llama.cpp column
+is windows.md's (quoted in 3060M.md); the RTX 3060 column is 3060M.md's.
+
+| | **this PC, Strata** (8060S, all experts on the GPU) | this PC, llama.cpp (windows.md) | RTX 3060 Laptop 12 GB, Strata |
+|---|---|---|---|
+| model load to listening | **45 s** | 30 s | 11.5 s |
+| cold first request, decode (MTP) | **36.8 t/s**, 89.7% acc | 26.1 t/s, 86.5% acc | 43.3 t/s, 88.1% acc |
+| fresh code prompt, decode (MTP) | **34.7 t/s**, 81.9% acc | 21.9 t/s, 74.5% acc | 42.1 t/s, 80.0% acc |
+| prefill @ ~4.75K | **146.1 t/s** (4749 tokens) | 321.5 t/s | 961.3 t/s |
+| decode tail after that prefill | **30.2 t/s**, 71.3% acc | 20.8 t/s, 81.9% acc | 39.3 t/s, 77.5% acc |
+| repeated prompt (reference only) | 39.1 t/s, 89.7% acc (`cache_n` 0: not reused, as on the 3060) | 49.9 t/s | 45.1 t/s |
+
+| test | **this PC, Strata server** | this PC, llama-bench | RTX 3060 Laptop, Strata server |
+|---|---|---|---|
+| pp4096 @ d0 | **146.4** (4085 tokens) | 318.1 +/- 70.0 | 926.9 |
+| tg128 @ d0 | **27.3** (MTP, 57.6% acc) | 20.92 (plain decode) | 36.2 (MTP, 61.4% acc) |
+| pp4096 @ d16384 | **~137** (derived: 4037 tokens in 144.2 - 114.3 s); 141.6 over all 20421 | 269.9 +/- 1.2 | ~1126 (derived) |
+| tg128 @ d16384 | **26.9** (MTP, 58.4% acc) | 17.98 (plain decode) | 37.4 (MTP, 65.3% acc) |
+
+The same caveats as in 3060M.md: MTP here against plain decode in llama-bench's tg rows, the chat template here
+against `/completion` there, the depth prefill derived from two whole-prompt requests. The answers are coherent
+code reasoning on every row (the JSON keeps the last 300 characters of each).
+
+**Reading it.** On the same hardware Strata decodes the Coder **1.3-1.6x faster than llama.cpp** (35-37 vs 22-26
+t/s with MTP on both; 27 vs 21 t/s at tg128 where llama.cpp has no MTP), the first Strata-vs-llama.cpp numbers on
+one machine. **Prefill is the problem: 141-146 t/s, 2.2x slower than llama.cpp here and 6.5x slower than the
+RTX 3060 PC.** The log says why. The prompt path does not use the GPU-resident experts; per 8192-token chunk it
+streams every expert of every layer from the expert source, which here is the GGUF in place: `expert tiers: ...
+files 0 blobs 47584.5 MB read (the GGUF in place)` after the 16K prompt, 75.5 GB after the session. On a discrete
+card that source is the pinned RAM arena (the R9700 read 4K prompts at ~1,000-1,800 t/s with the same 12,288
+resident experts). Here the source is the OS file cache, and there is none: with the server up, Windows had
+**1.2 GiB free and 0.6 GiB of standby cache** of its 31.6 GiB (the engine 22 GiB working set, 26 GiB private),
+so each chunk's 23.4 GB come from the NVMe again, in the in-place mode's three reads per expert: 47.6 GB in 114 s
+is 416 MB/s against the drive's 2.6 GB/s sequential. Decode is untouched because it needs no expert from the
+source (100% hits).
+
+**Not tried: the default mode (the arena pinned in RAM, no `--mmap-experts`).** With the engine stopped this PC
+has 23.6 GiB free; the Coder's arena is 23.4 GiB plus the engine's other ~2.5 GB. `strata-coder-iq1_m-arena.json`
+is that config, kept for after the fix below. **The fix is the BIOS split**: 64 GiB for the GPU and 64 GiB for
+Windows (or 80/48) gives the file cache, or the pinned arena, the room the prompt path needs, while 64 GiB of
+GPU memory still holds every expert of every size up to IQ3_S (50.3 GB + KV). That is the opposite of the
+"96 GiB side holds every model" reasoning above, which was right for decode and missed the prompt path's source.
+Until the BIOS is changed, the prompt path on this PC is NVMe-bound. A second route, in the engine, would be a
+prompt path that takes resident experts from the cache instead of the source; that is a code change with its own
+measurement, not a setting.
 
 ## The RTX 5090 over Thunderbolt (not pursued)
 
