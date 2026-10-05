@@ -11,13 +11,15 @@ rem mix cl.exe with Clang for HIP, so ROCm's clang compiles the host code too (t
 rem headers and linker from vcvars); cmake/hip_backend.cmake force-includes the CUDA->HIP shim.
 rem
 rem Settings (environment variables, all optional):
-rem   STRATA_HIP_ARCHS     gfx1100;gfx1101;gfx1102;gfx1200;gfx1201;gfx1030 (the cards setup supports, + gfx1102)
+rem   STRATA_HIP_ARCHS     gfx1100;gfx1101;gfx1102;gfx1200;gfx1201;gfx1030;gfx1151 (the cards setup supports, + gfx1102)
+rem   STRATA_ROCM_ROOT     an installed TheRock ROCm to build with (`rocm-sdk path --root` of any environment that
+rem                        has the libraries, devel and device-<arch> extras): step 1 is skipped, nothing is installed
 rem   STRATA_ROCM_VERSION  10.2.0a20260930        STRATA_ROCM_INDEX  https://nightly.repo.amd.com/rocm/whl-next/
 rem   ROCM_VENV            <repo>\.rocm-win       BUILD_DIR          <repo>\build-hip-win     DIST_DIR  <repo>\dist
 rem   STRATA_GGML_DIR      a llama.cpp checkout at the pinned commit (default: CMake fetches it)
 setlocal EnableDelayedExpansion
 for %%I in ("%~dp0..\..") do set "SRC=%%~fI"
-if not defined STRATA_HIP_ARCHS set "STRATA_HIP_ARCHS=gfx1100;gfx1101;gfx1102;gfx1200;gfx1201;gfx1030"
+if not defined STRATA_HIP_ARCHS set "STRATA_HIP_ARCHS=gfx1100;gfx1101;gfx1102;gfx1200;gfx1201;gfx1030;gfx1151"
 if not defined STRATA_ROCM_VERSION set "STRATA_ROCM_VERSION=10.2.0a20260930"
 if not defined STRATA_ROCM_INDEX set "STRATA_ROCM_INDEX=https://nightly.repo.amd.com/rocm/whl-next/"
 if not defined ROCM_VENV set "ROCM_VENV=%SRC%\.rocm-win"
@@ -31,6 +33,13 @@ set "PY="
 py -3 -c "import sys" >nul 2>nul && set "PY=py -3"
 if not defined PY python -c "import sys" >nul 2>nul && set "PY=python"
 if not defined PY (echo Python 3.10+ is needed & exit /b 1)
+set "PKG_PY=%ROCM_VENV%\Scripts\python.exe"
+if defined STRATA_ROCM_ROOT (
+  set "ROCM=%STRATA_ROCM_ROOT%"
+  set "PKG_PY=%PY%"
+  echo Using the ROCm at %STRATA_ROCM_ROOT% ^(STRATA_ROCM_ROOT^)
+  goto :rocm_ready
+)
 if not exist "%ROCM_VENV%\Scripts\python.exe" %PY% -m venv "%ROCM_VENV%" || exit /b 1
 set "EXTRAS=libraries,devel"
 for %%A in (%STRATA_HIP_ARCHS:;= %) do set "EXTRAS=!EXTRAS!,device-%%A"
@@ -45,6 +54,7 @@ if not "!HAVE!"=="!WANT!" (
   >"%STAMP%" echo !WANT!
 )
 for /f "delims=" %%R in ('"%ROCM_VENV%\Scripts\rocm-sdk.exe" path --root') do set "ROCM=%%R"
+:rocm_ready
 if not exist "%ROCM%\lib\llvm\bin\clang++.exe" (echo ROCm has no compiler in "%ROCM%" & exit /b 1)
 set "ROCM_F=%ROCM:\=/%"
 set "BITCODE=%ROCM_F%/lib/llvm/amdgcn/bitcode"
@@ -79,7 +89,7 @@ if "%TESTS%"=="ON" (
 )
 
 rem ---- 4. the zip: the two programs, the ROCm DLLs they load (+ rocBLAS/hipBLASLt kernels for these archs), licenses
-"%ROCM_VENV%\Scripts\python.exe" "%SRC%\tools\hip\package_windows.py" --build "%BUILD_DIR%" --rocm "%ROCM%" ^
+%PKG_PY% "%SRC%\tools\hip\package_windows.py" --build "%BUILD_DIR%" --rocm "%ROCM%" ^
   --archs "%STRATA_HIP_ARCHS%" --rocm-version "%STRATA_ROCM_VERSION%" --out "%DIST_DIR%" || exit /b 1
 echo.
 echo Done: %DIST_DIR%\strata-windows-x64-hip.zip

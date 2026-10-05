@@ -1,10 +1,10 @@
 """Strata on the EngramHalo windows.md tasks: the Coder server sequence and llama-bench-shaped pp/tg at depth 0 and
 16384, through /v1/chat/completions (temperature 0, numbers from `timings`).  Usage: bench_halo.py <label> <out.json>"""
-import json, sys, time, urllib.request
+import json, os, sys, time, urllib.request
 from pathlib import Path
 
 URL = "http://127.0.0.1:8080"
-E = Path("/mnt/evox2/large/work/AI/EngramHalo.cpp/src")
+E = Path(os.environ.get("STRATA_ENGRAM_SRC", "/mnt/evox2/large/work/AI/EngramHalo.cpp/src"))   # the EngramHalo.cpp checkout
 LOADER = (E / "llama-model-loader.cpp").read_text()
 
 

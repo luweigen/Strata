@@ -246,6 +246,47 @@ Not done on this page; each step is a check with a definite outcome.
 6. **Then** `STRATA_HIP_WMMA` for gfx11's WMMA layout is the one kernel-level gain to look at (the RDNA4 kernel gave
    7x on prompt attention); not before the baseline exists.
 
+## Execution log (2026-10-05, the same afternoon)
+
+The plan above was then carried out on this PC; what each step gave.
+
+**Step 1, the port** (branch `AIMAX395-ROCm`): gfx1151 and gfx1150 in `cmake/hip_backend.cmake`'s unvalidated list
+(the configure prints "gfx1151 builds, but it is not validated on a real card yet"), the two arch macros in
+`intrinsics.hpp`'s dot4 condition, setup's `AMD_ARCHS`, `AMD_NAMES`, `AMD_CARDS`, `ROCM_INDEXES` (TheRock has a
+`gfx1151` family index on Linux, checked) and the Windows PCI id `0x1586` plus a `8060S / 8050S` name rule;
+`build_windows.bat` takes `STRATA_ROCM_ROOT` (an installed ROCm instead of its own venv) and has gfx1151 in its
+default arch list. `tools/test_setup_amd.py` (18 tests) and `tools/test_setup_choices.py` (15) pass.
+
+**Step 2, the build.** A new conda env `strata` (Python 3.14.8, `C:\conda_envs\strata`) took every pinned package of
+`requirements.txt` (numpy 2.5.3 included) and gave `cmake`/`ninja`; the ROCm was the untouched `rocm100-py312` env's
+root through `STRATA_ROCM_ROOT`; `STRATA_GGML_DIR` pointed at `third_party/llama.cpp` (setup's `get_llama_cpp()`
+zip) because CMake's own git clone into `build-hip-win` on the exFAT disk failed with git's "dubious ownership".
+`tools\hip\build_windows.bat tests`: 255 ninja steps, `strata.exe` (15.6 MB), `strata-device.exe`, the test
+programs, no source error. Two fixes to `tools/hip/package_windows.py` on the way: the ROCm 10.0.0 wheels keep
+rocBLAS's kernels in `rocblas/library/gfx1151/` (a folder per arch; the 10.2 nightlies the script was written for
+put the files side by side), and the script read `CMakeLists.txt` with the locale's codec (GBK here) and fell over
+its non-ASCII comment: now `encoding="utf-8"`. The zip: 114 MiB (269 unpacked), gfx1151, ROCm 10.0.0, hipBLASLt
+1.4.1, unpacked into `engine\`. With only `engine\rocm\bin` on the PATH:
+
+```
+device 0: AMD Radeon(TM) 8060S Graphics
+  arch gfx1151, 107.9 GiB, wave32
+```
+
+and `strata-device --selftest` passes ("HIP arch gfx1151 wave32 (compiled for gfx1151)", VRAM 107.9 GiB total /
+107.7 free, the 20480-context plan FITS).
+
+**Step 3, ctest** (55 tests, `build-hip-win\ctest.log`): 48 pass, 2 skip, 5 fail. The skips are the gfx12-only
+WMMA attention and the hipBLASLt table test (no table for gfx1151). Four failures are the known ones:
+`hip_handoff` (the Windows mapped-pointer alias, see above), `ple_parity` (needs the Q2_0 model fixture),
+`expert_parity` and `pool_test` (need `pack/full/experts.bin`). **One is new and real on this card:**
+`hip_prefill_mmq_parity` fails with "synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output": ggml's MMQ
+prefill kernels, compiled for gfx1151, do not write their output here. The engine uses that path only when
+`STRATA_PREFILL_MMQ=1` is set at run time (off by default: `src/prefill/prefill.cpp:476`), so the model runs below
+are not affected; it is the first gfx1151-specific defect, to be looked at after the baseline. Everything else -
+the HIP intrinsics, the router, the native QSA score, the expert cache staging, the hipBLAS prefill batch, the
+sampler, the KV cache modes, the GDN and GR kernels - passes on the 8060S.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's

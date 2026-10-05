@@ -954,24 +954,28 @@ def cuda_lib_dirs():
 # ------------------------------------------------------------------------------------------------ AMD
 # The RX 7900 XT / XTX (gfx1100) and the RX 9070 series / Radeon AI PRO R9700 (gfx1201) on Linux, through the HIP
 # backend (docs/AMD_HIP.md); the RX 7800 XT / 7700 XT (gfx1101, #254) and the RX 9060 XT (gfx1200, #256) were run by
-# their owners; the RX 6800 / 6900 series (gfx1030, #311) runs but is unvalidated.  There is no ready-made AMD engine: ROCm comes from AMD's TheRock Python wheels into .venv (no sudo;
+# their owners; the RX 6800 / 6900 series (gfx1030, #311) runs but is unvalidated; the Radeon 8060S / 8050S integrated
+# GPU of the Ryzen AI MAX 300 series (gfx1151, docs/AIMAX+395-ROCm.md) is being ported.  There is no ready-made AMD engine: ROCm comes from AMD's TheRock Python wheels into .venv (no sudo;
 # a system ROCm 7 in /opt/rocm is used when it has hipcc and hipBLAS) and the engine is compiled here for the cards.
 # No images yet.
 ROCM_INDEXES = {"gfx1100": "https://rocm.nightlies.amd.com/v2/gfx110X-dgpu/",   # TheRock's wheels per GPU family
                 "gfx1101": "https://rocm.nightlies.amd.com/v2/gfx110X-dgpu/",
                 "gfx1200": "https://rocm.nightlies.amd.com/v2/gfx120X-all/",
                 "gfx1201": "https://rocm.nightlies.amd.com/v2/gfx120X-all/",
-                "gfx1030": "https://rocm.nightlies.amd.com/v2/gfx103X-all/"}
+                "gfx1030": "https://rocm.nightlies.amd.com/v2/gfx103X-all/",
+                "gfx1151": "https://rocm.nightlies.amd.com/v2/gfx1151/"}
 ROCM_VERSION = os.environ.get("STRATA_ROCM_VERSION", "7.10.0a20251120")   # what Strata's HIP build was tested with
 ROCM_SYSTEM_MIN = (7, 0)       # an older system ROCm is passed over for the wheels (gfx1201 needs ROCm 6.4 or newer)
-AMD_ARCHS = ("gfx1100", "gfx1101", "gfx1200", "gfx1201", "gfx1030")
+AMD_ARCHS = ("gfx1100", "gfx1101", "gfx1200", "gfx1201", "gfx1030", "gfx1151")
 AMD_NAMES = {"gfx1100": "AMD Radeon RX 7900 series (gfx1100)",   # when sysfs has no product name
              "gfx1101": "AMD Radeon RX 7800 XT / 7700 XT (gfx1101)",
              "gfx1200": "AMD Radeon RX 9060 series (gfx1200)",
              "gfx1201": "AMD Radeon RX 9070 series / AI PRO R9700 (gfx1201)",
-             "gfx1030": "AMD Radeon RX 6800 / 6900 series (gfx1030)"}
+             "gfx1030": "AMD Radeon RX 6800 / 6900 series (gfx1030)",
+             "gfx1151": "AMD Radeon 8060S / 8050S, Ryzen AI MAX 300 series (gfx1151)"}
 AMD_CARDS = ("the RX 7900 XT / XTX (gfx1100), RX 7800 XT / 7700 XT (gfx1101), RX 9060 XT (gfx1200) and "
-             "RX 9070 / 9070 XT / Radeon AI PRO R9700 (gfx1201), and the RX 6800 / 6900 series (gfx1030, unvalidated)")
+             "RX 9070 / 9070 XT / Radeon AI PRO R9700 (gfx1201), the RX 6800 / 6900 series (gfx1030, unvalidated) and "
+             "the Ryzen AI MAX 300 series' Radeon 8060S / 8050S (gfx1151, unvalidated)")
 
 
 def rocm_index(arch):
@@ -1073,8 +1077,10 @@ _WIN_AMD_DID = {0x744C: "gfx1100", 0x7448: "gfx1100", 0x745E: "gfx1100",        
                 0x7480: "gfx1102",                                                  # RX 7600 / 7600 XT
                 0x7590: "gfx1200",                                                  # RX 9060 XT
                 0x7550: "gfx1201", 0x7551: "gfx1201",                               # RX 9070 / 9070 XT, AI PRO R9700
-                0x73BF: "gfx1030", 0x73AF: "gfx1030", 0x73A5: "gfx1030"}            # RX 6800 / 6800 XT / 6900 XT / 6950 XT
+                0x73BF: "gfx1030", 0x73AF: "gfx1030", 0x73A5: "gfx1030",            # RX 6800 / 6800 XT / 6900 XT / 6950 XT
+                0x1586: "gfx1151"}                                                  # Radeon 8060S / 8050S (Strix Halo)
 _WIN_AMD_NAME = ((re.compile(r"\b9070\b|R9700", re.I), "gfx1201"),
+                 (re.compile(r"\b80[56]0S\b", re.I), "gfx1151"),
                  (re.compile(r"\b9060\b", re.I), "gfx1200"),
                  (re.compile(r"RX\s*7900|W7900|W7800", re.I), "gfx1100"),
                  (re.compile(r"RX\s*7800|RX\s*7700(?!\s*S)|W7700", re.I), "gfx1101"),

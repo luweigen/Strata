@@ -8,10 +8,12 @@ endif()
 # maintainers; gfx1101 (RX 7800 XT, #254) and gfx1200 (RX 9060 XT, #256) by their owners. gfx1102 (RX 7600) has the
 # same LDS limit and dot4 instruction and passed ctest (#192), but no model run has been reported yet. RDNA2 gfx1030 (RX 6800 / 6900) has the
 # same LDS limit and wave32 but an older dot4 instruction (v_dot4_i32_i8, hip_compat/intrinsics.hpp); a community
-# report ran it (#311), the maintainers have not.
+# report ran it (#311), the maintainers have not.  RDNA 3.5 gfx1151 (Radeon 8060S / 8050S in the Ryzen AI MAX
+# 300 series, an integrated GPU with up to 96 GiB of carve-out) and gfx1150 (Ryzen AI 300's Radeon 880M / 890M)
+# are the gfx11 instruction set with RDNA3's wave32, 64 KiB LDS and sudot4: the port is docs/AIMAX+395-ROCm.md.
 set(_strata_hip_validated gfx1100 gfx1201)
 set(_strata_hip_community gfx1101 gfx1200)
-set(_strata_hip_unvalidated gfx1102 gfx1030)
+set(_strata_hip_unvalidated gfx1102 gfx1030 gfx1151 gfx1150)
 # CMake hands HIP a ';' list, but a -DCMAKE_HIP_ARCHITECTURES typed by hand (or ROCm's own Windows tooling) may use
 # spaces, which foreach(IN LISTS) would otherwise treat as one element.
 string(REPLACE " " ";" _strata_hip_norm "${CMAKE_HIP_ARCHITECTURES}")
@@ -28,7 +30,7 @@ foreach(_arch IN LISTS _strata_hip_norm)
     message(WARNING "Strata HIP: ${_base} builds, but it is not validated on a real card yet; please report results")
   else()
     message(FATAL_ERROR
-      "Strata HIP supports wave32 gfx1100, gfx1101, gfx1200 and gfx1201 (unvalidated: ${_strata_hip_unvalidated}); "
+      "Strata HIP supports wave32 gfx1100, gfx1101, gfx1200 and gfx1201 (unvalidated: ${_strata_hip_unvalidated}, see docs/AMD_HIP.md); "
       "CMAKE_HIP_ARCHITECTURES is '${CMAKE_HIP_ARCHITECTURES}'")
   endif()
   list(APPEND STRATA_HIP_ARCH_LIST "${_base}")

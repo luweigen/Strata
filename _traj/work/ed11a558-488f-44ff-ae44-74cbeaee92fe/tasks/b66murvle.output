@@ -1,0 +1,15 @@
+exit 1
+    sys.exit(main())
+             ~~~~^^
+  File "E:\work\AI\Strata\tools\hip\package_windows.py", line 114, in main
+    shutil.copy2(f, lib / f.name)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\conda_envs\strata\Lib\shutil.py", line 529, in copy2
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\conda_envs\strata\Lib\shutil.py", line 313, in copyfile
+    with open(src, 'rb') as fsrc:
+         ~~~~^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'C:\\conda_envs\\rocm100-py312\\Lib\\site-packages\\_rocm_sdk_devel\\bin\\rocblas\\library\\gfx1151'
+
+[exited with code 1]

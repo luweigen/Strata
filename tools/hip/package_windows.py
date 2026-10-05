@@ -110,7 +110,11 @@ def main() -> int:
     lib.mkdir(parents=True)
     for f in (rbin / "rocblas" / "library").iterdir():
         m = re.search(r"gfx[0-9a-f]+", f.name)
-        if m is None or m.group() in archs:
+        if m is not None and m.group() not in archs:
+            continue
+        if f.is_dir():                                    # ROCm 10.0.0 release wheels: one folder per arch
+            shutil.copytree(f, lib / f.name)
+        else:                                             # 10.2 nightlies: the files side by side
             shutil.copy2(f, lib / f.name)
     for arch in archs:
         src = rbin / "hipblaslt" / "library" / arch
@@ -135,8 +139,8 @@ def main() -> int:
     (lic / "NOTICE.txt").write_text(NOTICE.format(rocm=a.rocm_version, dlls="\n".join("  " + d for d in shipped)),
                                     encoding="utf-8")
 
-    version = re.search(r"project\(strata VERSION ([\d.]+)", (ROOT / "CMakeLists.txt").read_text()).group(1)
-    hl = (a.rocm / "include" / "hipblaslt" / "hipblaslt-version.h").read_text()
+    version = re.search(r"project\(strata VERSION ([\d.]+)", (ROOT / "CMakeLists.txt").read_text(encoding="utf-8")).group(1)
+    hl = (a.rocm / "include" / "hipblaslt" / "hipblaslt-version.h").read_text(encoding="utf-8")
     hlv = [int(re.search(rf"#define\s+HIPBLASLT_VERSION_{k}\s+(\d+)", hl).group(1)) for k in ("MAJOR", "MINOR", "PATCH")]
     meta = {"source": "prebuilt", "backend": "hip", "platform": "windows-x64", "version": version, "archs": archs,
             "rocm": a.rocm_version, "hipblaslt_version": hlv[0] * 100000 + hlv[1] * 100 + hlv[2], "vision": "none",
