@@ -1,1 +1,15 @@
 === pa-wmma: ready=True
+{"label": "pa-wmma", "i": 0, "wall_s": 8.52, "cache_n": 0, "prompt_n": 4169, "prompt_per_second": 494.0}
+{"label": "pa-wmma", "i": 1, "wall_s": 8.0, "cache_n": 0, "prompt_n": 4169, "prompt_per_second": 526.2}
+strata prefill timing: 4164 tokens, GPU timeline 7733 ms, wall 7774 ms, host staging 9 ms: embed+steps 11 (0.1%) hc read 669 (8.7%) gdn 922 (11.9%) qsa proj 503 (6.5%) qsa indexer 0 (0.0%) qsa select 42 (0.5%) qsa attn 611 (7.9%) router+shared 220 (2.8%) host grouping 28 (0.4%) gather 71 (0.9%) wait copy 28 (0.4%) dequant 468 (6.1%) gemm gate/up 1776 (23.0%) gemm down 790 (10.2%) combine 224 (2.9%) ple 31 (0.4%) gdn conv+gates
+=== pa-wmma-plus-wmma-gemm: ready=True
+{"label": "pa-wmma-plus-wmma-gemm", "i": 0, "wall_s": 10.95, "cache_n": 0, "prompt_n": 4174, "prompt_per_second": 384.1}
+{"label": "pa-wmma-plus-wmma-gemm", "i": 1, "wall_s": 10.91, "cache_n": 0, "prompt_n": 4173, "prompt_per_second": 385.3}
+strata prefill timing: 4168 tokens, GPU timeline 10638 ms, wall 10678 ms, host staging 8 ms: embed+steps 11 (0.1%) hc read 1755 (16.5%) gdn 1900 (17.9%) qsa proj 929 (8.7%) qsa select 37 (0.4%) qsa attn 605 (5.7%) router+shared 324 (3.0%) host grouping 29 (0.3%) gather 68 (0.6%) wait copy 26 (0.2%) dequant 471 (4.4%) gemm gate/up 1756 (16.5%) gemm down 784 (7.4%) combine 224 (2.1%) ple 53 (0.5%) gdn conv+gates 80 (0.8%) gdn re
+=== wmma-gemm-only: ready=True
+{"label": "wmma-gemm-only", "i": 0, "wall_s": 12.4, "cache_n": 0, "prompt_n": 4171, "prompt_per_second": 338.5}
+{"label": "wmma-gemm-only", "i": 1, "wall_s": 12.31, "cache_n": 0, "prompt_n": 4171, "prompt_per_second": 340.7}
+strata prefill timing: 4166 tokens, GPU timeline 12042 ms, wall 12080 ms, host staging 8 ms: embed+steps 11 (0.1%) hc read 1840 (15.3%) gdn 1915 (15.9%) qsa proj 886 (7.4%) qsa indexer 0 (0.0%) qsa select 38 (0.3%) qsa attn 1970 (16.4%) router+shared 330 (2.7%) host grouping 30 (0.2%) gather 68 (0.6%) wait copy 28 (0.2%) dequant 466 (3.9%) gemm gate/up 1756 (14.6%) gemm down 781 (6.5%) combine 224 (1.9%) ple 53 (0.4%) gdn conv
+done
+
+[exited with code 0]
