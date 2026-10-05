@@ -14,18 +14,43 @@ the measurement that decides it. Test outputs (engine logs, server output, bench
    hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the
    maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for
    K8V4 pools.
-2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at
-   3.5-3.7 TFLOP/s; the same shape with a 16-bit output runs at 18.7. Decide between: a 16-bit output for these two
-   GEMMs only (consumers `swiglu_interleaved`, `moe_combine`; needs the parity tests), a WMMA kernel with FP32
-   accumulate (PR #313's 64x64 tile, or ROCm/hip-ep#1002's gfx1151-tuned kernel), or the MMQ path (next item).
+2. ~~**The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne`
+   rows per layer with FP32 output run at 3.5-3.7 TFLOP/s ... Decide between a 16-bit output, a WMMA kernel, or the
+   MMQ path~~ **Done 2026-10-05 night, with a corrected premise**
+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2-done-the-expert-products-are-mmq-not-fp16-gemms-and-their-j-tile-2026-10-05-night)):
+   the Coder's expert products run through llama.cpp's MMQ (int8) by default, not the FP16 GEMMs - those only run
+   with `STRATA_PREFILL_MMQ=0`. Measured on this card: the three FP16 routes (hipBLASLt solutions from the tuner,
+   16-bit output, PR #313's WMMA) and the MMQ products at one layer's shape. Shipped: `Product::opt_rows` - the MMQ
+   J tile chosen for a group's median row count instead of its largest (`STRATA_PREFILL_MMQ_OPT=max` restores the
+   old choice): gate/up 1,800-1,832 -> 1,581-1,604 ms, down 802-816 -> 764-769 ms, pp4096 509-525 -> 524-541 t/s,
+   a 1.3K prompt 398 -> 424 t/s, the same text out; the gfx1151 hipBLASLt table extended with the expert shapes at
+   small T (the FP16 path's gate/up 4,231 -> 1,593-1,671 ms, now on par with MMQ); experts sorted by row count
+   before grouping where the chunk does not stream (below `STRATA_PREFILL_STREAM_MIN` = 1,024 tokens: 1,001-token
+   prompts 360-388 -> 388-428 t/s; in arena mode every expert is staged from the arena in id order, so 4K chunks
+   keep id order). Left open, in the next two items.
+2a. **Group the experts by row count while they stream.** The MMQ products pay for the J tile the group's experts
+   pad to: a tile for the largest pads 46% of a 4K chunk's rows and 161% of a 1.3K chunk's (the engine's own count,
+   `STRATA_PREFILL_TIMING=1`); the median tile recovers part, sorted groups all of it (the harness
+   `docs/benchmarks/2026-10-05-halo-mmq-bench.cpp`: gate/up IQ3_XXS 47.8 -> 34.5 ms per layer with the median,
+   29.3 sorted). The streamed walk consumes ring slots in id order, so sorting needs the gathers to land in
+   per-size-class group buffers (one group buffer per class, rows laid out class-major at routing time), or a prompt
+   path that computes resident experts from their cache slots without staging (items 10, 11).
+2b. **The MMQ kernels themselves: 6-12 TOPS at the expert shapes** (the harness, sorted groups: 8.7-12.4), against
+   the card's int8 dot peak. The vendored ggml already has the RDNA 3.5 tile tables (`mmq-config-rdna3-5.cuh`: 256
+   threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles (128
+   threads, I = 64, J = 48; closed unmerged, pp128 +61-74% claimed) are untested here. The harness links
+   `strata_mmq.lib`, so a config edit and `cmake --build build-hip-win --target strata_mmq` measure it.
 3. **`hip_prefill_mmq_parity` fails on gfx1151** ("synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output").
    Find out whether it is ggml's gfx1151 handling (llama.cpp#21284: MMQ tile `mmq_x=48, mmq_y=64, nwarps=4`
-   against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). MMQ is
-   the grouped, dequant-free shape the expert GEMMs want.
+   against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). This
+   matters more than it looked: the Coder's and UD-IQ4_XS's experts run through MMQ by default on this card (item 2),
+   including layers whose down matrix is Q2_0 (`native_experts.txt`: layer 1 and others), and the day's benchmark
+   outputs came from that path.
 4. **The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and
-   8192; the engine logs `Lt fallback; no calibration for dtype=bf16 T=4165 N=256 K=2560` for the partial last
-   chunk and the 256-wide alpha/beta projections. Either calibrate more T values (the tuner takes `--case`) or make
-   the lookup tolerant of T. Also re-run `tune_hipblaslt` whenever the ROCm wheels change (ids are per version).
+   8192 and, since item 2, the two expert shapes at T = 16-512; the engine still logs `Lt fallback; no calibration
+   for dtype=bf16 T=4165 N=256 K=2560` for the 256-wide alpha/beta projections. Calibrate those (the tuner takes
+   `--case`; the lookup already takes the nearest T). Also re-run `tune_hipblaslt` whenever the ROCm wheels change
+   (ids are per version).
 5. **The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card
    (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.
 6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any

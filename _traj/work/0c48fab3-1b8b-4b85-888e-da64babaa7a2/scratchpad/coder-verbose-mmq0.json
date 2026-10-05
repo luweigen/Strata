@@ -1,0 +1,44 @@
+﻿{
+    "exe":  "E:\\work\\AI\\Strata\\engine\\strata.exe",
+    "args":  [
+                 "--pack",
+                 "C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m",
+                 "--native",
+                 "C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF\\IQ1_M\\Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.gguf",
+                 "--ple-gguf",
+                 "C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF\\IQ1_M\\Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00002-of-00002.gguf",
+                 "--expert-profile",
+                 "E:\\work\\AI\\Strata\\data\\expert-profile-coder.bin",
+                 "--expert-cache",
+                 "auto",
+                 "--prefill",
+                 "auto",
+                 "--spec",
+                 "4",
+                 "--spec-min-p",
+                 "0.5",
+                 "--mtp",
+                 "C:\\Users\\Wei Lu\\Documents\\Strata-data\\mtp\\rt",
+                 "--max-context",
+                 "32768",
+                 "--kv",
+                 "int8"
+             ],
+    "env":  {
+                "ROCBLAS_USE_HIPBLASLT":  "1",
+                "STRATA_HIPBLASLT_TUNING":  "E:\\work\\AI\\Strata\\tools\\hip\\gfx1151-hipblaslt-100401.txt",
+                "STRATA_PA_WMMA":  "1",
+                "STRATA_HIPBLASLT_VERBOSE":  "1",
+                "STRATA_PREFILL_TIMING":  "1",
+                "STRATA_PREFILL_MMQ":  "0"
+            },
+    "cwd":  "E:\\work\\AI\\Strata",
+    "tokenizer":  "C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m\\tokenizer",
+    "model_name":  "qwen3.8-flash-next-coder-iq1_m",
+    "log":  "E:\\work\\AI\\Strata\\docs\\benchmarks\\2026-10-05-halo-expert-gemm-verbose-mmq0.log",
+    "lib_dirs":  [
+                     "E:\\work\\AI\\Strata\\engine\\rocm\\bin"
+                 ],
+    "backend":  "hip",
+    "port":  8080
+}

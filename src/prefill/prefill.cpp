@@ -1005,6 +1005,10 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
     std::future<bool> next_run;
     int hand_buf = 0;
     double host_sync_ms = 0, host_chunk_ms = 0, host_setup_ms = 0;   // STRATA_PREFILL_TIMING: the host's share
+    // STRATA_PREFILL_TIMING: the expert loop's host time (issuing the gathers, products and their kernels; it
+    // blocks only on streamed blobs), the MoE rows and the rows MMQ's J tile pads them to, the layers sorted by count
+    double host_moe_ms = 0;
+    int64_t moe_rows = 0, moe_padded = 0, moe_layers = 0, moe_sorted = 0;
     strata::kernels::QsaShapes s = strata::kernels::qsa_real_shapes();
     s.n_head = g.n_head; s.n_head_kv = g.n_head_kv; s.head_dim = g.head_dim; s.idx_n_head = g.idx_q_heads;
     s.idx_dim = g.idx_key_dim;
@@ -1597,8 +1601,40 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                         if (e < 0 || e >= m.g->n_expert) { err = "prefill: routed id out of range"; return false; }
                         ++m.cnt[(size_t) e];
                     }
-                    m.off[0] = 0;
-                    for (int64_t e = 0; e < m.g->n_expert; ++e) m.off[(size_t) e + 1] = m.off[(size_t) e] + m.cnt[(size_t) e];
+                    // The experts with rows, and the order the layer computes them in: id order when this layer
+                    // streams blobs through the ring (the streamed walk below consumes them in id order), otherwise
+                    // sorted by row count, largest first (STRATA_PREFILL_SORT_EXPERTS=0 keeps id order).  The MMQ
+                    // path multiplies MMQ_GROUP consecutive experts in one launch with one J tile chosen from the
+                    // group's largest count, and every expert in the group pads its rows to that tile: in id order a
+                    // 4K chunk's groups mix experts of 1 and 1,000 rows and the padding about doubles the kernel's
+                    // work (gfx1151, docs/benchmarks/2026-10-05-halo-mmq-bench.cpp: 47 -> 29 ms per layer sorted).
+                    // The rows are laid out in this order too (m.off), so a group's experts stay contiguous.
+                    std::vector<int32_t> order;
+                    for (int32_t e = 0; e < m.g->n_expert; ++e) if (m.cnt[(size_t) e] > 0) order.push_back(e);
+                    static const bool sort_experts = [] { const char* v = std::getenv("STRATA_PREFILL_SORT_EXPERTS"); return !v || std::atoi(v) != 0; }();
+                    const bool streams = stream_all && !seq_start.empty() && seq_start[(size_t) l] != seq_start[(size_t) l + 1];
+                    if (sort_experts && !streams) {
+                        std::stable_sort(order.begin(), order.end(),
+                                         [&](int32_t a, int32_t b) { return m.cnt[(size_t) a] > m.cnt[(size_t) b]; });
+                        ++moe_sorted;
+                    }
+                    ++moe_layers;
+                    moe_rows += T * K;
+                    for (size_t j0 = 0; j0 < order.size(); j0 += MMQ_GROUP) {   // the J-tile padding of this grouping
+                        const size_t j1 = std::min(order.size(), j0 + MMQ_GROUP);
+                        int32_t maxr = 0;
+                        for (size_t j = j0; j < j1; ++j) maxr = std::max(maxr, m.cnt[(size_t) order[j]]);
+                        const int32_t J = std::min<int32_t>(128, (maxr + 7) / 8 * 8);
+                        for (size_t j = j0; j < j1; ++j) {
+                            const int32_t c = m.cnt[(size_t) order[j]];
+                            moe_padded += (c + J - 1) / J * J - c;
+                        }
+                    }
+                    {
+                        int32_t acc = 0;
+                        for (int32_t e : order) { m.off[(size_t) e] = acc; acc += m.cnt[(size_t) e]; }
+                        m.off[(size_t) m.g->n_expert] = acc;
+                    }
                     std::vector<int32_t> fill(m.off.begin(), m.off.end() - 1);
                     for (int64_t i = 0; i < T * K; ++i) {
                         const int32_t e = ids_h[(size_t) i];
@@ -1613,9 +1649,7 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                         cudaMemcpyAsync(m.slot_dev, m.slot_host.data(), (size_t) T * K * 4, cudaMemcpyHostToDevice, m.cs);
                         cudaMemcpyAsync(m.src_dev, m.src_host.data(), (size_t) T * K * 4, cudaMemcpyHostToDevice, m.cs);
                     }
-                    // the experts, in id order: resident ones from VRAM, the others through the staging ring
-                    std::vector<int32_t> order;
-                    for (int32_t e = 0; e < m.g->n_expert; ++e) if (m.cnt[(size_t) e] > 0) order.push_back(e);
+                    // the experts in `order`: resident ones from VRAM, the others through the staging ring
                     const strata::kernels::cpu::ExpertLayout& lay = strata::kernels::cpu::expert_layout();
                     const bool use_mmq = mmq_plan().any && mmq_plan().layer[(size_t) l];
                     const int mmq_gt = lay.native ? lay.fmt[(size_t) l].gu_type : 42;
@@ -1720,8 +1754,25 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                             const size_t j0 = j - q, g = j0 / MMQ_GROUP, n = order.size();
                             const int ngx = (int) (q + 1);
                             const int64_t r0 = m.bounds_host[j0], nr = m.bounds_host[j + 1] - r0;
-                            int64_t maxr = 0;
-                            for (size_t i = j0; i <= j; ++i) maxr = std::max<int64_t>(maxr, m.cnt[(size_t) order[i]]);
+                            // the launch grid covers the group's largest expert; the J tile is chosen for its median
+                            // (Product::opt_rows): the groups come in id order and mix experts of 10 and 1,000 rows,
+                            // and a tile sized for the largest pads the small ones (gfx1151, a 4K chunk: 46% of the
+                            // rows padded with the largest, docs/benchmarks/2026-10-05-halo-mmq-bench-opt.log: the
+                            // median takes 18-28% off the products' time; STRATA_PREFILL_MMQ_OPT=max restores the old
+                            // choice, =mean picks the mean)
+                            static const int opt_mode = [] {
+                                const char* v = std::getenv("STRATA_PREFILL_MMQ_OPT");
+                                return !v || std::strcmp(v, "median") == 0 ? 2 : std::strcmp(v, "mean") == 0 ? 1 : 0;
+                            }();
+                            int64_t maxr = 0, sumr = 0;
+                            int32_t rows_of[MMQ_GROUP];
+                            for (size_t i = j0; i <= j; ++i) {
+                                rows_of[i - j0] = m.cnt[(size_t) order[i]];
+                                maxr = std::max<int64_t>(maxr, rows_of[i - j0]);
+                                sumr += rows_of[i - j0];
+                            }
+                            std::sort(rows_of, rows_of + ngx);
+                            const int64_t optr = opt_mode == 2 ? rows_of[ngx / 2] : opt_mode == 1 ? (sumr + ngx - 1) / ngx : maxr;
                             pt.mark(kPfGemmGU, cs);
                             // the zeroed tail after the group's last expert (see MMQ_TAIL)
                             cudaMemsetAsync(m.grp_gu + (size_t) ngx * mmq_gub, 0, MMQ_TAIL, m.cs);
@@ -1729,7 +1780,7 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                             mmq::Product gu;
                             gu.w = m.grp_gu; gu.type = mmq_gt; gu.w_rows = 1280; gu.w_cols = N; gu.expert_bytes = mmq_gub;
                             gu.n = ngx; gu.xq = m.Xq; gu.bounds = m.bounds_dev + j0; gu.ids = m.ids_identity;
-                            gu.total_rows = T * K; gu.max_rows = maxr; gu.dst = m.GU; gu.ld_dst = 1280;
+                            gu.total_rows = T * K; gu.max_rows = maxr; gu.opt_rows = optr; gu.dst = m.GU; gu.ld_dst = 1280;
                             m.mmq_ctx->run(gu, m.cs);
                             mmq::swiglu(m.GU + r0 * 1280, m.H + r0 * 640, nr, 640, !lay.native, m.cs);
                             pt.mark(kPfGemmD, cs);
@@ -1737,7 +1788,7 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                             mmq::Product dn;
                             dn.w = m.grp_d; dn.type = mmq_dt; dn.w_rows = N; dn.w_cols = 640; dn.expert_bytes = mmq_db;
                             dn.n = ngx; dn.xq = m.Hq; dn.bounds = m.bounds_dev + n + 1 + g * (MMQ_GROUP + 1);
-                            dn.ids = m.ids_identity; dn.total_rows = nr; dn.max_rows = maxr; dn.dst = m.Dm + r0 * N;
+                            dn.ids = m.ids_identity; dn.total_rows = nr; dn.max_rows = maxr; dn.opt_rows = optr; dn.dst = m.Dm + r0 * N;
                             dn.ld_dst = N;
                             m.mmq_ctx->run(dn, m.cs);
                             return true;
@@ -1761,6 +1812,7 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                         m.gemm.f16(m.Hh + o0 * 640, m.dq_d[q], m.Dm + o0 * N, ne, N, 640);
                         return true;
                     };
+                    const auto t_moe = Clock::now();
                     if (!stream_all) {
                         size_t staged = 0;
                         const size_t lookahead = STAGE - 1;
@@ -1809,6 +1861,7 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
                         }
                         release_to(m.g->n_expert);
                     }
+                    host_moe_ms += ms_since(t_moe);
                     pt.mark(kPfCombine, cs);
                     moe_combine(m.Dm, m.slot_dev, m.w, m.shared, m.sg, m.bo, T, m.cs);
                     // debug: STRATA_DBG_NAN=1 reports the first layer of a chunk whose MoE produced non-finite values
@@ -1956,6 +2009,10 @@ bool Prefill::run(const int64_t* tokens, int64_t n, int64_t pos0, std::string& e
         std::fprintf(stderr, "strata prefill timing: host: chunk setup (PLE rows, the expert stream plan) %.0f ms, "
                              "waiting for each chunk %.0f ms, after each chunk (the draft layer, progress) %.0f ms, "
                              "PLE %.0f ms\n", host_setup_ms, host_sync_ms, host_chunk_ms, stats_.ms_ple);
+        std::fprintf(stderr, "strata prefill timing: experts: the loop's host time %.0f ms over %lld layers (%lld sorted by "
+                             "row count), %lld routed rows, a J tile for each group's largest expert would pad them by %.1f%%\n", host_moe_ms,
+                     (long long) moe_layers, (long long) moe_sorted, (long long) moe_rows,
+                     moe_rows > 0 ? 100.0 * (double) moe_padded / (double) moe_rows : 0.0);
     }
     if (std::getenv("STRATA_STATE_HASH_GDN") != nullptr) {   // debug: the GDN states as the prompt path leaves them
         cudaStreamSynchronize(m.cs);

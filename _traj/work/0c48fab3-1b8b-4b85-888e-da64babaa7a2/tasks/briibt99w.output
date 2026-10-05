@@ -1,0 +1,14 @@
+server pid 10900
+up: True
+{"label": "mmq0", "i": 0, "wall_s": 10.56, "cache_n": 0, "prompt_n": 4168, "prompt_per_second": 397.9}
+{"label": "mmq0", "i": 1, "wall_s": 10.32, "cache_n": 0, "prompt_n": 4169, "prompt_per_second": 407.1}
+---- Lt lines by shape:
+ 1208  prefill gemm: Lt solution=2539 dtype=f16 T=* N=2560 K=640 ldy=2560 
+ 1206  prefill gemm: Lt fallback; no calibration for dtype=f16 T=* N=1280 K=2560 ldy=1280
+    5  prefill gemm: Lt solution=1251 dtype=bf16 T=* N=320 K=10240 ldy=320 
+    5  prefill gemm: Lt solution=1251 dtype=bf16 T=* N=10240 K=320 ldy=10240 
+    2  prefill gemm: Lt solution=1251 dtype=bf16 T=* N=10240 K=2560 ldy=10240 
+    2  prefill gemm: Lt solution=2539 dtype=f16 T=* N=12288 K=2560 ldy=12288 
+---- timing:
+strata prefill timing: 4164 tokens, GPU timeline 10048 ms, wall 10084 ms, host staging 11 ms: embed+steps 11 (0.1%) hc read 670 (6.7%) gdn 912 (9.1%) qsa proj 479 (4.8%) qsa indexer 0 (0.0%) qsa select 42 (0.4%) qsa attn 610 (6.1%) router+shared 221 (2.2%) host grouping 35 (0.4%) gather 71 (0.7%) wait copy 8 (0.1%) dequant 555 (5.5%) gemm gate/up 4231 (42.1%) gemm down 636 (6.3%) combine 224 (2.2%) ple 30 (0.3%) gdn conv+gates 84 (0.8%) gdn recurrence 825 (8.2%) gdn out proj 402 (4.0%)
+strata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 11 ms, waiting for each chunk 114 ms, after each chunk (the draft layer, progress) 35 ms, PLE 111 ms

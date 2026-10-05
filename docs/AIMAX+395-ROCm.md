@@ -854,6 +854,95 @@ limits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's thre
 between the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap
 to the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.
 
+## TODO 2 done: the expert products are MMQ, not FP16 GEMMs, and their J tile (2026-10-05, night)
+
+[TODO.md](TODO.md) item 2 asked to decide between three faster routes for "512 FP16 GEMMs of ne rows per layer with
+FP32 output at 3.5-3.7 TFLOP/s". The first measurement overturned the premise. Everything below is the Coder IQ1_M
+in arena mode at 32/96 with the night's config (the table, `ROCBLAS_USE_HIPBLASLT=1`, `STRATA_PA_WMMA=1`), 4,16x-token
+requests from `pp4k.py` (3 each), the phases from `STRATA_PREFILL_TIMING=1`; probe sources and logs in
+`docs/benchmarks/2026-10-05-halo-expert-*` and `2026-10-05-halo-mmq-bench*`.
+
+**What the expert phases actually run.** With `STRATA_HIPBLASLT_VERBOSE=1` the engine resolves a hipBLASLt solution
+once per distinct shape; the 4K run logs 40 dense resolutions and none for an expert row count. With
+`STRATA_PREFILL_MMQ=0` it logs 1,206 distinct `Lt fallback; no calibration for dtype=f16 T=<ne> N=1280 K=2560` and
+the phases change: so by default the Coder's experts go through llama.cpp's MMQ (`src/prefill/moe_mmq.cu`: the
+weights stay quantized, the activations rounded to q8_1, int8 dot products, 16 experts per launch), because its
+pack's expert types are MMQ types (`native_experts.txt`: gate/up IQ3_XXS or IQ2_S, down IQ4_NL or Strata's Q2_0;
+UD-IQ4_XS's IQ4_XS / IQ3_S / Q8_0 likewise). "dequant" in the timing line is the gathers of the experts into the
+group buffer, "gemm gate/up" the MMQ product plus swiglu, "gemm down" the q8_1 quantization plus the product.
+
+| 4,165-token prompt | dequant / gather | gemm gate/up | gemm down | GPU timeline | pp4096 |
+|---|---|---|---|---|---|
+| default (MMQ) | 478-489 ms | 1,777-1,839 | 787-816 | 7,712-8,042 ms | 503-527 t/s |
+| `STRATA_PREFILL_MMQ=0` (FP16 dequant + `Gemm::f16`, the shapes uncalibrated) | 555 | 4,231 | 636 | 10,048 | 398-407 |
+| `STRATA_PREFILL_MMQ=0` + the table rows below | 678-699 | 1,593-1,671 | 760-813 | 7,704-8,160 | 498-528 |
+| default + the median J tile (shipped, below) | 479-484 | **1,581-1,604** | **764-769** | **7,516-7,741** | **524-541** |
+
+The host is not the limit on either path: the expert loop's host time per 4K prompt (a new line in the timing
+output) is 34-68 ms on MMQ and 447-516 ms on the FP16 path, against 2.4-2.6 s of GPU phases.
+
+**The three FP16 routes, measured anyway** (`docs/benchmarks/2026-10-05-halo-expert-gemm.cpp`, linking
+`wmma_gemm.cu`; 20 back-to-back launches per point, so launch latency is amortized; max relative error against a
+double product in brackets):
+
+| gate/up [T x 2560] x [2560 x 1280], us per GEMM | T=16 | 64 | 128 | 256 | 512 | one layer (512 experts, Zipf rows, 39,665 in all) |
+|---|---|---|---|---|---|---|
+| `hipblasGemmEx` FP16 -> FP32 (the engine's call, 7e-6) | 43 | 108 | 183 | 402 | 911 | 95.9 ms = 2.7 TFLOP/s |
+| hipBLASLt solution from the tuner, FP32 out (7e-6) | 35 | 55 | 80 | 98 | 191 | 44.9 ms (lt2537/2538/2551 below T=96, lt2539 above) |
+| `hipblasGemmEx` FP16 -> FP16, compute 32F (2.8e-4) | 51 | 67 | 66 | 66 | 174 | 21.0 ms |
+| PR #313's WMMA, FP32 accumulate (8e-6) | 31 | 83 | 100 | 145 | 414 | 81.5 ms |
+| down [T x 640] x [640 x 2560]: the same four | 33 / 22 / 26 / 9 | 62 / 45 / 27 / 22 | 95 / 52 / 64 / 49 | 185 / 72 / 50 / 56 | 411 / 81 / 62 / 102 | 47.0 / 19.5 / 17.6 / 20.1 ms |
+
+hipBLASLt 1.4.1's grouped GEMM (`hipblaslt_ext::GroupedGemm`, 16 experts per launch) refuses the problem on gfx1151
+(`setProblem`/heuristic fails at the first group). `tune_hipblaslt --case` at the two shapes for T = 16-512
+(`2026-10-05-halo-expert-lt-tuning.log`) found FP32-output solutions 1.8-3.6x faster than `hipblasGemmEx`; those 16
+rows are now in `tools/hip/gfx1151-hipblaslt-100401.txt` (the lookup takes the nearest T), which is the third table
+row above: the FP16 path's gate/up 4,231 -> 1,593-1,671 ms and no uncalibrated shape left. The 16-bit output would
+take the FP16 path further (half the gate/up time again in the probe) at a precision change (2.8e-4 against 7e-6),
+and only matters when MMQ is off; not taken.
+
+**The MMQ products at one layer's shape** (`docs/benchmarks/2026-10-05-halo-mmq-bench.cpp`, linking
+`strata_mmq.lib`: 512 experts with Zipf-like row counts summing to 41,650 over the ids in random order, groups of 16
+as `prefill.cpp` forms them, ms per layer averaged over 3 distributions x 5 reps; "padding" is the rows the J tile
+adds, counted the way the kernel pads: each expert to a multiple of the group's tile):
+
+| per layer, ms (TOPS) | id order, tile for the largest (the engine until tonight) | tile for the mean | tile for the median | sorted by rows, tile for the largest |
+|---|---|---|---|---|
+| J padding | 98% of the rows | 51% | 22% | 16% |
+| gate/up IQ3_XXS / IQ2_S / IQ4_XS / IQ3_S | 47.8 (5.7) / 50.6 / 37.5 / 41.0 | 37.1 / 41.1 / 30.7 / 35.4 | 34.5 (7.9) / 38.1 / 29.7 / 34.9 | 29.3 (9.3) / 31.4 / 25.8 / 28.3 |
+| down IQ4_NL / Q2_0 / IQ4_XS / Q8_0 | 21.7 (6.3) / 21.2 / 15.3 / 23.9 | 18.6 / 18.7 / 13.1 / 20.4 | 17.8 (7.7) / 17.8 / 12.8 / 18.9 | 15.4 (8.8) / 15.6 / 11.0 / 15.8 |
+| groups of 32 / 64 (id order, largest), IQ3_XXS gate/up | 48.3 / 48.6 | | | 32.3 / 34.1 |
+
+The mechanism: `mul_mat_q_switch_J` picks the J tile from `ncols_opt` and the launch grid from `ncols_max`;
+`moe_mmq.cu` passed the group's largest expert for both, so a group of 16 in id order (10 rows next to 1,000)
+computed its small experts on 128-row tiles. The engine's own count of this (the new timing line, the real routing):
+a J tile for each group's largest expert pads **46% of a 4,16x-token chunk's rows and 161% of a 1,301-token
+chunk's**.
+
+**Shipped.** `mmq::Product::opt_rows`, the row count the tile is chosen for; `prefill.cpp` passes the group's
+median (`STRATA_PREFILL_MMQ_OPT=max` restores the old choice, `=mean` the mean). Measured, same binary:
+
+| Coder, 3 requests each | gemm gate/up | gemm down | GPU timeline (4,16x tokens) | pp4096 | 1,306-token prompt |
+|---|---|---|---|---|---|
+| tile for the largest (`STRATA_PREFILL_MMQ_OPT=max`) | 1,803-1,864 | 803-832 | 7,772-8,016 | 507-524 t/s | 395 t/s |
+| tile for the mean (`=mean`) | 1,625-1,698 | 776-811 | 7,587-7,967 | 509-536 t/s | 428 t/s |
+| **tile for the median (the default now)** | **1,581-1,604** | **764-769** | **7,516-7,741** | **524-541 t/s** | **424 t/s** |
+
+The 96 tokens a temperature-0 request produced (reasoning text over a 1,306-token prompt) are identical between the
+largest and the median tile, as they should be: the products are the same, only their tiling changes. (The FP16 path
+diverges from MMQ after 150 characters: different arithmetic, not a defect.) The gain is smaller than the harness's
+because the real routing pads less than its Zipf curve (46% against 98%).
+
+**Sorting the experts by row count** (the harness's best column) is in `prefill.cpp` too (`STRATA_PREFILL_SORT_EXPERTS=0`
+turns it off), but only takes effect when the chunk does not stream its experts: in arena mode every expert is
+staged from the pinned arena through the ring in id order even when it is resident in the cache (the prompt path
+borrows cache slots as its staging ring; TODO items 10 and 11), and the streamed walk consumes the ring in that
+order, so for chunks of `STRATA_PREFILL_STREAM_MIN` = 1,024 tokens and more 0 of 48 layers sort. Where it applies it pays: 1,001-token requests (`pp4k.py ... 800`, 3 each, the chunk below the threshold, 48 of 48 layers sorted), the same binary with `STRATA_PREFILL_SORT_EXPERTS=0` against the default: gemm gate/up 610-643 -> 475-509 ms, gemm down 290-303 -> 226-240 ms, GPU timeline 2,437-2,620 -> 2,200-2,412 ms, 360-388 -> 388-428 t/s (the engine's padding count for a tile sized to the largest: 207% of the rows in id order, 31% sorted).
+What it would be worth for long chunks is the harness's last column: group the gathers by size class instead (TODO
+2a). The MMQ kernels' own efficiency, 6-12 TOPS at these shapes against the card's int8 peak, is TODO 2b: the
+vendored ggml already carries upstream's RDNA 3.5 tile tables and uses `sudot4`; llama.cpp#21284's smaller tiles
+are the untested lead.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's

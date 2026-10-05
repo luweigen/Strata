@@ -1,5 +1,5 @@
 """One pp4096-shaped request against a running Strata server (temperature 0, 1 token out): prints the timings line.
-Usage: pp4k.py <label> [repeat]   (the prompt: the start of EngramHalo.cpp's llama-model-loader.cpp, ~4K tokens,
+Usage: pp4k.py <label> [repeat] [tokens]   (the prompt: the start of EngramHalo.cpp's llama-model-loader.cpp, ~4K tokens or `tokens`,
 the folder from STRATA_ENGRAM_SRC as 2026-10-02-3060m-bench_halo.py takes it)."""
 import json, os, sys, time, urllib.request
 from pathlib import Path
@@ -20,7 +20,8 @@ def count(t):
 
 
 n = count(text[:16000])
-prompt = text[:int(16000 * 4096 / n)]
+target = int(sys.argv[3]) if len(sys.argv) > 3 else 4096
+prompt = text[:int(16000 * target / n)]
 label = sys.argv[1] if len(sys.argv) > 1 else "pp4k"
 for i in range(int(sys.argv[2]) if len(sys.argv) > 2 else 1):
     # a different first line each time, so the prompt cache does not reuse the previous request's prefix
