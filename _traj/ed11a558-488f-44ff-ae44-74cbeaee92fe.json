@@ -32195,19 +32195,297 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 388,
+      "timestamp": "2026-10-05T13:02:07.715Z",
+      "source": "user",
+      "message": "这节应该插入在## One table:之后，## The RTX 5090之前",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 389,
+      "timestamp": "2026-10-05T13:02:18.922Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_018M1t6pYqw4wKqNxJ4tzmR9",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_018M1t6pYqw4wKqNxJ4tzmR9",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "grep -n \"^## \" \"docs/AIMAX+395-ROCm.md\"",
+            "description": "List the document's section order"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_018M1t6pYqw4wKqNxJ4tzmR9",
+            "content": "18:## The PC\n43:## What Strata's HIP backend needs, and what gfx1151 has\n64:## What was checked on this PC (2026-10-05)\n115:## What stops it today\n153:## Memory: how Strata's design maps onto a unified-memory APU\n204:## The model files already here\n220:## The plan from here\n253:## Execution log (2026-10-05, the same afternoon)\n370:## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\n440:## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\n501:## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\n537:## UD-IQ4_XS on the 32/96 split\n595:## Which GEMMs and kernels the prompt path's time goes to\n635:## One table: the best Halo setup per model against the 3060M PC\n665:## The RTX 5090 over Thunderbolt (not pursued)\n\n[stdout]\n18:## The PC\n43:## What Strata's HIP backend needs, and what gfx1151 has\n64:## What was checked on this PC (2026-10-05)\n115:## What stops it today\n153:## Memory: how Strata's design maps onto a unified-memory APU\n204:## The model files already here\n220:## The plan from here\n253:## Execution log (2026-10-05, the same afternoon)\n370:## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\n440:## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\n501:## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\n537:## UD-IQ4_XS on the 32/96 split\n595:## Which GEMMs and kernels the prompt path's time goes to\n635:## One table: the best Halo setup per model against the 3060M PC\n665:## The RTX 5090 over Thunderbolt (not pursued)\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 467769,
+        "completion_tokens": 113,
+        "cached_tokens": 467767,
+        "extra": {
+          "cache_creation_input_tokens": 51,
+          "cache_read_input_tokens": 467767,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 51,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 113,
+              "cache_read_input_tokens": 467767,
+              "cache_creation_input_tokens": 51,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 51
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "18:## The PC\n43:## What Strata's HIP backend needs, and what gfx1151 has\n64:## What was checked on this PC (2026-10-05)\n115:## What stops it today\n153:## Memory: how Strata's design maps onto a unified-memory APU\n204:## The model files already here\n220:## The plan from here\n253:## Execution log (2026-10-05, the same afternoon)\n370:## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\n440:## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\n501:## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\n537:## UD-IQ4_XS on the 32/96 split\n595:## Which GEMMs and kernels the prompt path's time goes to\n635:## One table: the best Halo setup per model against the 3060M PC\n665:## The RTX 5090 over Thunderbolt (not pursued)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_018M1t6pYqw4wKqNxJ4tzmR9",
+            "type": "tool_result",
+            "content": "18:## The PC\n43:## What Strata's HIP backend needs, and what gfx1151 has\n64:## What was checked on this PC (2026-10-05)\n115:## What stops it today\n153:## Memory: how Strata's design maps onto a unified-memory APU\n204:## The model files already here\n220:## The plan from here\n253:## Execution log (2026-10-05, the same afternoon)\n370:## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\n440:## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\n501:## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\n537:## UD-IQ4_XS on the 32/96 split\n595:## Which GEMMs and kernels the prompt path's time goes to\n635:## One table: the best Halo setup per model against the 3060M PC\n665:## The RTX 5090 over Thunderbolt (not pursued)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "18:## The PC\n43:## What Strata's HIP backend needs, and what gfx1151 has\n64:## What was checked on this PC (2026-10-05)\n115:## What stops it today\n153:## Memory: how Strata's design maps onto a unified-memory APU\n204:## The model files already here\n220:## The plan from here\n253:## Execution log (2026-10-05, the same afternoon)\n370:## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\n440:## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\n501:## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\n537:## UD-IQ4_XS on the 32/96 split\n595:## Which GEMMs and kernels the prompt path's time goes to\n635:## One table: the best Halo setup per model against the 3060M PC\n665:## The RTX 5090 over Thunderbolt (not pursued)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_018M1t6pYqw4wKqNxJ4tzmR9",
+            "type": "tool_result",
+            "content": "18:## The PC\n43:## What Strata's HIP backend needs, and what gfx1151 has\n64:## What was checked on this PC (2026-10-05)\n115:## What stops it today\n153:## Memory: how Strata's design maps onto a unified-memory APU\n204:## The model files already here\n220:## The plan from here\n253:## Execution log (2026-10-05, the same afternoon)\n370:## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\n440:## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\n501:## The 3060's way on this PC: GPU 32 GiB / RAM 96 GiB, a partial expert cache, the CPU computes the rest\n537:## UD-IQ4_XS on the 32/96 split\n595:## Which GEMMs and kernels the prompt path's time goes to\n635:## One table: the best Halo setup per model against the 3060M PC\n665:## The RTX 5090 over Thunderbolt (not pursued)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "grep -n \"^## \" \"docs/AIMAX+395-ROCm.md\"",
+          "description": "List the document's section order"
+        }
+      }
+    },
+    {
+      "step_id": 390,
+      "timestamp": "2026-10-05T13:02:26.921Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01GjY4DEC9sLkVc8SgpJtEYB",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01GjY4DEC9sLkVc8SgpJtEYB",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "/c/conda_envs/strata/python.exe - <<'EOF'\nimport pathlib\np = pathlib.Path(\"docs/AIMAX+395-ROCm.md\")\nlines = p.read_text(encoding=\"utf-8\").split(\"\\n\")\ndef idx(h): return next(i for i, l in enumerate(lines) if l.startswith(h))\na = idx(\"## Which GEMMs and kernels\"); b = idx(\"## One table:\"); c = idx(\"## The RTX 5090\")\ngemm, one = lines[a:b], lines[b:c]\nlines[a:c] = one + gemm\np.write_text(\"\\n\".join(lines), encoding=\"utf-8\")\nprint([l for l in lines if l.startswith(\"## \")][-4:])\nEOF",
+            "description": "Move the GEMM-and-kernels section after the one-table section and before the RTX 5090 section"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01GjY4DEC9sLkVc8SgpJtEYB",
+            "content": "['## UD-IQ4_XS on the 32/96 split', '## One table: the best Halo setup per model against the 3060M PC', \"## Which GEMMs and kernels the prompt path's time goes to\", '## The RTX 5090 over Thunderbolt (not pursued)']\n\n[stdout]\n['## UD-IQ4_XS on the 32/96 split', '## One table: the best Halo setup per model against the 3060M PC', \"## Which GEMMs and kernels the prompt path's time goes to\", '## The RTX 5090 over Thunderbolt (not pursued)']\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [], \"moreFiles\": 1, \"changedFiles\": [\"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 467850,
+        "completion_tokens": 359,
+        "cached_tokens": 467818,
+        "extra": {
+          "cache_creation_input_tokens": 532,
+          "cache_read_input_tokens": 467818,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 532,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 359,
+              "cache_read_input_tokens": 467818,
+              "cache_creation_input_tokens": 532,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 532
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "['## UD-IQ4_XS on the 32/96 split', '## One table: the best Halo setup per model against the 3060M PC', \"## Which GEMMs and kernels the prompt path's time goes to\", '## The RTX 5090 over Thunderbolt (not pursued)']",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [],
+              "moreFiles": 1,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01GjY4DEC9sLkVc8SgpJtEYB",
+            "type": "tool_result",
+            "content": "['## UD-IQ4_XS on the 32/96 split', '## One table: the best Halo setup per model against the 3060M PC', \"## Which GEMMs and kernels the prompt path's time goes to\", '## The RTX 5090 over Thunderbolt (not pursued)']",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "['## UD-IQ4_XS on the 32/96 split', '## One table: the best Halo setup per model against the 3060M PC', \"## Which GEMMs and kernels the prompt path's time goes to\", '## The RTX 5090 over Thunderbolt (not pursued)']",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [],
+              "moreFiles": 1,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01GjY4DEC9sLkVc8SgpJtEYB",
+            "type": "tool_result",
+            "content": "['## UD-IQ4_XS on the 32/96 split', '## One table: the best Halo setup per model against the 3060M PC', \"## Which GEMMs and kernels the prompt path's time goes to\", '## The RTX 5090 over Thunderbolt (not pursued)']",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "/c/conda_envs/strata/python.exe - <<'EOF'\nimport pathlib\np = pathlib.Path(\"docs/AIMAX+395-ROCm.md\")\nlines = p.read_text(encoding=\"utf-8\").split(\"\\n\")\ndef idx(h): return next(i for i, l in enumerate(lines) if l.startswith(h))\na = idx(\"## Which GEMMs and kernels\"); b = idx(\"## One table:\"); c = idx(\"## The RTX 5090\")\ngemm, one = lines[a:b], lines[b:c]\nlines[a:c] = one + gemm\np.write_text(\"\\n\".join(lines), encoding=\"utf-8\")\nprint([l for l in lines if l.startswith(\"## \")][-4:])\nEOF",
+          "description": "Move the GEMM-and-kernels section after the one-table section and before the RTX 5090 section"
+        }
+      }
+    },
+    {
+      "step_id": 391,
+      "timestamp": "2026-10-05T13:02:41.596Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "已调整：现在的顺序是 \"UD-IQ4_XS on the 32/96 split\" → \"One table: the best Halo setup per model against the 3060M PC\" → \"Which GEMMs and kernels the prompt path's time goes to\" → \"The RTX 5090 over Thunderbolt\"。章节内容未动。",
+      "metrics": {
+        "prompt_tokens": 468382,
+        "completion_tokens": 108,
+        "cached_tokens": 468350,
+        "extra": {
+          "cache_creation_input_tokens": 481,
+          "cache_read_input_tokens": 468350,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 481,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 108,
+              "cache_read_input_tokens": 468350,
+              "cache_creation_input_tokens": 481,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 481
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 101679756,
-    "total_completion_tokens": 717472,
-    "total_cached_tokens": 101670684,
-    "total_steps": 387,
+    "total_prompt_tokens": 103083757,
+    "total_completion_tokens": 718052,
+    "total_cached_tokens": 103074619,
+    "total_steps": 391,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1423327,
-      "total_cache_read_input_tokens": 101670684
+      "total_cache_creation_input_tokens": 1424391,
+      "total_cache_read_input_tokens": 103074619
     }
   }
 }
