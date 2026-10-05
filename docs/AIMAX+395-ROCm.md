@@ -208,8 +208,10 @@ In `C:\Users\Wei Lu\Documents` (the user confirmed these are the weights to use)
 | `Qwen3.8-27B-GSQ-RCO-GGUF\` | a 27B dense model | not a Strata model |
 
 The MTP draft layer Strata uses (~5-6 GB, from the original checkpoint) is not here: setup's step 6 downloads it.
-Strata's data folder (`packs`, `mtp`, the server config) should go on C: (89 GB free; `--models-dir` keeps the
-GGUFs where they are with `--gguf-dir`), not on the exFAT hard disk.
+**Where things go on this PC** (the user's rule): the conda environments and everything model-sized - the GGUFs,
+the packs, the draft layer - stay on C: (the NVMe, 89 GB free; `--gguf-dir` uses the files where they are,
+`--models-dir` on C: takes the rest). The Strata source, its build (`build-hip-win`, `dist\`, `engine\`) and the
+results (logs, benchmark JSON, these pages) stay in this repository on E:.
 
 ## The plan from here
 
@@ -221,12 +223,14 @@ Not done on this page; each step is a check with a definite outcome.
 2. **The build**, on this PC. `tools\hip\build_windows.bat` with `STRATA_HIP_ARCHS=gfx1151`, and either its own
    `.rocm-win` venv with the 10.0.0 wheels (`STRATA_ROCM_VERSION=10.0.0`, `STRATA_ROCM_INDEX=https://stable.repo.amd.com/rocm/whl-next/`)
    or the conda root passed by hand (the script's `cmake` line with `-DCMAKE_HIP_COMPILER=C:/conda_envs/rocm100-py312/Lib/site-packages/_rocm_sdk_devel/lib/llvm/bin/clang++.exe`,
-   `-DCMAKE_PREFIX_PATH=<that root>` and `--rocm-device-lib-path=<root>/lib/llvm/amdgcn/bitcode`). `BUILD_DIR` on C:,
-   not the USB disk. **Environments:** the existing `rocm100-py312` env is read, never written (the script's venv
-   install must not target it: it expects `Scripts\python.exe`, which a conda env does not have). If a new
-   environment is needed for Strata itself, it is a new one: `conda create -n strata python=3.14 -y`; whether every
-   pinned package in `requirements.txt` has a Python 3.14 wheel is checked at that step (numpy 2.5.3, pillow 12.3,
-   psutil 7.2 do; the ROCm wheels are `py3-none`).
+   `-DCMAKE_PREFIX_PATH=<that root>` and `--rocm-device-lib-path=<root>/lib/llvm/amdgcn/bitcode`). The build
+   directory is the script's default, `build-hip-win` in this repository (the USB disk is slower, but the build and
+   its results belong with the source); the ROCm wheels are not copied there: they come from the conda env on C:.
+   **Environments:** the existing `rocm100-py312` env is read, never written (the script's venv install must not
+   target it: it expects `Scripts\python.exe`, which a conda env does not have, so `ROCM_VENV` is never pointed at
+   a conda env). If a new environment is needed for Strata itself, it is a new conda env on C:, `conda create -n
+   strata python=3.14 -y`; whether every pinned package in `requirements.txt` has a Python 3.14 wheel is checked at
+   that step (numpy 2.5.3, pillow 12.3, psutil 7.2 do; the ROCm wheels are `py3-none`).
    Outcome: `engine\strata-device.exe --list-devices` prints the card with no "cannot run", `--selftest` passes.
 3. **ctest** with `build_windows.bat tests`: the R9700's known results are 42 of 45 (`hip_handoff` times out on
    Windows, `ple_parity` needs the Q2_0 fixture, `expert_multi_test` needs AVX-512; this CPU has AVX-512), so
