@@ -22708,19 +22708,584 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 259,
+      "timestamp": "2026-10-05T10:33:15.059Z",
+      "source": "user",
+      "message": "跟3060M.md中记录的性能比较",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 260,
+      "timestamp": "2026-10-05T10:33:24.905Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 361527,
+        "completion_tokens": 1348,
+        "cached_tokens": 361525,
+        "extra": {
+          "cache_creation_input_tokens": 42,
+          "cache_read_input_tokens": 361525,
+          "output_tokens_details": {
+            "thinking_tokens": 579
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 42,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1348,
+              "cache_read_input_tokens": 361525,
+              "cache_creation_input_tokens": 42,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 42
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 261,
+      "timestamp": "2026-10-05T10:33:26.339Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "要公平比较，先用最终配置（pinned + hipBLASLt）把 3060M.md 的整套提示词再跑一遍（之前 16-20K 的行没在该配置下测过），约 5 分钟。",
+      "metrics": {
+        "prompt_tokens": 361527,
+        "completion_tokens": 1348,
+        "cached_tokens": 361525,
+        "extra": {
+          "cache_creation_input_tokens": 42,
+          "cache_read_input_tokens": 361525,
+          "output_tokens_details": {
+            "thinking_tokens": 579
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 42,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1348,
+              "cache_read_input_tokens": 361525,
+              "cache_creation_input_tokens": 42,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 42
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 262,
+      "timestamp": "2026-10-05T10:33:30.975Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed PowerShell toolu_018G59GsJ5pm8B1VMNKYL8zK",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_018G59GsJ5pm8B1VMNKYL8zK",
+          "function_name": "PowerShell",
+          "arguments": {
+            "command": "Set-Location E:\\work\\AI\\Strata; $env:STRATA_ENGRAM_SRC=\"E:\\work\\AI\\EngramHalo.cpp\\src\"; $env:PYTHONUTF8=\"1\"; cmd /c \"C:\\conda_envs\\strata\\python.exe docs\\benchmarks\\2026-10-02-3060m-bench_halo.py halo-8060S-coder-iq1_m-arena-hipblaslt docs\\benchmarks\\2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json > docs\\benchmarks\\2026-10-05-halo-coder-iq1_m-arena-hipblaslt.log 2>&1\"; \"bench exit $LASTEXITCODE\"; Get-Content docs\\benchmarks\\2026-10-05-halo-coder-iq1_m-arena-hipblaslt.log",
+            "description": "Run the 3060M benchmark sequence against the final configuration (pinned arena, hipBLASLt routing)",
+            "run_in_background": true,
+            "timeout": 3600000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_018G59GsJ5pm8B1VMNKYL8zK",
+            "content": "Command running in background with ID: bfqb72owt. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\bfqb72owt.output. You will be notified when it completes. To check interim output, use Read on that file path.\n\n[metadata] {\"backgroundTaskId\": \"bfqb72owt\"}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 361527,
+        "completion_tokens": 1348,
+        "cached_tokens": 361525,
+        "extra": {
+          "cache_creation_input_tokens": 42,
+          "cache_read_input_tokens": 361525,
+          "output_tokens_details": {
+            "thinking_tokens": 579
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 42,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1348,
+              "cache_read_input_tokens": 361525,
+              "cache_creation_input_tokens": 42,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 42
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "PowerShell",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "backgroundTaskId": "bfqb72owt"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_018G59GsJ5pm8B1VMNKYL8zK",
+            "type": "tool_result",
+            "content": "Command running in background with ID: bfqb72owt. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\bfqb72owt.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "backgroundTaskId": "bfqb72owt"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_018G59GsJ5pm8B1VMNKYL8zK",
+            "type": "tool_result",
+            "content": "Command running in background with ID: bfqb72owt. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\bfqb72owt.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "Set-Location E:\\work\\AI\\Strata; $env:STRATA_ENGRAM_SRC=\"E:\\work\\AI\\EngramHalo.cpp\\src\"; $env:PYTHONUTF8=\"1\"; cmd /c \"C:\\conda_envs\\strata\\python.exe docs\\benchmarks\\2026-10-02-3060m-bench_halo.py halo-8060S-coder-iq1_m-arena-hipblaslt docs\\benchmarks\\2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json > docs\\benchmarks\\2026-10-05-halo-coder-iq1_m-arena-hipblaslt.log 2>&1\"; \"bench exit $LASTEXITCODE\"; Get-Content docs\\benchmarks\\2026-10-05-halo-coder-iq1_m-arena-hipblaslt.log",
+          "description": "Run the 3060M benchmark sequence against the final configuration (pinned arena, hipBLASLt routing)",
+          "run_in_background": true,
+          "timeout": 3600000
+        }
+      }
+    },
+    {
+      "step_id": 263,
+      "timestamp": "2026-10-05T10:33:33.428Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01BD9dS2B89bEMX1W9BMCSr7",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01BD9dS2B89bEMX1W9BMCSr7",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "sed -n 36,60p docs/3060M.md | cut -c1-200 && echo ===== && sed -n 86,112p docs/3060M.md | cut -c1-220 && echo =====PCIE && sed -n 689,700p docs/3060M.md | cut -c1-200 && grep -n \"decode.*t/s\\|tok/s\" docs/3060M.md | sed -n 1,12p | cut -c1-160",
+            "description": "Pull the 3060M PC's hardware table and the other measured numbers to compare against"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01BD9dS2B89bEMX1W9BMCSr7",
+            "content": "| Driver | 580.142, the official driver repacked by \"FrankenDriver\" for converted cards: same kernel module, plus `NVreg_RegistryDwords=\"RM1457588=1;\"` (see `~/3060M-FrankenDriver-Linux.md`); GSP firm\n| CUDA | 13.0 toolkit in the conda environment (nvcc 13.0.88, cuBLAS 13.1.1.3); the engine is built for sm_86 |\n\n**CPU**\n\n| | |\n|---|---|\n| CPU | AMD Ryzen 9 8945HX (Zen 4, mobile \"HX\"), 16 cores / 32 threads, 1 socket, 1 NUMA node |\n| Layout | two chiplets: CCD1 = cores 0-7, CCD2 = cores 8-15; logical CPUs 16-31 are the SMT siblings of 0-15 |\n| Caches | L1d 32 KiB + L1i 32 KiB per core, L2 1 MiB per core (16 MiB), L3 64 MiB (32 MiB per chiplet) |\n| Vector | AVX2 and AVX-512 (F, BW, DQ, VL, CD, IFMA, VBMI, VBMI2, VNNI, **BF16**, BITALG, VPOPCNTDQ) |\n| Clocks | 400-5461 MHz; measured under the BFCL load: 5083 MHz on CCD1, 4901 MHz on CCD2 |\n| Power policy | `amd-pstate-epp`, governor `powersave`, energy preference `performance` |\n| Strata's use | 15 expert-pool workers pinned to cores 1-15 and the host thread on core 0; SMT siblings left idle (see \"Where the CPU time goes\") |\n\n**Memory**\n\n| | |\n|---|---|\n| Modules | 2 x 48 GB DDR5 SO-DIMM, Crucial `CT48G56C46S5.M16B1` (manufacturer ID bank 6, 0x9B), dual rank, unbuffered, no ECC, 1.1 V |\n| Channels | **dual channel**: one module on channel A, one on channel B (both slots used; the board takes up to 128 GB) |\n| Speed | rated DDR5-5600 (CL46), **running at 5200 MT/s** (the 8945HX's supported maximum) |\n| Bandwidth | 5200 MT/s x 8 bytes x 2 channels = **83.2 GB/s** in theory; **measured: about 55 GB/s read** (66%), see below |\n| Seen by the OS | 98.8 GB (`free`), 92 GiB `MemTotal`; 2 GiB is the iGPU's carve-out (`mem_info_vram_total`) |\n| Settings | swap 8 GiB file (3 MiB used); transparent huge pages `madvise`; no static huge pages |\n=====\n  the 83.2 GB/s theory; at most 57.0 with 4 threads on each chiplet. One thread already reaches 46 GB/s and 2-4\n  reach 51: memory, not the number of cores, is the limit.\n- **One chiplet** reads 46-50 GB/s, both together 55-57: each chiplet's Infinity Fabric link nearly fills the memory\n  on its own, so spreading over both adds about 10%.\n- **SMT siblings add nothing** (55.3 with 32 threads vs 55.5 with 16; memset drops from 54.5 to 49.3), which agrees\n  with Strata leaving them idle.\n- **Plain stores count half**: `write` and the stores in `copy`/`triad` first read each cache line\n  (read-for-ownership), so 24 GB/s counted is about 48 GB/s of real traffic. Non-temporal stores (glibc's\n  memset/memcpy at this size) skip that: 54-65 GB/s for writing.\n- For comparison on this PC: the GPU's VRAM 336 GB/s (spec), the PCIe link 26.8 GB/s measured. The experts the GPU\n  does not hold are read by the CPU at most at about 55 GB/s, or copied to the GPU at 26.8 GB/s.\n\n**Storage and network**\n\n| | |\n|---|---|\n| SSD | Acer SSD N3500 1 TB (MAXIO MAP1202, DRAM-less), **PCIe 3.0 x4** (8 GT/s x4: about 3.9 GB/s in theory); root on LVM, 688 GB free |\n| Measured | the engine's expert load at start: 55.4 GiB of UD-IQ4_XS experts at 2.57-2.75 GiB/s (20-22 s), 23.4 GiB of Coder experts at 1.7-2.9 GiB/s - from the SSD, or partly from the page cache; when they are all cach\n| Network share | `/mnt/evox2` (SMB): 112 MB/s measured with `rsync` (59.3 GB in 8 min 24 s; 93.7 GB in 13 min 16 s); loading a model straight from it ran at 0.11 GiB/s |\n\n**System and software**\n\n| | |\n|---|---|\n| Board | \"Micro Computer (HK) Tech Limited\" / \"Meigao Innovation Technology\", product `MotherBoard Series`, board `DRFXL`, BIOS 1.14 (2025-11-13); chassis type 3 = desktop |\n| iGPU | AMD Raphael (Radeon 610M class), PCIe-attached at 16 GT/s x16; not used by Strata |\n| OS | Ubuntu 24.04.4 LTS, Linux 6.8.0-136-generic, gcc 13.3.0 |\n=====PCIE\n## `--pcie-frac`: decode and prefill\n\n`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;\nthe CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when\nthe link is fast: here \"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\" (`src/program/generate.cpp`:\n20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC\nthe two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),\nand the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.\n\n**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill\nthe other way, 0.65-0.85.\n\n323:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | **43.3 t/s**, 88.1% acc |\n324:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | **42.1 t/s**, 80.0% acc |\n326:| decode tail after that prefill | 20.8 t/s, 81.9% acc | **39.3 t/s**, 77.5% acc |\n358:**Reading it:** on this PC Strata decodes this model at about 2x the Halo llama.cpp speed (39-43 t/s vs 21-26 t/s\n396:| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |\n400:The answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the\n419:| cold first request, decode | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s | **37.6 t/s**, 87.9% acc |\n420:| fresh code prompt, decode | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc | **38.7 t/s**, 87.1% acc |\n422:| decode tail after that prefill | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s | **33.1 t/s**, 76.9% acc |\n440:- With UD-IQ4_XS, this PC decodes 1.3-1.5x the Halo's speed with MTP on both (33-39 vs 23-30 t/s) and prefills\n444:- Against the Coder on this PC, UD-IQ4_XS is 8-16% slower to decode (37.6/38.7/33.1 vs 43.3/42.1/39.3 t/s),\n740:(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out\n\n[stdout]\n| Driver | 580.142, the official driver repacked by \"FrankenDriver\" for converted cards: same kernel module, plus `NVreg_RegistryDwords=\"RM1457588=1;\"` (see `~/3060M-FrankenDriver-Linux.md`); GSP firm\n| CUDA | 13.0 toolkit in the conda environment (nvcc 13.0.88, cuBLAS 13.1.1.3); the engine is built for sm_86 |\n\n**CPU**\n\n| | |\n|---|---|\n| CPU | AMD Ryzen 9 8945HX (Zen 4, mobile \"HX\"), 16 cores / 32 threads, 1 socket, 1 NUMA node |\n| Layout | two chiplets: CCD1 = cores 0-7, CCD2 = cores 8-15; logical CPUs 16-31 are the SMT siblings of 0-15 |\n| Caches | L1d 32 KiB + L1i 32 KiB per core, L2 1 MiB per core (16 MiB), L3 64 MiB (32 MiB per chiplet) |\n| Vector | AVX2 and AVX-512 (F, BW, DQ, VL, CD, IFMA, VBMI, VBMI2, VNNI, **BF16**, BITALG, VPOPCNTDQ) |\n| Clocks | 400-5461 MHz; measured under the BFCL load: 5083 MHz on CCD1, 4901 MHz on CCD2 |\n| Power policy | `amd-pstate-epp`, governor `powersave`, energy preference `performance` |\n| Strata's use | 15 expert-pool workers pinned to cores 1-15 and the host thread on core 0; SMT siblings left idle (see \"Where the CPU time goes\") |\n\n**Memory**\n\n| | |\n|---|---|\n| Modules | 2 x 48 GB DDR5 SO-DIMM, Crucial `CT48G56C46S5.M16B1` (manufacturer ID bank 6, 0x9B), dual rank, unbuffered, no ECC, 1.1 V |\n| Channels | **dual channel**: one module on channel A, one on channel B (both slots used; the board takes up to 128 GB) |\n| Speed | rated DDR5-5600 (CL46), **running at 5200 MT/s** (the 8945HX's supported maximum) |\n| Bandwidth | 5200 MT/s x 8 bytes x 2 channels = **83.2 GB/s** in theory; **measured: about 55 GB/s read** (66%), see below |\n| Seen by the OS | 98.8 GB (`free`), 92 GiB `MemTotal`; 2 GiB is the iGPU's carve-out (`mem_info_vram_total`) |\n| Settings | swap 8 GiB file (3 MiB used); transparent huge pages `madvise`; no static huge pages |\n=====\n  the 83.2 GB/s theory; at most 57.0 with 4 threads on each chiplet. One thread already reaches 46 GB/s and 2-4\n  reach 51: memory, not the number of cores, is the limit.\n- **One chiplet** reads 46-50 GB/s, both together 55-57: each chiplet's Infinity Fabric link nearly fills the memory\n  on its own, so spreading over both adds about 10%.\n- **SMT siblings add nothing** (55.3 with 32 threads vs 55.5 with 16; memset drops from 54.5 to 49.3), which agrees\n  with Strata leaving them idle.\n- **Plain stores count half**: `write` and the stores in `copy`/`triad` first read each cache line\n  (read-for-ownership), so 24 GB/s counted is about 48 GB/s of real traffic. Non-temporal stores (glibc's\n  memset/memcpy at this size) skip that: 54-65 GB/s for writing.\n- For comparison on this PC: the GPU's VRAM 336 GB/s (spec), the PCIe link 26.8 GB/s measured. The experts the GPU\n  does not hold are read by the CPU at most at about 55 GB/s, or copied to the GPU at 26.8 GB/s.\n\n**Storage and network**\n\n| | |\n|---|---|\n| SSD | Acer SSD N3500 1 TB (MAXIO MAP1202, DRAM-less), **PCIe 3.0 x4** (8 GT/s x4: about 3.9 GB/s in theory); root on LVM, 688 GB free |\n| Measured | the engine's expert load at start: 55.4 GiB of UD-IQ4_XS experts at 2.57-2.75 GiB/s (20-22 s), 23.4 GiB of Coder experts at 1.7-2.9 GiB/s - from the SSD, or partly from the page cache; when they are all cach\n| Network share | `/mnt/evox2` (SMB): 112 MB/s measured with `rsync` (59.3 GB in 8 min 24 s; 93.7 GB in 13 min 16 s); loading a model straight from it ran at 0.11 GiB/s |\n\n**System and software**\n\n| | |\n|---|---|\n| Board | \"Micro Computer (HK) Tech Limited\" / \"Meigao Innovation Technology\", product `MotherBoard Series`, board `DRFXL`, BIOS 1.14 (2025-11-13); chassis type 3 = desktop |\n| iGPU | AMD Raphael (Radeon 610M class), PCIe-attached at 16 GT/s x16; not used by Strata |\n| OS | Ubuntu 24.04.4 LTS, Linux 6.8.0-136-generic, gcc 13.3.0 |\n=====PCIE\n## `--pcie-frac`: decode and prefill\n\n`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;\nthe CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when\nthe link is fast: here \"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\" (`src/program/generate.cpp`:\n20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC\nthe two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),\nand the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.\n\n**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill\nthe other way, 0.65-0.85.\n\n323:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | **43.3 t/s**, 88.1% acc |\n324:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | **42.1 t/s**, 80.0% acc |\n326:| decode tail after that prefill | 20.8 t/s, 81.9% acc | **39.3 t/s**, 77.5% acc |\n358:**Reading it:** on this PC Strata decodes this model at about 2x the Halo llama.cpp speed (39-43 t/s vs 21-26 t/s\n396:| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |\n400:The answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the\n419:| cold first request, decode | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s | **37.6 t/s**, 87.9% acc |\n420:| fresh code prompt, decode | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc | **38.7 t/s**, 87.1% acc |\n422:| decode tail after that prefill | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s | **33.1 t/s**, 76.9% acc |\n440:- With UD-IQ4_XS, this PC decodes 1.3-1.5x the Halo's speed with MTP on both (33-39 vs 23-30 t/s) and prefills\n444:- Against the Coder on this PC, UD-IQ4_XS is 8-16% slower to decode (37.6/38.7/33.1 vs 43.3/42.1/39.3 t/s),\n740:(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 361527,
+        "completion_tokens": 1348,
+        "cached_tokens": 361525,
+        "extra": {
+          "cache_creation_input_tokens": 42,
+          "cache_read_input_tokens": 361525,
+          "output_tokens_details": {
+            "thinking_tokens": 579
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 42,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1348,
+              "cache_read_input_tokens": 361525,
+              "cache_creation_input_tokens": 42,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 42
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "| Driver | 580.142, the official driver repacked by \"FrankenDriver\" for converted cards: same kernel module, plus `NVreg_RegistryDwords=\"RM1457588=1;\"` (see `~/3060M-FrankenDriver-Linux.md`); GSP firm\n| CUDA | 13.0 toolkit in the conda environment (nvcc 13.0.88, cuBLAS 13.1.1.3); the engine is built for sm_86 |\n\n**CPU**\n\n| | |\n|---|---|\n| CPU | AMD Ryzen 9 8945HX (Zen 4, mobile \"HX\"), 16 cores / 32 threads, 1 socket, 1 NUMA node |\n| Layout | two chiplets: CCD1 = cores 0-7, CCD2 = cores 8-15; logical CPUs 16-31 are the SMT siblings of 0-15 |\n| Caches | L1d 32 KiB + L1i 32 KiB per core, L2 1 MiB per core (16 MiB), L3 64 MiB (32 MiB per chiplet) |\n| Vector | AVX2 and AVX-512 (F, BW, DQ, VL, CD, IFMA, VBMI, VBMI2, VNNI, **BF16**, BITALG, VPOPCNTDQ) |\n| Clocks | 400-5461 MHz; measured under the BFCL load: 5083 MHz on CCD1, 4901 MHz on CCD2 |\n| Power policy | `amd-pstate-epp`, governor `powersave`, energy preference `performance` |\n| Strata's use | 15 expert-pool workers pinned to cores 1-15 and the host thread on core 0; SMT siblings left idle (see \"Where the CPU time goes\") |\n\n**Memory**\n\n| | |\n|---|---|\n| Modules | 2 x 48 GB DDR5 SO-DIMM, Crucial `CT48G56C46S5.M16B1` (manufacturer ID bank 6, 0x9B), dual rank, unbuffered, no ECC, 1.1 V |\n| Channels | **dual channel**: one module on channel A, one on channel B (both slots used; the board takes up to 128 GB) |\n| Speed | rated DDR5-5600 (CL46), **running at 5200 MT/s** (the 8945HX's supported maximum) |\n| Bandwidth | 5200 MT/s x 8 bytes x 2 channels = **83.2 GB/s** in theory; **measured: about 55 GB/s read** (66%), see below |\n| Seen by the OS | 98.8 GB (`free`), 92 GiB `MemTotal`; 2 GiB is the iGPU's carve-out (`mem_info_vram_total`) |\n| Settings | swap 8 GiB file (3 MiB used); transparent huge pages `madvise`; no static huge pages |\n=====\n  the 83.2 GB/s theory; at most 57.0 with 4 threads on each chiplet. One thread already reaches 46 GB/s and 2-4\n  reach 51: memory, not the number of cores, is the limit.\n- **One chiplet** reads 46-50 GB/s, both together 55-57: each chiplet's Infinity Fabric link nearly fills the memory\n  on its own, so spreading over both adds about 10%.\n- **SMT siblings add nothing** (55.3 with 32 threads vs 55.5 with 16; memset drops from 54.5 to 49.3), which agrees\n  with Strata leaving them idle.\n- **Plain stores count half**: `write` and the stores in `copy`/`triad` first read each cache line\n  (read-for-ownership), so 24 GB/s counted is about 48 GB/s of real traffic. Non-temporal stores (glibc's\n  memset/memcpy at this size) skip that: 54-65 GB/s for writing.\n- For comparison on this PC: the GPU's VRAM 336 GB/s (spec), the PCIe link 26.8 GB/s measured. The experts the GPU\n  does not hold are read by the CPU at most at about 55 GB/s, or copied to the GPU at 26.8 GB/s.\n\n**Storage and network**\n\n| | |\n|---|---|\n| SSD | Acer SSD N3500 1 TB (MAXIO MAP1202, DRAM-less), **PCIe 3.0 x4** (8 GT/s x4: about 3.9 GB/s in theory); root on LVM, 688 GB free |\n| Measured | the engine's expert load at start: 55.4 GiB of UD-IQ4_XS experts at 2.57-2.75 GiB/s (20-22 s), 23.4 GiB of Coder experts at 1.7-2.9 GiB/s - from the SSD, or partly from the page cache; when they are all cach\n| Network share | `/mnt/evox2` (SMB): 112 MB/s measured with `rsync` (59.3 GB in 8 min 24 s; 93.7 GB in 13 min 16 s); loading a model straight from it ran at 0.11 GiB/s |\n\n**System and software**\n\n| | |\n|---|---|\n| Board | \"Micro Computer (HK) Tech Limited\" / \"Meigao Innovation Technology\", product `MotherBoard Series`, board `DRFXL`, BIOS 1.14 (2025-11-13); chassis type 3 = desktop |\n| iGPU | AMD Raphael (Radeon 610M class), PCIe-attached at 16 GT/s x16; not used by Strata |\n| OS | Ubuntu 24.04.4 LTS, Linux 6.8.0-136-generic, gcc 13.3.0 |\n=====PCIE\n## `--pcie-frac`: decode and prefill\n\n`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;\nthe CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when\nthe link is fast: here \"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\" (`src/program/generate.cpp`:\n20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC\nthe two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),\nand the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.\n\n**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill\nthe other way, 0.65-0.85.\n\n323:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | **43.3 t/s**, 88.1% acc |\n324:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | **42.1 t/s**, 80.0% acc |\n326:| decode tail after that prefill | 20.8 t/s, 81.9% acc | **39.3 t/s**, 77.5% acc |\n358:**Reading it:** on this PC Strata decodes this model at about 2x the Halo llama.cpp speed (39-43 t/s vs 21-26 t/s\n396:| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |\n400:The answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the\n419:| cold first request, decode | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s | **37.6 t/s**, 87.9% acc |\n420:| fresh code prompt, decode | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc | **38.7 t/s**, 87.1% acc |\n422:| decode tail after that prefill | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s | **33.1 t/s**, 76.9% acc |\n440:- With UD-IQ4_XS, this PC decodes 1.3-1.5x the Halo's speed with MTP on both (33-39 vs 23-30 t/s) and prefills\n444:- Against the Coder on this PC, UD-IQ4_XS is 8-16% slower to decode (37.6/38.7/33.1 vs 43.3/42.1/39.3 t/s),\n740:(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01BD9dS2B89bEMX1W9BMCSr7",
+            "type": "tool_result",
+            "content": "| Driver | 580.142, the official driver repacked by \"FrankenDriver\" for converted cards: same kernel module, plus `NVreg_RegistryDwords=\"RM1457588=1;\"` (see `~/3060M-FrankenDriver-Linux.md`); GSP firm\n| CUDA | 13.0 toolkit in the conda environment (nvcc 13.0.88, cuBLAS 13.1.1.3); the engine is built for sm_86 |\n\n**CPU**\n\n| | |\n|---|---|\n| CPU | AMD Ryzen 9 8945HX (Zen 4, mobile \"HX\"), 16 cores / 32 threads, 1 socket, 1 NUMA node |\n| Layout | two chiplets: CCD1 = cores 0-7, CCD2 = cores 8-15; logical CPUs 16-31 are the SMT siblings of 0-15 |\n| Caches | L1d 32 KiB + L1i 32 KiB per core, L2 1 MiB per core (16 MiB), L3 64 MiB (32 MiB per chiplet) |\n| Vector | AVX2 and AVX-512 (F, BW, DQ, VL, CD, IFMA, VBMI, VBMI2, VNNI, **BF16**, BITALG, VPOPCNTDQ) |\n| Clocks | 400-5461 MHz; measured under the BFCL load: 5083 MHz on CCD1, 4901 MHz on CCD2 |\n| Power policy | `amd-pstate-epp`, governor `powersave`, energy preference `performance` |\n| Strata's use | 15 expert-pool workers pinned to cores 1-15 and the host thread on core 0; SMT siblings left idle (see \"Where the CPU time goes\") |\n\n**Memory**\n\n| | |\n|---|---|\n| Modules | 2 x 48 GB DDR5 SO-DIMM, Crucial `CT48G56C46S5.M16B1` (manufacturer ID bank 6, 0x9B), dual rank, unbuffered, no ECC, 1.1 V |\n| Channels | **dual channel**: one module on channel A, one on channel B (both slots used; the board takes up to 128 GB) |\n| Speed | rated DDR5-5600 (CL46), **running at 5200 MT/s** (the 8945HX's supported maximum) |\n| Bandwidth | 5200 MT/s x 8 bytes x 2 channels = **83.2 GB/s** in theory; **measured: about 55 GB/s read** (66%), see below |\n| Seen by the OS | 98.8 GB (`free`), 92 GiB `MemTotal`; 2 GiB is the iGPU's carve-out (`mem_info_vram_total`) |\n| Settings | swap 8 GiB file (3 MiB used); transparent huge pages `madvise`; no static huge pages |\n=====\n  the 83.2 GB/s theory; at most 57.0 with 4 threads on each chiplet. One thread already reaches 46 GB/s and 2-4\n  reach 51: memory, not the number of cores, is the limit.\n- **One chiplet** reads 46-50 GB/s, both together 55-57: each chiplet's Infinity Fabric link nearly fills the memory\n  on its own, so spreading over both adds about 10%.\n- **SMT siblings add nothing** (55.3 with 32 threads vs 55.5 with 16; memset drops from 54.5 to 49.3), which agrees\n  with Strata leaving them idle.\n- **Plain stores count half**: `write` and the stores in `copy`/`triad` first read each cache line\n  (read-for-ownership), so 24 GB/s counted is about 48 GB/s of real traffic. Non-temporal stores (glibc's\n  memset/memcpy at this size) skip that: 54-65 GB/s for writing.\n- For comparison on this PC: the GPU's VRAM 336 GB/s (spec), the PCIe link 26.8 GB/s measured. The experts the GPU\n  does not hold are read by the CPU at most at about 55 GB/s, or copied to the GPU at 26.8 GB/s.\n\n**Storage and network**\n\n| | |\n|---|---|\n| SSD | Acer SSD N3500 1 TB (MAXIO MAP1202, DRAM-less), **PCIe 3.0 x4** (8 GT/s x4: about 3.9 GB/s in theory); root on LVM, 688 GB free |\n| Measured | the engine's expert load at start: 55.4 GiB of UD-IQ4_XS experts at 2.57-2.75 GiB/s (20-22 s), 23.4 GiB of Coder experts at 1.7-2.9 GiB/s - from the SSD, or partly from the page cache; when they are all cach\n| Network share | `/mnt/evox2` (SMB): 112 MB/s measured with `rsync` (59.3 GB in 8 min 24 s; 93.7 GB in 13 min 16 s); loading a model straight from it ran at 0.11 GiB/s |\n\n**System and software**\n\n| | |\n|---|---|\n| Board | \"Micro Computer (HK) Tech Limited\" / \"Meigao Innovation Technology\", product `MotherBoard Series`, board `DRFXL`, BIOS 1.14 (2025-11-13); chassis type 3 = desktop |\n| iGPU | AMD Raphael (Radeon 610M class), PCIe-attached at 16 GT/s x16; not used by Strata |\n| OS | Ubuntu 24.04.4 LTS, Linux 6.8.0-136-generic, gcc 13.3.0 |\n=====PCIE\n## `--pcie-frac`: decode and prefill\n\n`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;\nthe CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when\nthe link is fast: here \"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\" (`src/program/generate.cpp`:\n20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC\nthe two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),\nand the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.\n\n**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill\nthe other way, 0.65-0.85.\n\n323:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | **43.3 t/s**, 88.1% acc |\n324:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | **42.1 t/s**, 80.0% acc |\n326:| decode tail after that prefill | 20.8 t/s, 81.9% acc | **39.3 t/s**, 77.5% acc |\n358:**Reading it:** on this PC Strata decodes this model at about 2x the Halo llama.cpp speed (39-43 t/s vs 21-26 t/s\n396:| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |\n400:The answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the\n419:| cold first request, decode | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s | **37.6 t/s**, 87.9% acc |\n420:| fresh code prompt, decode | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc | **38.7 t/s**, 87.1% acc |\n422:| decode tail after that prefill | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s | **33.1 t/s**, 76.9% acc |\n440:- With UD-IQ4_XS, this PC decodes 1.3-1.5x the Halo's speed with MTP on both (33-39 vs 23-30 t/s) and prefills\n444:- Against the Coder on this PC, UD-IQ4_XS is 8-16% slower to decode (37.6/38.7/33.1 vs 43.3/42.1/39.3 t/s),\n740:(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "| Driver | 580.142, the official driver repacked by \"FrankenDriver\" for converted cards: same kernel module, plus `NVreg_RegistryDwords=\"RM1457588=1;\"` (see `~/3060M-FrankenDriver-Linux.md`); GSP firm\n| CUDA | 13.0 toolkit in the conda environment (nvcc 13.0.88, cuBLAS 13.1.1.3); the engine is built for sm_86 |\n\n**CPU**\n\n| | |\n|---|---|\n| CPU | AMD Ryzen 9 8945HX (Zen 4, mobile \"HX\"), 16 cores / 32 threads, 1 socket, 1 NUMA node |\n| Layout | two chiplets: CCD1 = cores 0-7, CCD2 = cores 8-15; logical CPUs 16-31 are the SMT siblings of 0-15 |\n| Caches | L1d 32 KiB + L1i 32 KiB per core, L2 1 MiB per core (16 MiB), L3 64 MiB (32 MiB per chiplet) |\n| Vector | AVX2 and AVX-512 (F, BW, DQ, VL, CD, IFMA, VBMI, VBMI2, VNNI, **BF16**, BITALG, VPOPCNTDQ) |\n| Clocks | 400-5461 MHz; measured under the BFCL load: 5083 MHz on CCD1, 4901 MHz on CCD2 |\n| Power policy | `amd-pstate-epp`, governor `powersave`, energy preference `performance` |\n| Strata's use | 15 expert-pool workers pinned to cores 1-15 and the host thread on core 0; SMT siblings left idle (see \"Where the CPU time goes\") |\n\n**Memory**\n\n| | |\n|---|---|\n| Modules | 2 x 48 GB DDR5 SO-DIMM, Crucial `CT48G56C46S5.M16B1` (manufacturer ID bank 6, 0x9B), dual rank, unbuffered, no ECC, 1.1 V |\n| Channels | **dual channel**: one module on channel A, one on channel B (both slots used; the board takes up to 128 GB) |\n| Speed | rated DDR5-5600 (CL46), **running at 5200 MT/s** (the 8945HX's supported maximum) |\n| Bandwidth | 5200 MT/s x 8 bytes x 2 channels = **83.2 GB/s** in theory; **measured: about 55 GB/s read** (66%), see below |\n| Seen by the OS | 98.8 GB (`free`), 92 GiB `MemTotal`; 2 GiB is the iGPU's carve-out (`mem_info_vram_total`) |\n| Settings | swap 8 GiB file (3 MiB used); transparent huge pages `madvise`; no static huge pages |\n=====\n  the 83.2 GB/s theory; at most 57.0 with 4 threads on each chiplet. One thread already reaches 46 GB/s and 2-4\n  reach 51: memory, not the number of cores, is the limit.\n- **One chiplet** reads 46-50 GB/s, both together 55-57: each chiplet's Infinity Fabric link nearly fills the memory\n  on its own, so spreading over both adds about 10%.\n- **SMT siblings add nothing** (55.3 with 32 threads vs 55.5 with 16; memset drops from 54.5 to 49.3), which agrees\n  with Strata leaving them idle.\n- **Plain stores count half**: `write` and the stores in `copy`/`triad` first read each cache line\n  (read-for-ownership), so 24 GB/s counted is about 48 GB/s of real traffic. Non-temporal stores (glibc's\n  memset/memcpy at this size) skip that: 54-65 GB/s for writing.\n- For comparison on this PC: the GPU's VRAM 336 GB/s (spec), the PCIe link 26.8 GB/s measured. The experts the GPU\n  does not hold are read by the CPU at most at about 55 GB/s, or copied to the GPU at 26.8 GB/s.\n\n**Storage and network**\n\n| | |\n|---|---|\n| SSD | Acer SSD N3500 1 TB (MAXIO MAP1202, DRAM-less), **PCIe 3.0 x4** (8 GT/s x4: about 3.9 GB/s in theory); root on LVM, 688 GB free |\n| Measured | the engine's expert load at start: 55.4 GiB of UD-IQ4_XS experts at 2.57-2.75 GiB/s (20-22 s), 23.4 GiB of Coder experts at 1.7-2.9 GiB/s - from the SSD, or partly from the page cache; when they are all cach\n| Network share | `/mnt/evox2` (SMB): 112 MB/s measured with `rsync` (59.3 GB in 8 min 24 s; 93.7 GB in 13 min 16 s); loading a model straight from it ran at 0.11 GiB/s |\n\n**System and software**\n\n| | |\n|---|---|\n| Board | \"Micro Computer (HK) Tech Limited\" / \"Meigao Innovation Technology\", product `MotherBoard Series`, board `DRFXL`, BIOS 1.14 (2025-11-13); chassis type 3 = desktop |\n| iGPU | AMD Raphael (Radeon 610M class), PCIe-attached at 16 GT/s x16; not used by Strata |\n| OS | Ubuntu 24.04.4 LTS, Linux 6.8.0-136-generic, gcc 13.3.0 |\n=====PCIE\n## `--pcie-frac`: decode and prefill\n\n`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;\nthe CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when\nthe link is fast: here \"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\" (`src/program/generate.cpp`:\n20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC\nthe two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),\nand the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.\n\n**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill\nthe other way, 0.65-0.85.\n\n323:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | **43.3 t/s**, 88.1% acc |\n324:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | **42.1 t/s**, 80.0% acc |\n326:| decode tail after that prefill | 20.8 t/s, 81.9% acc | **39.3 t/s**, 77.5% acc |\n358:**Reading it:** on this PC Strata decodes this model at about 2x the Halo llama.cpp speed (39-43 t/s vs 21-26 t/s\n396:| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |\n400:The answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the\n419:| cold first request, decode | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s | **37.6 t/s**, 87.9% acc |\n420:| fresh code prompt, decode | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc | **38.7 t/s**, 87.1% acc |\n422:| decode tail after that prefill | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s | **33.1 t/s**, 76.9% acc |\n440:- With UD-IQ4_XS, this PC decodes 1.3-1.5x the Halo's speed with MTP on both (33-39 vs 23-30 t/s) and prefills\n444:- Against the Coder on this PC, UD-IQ4_XS is 8-16% slower to decode (37.6/38.7/33.1 vs 43.3/42.1/39.3 t/s),\n740:(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01BD9dS2B89bEMX1W9BMCSr7",
+            "type": "tool_result",
+            "content": "| Driver | 580.142, the official driver repacked by \"FrankenDriver\" for converted cards: same kernel module, plus `NVreg_RegistryDwords=\"RM1457588=1;\"` (see `~/3060M-FrankenDriver-Linux.md`); GSP firm\n| CUDA | 13.0 toolkit in the conda environment (nvcc 13.0.88, cuBLAS 13.1.1.3); the engine is built for sm_86 |\n\n**CPU**\n\n| | |\n|---|---|\n| CPU | AMD Ryzen 9 8945HX (Zen 4, mobile \"HX\"), 16 cores / 32 threads, 1 socket, 1 NUMA node |\n| Layout | two chiplets: CCD1 = cores 0-7, CCD2 = cores 8-15; logical CPUs 16-31 are the SMT siblings of 0-15 |\n| Caches | L1d 32 KiB + L1i 32 KiB per core, L2 1 MiB per core (16 MiB), L3 64 MiB (32 MiB per chiplet) |\n| Vector | AVX2 and AVX-512 (F, BW, DQ, VL, CD, IFMA, VBMI, VBMI2, VNNI, **BF16**, BITALG, VPOPCNTDQ) |\n| Clocks | 400-5461 MHz; measured under the BFCL load: 5083 MHz on CCD1, 4901 MHz on CCD2 |\n| Power policy | `amd-pstate-epp`, governor `powersave`, energy preference `performance` |\n| Strata's use | 15 expert-pool workers pinned to cores 1-15 and the host thread on core 0; SMT siblings left idle (see \"Where the CPU time goes\") |\n\n**Memory**\n\n| | |\n|---|---|\n| Modules | 2 x 48 GB DDR5 SO-DIMM, Crucial `CT48G56C46S5.M16B1` (manufacturer ID bank 6, 0x9B), dual rank, unbuffered, no ECC, 1.1 V |\n| Channels | **dual channel**: one module on channel A, one on channel B (both slots used; the board takes up to 128 GB) |\n| Speed | rated DDR5-5600 (CL46), **running at 5200 MT/s** (the 8945HX's supported maximum) |\n| Bandwidth | 5200 MT/s x 8 bytes x 2 channels = **83.2 GB/s** in theory; **measured: about 55 GB/s read** (66%), see below |\n| Seen by the OS | 98.8 GB (`free`), 92 GiB `MemTotal`; 2 GiB is the iGPU's carve-out (`mem_info_vram_total`) |\n| Settings | swap 8 GiB file (3 MiB used); transparent huge pages `madvise`; no static huge pages |\n=====\n  the 83.2 GB/s theory; at most 57.0 with 4 threads on each chiplet. One thread already reaches 46 GB/s and 2-4\n  reach 51: memory, not the number of cores, is the limit.\n- **One chiplet** reads 46-50 GB/s, both together 55-57: each chiplet's Infinity Fabric link nearly fills the memory\n  on its own, so spreading over both adds about 10%.\n- **SMT siblings add nothing** (55.3 with 32 threads vs 55.5 with 16; memset drops from 54.5 to 49.3), which agrees\n  with Strata leaving them idle.\n- **Plain stores count half**: `write` and the stores in `copy`/`triad` first read each cache line\n  (read-for-ownership), so 24 GB/s counted is about 48 GB/s of real traffic. Non-temporal stores (glibc's\n  memset/memcpy at this size) skip that: 54-65 GB/s for writing.\n- For comparison on this PC: the GPU's VRAM 336 GB/s (spec), the PCIe link 26.8 GB/s measured. The experts the GPU\n  does not hold are read by the CPU at most at about 55 GB/s, or copied to the GPU at 26.8 GB/s.\n\n**Storage and network**\n\n| | |\n|---|---|\n| SSD | Acer SSD N3500 1 TB (MAXIO MAP1202, DRAM-less), **PCIe 3.0 x4** (8 GT/s x4: about 3.9 GB/s in theory); root on LVM, 688 GB free |\n| Measured | the engine's expert load at start: 55.4 GiB of UD-IQ4_XS experts at 2.57-2.75 GiB/s (20-22 s), 23.4 GiB of Coder experts at 1.7-2.9 GiB/s - from the SSD, or partly from the page cache; when they are all cach\n| Network share | `/mnt/evox2` (SMB): 112 MB/s measured with `rsync` (59.3 GB in 8 min 24 s; 93.7 GB in 13 min 16 s); loading a model straight from it ran at 0.11 GiB/s |\n\n**System and software**\n\n| | |\n|---|---|\n| Board | \"Micro Computer (HK) Tech Limited\" / \"Meigao Innovation Technology\", product `MotherBoard Series`, board `DRFXL`, BIOS 1.14 (2025-11-13); chassis type 3 = desktop |\n| iGPU | AMD Raphael (Radeon 610M class), PCIe-attached at 16 GT/s x16; not used by Strata |\n| OS | Ubuntu 24.04.4 LTS, Linux 6.8.0-136-generic, gcc 13.3.0 |\n=====PCIE\n## `--pcie-frac`: decode and prefill\n\n`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;\nthe CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when\nthe link is fast: here \"PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)\" (`src/program/generate.cpp`:\n20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC\nthe two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),\nand the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.\n\n**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill\nthe other way, 0.65-0.85.\n\n323:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | **43.3 t/s**, 88.1% acc |\n324:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | **42.1 t/s**, 80.0% acc |\n326:| decode tail after that prefill | 20.8 t/s, 81.9% acc | **39.3 t/s**, 77.5% acc |\n358:**Reading it:** on this PC Strata decodes this model at about 2x the Halo llama.cpp speed (39-43 t/s vs 21-26 t/s\n396:| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |\n400:The answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the\n419:| cold first request, decode | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s | **37.6 t/s**, 87.9% acc |\n420:| fresh code prompt, decode | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc | **38.7 t/s**, 87.1% acc |\n422:| decode tail after that prefill | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s | **33.1 t/s**, 76.9% acc |\n440:- With UD-IQ4_XS, this PC decodes 1.3-1.5x the Halo's speed with MTP on both (33-39 vs 23-30 t/s) and prefills\n444:- Against the Coder on this PC, UD-IQ4_XS is 8-16% slower to decode (37.6/38.7/33.1 vs 43.3/42.1/39.3 t/s),\n740:(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "sed -n 36,60p docs/3060M.md | cut -c1-200 && echo ===== && sed -n 86,112p docs/3060M.md | cut -c1-220 && echo =====PCIE && sed -n 689,700p docs/3060M.md | cut -c1-200 && grep -n \"decode.*t/s\\|tok/s\" docs/3060M.md | sed -n 1,12p | cut -c1-160",
+          "description": "Pull the 3060M PC's hardware table and the other measured numbers to compare against"
+        }
+      }
+    },
+    {
+      "step_id": 264,
+      "timestamp": "2026-10-05T10:33:40.987Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 361599,
+        "completion_tokens": 418,
+        "cached_tokens": 361567,
+        "extra": {
+          "cache_creation_input_tokens": 4569,
+          "cache_read_input_tokens": 361567,
+          "output_tokens_details": {
+            "thinking_tokens": 208
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4569,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 418,
+              "cache_read_input_tokens": 361567,
+              "cache_creation_input_tokens": 4569,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 4569
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 265,
+      "timestamp": "2026-10-05T10:33:43.309Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01ARTvamRTR1dy1krw3KFTHd",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01ARTvamRTR1dy1krw3KFTHd",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "sed -n 30,35p docs/3060M.md | cut -c1-240 && echo ===== && sed -n 700,760p docs/3060M.md | grep -E \"^\\||^\\*\\*|decode|prefill\" | cut -c1-200 | head -40",
+            "description": "Read the RTX 3060 Laptop's GPU spec rows and the pcie-frac decode and prefill table from 3060M.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01ARTvamRTR1dy1krw3KFTHd",
+            "content": "| VRAM | 12288 MiB GDDR6; memory clock 7001 MHz (14 Gbps effective); 192-bit bus, 336 GB/s (spec for GA106 at 14 Gbps) |\n| Cores, clocks | 30 SMs, 3840 CUDA cores (spec); graphics clock up to 2100 MHz, 1980 MHz seen under the BFCL load |\n| Power | 80 W limit (default and current; the card allows 1-85 W); P0 under load; 60-64 °C at 100% load |\n| PCIe link | **PCIe 4.0 x16** (16 GT/s, x16, the card's maximum; the slot can do 5.0): about 31.5 GB/s each way in theory |\n| PCIe, measured | **26.8 GB/s host to device** (the engine's probe at every start, so `--pcie-frac 0.55`, the default) |\n| BAR1 | 8192 MiB (less than the 12 GiB of VRAM) |\n=====\n**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in\n- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,\n- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused\n| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |\n|---|---|---|---|---|---|\n| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |\n| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |\n| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |\n| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |\n| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |\n| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |\n| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |\n| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |\nwith the value (63.4% / 66.3% / 76.2%) while decode got slower.\n  predicted for prefill does not apply to this engine.\n**On a real workload: the BFCL runs** (GSQ Coder, path A, thinking on). Every request writes \"done: N tokens in E s\n(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out\n(their rate is noise); \"token-weighted\" is all tokens over all decode time:\n| run | `--pcie-frac` | requests | tokens | median | token-weighted |\n|---|---|---|---|---|---|\n| the model's own template, 32K, the whole 400-entry run | 0.55 | 5404 | 1,014,385 | 40.9 | 40.5 tok/s |\n| v22.4, 64K, its first 10 entries (before the pause) | 0.55 | 142 | 17,733 | 42.3 | 41.6 tok/s |\n| v22.4, 64K, the other 390 entries (after the resume) | **0.2** | 5448 | 1,304,873 | **51.3** | **54.1 tok/s** |\n**The rule** (`src/program/generate.cpp`, the `pcie_frac < 0` block; the same rule again for a layer split's other\n\n[stdout]\n| VRAM | 12288 MiB GDDR6; memory clock 7001 MHz (14 Gbps effective); 192-bit bus, 336 GB/s (spec for GA106 at 14 Gbps) |\n| Cores, clocks | 30 SMs, 3840 CUDA cores (spec); graphics clock up to 2100 MHz, 1980 MHz seen under the BFCL load |\n| Power | 80 W limit (default and current; the card allows 1-85 W); P0 under load; 60-64 °C at 100% load |\n| PCIe link | **PCIe 4.0 x16** (16 GT/s, x16, the card's maximum; the slot can do 5.0): about 31.5 GB/s each way in theory |\n| PCIe, measured | **26.8 GB/s host to device** (the engine's probe at every start, so `--pcie-frac 0.55`, the default) |\n| BAR1 | 8192 MiB (less than the 12 GiB of VRAM) |\n=====\n**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in\n- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,\n- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused\n| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |\n|---|---|---|---|---|---|\n| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |\n| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |\n| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |\n| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |\n| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |\n| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |\n| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |\n| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |\nwith the value (63.4% / 66.3% / 76.2%) while decode got slower.\n  predicted for prefill does not apply to this engine.\n**On a real workload: the BFCL runs** (GSQ Coder, path A, thinking on). Every request writes \"done: N tokens in E s\n(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out\n(their rate is noise); \"token-weighted\" is all tokens over all decode time:\n| run | `--pcie-frac` | requests | tokens | median | token-weighted |\n|---|---|---|---|---|---|\n| the model's own template, 32K, the whole 400-entry run | 0.55 | 5404 | 1,014,385 | 40.9 | 40.5 tok/s |\n| v22.4, 64K, its first 10 entries (before the pause) | 0.55 | 142 | 17,733 | 42.3 | 41.6 tok/s |\n| v22.4, 64K, the other 390 entries (after the resume) | **0.2** | 5448 | 1,304,873 | **51.3** | **54.1 tok/s** |\n**The rule** (`src/program/generate.cpp`, the `pcie_frac < 0` block; the same rule again for a layer split's other\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 361599,
+        "completion_tokens": 418,
+        "cached_tokens": 361567,
+        "extra": {
+          "cache_creation_input_tokens": 4569,
+          "cache_read_input_tokens": 361567,
+          "output_tokens_details": {
+            "thinking_tokens": 208
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4569,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 418,
+              "cache_read_input_tokens": 361567,
+              "cache_creation_input_tokens": 4569,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 4569
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "| VRAM | 12288 MiB GDDR6; memory clock 7001 MHz (14 Gbps effective); 192-bit bus, 336 GB/s (spec for GA106 at 14 Gbps) |\n| Cores, clocks | 30 SMs, 3840 CUDA cores (spec); graphics clock up to 2100 MHz, 1980 MHz seen under the BFCL load |\n| Power | 80 W limit (default and current; the card allows 1-85 W); P0 under load; 60-64 °C at 100% load |\n| PCIe link | **PCIe 4.0 x16** (16 GT/s, x16, the card's maximum; the slot can do 5.0): about 31.5 GB/s each way in theory |\n| PCIe, measured | **26.8 GB/s host to device** (the engine's probe at every start, so `--pcie-frac 0.55`, the default) |\n| BAR1 | 8192 MiB (less than the 12 GiB of VRAM) |\n=====\n**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in\n- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,\n- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused\n| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |\n|---|---|---|---|---|---|\n| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |\n| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |\n| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |\n| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |\n| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |\n| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |\n| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |\n| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |\nwith the value (63.4% / 66.3% / 76.2%) while decode got slower.\n  predicted for prefill does not apply to this engine.\n**On a real workload: the BFCL runs** (GSQ Coder, path A, thinking on). Every request writes \"done: N tokens in E s\n(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out\n(their rate is noise); \"token-weighted\" is all tokens over all decode time:\n| run | `--pcie-frac` | requests | tokens | median | token-weighted |\n|---|---|---|---|---|---|\n| the model's own template, 32K, the whole 400-entry run | 0.55 | 5404 | 1,014,385 | 40.9 | 40.5 tok/s |\n| v22.4, 64K, its first 10 entries (before the pause) | 0.55 | 142 | 17,733 | 42.3 | 41.6 tok/s |\n| v22.4, 64K, the other 390 entries (after the resume) | **0.2** | 5448 | 1,304,873 | **51.3** | **54.1 tok/s** |\n**The rule** (`src/program/generate.cpp`, the `pcie_frac < 0` block; the same rule again for a layer split's other",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01ARTvamRTR1dy1krw3KFTHd",
+            "type": "tool_result",
+            "content": "| VRAM | 12288 MiB GDDR6; memory clock 7001 MHz (14 Gbps effective); 192-bit bus, 336 GB/s (spec for GA106 at 14 Gbps) |\n| Cores, clocks | 30 SMs, 3840 CUDA cores (spec); graphics clock up to 2100 MHz, 1980 MHz seen under the BFCL load |\n| Power | 80 W limit (default and current; the card allows 1-85 W); P0 under load; 60-64 °C at 100% load |\n| PCIe link | **PCIe 4.0 x16** (16 GT/s, x16, the card's maximum; the slot can do 5.0): about 31.5 GB/s each way in theory |\n| PCIe, measured | **26.8 GB/s host to device** (the engine's probe at every start, so `--pcie-frac 0.55`, the default) |\n| BAR1 | 8192 MiB (less than the 12 GiB of VRAM) |\n=====\n**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in\n- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,\n- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused\n| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |\n|---|---|---|---|---|---|\n| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |\n| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |\n| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |\n| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |\n| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |\n| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |\n| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |\n| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |\nwith the value (63.4% / 66.3% / 76.2%) while decode got slower.\n  predicted for prefill does not apply to this engine.\n**On a real workload: the BFCL runs** (GSQ Coder, path A, thinking on). Every request writes \"done: N tokens in E s\n(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out\n(their rate is noise); \"token-weighted\" is all tokens over all decode time:\n| run | `--pcie-frac` | requests | tokens | median | token-weighted |\n|---|---|---|---|---|---|\n| the model's own template, 32K, the whole 400-entry run | 0.55 | 5404 | 1,014,385 | 40.9 | 40.5 tok/s |\n| v22.4, 64K, its first 10 entries (before the pause) | 0.55 | 142 | 17,733 | 42.3 | 41.6 tok/s |\n| v22.4, 64K, the other 390 entries (after the resume) | **0.2** | 5448 | 1,304,873 | **51.3** | **54.1 tok/s** |\n**The rule** (`src/program/generate.cpp`, the `pcie_frac < 0` block; the same rule again for a layer split's other",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "| VRAM | 12288 MiB GDDR6; memory clock 7001 MHz (14 Gbps effective); 192-bit bus, 336 GB/s (spec for GA106 at 14 Gbps) |\n| Cores, clocks | 30 SMs, 3840 CUDA cores (spec); graphics clock up to 2100 MHz, 1980 MHz seen under the BFCL load |\n| Power | 80 W limit (default and current; the card allows 1-85 W); P0 under load; 60-64 °C at 100% load |\n| PCIe link | **PCIe 4.0 x16** (16 GT/s, x16, the card's maximum; the slot can do 5.0): about 31.5 GB/s each way in theory |\n| PCIe, measured | **26.8 GB/s host to device** (the engine's probe at every start, so `--pcie-frac 0.55`, the default) |\n| BAR1 | 8192 MiB (less than the 12 GiB of VRAM) |\n=====\n**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in\n- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,\n- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused\n| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |\n|---|---|---|---|---|---|\n| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |\n| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |\n| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |\n| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |\n| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |\n| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |\n| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |\n| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |\nwith the value (63.4% / 66.3% / 76.2%) while decode got slower.\n  predicted for prefill does not apply to this engine.\n**On a real workload: the BFCL runs** (GSQ Coder, path A, thinking on). Every request writes \"done: N tokens in E s\n(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out\n(their rate is noise); \"token-weighted\" is all tokens over all decode time:\n| run | `--pcie-frac` | requests | tokens | median | token-weighted |\n|---|---|---|---|---|---|\n| the model's own template, 32K, the whole 400-entry run | 0.55 | 5404 | 1,014,385 | 40.9 | 40.5 tok/s |\n| v22.4, 64K, its first 10 entries (before the pause) | 0.55 | 142 | 17,733 | 42.3 | 41.6 tok/s |\n| v22.4, 64K, the other 390 entries (after the resume) | **0.2** | 5448 | 1,304,873 | **51.3** | **54.1 tok/s** |\n**The rule** (`src/program/generate.cpp`, the `pcie_frac < 0` block; the same rule again for a layer split's other",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01ARTvamRTR1dy1krw3KFTHd",
+            "type": "tool_result",
+            "content": "| VRAM | 12288 MiB GDDR6; memory clock 7001 MHz (14 Gbps effective); 192-bit bus, 336 GB/s (spec for GA106 at 14 Gbps) |\n| Cores, clocks | 30 SMs, 3840 CUDA cores (spec); graphics clock up to 2100 MHz, 1980 MHz seen under the BFCL load |\n| Power | 80 W limit (default and current; the card allows 1-85 W); P0 under load; 60-64 °C at 100% load |\n| PCIe link | **PCIe 4.0 x16** (16 GT/s, x16, the card's maximum; the slot can do 5.0): about 31.5 GB/s each way in theory |\n| PCIe, measured | **26.8 GB/s host to device** (the engine's probe at every start, so `--pcie-frac 0.55`, the default) |\n| BAR1 | 8192 MiB (less than the 12 GiB of VRAM) |\n=====\n**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in\n- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,\n- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused\n| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |\n|---|---|---|---|---|---|\n| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |\n| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |\n| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |\n| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |\n| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |\n| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |\n| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |\n| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |\nwith the value (63.4% / 66.3% / 76.2%) while decode got slower.\n  predicted for prefill does not apply to this engine.\n**On a real workload: the BFCL runs** (GSQ Coder, path A, thinking on). Every request writes \"done: N tokens in E s\n(R tok/s)\" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out\n(their rate is noise); \"token-weighted\" is all tokens over all decode time:\n| run | `--pcie-frac` | requests | tokens | median | token-weighted |\n|---|---|---|---|---|---|\n| the model's own template, 32K, the whole 400-entry run | 0.55 | 5404 | 1,014,385 | 40.9 | 40.5 tok/s |\n| v22.4, 64K, its first 10 entries (before the pause) | 0.55 | 142 | 17,733 | 42.3 | 41.6 tok/s |\n| v22.4, 64K, the other 390 entries (after the resume) | **0.2** | 5448 | 1,304,873 | **51.3** | **54.1 tok/s** |\n**The rule** (`src/program/generate.cpp`, the `pcie_frac < 0` block; the same rule again for a layer split's other",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "sed -n 30,35p docs/3060M.md | cut -c1-240 && echo ===== && sed -n 700,760p docs/3060M.md | grep -E \"^\\||^\\*\\*|decode|prefill\" | cut -c1-200 | head -40",
+          "description": "Read the RTX 3060 Laptop's GPU spec rows and the pcie-frac decode and prefill table from 3060M.md"
+        }
+      }
+    },
+    {
+      "step_id": 266,
+      "timestamp": "2026-10-05T10:33:49.609Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 366168,
+        "completion_tokens": 93,
+        "cached_tokens": 366136,
+        "extra": {
+          "cache_creation_input_tokens": 1840,
+          "cache_read_input_tokens": 366136,
+          "output_tokens_details": {
+            "thinking_tokens": 28
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1840,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 93,
+              "cache_read_input_tokens": 366136,
+              "cache_creation_input_tokens": 1840,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1840
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 267,
+      "timestamp": "2026-10-05T10:33:49.614Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "本次所需的最后一项是正在后台跑的最终配置 benchmark，其他对比数据（3060M.md 的各表）已齐。等它完成后一并汇总写入文档。",
+      "metrics": {
+        "prompt_tokens": 366168,
+        "completion_tokens": 93,
+        "cached_tokens": 366136,
+        "extra": {
+          "cache_creation_input_tokens": 1840,
+          "cache_read_input_tokens": 366136,
+          "output_tokens_details": {
+            "thinking_tokens": 28
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1840,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 93,
+              "cache_read_input_tokens": 366136,
+              "cache_creation_input_tokens": 1840,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1840
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 57702835,
-    "total_completion_tokens": 538895,
-    "total_cached_tokens": 57696273,
-    "total_steps": 258,
+    "total_prompt_tokens": 60604477,
+    "total_completion_tokens": 545309,
+    "total_cached_tokens": 60597779,
+    "total_steps": 267,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1201952,
-      "total_cache_read_input_tokens": 57696273
+      "total_cache_creation_input_tokens": 1214938,
+      "total_cache_read_input_tokens": 60597779
     }
   }
 }
