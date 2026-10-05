@@ -1,0 +1,71 @@
+# TODO: the Strix Halo (gfx1151) port, after 2026-10-05
+
+What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names
+the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to
+`docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).
+
+## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)
+
+1. **The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313 (branch `wmma-optin`: gfx11 WMMA prompt
+   attention + dense WMMA GEMM, opt-in `STRATA_PA_WMMA=1` / `STRATA_WMMA_GEMM=1`) to gfx1151: add
+   `defined(__gfx1151__)` (and `__gfx1150__`) to its device guards, build, run its 440-shape GEMM parity test, write
+   an attention parity test (the PR has none; `tests/hip/prefill_wmma_gemm_parity.cpp` is the model), then measure
+   with `STRATA_PREFILL_TIMING=1` and `docs/benchmarks/2026-10-05-halo-pp4k.py`. Expected from gfx1201's WMMA
+   attention: 7x on the phase.
+2. **The expert GEMMs, 2.6 s + 0.5 s dequant (34%).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at
+   3.5-3.7 TFLOP/s; the same shape with a 16-bit output runs at 18.7. Decide between: a 16-bit output for these two
+   GEMMs only (consumers `swiglu_interleaved`, `moe_combine`; needs the parity tests), a WMMA kernel with FP32
+   accumulate (PR #313's 64x64 tile, or ROCm/hip-ep#1002's gfx1151-tuned kernel), or the MMQ path (next item).
+3. **`hip_prefill_mmq_parity` fails on gfx1151** ("synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output").
+   Find out whether it is ggml's gfx1151 handling (llama.cpp#21284: MMQ tile `mmq_x=48, mmq_y=64, nwarps=4`
+   against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). MMQ is
+   the grouped, dequant-free shape the expert GEMMs want.
+4. **The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and
+   8192; the engine logs `Lt fallback; no calibration for dtype=bf16 T=4165 N=256 K=2560` for the partial last
+   chunk and the 256-wide alpha/beta projections. Either calibrate more T values (the tuner takes `--case`) or make
+   the lookup tolerant of T. Also re-run `tune_hipblaslt` whenever the ROCm wheels change (ids are per version).
+5. **The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card
+   (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.
+6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any
+   fusing.
+
+## Decode
+
+7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does
+   depend on residency). Run with `STRATA_DECODE_TIMING=1` at 32/96 and find the shared cost; candidates: the GPU
+   expert kernels for this file's IQ3_S / IQ4_NL / Q8_0 blobs on RDNA 3.5, the per-token PLE rows from the NVMe,
+   or a copy path (pytorch/pytorch#171687 reports gfx1151 decode 90% in `hipMemcpyWithStream`).
+8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes
+   four fifths of the experts on its CPU. The decode phase timing (`STRATA_DECODE_TIMING=1`) has not been read on
+   this card yet.
+
+## Memory and setup on an APU
+
+9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:
+   16 GiB registered -> 32 GiB less free). `--expert-cache auto` sizes from that figure and gave UD-IQ4_XS 0 slots
+   at 32/96; the remedy was `STRATA_ARENA_PIN_GIB=24` by hand. Setup and the engine should do this themselves on an
+   integrated GPU: cap the pin, and size the cache from the dedicated carve-out rather than the WDDM figure.
+10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident
+    (`expert tiers: ... files ... MB read`), far more than the 1,945 lent slots' experts. Find what reads (the
+    routing prefetch of whole layers?) and whether it is needed when the prompt path's experts are resident.
+11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU
+    memory and its pinned arena ~69 GiB of RAM. A prompt path that takes resident experts from the cache instead of
+    the host source would make 96/32 the right split for every model; until then 32/96 with a partial cache.
+12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip
+    (`build_windows.bat` default list has it, the zip must be built and published), the docs' "integrated GPUs are
+    not supported" lines ([AI_SETUP.md](AI_SETUP.md), [INSTALL.md](INSTALL.md), [TROUBLESHOOTING.md](TROUBLESHOOTING.md),
+    [AMD_HIP.md](AMD_HIP.md)), setup choosing `STRATA_HIPBLASLT_TUNING` from `tools/hip/gfx1151-hipblaslt-100401.txt`
+    (it should, by arch and version: verify), and `ROCBLAS_USE_HIPBLASLT=1` in the config's env for AMD cards.
+13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off
+    (ROCm/legacy-rocm-build#6675; not seen here, 2.8-2.9 GHz under load over RDP with a 300 s timeout). The engine
+    or server could hold `SetThreadExecutionState(ES_DISPLAY_REQUIRED)` while a request runs.
+
+## Housekeeping
+
+14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with
+    the pin cap) and keeps 0.55; measured here 0.2 vs 0.55 made no difference. Nothing to fix for speed; the log line
+    should say what it saw.
+15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it
+    report rather than hang.
+16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as
+    UTF-8; `pp4k.py` is the quick single-shape check. Keep new runs' JSON and logs in `docs/benchmarks/`.
