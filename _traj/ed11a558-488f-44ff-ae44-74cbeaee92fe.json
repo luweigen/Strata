@@ -24083,19 +24083,126 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 278,
+      "timestamp": "2026-10-05T10:48:05.322Z",
+      "source": "user",
+      "message": "3060M上12G VRAM为什么够？",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 279,
+      "timestamp": "2026-10-05T10:48:14.006Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 379304,
+        "completion_tokens": 1460,
+        "cached_tokens": 379302,
+        "extra": {
+          "cache_creation_input_tokens": 42,
+          "cache_read_input_tokens": 379302,
+          "output_tokens_details": {
+            "thinking_tokens": 556
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 42,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1460,
+              "cache_read_input_tokens": 379302,
+              "cache_creation_input_tokens": 42,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 42
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 280,
+      "timestamp": "2026-10-05T10:48:25.769Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "因为 Strata 的设计本来就不要求专家全在显存里。3060M.md 记录的正是这种\"显存小、内存大\"的工作方式：\n\n**GPU 上只放三样东西**：稠密层（注意力、DeltaNet、路由器、共享专家、输出头，约 2 GB）、KV 缓存和 MTP draft 层（约 1 GB），以及**一部分专家的缓存**，用显存剩下的空间装按使用频率排序的专家（`expert-profile-coder.bin` 决定顺序）。\n\n**全部专家放在内存里**（pinned，Coder 23.4 GiB、UD-IQ4_XS 55.4 GiB，那台机器有 92 GiB）。每个 token 路由到的专家如果不在 GPU 缓存里，就由 16 核 CPU 直接从内存算（AVX-512，55 GB/s），或者按 `--pcie-frac` 的比例拷到 GPU 算。提示路径则把每层的全部专家经 PCIe 流式送到 GPU 处理一个 8K 块。\n\n3060M.md 的实测数字：\n\n| | 显存占用 | GPU 上的专家 | 缓存命中率 | 解码 |\n|---|---|---|---|---|\n| Coder IQ1_M | 11,579 of 12,288 MiB | 2,666 / 12,288（5.1 GiB，22%） | 64.6% | 41-43 t/s |\n| UD-IQ4_XS | 同上量级 | 1,864 / 24,576（4.2 GiB，8%） | 48.3% | 34-39 t/s |\n\n所以 12 GB \"够\"的代价是解码速度取决于命中率和 CPU：命中率从 65% 降到 48%，解码就从 41 降到 34 t/s；而且需要 92 GiB 内存和一颗能跑 AVX-512 的 16 核 CPU。DETAILS.md 说 8 GB 的卡也能启动，就是这个道理：显存只决定缓存多少专家，不决定能不能跑。\n\n对本机的含义：GPU 48 / RAM 80 的划分，就是 3060 那套方式的加强版。48 GiB 能装 UD-IQ4_XS 约 78% 的专家（3060 只装 8%），命中率会远高于 48%，CPU 这边是 16 核 Zen 5、实测内存读 57 GB/s，和 3060 那台相当。差别在于本机 CPU 和 GPU 抢同一条 236 GB/s 的内存带宽，所以未命中的 CPU 计算会比独显机器上多少拖累 GPU，具体多少要测。",
+      "metrics": {
+        "prompt_tokens": 379304,
+        "completion_tokens": 1460,
+        "cached_tokens": 379302,
+        "extra": {
+          "cache_creation_input_tokens": 42,
+          "cache_read_input_tokens": 379302,
+          "output_tokens_details": {
+            "thinking_tokens": 556
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 42,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1460,
+              "cache_read_input_tokens": 379302,
+              "cache_creation_input_tokens": 42,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 42
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 63570266,
-    "total_completion_tokens": 564264,
-    "total_cached_tokens": 63563400,
-    "total_steps": 277,
+    "total_prompt_tokens": 64328874,
+    "total_completion_tokens": 567184,
+    "total_cached_tokens": 64322004,
+    "total_steps": 280,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1231743,
-      "total_cache_read_input_tokens": 63563400
+      "total_cache_creation_input_tokens": 1231827,
+      "total_cache_read_input_tokens": 64322004
     }
   }
 }
