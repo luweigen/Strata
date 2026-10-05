@@ -408,6 +408,37 @@ the transfer:
   rocBLAS, so this switch reaches every dense GEMM of the prompt path. The 8060S's matrix-core peak is far above
   either number: rocBLAS's gfx1151 kernels are plainly not tuned, hipBLASLt's less so.
 
+**With `ROCBLAS_USE_HIPBLASLT=1` on the server** (the arena config, the same 4K prompt sent twice with
+`benchmarks/2026-10-05-halo-pp4k.py`, 1 token out):
+
+| | arena, plain hipBLAS | **arena, rocBLAS -> hipBLASLt** |
+|---|---|---|
+| pp4096 (4164-4171 tokens) | 199.4, 206.6 t/s | **264.2, 279.2 t/s** (+33%) |
+| GPU timeline of the prompt | 19,955 ms | **14,725 ms** |
+| hc read / GDN / QSA proj / router | 3,438 / 4,969 / 2,077 / 909 ms | 1,768 / 3,263 / 1,443 / 591 ms |
+| QSA attn / expert GEMMs gate-up + down / GDN recurrence | 1,986 / 1,772 + 785 / 799 ms | 1,944 / 1,705 + 763 / 835 ms (unchanged: not rocBLAS calls) |
+| the prime request, decode | 35.9 t/s, 162 of 212 drafts, the same `is_prime` | the same |
+
+So on this card the switch is worth a third of the prompt speed and costs nothing; `strata-coder-iq1_m.json` now
+carries it (`"env": {"ROCBLAS_USE_HIPBLASLT": "1"}`, the arena mode, no `--mmap-experts`) and is what
+`run-coder-iq1_m.ps1` starts; `strata-coder-iq1_m-arena.json` is the measured variant without the switch. What
+remains of the 14.7 s is the engine's own kernels on RDNA 3.5: the FP32 prompt attention (1.9 s; the RDNA4 WMMA
+kernel is 7x faster on gfx12 and gfx11.5 has WMMA with gfx11's layout), the GDN recurrence (0.8 s), the
+hyper-connection read (1.8 s), and the expert GEMMs (2.5 s, not through rocBLAS). Those are kernel work for
+later, each with this phase timing to measure against.
+
+**Where this leaves the 8060S against the two references** (the Coder IQ1_M, MTP on):
+
+| | 8060S, Strata (64/64, hipBLASLt) | 8060S, llama.cpp | RTX 3060 Laptop, Strata |
+|---|---|---|---|
+| decode, short prompts | 33-36 t/s | 22-26 t/s | 42-43 t/s |
+| decode after a 4.75K prompt | 31 t/s | 21 t/s | 39 t/s |
+| prefill, 4K | 264-279 t/s | 318-322 t/s | 927-961 t/s |
+| prefill, 16-20K | ~210 t/s (before the switch; not re-measured) | 270 t/s | ~1,100 t/s |
+
+Decode: 1.3-1.6x llama.cpp on the same machine, 0.8x a 12 GB RTX 3060 with a 92 GB host. Prefill: 0.85x
+llama.cpp at 4K after the switch, and a GEMM-and-kernel problem on RDNA 3.5 rather than a memory one.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's
