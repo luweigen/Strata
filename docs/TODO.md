@@ -1,17 +1,19 @@
 # TODO: the Strix Halo (gfx1151) port, after 2026-10-05
 
-What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake; finished items
-move to [DONE.md](DONE.md). Every item names
+What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names
 the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to
 `docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).
 
-## Prompt speed (the Coder's 4K prompt: 7.7 s of GPU time, 517-543 t/s)
+## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)
 
-1. **PR #313 follow-ups.** The gfx11 WMMA prompt attention is in from the merge (see [DONE.md](DONE.md)); left from
-   it: the PR is not upstream (the maintainer asked for a rebase on 0.1.39 and per-arch guards for mixed builds), the
-   gfx11 attention kernel has no path for K8V4 pools (`--kv k8v4` falls back to the FP32 kernel), and its WMMA GEMM
-   declines the expert shapes and loses to the calibrated hipBLASLt table on gfx1151 (left off; not re-measured on
-   gfx1100, where the PR measured it at +25%).
+1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch
+   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):
+   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now
+   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543
+   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated
+   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the
+   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for
+   K8V4 pools.
 2. **The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne` rows per layer with FP32 output run at
    3.5-3.7 TFLOP/s; the same shape with a 16-bit output runs at 18.7. Decide between: a 16-bit output for these two
    GEMMs only (consumers `swiglu_interleaved`, `moe_combine`; needs the parity tests), a WMMA kernel with FP32
