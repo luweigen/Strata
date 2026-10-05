@@ -1250,6 +1250,47 @@ The engine was copied into `engine\`; the previous one is `engine\strata-0.1.34-
 card. There the J tiles differ (`mmq-config-*.cuh`) and the lent slots come out of a smaller cache. The classes
 are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.
 
+### The one table, redone with TODO 2a's engine
+
+The same table as [TODO 5's](#the-one-table-redone-with-todo-5s-engine), with this section's engine (the classes on
+top of TODO 5's) in both Strata columns; the earlier tables are left as they were. The same benchmark
+(`2026-10-02-3060m-bench_halo.py`), the same configs (`strata-coder-iq1_m.json` at 32/96, all 12,288 experts
+resident, 100% hits; `strata-unsloth-ud-iq4_xs.json` at 32/96, `STRATA_ARENA_PIN_GIB=24`, 14,358 slots, 90.6-98.9%
+hits), run back to back by `2026-10-05-halo-onetable-run.py todo2a` on 2026-10-06
+(`benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json`, `benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json`, the
+engine logs beside them, the rows in `2026-10-05-halo-onetable-todo2a.log`). llama.cpp and the 3060M PC columns are
+the night's. MTP on in every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode).
+Where the other Halo engine wins a row, its number is in brackets; TODO 5's Strata number follows in parentheses
+where it moved.
+
+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU, TODO 2a's engine** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (TODO 2a's engine) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |
+|---|---|---|---|---|
+| model load to listening | 15.4 s (was 11.7) | 11.5 s | 83-94 s (**Strata: 37.8 s**) | 42 s |
+| cold first request, decode | **39.1 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.9) - even | 37.6 t/s |
+| fresh code prompt, decode | **38.0 t/s** (was 36.9; llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.9) - even | 38.7 t/s |
+| prefill @ ~4.75K | **587.5 t/s** (was 573.0; llama.cpp: 321.5) | 961.3 t/s | 322 t/s (**Strata: 355.2**, was 341.3) | 662.8 t/s |
+| decode tail after that prefill | **33.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1) - even | 33.1 t/s |
+| repeated prompt (reference) | 39.2 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 29.5) | 42.6 t/s |
+| pp4096 @ d0 | **576.1 t/s** (was 557.5; llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (Strata: 339.1, was 335.0) | 819.4 t/s |
+| tg128 @ d0 | **27.7 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.8 MTP) - even | 32.2 t/s |
+| pp4096 @ d16384 | **~595 t/s** (591.3 over 20,421, the 16,384 prefix at 597.4; was ~585; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (**Strata: 362-366** over 16-20K, was 351-356) | ~949 t/s |
+| tg128 @ d16384 | **27.9 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 22.5** MTP, was 19.1) | 31.7 t/s |
+| ratio to the 3060M PC, decode | 0.75-0.90 | 1 | 0.65-0.80 (Strata) | 1 |
+| ratio to the 3060M PC, prefill | 0.52-0.62 | 1 | 0.38-0.54 (Strata; llama.cpp 0.4-0.5) | 1 |
+
+What moved: the Coder's prefill, +2-3% at every length (573.0 -> 587.5 at 4.75K, 557.5 -> 576.1 at pp4096, ~585 ->
+~595 at 16-20K), as the A/B above said for 4K chunks. The 16K prefix gains least (592.7 -> 597.4): its chunks are
+8,192 tokens, where most experts have more than 128 rows and fall into one class. UD-IQ4_XS +1-4% (341.3 -> 355.2
+at 4.75K, 335.0 -> 339.1 at pp4096, 351-356 -> 362-366 at 16-20K). The A/B above found its 4K chunks bound by the
+arena staging, and these gains are within the run-to-run spread of its earlier tables (311.9 -> 322.0 at pp4096 between
+the night's run and TODO 2's). llama.cpp still leads at pp4096 @ d0. Decode does not use this path. Its rows moved
+within the spread, except UD-IQ4_XS's tg128 @ d16384, 19.1 -> 22.5 t/s. That row's MTP acceptance went 58.3 ->
+72.6%, back near TODO 2's 73.9% (21.8 t/s); its decode is not repeatable from run to run (above). The Coder's load
+time, 11.7 -> 15.4 s, is not this change: the classes only add buffers to a prompt chunk, and the A/B runs above
+with the same engine were listening after 12.1-12.2 s. Load times here have moved by 2-4 s between runs before
+(15 -> 12.6 s in TODO 2's table). The day's prompt speed for the Coder at 4.75K: 146 -> 209 -> 274 -> 451
+-> 528 -> 548 -> 573 -> 588 t/s.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's
