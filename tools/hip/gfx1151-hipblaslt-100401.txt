@@ -51,3 +51,8 @@ f16 1280 2560 1280 256 2539
 f16 2560 640 2560 256 2539
 f16 1280 2560 1280 512 2539
 f16 2560 640 2560 512 2539
+# the router projection, [T x 2560] x [2560 x 256] BF16 (ffn_gate_inp.weight: 256 experts, one GEMM per layer, 48 per chunk), the one
+# dense shape the engine still fell back on (TODO.md item 4; docs/benchmarks/2026-10-05-halo-router-lt-tuning.log): the same solution
+# is the best at T = 1024, 2048, 4096 and 8192, so the two chunk-size rows cover every T through the nearest-T lookup
+bf16 256 2560 256 4096 1251
+bf16 256 2560 256 8192 1251

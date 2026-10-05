@@ -59,11 +59,19 @@ the measurement that decides it. Test outputs (engine logs, server output, bench
    run differs: int8 against FP16 rounding), so the day's benchmark outputs were computed. Probes:
    `docs/benchmarks/2026-10-05-halo-mmq-{parity,config,kernel}-probe*`, the engine A/B `2026-10-05-halo-mmq-ab.py`. Also seen:
    a kernel trap on this HIP is reported by the next `hipMemcpy`, not by `hipDeviceSynchronize`.
-4. **The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and
+4. ~~**The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and
    8192 and, since item 2, the two expert shapes at T = 16-512; the engine still logs `Lt fallback; no calibration
    for dtype=bf16 T=4165 N=256 K=2560` for the 256-wide alpha/beta projections. Calibrate those (the tuner takes
    `--case`; the lookup already takes the nearest T). Also re-run `tune_hipblaslt` whenever the ROCm wheels change
-   (ids are per version).
+   (ids are per version).~~ **Done 2026-10-05 night**
+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-4-done-the-last-hole-in-the-hipblaslt-table-was-the-router-not-the-alphabeta-projections-2026-10-05-night)):
+   the shape is the router (`ffn_gate_inp.weight`, 256 experts, one BF16 GEMM per layer, 48 per chunk), not the
+   alpha/beta projections (those are N = 48 and were in the table). Two rows (T = 4096 and 8192, solution 1251: the
+   best at every T from 1024 to 8192, `docs/benchmarks/2026-10-05-halo-router-lt-tuning.log`) close the last hole:
+   the GEMM 1.30 -> 0.27 ms at T = 4096 in the tuner (against the engine's `ROCBLAS_USE_HIPBLASLT=1` fallback), the
+   engine's "router+shared" phase 222-223 -> 161-162 ms per 4K chunk, pp4096 543-546 -> 547-553 t/s, no fallback
+   logged (`2026-10-05-halo-router-lt-ab.py`). On a wheel change the engine refuses the file (its header carries the
+   arch and version) and says so; re-tune then.
 5. **The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card
    (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.
 6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any
