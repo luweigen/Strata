@@ -943,6 +943,42 @@ What it would be worth for long chunks is the harness's last column: group the g
 vendored ggml already carries upstream's RDNA 3.5 tile tables and uses `sudot4`; llama.cpp#21284's smaller tiles
 are the untested lead.
 
+### The one table, redone with TODO 2's engine
+
+The same table as [the night's](#the-one-table-redone-with-the-nights-engine), with this section's engine (the
+median J tile, the sort below 1,024 tokens, the extended hipBLASLt table, on top of the night's table and WMMA
+attention) in both Strata columns; the earlier tables are left as they were. The same benchmark
+(`2026-10-02-3060m-bench_halo.py`), the same configs (`strata-coder-iq1_m.json` at 32/96, all 12,288 experts
+resident, 100% hits; `strata-unsloth-ud-iq4_xs.json` at 32/96, `STRATA_ARENA_PIN_GIB=24`, 10,000 slots asked and
+14,358 made, 90-98% hits), run back to back late on 2026-10-05
+(`benchmarks/2026-10-05-halo-coder-iq1_m-todo2.json`, `benchmarks/2026-10-05-halo-ud-iq4_xs-todo2.json`; the load
+time is the server's start to its first `/v1/models` answer). llama.cpp and the 3060M PC columns are the night's.
+MTP on in every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other
+Halo engine wins a row, its number is in brackets; the night's Strata number follows in parentheses where it moved.
+
+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU, TODO 2's engine** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (TODO 2's engine) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |
+|---|---|---|---|---|
+| model load to listening | **12.6 s** (was 15) | 11.5 s | 83-94 s (**Strata: 36 s**) | 42 s |
+| cold first request, decode | **40.4 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 30.9) - even | 37.6 t/s |
+| fresh code prompt, decode | **36.6 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.1) - even | 38.7 t/s |
+| prefill @ ~4.75K | **548.1 t/s** (was 528.1; llama.cpp: 321.5) | 961.3 t/s | 322 t/s (**Strata: 317.5**, was 324.1) - even | 662.8 t/s |
+| decode tail after that prefill | **32.3 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.2) - even | 33.1 t/s |
+| repeated prompt (reference) | 40.8 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 30.7) | 42.6 t/s |
+| pp4096 @ d0 | **536.6 t/s** (was 516.8; llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (Strata: 322.0, was 311.9) | 819.4 t/s |
+| tg128 @ d0 | **27.7 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.5 MTP) - even | 32.2 t/s |
+| pp4096 @ d16384 | **~560 t/s** (560.3 over 20,421, the 16,384 prefix at 568.3; was ~530; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (**Strata: 347-354** over 16-20K, was 342-353) | ~949 t/s |
+| tg128 @ d16384 | **27.9 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 21.8** MTP) | 31.7 t/s |
+| ratio to the 3060M PC, decode | 0.75-0.93 | 1 | 0.64-0.82 | 1 |
+| ratio to the 3060M PC, prefill | 0.50-0.58 | 1 | 0.37-0.48 (llama.cpp 0.4-0.5) | 1 |
+
+What moved: the Coder's prefill, +4-6% at every length (528 -> 548 at 4.75K, 517 -> 537 at pp4096, ~530 -> ~560 at
+16-20K: the median J tile on a 4-8K chunk), its decode unchanged within the run-to-run spread (the expert products
+of the decode path are not the prompt path's), the load 2 s shorter (the spread of a page-cached start, not the
+engine). UD-IQ4_XS did not move (317-354 against 312-353): its prompt chunks stream most experts from the arena
+(`host staging` 4.7-39.5 s per chunk in its timing lines), so the sort does not apply and the products wait on the
+staging; TODO items 10 and 11 are its lever, not the tile. The day's prompt speed for the Coder, then: 146 -> 209 ->
+274 -> 451 -> 528 -> 548 t/s at 4.75K.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's

@@ -23,7 +23,8 @@ the measurement that decides it. Test outputs (engine logs, server output, bench
    16-bit output, PR #313's WMMA) and the MMQ products at one layer's shape. Shipped: `Product::opt_rows` - the MMQ
    J tile chosen for a group's median row count instead of its largest (`STRATA_PREFILL_MMQ_OPT=max` restores the
    old choice): gate/up 1,800-1,832 -> 1,581-1,604 ms, down 802-816 -> 764-769 ms, pp4096 509-525 -> 524-541 t/s,
-   a 1.3K prompt 398 -> 424 t/s, the same text out; the gfx1151 hipBLASLt table extended with the expert shapes at
+   a 1.3K prompt 398 -> 424 t/s, the same text out; the full benchmark: Coder prefill 528 -> 548 t/s at 4.75K,
+   517 -> 537 at pp4096, ~530 -> ~560 at 16-20K, decode unchanged, UD-IQ4_XS unchanged (its chunks stream); the gfx1151 hipBLASLt table extended with the expert shapes at
    small T (the FP16 path's gate/up 4,231 -> 1,593-1,671 ms, now on par with MMQ); experts sorted by row count
    before grouping where the chunk does not stream (below `STRATA_PREFILL_STREAM_MIN` = 1,024 tokens: 1,001-token
    prompts 360-388 -> 388-428 t/s; in arena mode every expert is staged from the arena in id order, so 4K chunks

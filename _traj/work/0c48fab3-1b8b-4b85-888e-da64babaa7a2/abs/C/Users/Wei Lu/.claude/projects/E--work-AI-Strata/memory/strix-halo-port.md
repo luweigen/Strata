@@ -1,6 +1,6 @@
 ---
 name: strix-halo-port
-description: "State of the Strata gfx1151 (Radeon 8060S) port as of 2026-10-05 late night, branch wmma-gfx1151 (TODO 1 and 2 done): Coder prefill 524-541 t/s, decode 37-41; the Coder's experts run through MMQ by default (not FP16 GEMMs); next: TODO 2a (size-class groups), 2b (MMQ tiles), 3 (MMQ parity)"
+description: "State of the Strata gfx1151 (Radeon 8060S) port as of 2026-10-05 late night, branch wmma-gfx1151 (TODO 1 and 2 done): Coder prefill 537-568 t/s (4K-20K), decode 37-40; the Coder's experts run through MMQ by default (not FP16 GEMMs); next: TODO 2a (size-class groups), 2b (MMQ tiles), 3 (MMQ parity)"
 metadata:
   node_type: memory
   type: project
@@ -22,7 +22,7 @@ env; quick check `docs/benchmarks/2026-10-05-halo-pp4k.py <label> [repeat] [toke
 **Why:** TODO 2's premise was wrong: the Coder's (and UD-IQ4_XS's) expert types are MMQ types, so the prompt path
 runs llama.cpp's int8 MMQ by default (`STRATA_PREFILL_MMQ=0` gives the FP16 GEMMs). Shipped 2026-10-05 night:
 `mmq::Product::opt_rows` = the group's median row count for the J tile (`STRATA_PREFILL_MMQ_OPT=max|mean|median`):
-pp4096 509-525 -> 524-541 t/s, identical text; the table rows for the FP16 path; experts sorted by rows only when
+pp4096 509-525 -> 524-541 t/s, identical text; the full benchmark (`docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2.json`): 548 / 537 / ~560 t/s at 4.75K / pp4096 / 16-20K, UD-IQ4_XS unchanged (streams); the table rows for the FP16 path; experts sorted by rows only when
 the chunk does not stream (< 1,024 tokens; arena mode stages every expert in id order). Harnesses:
 `docs/benchmarks/2026-10-05-halo-expert-gemm.cpp` (FP16 routes), `2026-10-05-halo-mmq-bench.cpp` (MMQ, links
 `build-hip-win/strata_mmq.lib`; build lines in the file headers; hipcc needs `-Wl,<lib>` and `-D_DLL -D_MT -Xclang
