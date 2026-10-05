@@ -50206,19 +50206,498 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 573,
+      "timestamp": "2026-10-05T16:49:30.404Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>b4k1f2gqv</task-id>\n<tool-use-id>toolu_01WhmwXY3cDkG29qM8HhGJDr</tool-use-id>\n<output-file>C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\b4k1f2gqv.output</output-file>\n<status>completed</status>\n<summary>Background command \"Run UD-IQ4_XS (32/96, 10,000-slot cache) with the new engine, the table and the WMMA attention through the full benchmark\" completed (exit code 0)</summary>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 574,
+      "timestamp": "2026-10-05T16:49:40.047Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_013hXzV7No3iuNxskcGAGCsi",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_013hXzV7No3iuNxskcGAGCsi",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "grep -E \"ready=|bench exit|slots|fallback|hit rate\" \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/tasks/b4k1f2gqv.output\" | cut -c1-160; /c/conda_envs/strata/python.exe - <<'EOF' 2>&1\nimport json\nd=json.load(open('docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json', encoding='utf-8')); print('==', d['label'])\nfor r in d['rows']:\n    print('  %-50s prompt %6s %7s t/s | pred %4s %6s t/s | acc %5s | wall %7s' % (r['test'][:50], r.get('prompt_n'), r.get('prompt_per_second'), r.get('predicted_n'), r.get('predicted_per_second'), r.get('accept_pct'), r.get('wall_s')))\nEOF",
+            "description": "Show the UD-IQ4_XS results with the new engine"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_013hXzV7No3iuNxskcGAGCsi",
+            "content": "ready=True after 30 s\nbench exit 0\nstrata serve: decode expert cache hit rate: 98.0% (77854 hits / 79453 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (470 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 99.0% (475 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 98.6% (71352 hits / 72352 lookups)\n== halo-8060S-ud-iq4_xs-32-96-cache10000-table-pa-wmma\r\n  server: cold first request (short code prompt)     prompt    314   105.5 t/s | pred  400   29.7 t/s | acc  91.2 | wall   16.47\r\n  server: fresh code prompt                          prompt    218   109.5 t/s | pred  400   26.7 t/s | acc  86.1 | wall   17.03\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   324.1 t/s | pred  400   22.4 t/s | acc  75.2 | wall   32.57\r\n  server: repeated first prompt (reference only)     prompt    314   131.1 t/s | pred  400   30.7 t/s | acc  92.7 | wall   15.44\r\n  pp4096 @ d0                                        prompt   4085   311.9 t/s | pred    1   16.9 t/s | acc  None | wall   13.18\r\n  tg128 @ d0                                         prompt     68    41.2 t/s | pred  128   19.9 t/s | acc  59.6 | wall     8.1\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   349.7 t/s | pred    1   16.3 t/s | acc  None | wall   46.98\r\n  pp4096 @ d16384                                    prompt  20421   342.4 t/s | pred    1   16.9 t/s | acc  None | wall   59.78\r\n  tg128 @ d16384                                     prompt  16401   352.7 t/s | pred  128   21.7 t/s | acc  76.4 | wall   52.48\n\n[stdout]\nready=True after 30 s\nbench exit 0\nstrata serve: decode expert cache hit rate: 98.0% (77854 hits / 79453 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (470 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 99.0% (475 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 98.6% (71352 hits / 72352 lookups)\n== halo-8060S-ud-iq4_xs-32-96-cache10000-table-pa-wmma\r\n  server: cold first request (short code prompt)     prompt    314   105.5 t/s | pred  400   29.7 t/s | acc  91.2 | wall   16.47\r\n  server: fresh code prompt                          prompt    218   109.5 t/s | pred  400   26.7 t/s | acc  86.1 | wall   17.03\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   324.1 t/s | pred  400   22.4 t/s | acc  75.2 | wall   32.57\r\n  server: repeated first prompt (reference only)     prompt    314   131.1 t/s | pred  400   30.7 t/s | acc  92.7 | wall   15.44\r\n  pp4096 @ d0                                        prompt   4085   311.9 t/s | pred    1   16.9 t/s | acc  None | wall   13.18\r\n  tg128 @ d0                                         prompt     68    41.2 t/s | pred  128   19.9 t/s | acc  59.6 | wall     8.1\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   349.7 t/s | pred    1   16.3 t/s | acc  None | wall   46.98\r\n  pp4096 @ d16384                                    prompt  20421   342.4 t/s | pred    1   16.9 t/s | acc  None | wall   59.78\r\n  tg128 @ d16384                                     prompt  16401   352.7 t/s | pred  128   21.7 t/s | acc  76.4 | wall   52.48\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 649741,
+        "completion_tokens": 460,
+        "cached_tokens": 649737,
+        "extra": {
+          "cache_creation_input_tokens": 420,
+          "cache_read_input_tokens": 649737,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 420,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 460,
+              "cache_read_input_tokens": 649737,
+              "cache_creation_input_tokens": 420,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 420
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "ready=True after 30 s\nbench exit 0\nstrata serve: decode expert cache hit rate: 98.0% (77854 hits / 79453 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (470 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 99.0% (475 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 98.6% (71352 hits / 72352 lookups)\n== halo-8060S-ud-iq4_xs-32-96-cache10000-table-pa-wmma\r\n  server: cold first request (short code prompt)     prompt    314   105.5 t/s | pred  400   29.7 t/s | acc  91.2 | wall   16.47\r\n  server: fresh code prompt                          prompt    218   109.5 t/s | pred  400   26.7 t/s | acc  86.1 | wall   17.03\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   324.1 t/s | pred  400   22.4 t/s | acc  75.2 | wall   32.57\r\n  server: repeated first prompt (reference only)     prompt    314   131.1 t/s | pred  400   30.7 t/s | acc  92.7 | wall   15.44\r\n  pp4096 @ d0                                        prompt   4085   311.9 t/s | pred    1   16.9 t/s | acc  None | wall   13.18\r\n  tg128 @ d0                                         prompt     68    41.2 t/s | pred  128   19.9 t/s | acc  59.6 | wall     8.1\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   349.7 t/s | pred    1   16.3 t/s | acc  None | wall   46.98\r\n  pp4096 @ d16384                                    prompt  20421   342.4 t/s | pred    1   16.9 t/s | acc  None | wall   59.78\r\n  tg128 @ d16384                                     prompt  16401   352.7 t/s | pred  128   21.7 t/s | acc  76.4 | wall   52.48",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_013hXzV7No3iuNxskcGAGCsi",
+            "type": "tool_result",
+            "content": "ready=True after 30 s\nbench exit 0\nstrata serve: decode expert cache hit rate: 98.0% (77854 hits / 79453 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (470 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 99.0% (475 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 98.6% (71352 hits / 72352 lookups)\n== halo-8060S-ud-iq4_xs-32-96-cache10000-table-pa-wmma\r\n  server: cold first request (short code prompt)     prompt    314   105.5 t/s | pred  400   29.7 t/s | acc  91.2 | wall   16.47\r\n  server: fresh code prompt                          prompt    218   109.5 t/s | pred  400   26.7 t/s | acc  86.1 | wall   17.03\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   324.1 t/s | pred  400   22.4 t/s | acc  75.2 | wall   32.57\r\n  server: repeated first prompt (reference only)     prompt    314   131.1 t/s | pred  400   30.7 t/s | acc  92.7 | wall   15.44\r\n  pp4096 @ d0                                        prompt   4085   311.9 t/s | pred    1   16.9 t/s | acc  None | wall   13.18\r\n  tg128 @ d0                                         prompt     68    41.2 t/s | pred  128   19.9 t/s | acc  59.6 | wall     8.1\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   349.7 t/s | pred    1   16.3 t/s | acc  None | wall   46.98\r\n  pp4096 @ d16384                                    prompt  20421   342.4 t/s | pred    1   16.9 t/s | acc  None | wall   59.78\r\n  tg128 @ d16384                                     prompt  16401   352.7 t/s | pred  128   21.7 t/s | acc  76.4 | wall   52.48",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "ready=True after 30 s\nbench exit 0\nstrata serve: decode expert cache hit rate: 98.0% (77854 hits / 79453 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (470 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 99.0% (475 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 98.6% (71352 hits / 72352 lookups)\n== halo-8060S-ud-iq4_xs-32-96-cache10000-table-pa-wmma\r\n  server: cold first request (short code prompt)     prompt    314   105.5 t/s | pred  400   29.7 t/s | acc  91.2 | wall   16.47\r\n  server: fresh code prompt                          prompt    218   109.5 t/s | pred  400   26.7 t/s | acc  86.1 | wall   17.03\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   324.1 t/s | pred  400   22.4 t/s | acc  75.2 | wall   32.57\r\n  server: repeated first prompt (reference only)     prompt    314   131.1 t/s | pred  400   30.7 t/s | acc  92.7 | wall   15.44\r\n  pp4096 @ d0                                        prompt   4085   311.9 t/s | pred    1   16.9 t/s | acc  None | wall   13.18\r\n  tg128 @ d0                                         prompt     68    41.2 t/s | pred  128   19.9 t/s | acc  59.6 | wall     8.1\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   349.7 t/s | pred    1   16.3 t/s | acc  None | wall   46.98\r\n  pp4096 @ d16384                                    prompt  20421   342.4 t/s | pred    1   16.9 t/s | acc  None | wall   59.78\r\n  tg128 @ d16384                                     prompt  16401   352.7 t/s | pred  128   21.7 t/s | acc  76.4 | wall   52.48",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_013hXzV7No3iuNxskcGAGCsi",
+            "type": "tool_result",
+            "content": "ready=True after 30 s\nbench exit 0\nstrata serve: decode expert cache hit rate: 98.0% (77854 hits / 79453 lookups)\nstrata serve: decode expert cache hit rate: 97.9% (470 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 99.0% (475 hits / 480 lookups)\nstrata serve: decode expert cache hit rate: 98.6% (71352 hits / 72352 lookups)\n== halo-8060S-ud-iq4_xs-32-96-cache10000-table-pa-wmma\r\n  server: cold first request (short code prompt)     prompt    314   105.5 t/s | pred  400   29.7 t/s | acc  91.2 | wall   16.47\r\n  server: fresh code prompt                          prompt    218   109.5 t/s | pred  400   26.7 t/s | acc  86.1 | wall   17.03\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   324.1 t/s | pred  400   22.4 t/s | acc  75.2 | wall   32.57\r\n  server: repeated first prompt (reference only)     prompt    314   131.1 t/s | pred  400   30.7 t/s | acc  92.7 | wall   15.44\r\n  pp4096 @ d0                                        prompt   4085   311.9 t/s | pred    1   16.9 t/s | acc  None | wall   13.18\r\n  tg128 @ d0                                         prompt     68    41.2 t/s | pred  128   19.9 t/s | acc  59.6 | wall     8.1\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   349.7 t/s | pred    1   16.3 t/s | acc  None | wall   46.98\r\n  pp4096 @ d16384                                    prompt  20421   342.4 t/s | pred    1   16.9 t/s | acc  None | wall   59.78\r\n  tg128 @ d16384                                     prompt  16401   352.7 t/s | pred  128   21.7 t/s | acc  76.4 | wall   52.48",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "grep -E \"ready=|bench exit|slots|fallback|hit rate\" \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/tasks/b4k1f2gqv.output\" | cut -c1-160; /c/conda_envs/strata/python.exe - <<'EOF' 2>&1\nimport json\nd=json.load(open('docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json', encoding='utf-8')); print('==', d['label'])\nfor r in d['rows']:\n    print('  %-50s prompt %6s %7s t/s | pred %4s %6s t/s | acc %5s | wall %7s' % (r['test'][:50], r.get('prompt_n'), r.get('prompt_per_second'), r.get('predicted_n'), r.get('predicted_per_second'), r.get('accept_pct'), r.get('wall_s')))\nEOF",
+          "description": "Show the UD-IQ4_XS results with the new engine"
+        }
+      }
+    },
+    {
+      "step_id": 575,
+      "timestamp": "2026-10-05T16:49:56.481Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 650189,
+        "completion_tokens": 3736,
+        "cached_tokens": 650157,
+        "extra": {
+          "cache_creation_input_tokens": 1244,
+          "cache_read_input_tokens": 650157,
+          "output_tokens_details": {
+            "thinking_tokens": 511
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1244,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3736,
+              "cache_read_input_tokens": 650157,
+              "cache_creation_input_tokens": 1244,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1244
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 576,
+      "timestamp": "2026-10-05T16:50:28.154Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_012n6HFMLfDNFPwVN8CjQxVz",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_012n6HFMLfDNFPwVN8CjQxVz",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "/c/conda_envs/strata/python.exe - <<'EOF'\nimport pathlib\np = pathlib.Path(\"docs/AIMAX+395-ROCm.md\"); s = p.read_text(encoding=\"utf-8\")\nedits = [\n (\"| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\",\n  \"| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (the night's engine, 10,000-slot cache) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |\"),\n (\"| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\",\n  \"| model load to listening | **15 s** | 11.5 s | 83-94 s (**Strata: 30 s**) | 42 s |\"),\n (\"| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\",\n  \"| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.7) - even | 37.6 t/s |\"),\n (\"| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\",\n  \"| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.7) - even | 38.7 t/s |\"),\n (\"| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\",\n  \"| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | 322 t/s (278-284 before the kernel; **Strata: 324.1**) - even | 662.8 t/s |\"),\n (\"| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\",\n  \"| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.4) - even | 33.1 t/s |\"),\n (\"| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\",\n  \"| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 30.7) | 42.6 t/s |\"),\n (\"| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\",\n  \"| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 311.9) | 819.4 t/s |\"),\n (\"| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\",\n  \"| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 19.9 MTP) - even | 32.2 t/s |\"),\n (\"| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\",\n  \"| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (244-260 before; **Strata: 342-353** over 16-20K) | ~949 t/s |\"),\n (\"| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\",\n  \"| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 21.7** MTP) | 31.7 t/s |\"),\n (\"| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |\",\n  \"| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.4-0.5 (Strata: 0.36-0.49) | 1 |\"),\n (\"on this PC and about half the 3060's.\",\n  \"on this PC and about half the 3060's. For UD-IQ4_XS the night's engine (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`,\\n\"\n  \"the table, the WMMA attention, 10,000 slots asked for, 98-99% hits) lifted Strata's prefill from 210-236 to\\n\"\n  \"312-353 t/s: even with llama.cpp at 4.75K (324 vs 322), behind it at pp4096 (312 vs 372-391), ahead at 16-20K\\n\"\n  \"(342-353 vs 273-281), with decode even (20-30 t/s both) and the load 30 s against 83-94. No longer one engine's\\n\"\n  \"model: llama.cpp for short prompts, Strata for long ones and for the start-up.\"),\n]\nfor old, new in edits:\n    assert s.count(old) == 1, old[:70]\n    s = s.replace(old, new)\n# a line in the UD-IQ4_XS section\nold = \"- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path\\n  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.\"\nassert s.count(old) == 1\ns = s.replace(old, old + \"\\n- **Later the same night**, with the calibrated hipBLASLt table and the gfx11 WMMA attention (and the same pin\\n  cap and 10,000-slot cache): prefill 324 / 312 / 350 / 342 / 353 t/s on the 4.75K / pp4096 / 16K / 20K rows,\\n  decode 29.7 / 26.7 / 22.4 and tg128 19.9 / 21.7 t/s, 98-99% hits (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`).\\n  Prefill +50%, decode unchanged: the decode question above stands.\")\np.write_text(s, encoding=\"utf-8\", newline=\"\\n\"); print(\"one table updated\")\nEOF\nsed -i 's|next: expert GEMMs (TODO 2)|UD-IQ4_XS prefill 312-353 (even with llama.cpp); next: expert GEMMs (TODO 2)|' \"/c/Users/Wei Lu/.claude/projects/E--work-AI-Strata/memory/MEMORY.md\"",
+            "description": "Update the one-table section and the UD-IQ4_XS section with the new engine's results, and the memory index"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_012n6HFMLfDNFPwVN8CjQxVz",
+            "content": "one table updated\n\n[stdout]\none table updated\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"hunks\": [{\"oldStart\": 593, \"oldLines\": 6, \"newStart\": 593, \"newLines\": 10, \"lines\": [\"   `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.\", \" - The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path\", \"   streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.\", \"+- **Later the same night**, with the calibrated hipBLASLt table and the gfx11 WMMA attention (and the same pin\", \"+  cap and 10,000-slot cache): prefill 324 / 312 / 350 / 342 / 353 t/s on the 4.75K / pp4096 / 16K / 20K rows,\", \"+  decode 29.7 / 26.7 / 22.4 and tg128 19.9 / 21.7 t/s, 98-99% hits (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`).\", \"+  Prefill +50%, decode unchanged: the decode question above stands.\", \" \", \" ## One table: the best Halo setup per model against the 3060M PC\", \" \"]}, {\"oldStart\": 602, \"oldLines\": 27, \"newStart\": 606, \"newLines\": 31, \"lines\": [\" every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo\", \" engine wins a row, its number is in brackets.\", \" \", \"-| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\", \"+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (the night's engine, 10,000-slot cache) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |\", \" |---|---|---|---|---|\", \"-| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\", \"-| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\", \"-| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\", \"-| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\", \"-| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\", \"-| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\", \"-| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\", \"-| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\", \"-| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\", \"-| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\", \"+| model load to listening | **15 s** | 11.5 s | 83-94 s (**Strata: 30 s**) | 42 s |\", \"+| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.7) - even | 37.6 t/s |\", \"+| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.7) - even | 38.7 t/s |\", \"+| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | 322 t/s (278-284 before the kernel; **Strata: 324.1**) - even | 662.8 t/s |\", \"+| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.4) - even | 33.1 t/s |\", \"+| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 30.7) | 42.6 t/s |\", \"+| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 311.9) | 819.4 t/s |\", \"+| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 19.9 MTP) - even | 32.2 t/s |\", \"+| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (244-260 before; **Strata: 342-353** over 16-20K) | ~949 t/s |\", \"+| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 21.7** MTP) | 31.7 t/s |\", \" | ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\", \"-| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |\", \"+| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.4-0.5 (Strata: 0.36-0.49) | 1 |\", \" \", \" (The Coder column is the night's configuration: the calibrated hipBLASLt table and PR #313's gfx11 WMMA attention,\", \" see [A better GEMM](#a-better-gemm-what-was-searched-what-was-measured-what-it-gave-2026-10-05-evening) and\", \" [TODO 1 done](#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night); the day began\", \" at 146 t/s.) What the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which\", \" puts its decode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x, and its prefill 1.6-2.0x llama.cpp's\", \"-on this PC and about half the 3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64\", \"+on this PC and about half the 3060's. For UD-IQ4_XS the night's engine (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`,\", \"+the table, the WMMA attention, 10,000 slots asked for, 98-99% hits) lifted Strata's prefill from 210-236 to\", \"+312-353 t/s: even with llama.cpp at 4.75K (324 vs 322), behind it at pp4096 (312 vs 372-391), ahead at 16-20K\", \"+(342-353 vs 273-281), with decode even (20-30 t/s both) and the load 30 s against 83-94. No longer one engine's\", \"+model: llama.cpp for short prompts, Strata for long ones and for the start-up. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64\", \" limits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie\", \" between the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap\", \" to the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 650189,
+        "completion_tokens": 3736,
+        "cached_tokens": 650157,
+        "extra": {
+          "cache_creation_input_tokens": 1244,
+          "cache_read_input_tokens": 650157,
+          "output_tokens_details": {
+            "thinking_tokens": 511
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1244,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3736,
+              "cache_read_input_tokens": 650157,
+              "cache_creation_input_tokens": 1244,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1244
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "one table updated",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+                  "hunks": [
+                    {
+                      "oldStart": 593,
+                      "oldLines": 6,
+                      "newStart": 593,
+                      "newLines": 10,
+                      "lines": [
+                        "   `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.",
+                        " - The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path",
+                        "   streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.",
+                        "+- **Later the same night**, with the calibrated hipBLASLt table and the gfx11 WMMA attention (and the same pin",
+                        "+  cap and 10,000-slot cache): prefill 324 / 312 / 350 / 342 / 353 t/s on the 4.75K / pp4096 / 16K / 20K rows,",
+                        "+  decode 29.7 / 26.7 / 22.4 and tg128 19.9 / 21.7 t/s, 98-99% hits (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`).",
+                        "+  Prefill +50%, decode unchanged: the decode question above stands.",
+                        " ",
+                        " ## One table: the best Halo setup per model against the 3060M PC",
+                        " "
+                      ]
+                    },
+                    {
+                      "oldStart": 602,
+                      "oldLines": 27,
+                      "newStart": 606,
+                      "newLines": 31,
+                      "lines": [
+                        " every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo",
+                        " engine wins a row, its number is in brackets.",
+                        " ",
+                        "-| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |",
+                        "+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (the night's engine, 10,000-slot cache) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |",
+                        " |---|---|---|---|---|",
+                        "-| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |",
+                        "-| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |",
+                        "-| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |",
+                        "-| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |",
+                        "-| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |",
+                        "-| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |",
+                        "-| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |",
+                        "-| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |",
+                        "-| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |",
+                        "-| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |",
+                        "+| model load to listening | **15 s** | 11.5 s | 83-94 s (**Strata: 30 s**) | 42 s |",
+                        "+| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.7) - even | 37.6 t/s |",
+                        "+| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.7) - even | 38.7 t/s |",
+                        "+| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | 322 t/s (278-284 before the kernel; **Strata: 324.1**) - even | 662.8 t/s |",
+                        "+| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.4) - even | 33.1 t/s |",
+                        "+| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 30.7) | 42.6 t/s |",
+                        "+| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 311.9) | 819.4 t/s |",
+                        "+| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 19.9 MTP) - even | 32.2 t/s |",
+                        "+| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (244-260 before; **Strata: 342-353** over 16-20K) | ~949 t/s |",
+                        "+| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 21.7** MTP) | 31.7 t/s |",
+                        " | ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |",
+                        "-| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |",
+                        "+| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.4-0.5 (Strata: 0.36-0.49) | 1 |",
+                        " ",
+                        " (The Coder column is the night's configuration: the calibrated hipBLASLt table and PR #313's gfx11 WMMA attention,",
+                        " see [A better GEMM](#a-better-gemm-what-was-searched-what-was-measured-what-it-gave-2026-10-05-evening) and",
+                        " [TODO 1 done](#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night); the day began",
+                        " at 146 t/s.) What the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which",
+                        " puts its decode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x, and its prefill 1.6-2.0x llama.cpp's",
+                        "-on this PC and about half the 3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64",
+                        "+on this PC and about half the 3060's. For UD-IQ4_XS the night's engine (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`,",
+                        "+the table, the WMMA attention, 10,000 slots asked for, 98-99% hits) lifted Strata's prefill from 210-236 to",
+                        "+312-353 t/s: even with llama.cpp at 4.75K (324 vs 322), behind it at pp4096 (312 vs 372-391), ahead at 16-20K",
+                        "+(342-353 vs 273-281), with decode even (20-30 t/s both) and the load 30 s against 83-94. No longer one engine's",
+                        "+model: llama.cpp for short prompts, Strata for long ones and for the start-up. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64",
+                        " limits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie",
+                        " between the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap",
+                        " to the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_012n6HFMLfDNFPwVN8CjQxVz",
+            "type": "tool_result",
+            "content": "one table updated",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "one table updated",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+                  "hunks": [
+                    {
+                      "oldStart": 593,
+                      "oldLines": 6,
+                      "newStart": 593,
+                      "newLines": 10,
+                      "lines": [
+                        "   `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.",
+                        " - The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path",
+                        "   streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.",
+                        "+- **Later the same night**, with the calibrated hipBLASLt table and the gfx11 WMMA attention (and the same pin",
+                        "+  cap and 10,000-slot cache): prefill 324 / 312 / 350 / 342 / 353 t/s on the 4.75K / pp4096 / 16K / 20K rows,",
+                        "+  decode 29.7 / 26.7 / 22.4 and tg128 19.9 / 21.7 t/s, 98-99% hits (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`).",
+                        "+  Prefill +50%, decode unchanged: the decode question above stands.",
+                        " ",
+                        " ## One table: the best Halo setup per model against the 3060M PC",
+                        " "
+                      ]
+                    },
+                    {
+                      "oldStart": 602,
+                      "oldLines": 27,
+                      "newStart": 606,
+                      "newLines": 31,
+                      "lines": [
+                        " every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo",
+                        " engine wins a row, its number is in brackets.",
+                        " ",
+                        "-| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |",
+                        "+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (the night's engine, 10,000-slot cache) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |",
+                        " |---|---|---|---|---|",
+                        "-| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |",
+                        "-| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |",
+                        "-| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |",
+                        "-| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |",
+                        "-| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |",
+                        "-| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |",
+                        "-| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |",
+                        "-| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |",
+                        "-| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |",
+                        "-| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |",
+                        "+| model load to listening | **15 s** | 11.5 s | 83-94 s (**Strata: 30 s**) | 42 s |",
+                        "+| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.7) - even | 37.6 t/s |",
+                        "+| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.7) - even | 38.7 t/s |",
+                        "+| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | 322 t/s (278-284 before the kernel; **Strata: 324.1**) - even | 662.8 t/s |",
+                        "+| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.4) - even | 33.1 t/s |",
+                        "+| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 30.7) | 42.6 t/s |",
+                        "+| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 311.9) | 819.4 t/s |",
+                        "+| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 19.9 MTP) - even | 32.2 t/s |",
+                        "+| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (244-260 before; **Strata: 342-353** over 16-20K) | ~949 t/s |",
+                        "+| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 21.7** MTP) | 31.7 t/s |",
+                        " | ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |",
+                        "-| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |",
+                        "+| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.4-0.5 (Strata: 0.36-0.49) | 1 |",
+                        " ",
+                        " (The Coder column is the night's configuration: the calibrated hipBLASLt table and PR #313's gfx11 WMMA attention,",
+                        " see [A better GEMM](#a-better-gemm-what-was-searched-what-was-measured-what-it-gave-2026-10-05-evening) and",
+                        " [TODO 1 done](#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night); the day began",
+                        " at 146 t/s.) What the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which",
+                        " puts its decode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x, and its prefill 1.6-2.0x llama.cpp's",
+                        "-on this PC and about half the 3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64",
+                        "+on this PC and about half the 3060's. For UD-IQ4_XS the night's engine (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`,",
+                        "+the table, the WMMA attention, 10,000 slots asked for, 98-99% hits) lifted Strata's prefill from 210-236 to",
+                        "+312-353 t/s: even with llama.cpp at 4.75K (324 vs 322), behind it at pp4096 (312 vs 372-391), ahead at 16-20K",
+                        "+(342-353 vs 273-281), with decode even (20-30 t/s both) and the load 30 s against 83-94. No longer one engine's",
+                        "+model: llama.cpp for short prompts, Strata for long ones and for the start-up. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64",
+                        " limits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie",
+                        " between the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap",
+                        " to the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_012n6HFMLfDNFPwVN8CjQxVz",
+            "type": "tool_result",
+            "content": "one table updated",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "/c/conda_envs/strata/python.exe - <<'EOF'\nimport pathlib\np = pathlib.Path(\"docs/AIMAX+395-ROCm.md\"); s = p.read_text(encoding=\"utf-8\")\nedits = [\n (\"| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\",\n  \"| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (the night's engine, 10,000-slot cache) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |\"),\n (\"| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\",\n  \"| model load to listening | **15 s** | 11.5 s | 83-94 s (**Strata: 30 s**) | 42 s |\"),\n (\"| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\",\n  \"| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.7) - even | 37.6 t/s |\"),\n (\"| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\",\n  \"| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.7) - even | 38.7 t/s |\"),\n (\"| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\",\n  \"| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | 322 t/s (278-284 before the kernel; **Strata: 324.1**) - even | 662.8 t/s |\"),\n (\"| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\",\n  \"| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.4) - even | 33.1 t/s |\"),\n (\"| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\",\n  \"| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 30.7) | 42.6 t/s |\"),\n (\"| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\",\n  \"| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 311.9) | 819.4 t/s |\"),\n (\"| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\",\n  \"| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 19.9 MTP) - even | 32.2 t/s |\"),\n (\"| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\",\n  \"| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (244-260 before; **Strata: 342-353** over 16-20K) | ~949 t/s |\"),\n (\"| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\",\n  \"| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 21.7** MTP) | 31.7 t/s |\"),\n (\"| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |\",\n  \"| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.4-0.5 (Strata: 0.36-0.49) | 1 |\"),\n (\"on this PC and about half the 3060's.\",\n  \"on this PC and about half the 3060's. For UD-IQ4_XS the night's engine (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`,\\n\"\n  \"the table, the WMMA attention, 10,000 slots asked for, 98-99% hits) lifted Strata's prefill from 210-236 to\\n\"\n  \"312-353 t/s: even with llama.cpp at 4.75K (324 vs 322), behind it at pp4096 (312 vs 372-391), ahead at 16-20K\\n\"\n  \"(342-353 vs 273-281), with decode even (20-30 t/s both) and the load 30 s against 83-94. No longer one engine's\\n\"\n  \"model: llama.cpp for short prompts, Strata for long ones and for the start-up.\"),\n]\nfor old, new in edits:\n    assert s.count(old) == 1, old[:70]\n    s = s.replace(old, new)\n# a line in the UD-IQ4_XS section\nold = \"- The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path\\n  streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.\"\nassert s.count(old) == 1\ns = s.replace(old, old + \"\\n- **Later the same night**, with the calibrated hipBLASLt table and the gfx11 WMMA attention (and the same pin\\n  cap and 10,000-slot cache): prefill 324 / 312 / 350 / 342 / 353 t/s on the 4.75K / pp4096 / 16K / 20K rows,\\n  decode 29.7 / 26.7 / 22.4 and tg128 19.9 / 21.7 t/s, 98-99% hits (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`).\\n  Prefill +50%, decode unchanged: the decode question above stands.\")\np.write_text(s, encoding=\"utf-8\", newline=\"\\n\"); print(\"one table updated\")\nEOF\nsed -i 's|next: expert GEMMs (TODO 2)|UD-IQ4_XS prefill 312-353 (even with llama.cpp); next: expert GEMMs (TODO 2)|' \"/c/Users/Wei Lu/.claude/projects/E--work-AI-Strata/memory/MEMORY.md\"",
+          "description": "Update the one-table section and the UD-IQ4_XS section with the new engine's results, and the memory index"
+        }
+      }
+    },
+    {
+      "step_id": 577,
+      "timestamp": "2026-10-05T16:50:55.804Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "表已按今晚的引擎更新。两列的变化：\n\n**Coder 一列**（之前已换成今晚数字）：预填充 451 → **528**（4.75K）、441 → **517**（pp4096）、~430 → **~530**（16K 深度）；解码 39.9/36.1/30.9 → 40.8/37.1/32.6；对 3060 的预填充比值 0.38-0.48 → **0.47-0.56**。\n\n**UD-IQ4_XS 一列**（刚用新引擎在 32/96 重测，表 + WMMA 注意力，98-99% 命中）：Strata 括号里的旧数字全部更新，结论从\"llama.cpp 最佳\"变成**分行各有胜负**：\n\n| UD-IQ4_XS | llama.cpp（96/32，chunked GDN） | Strata（32/96，今晚引擎） | 之前的 Strata |\n|---|---|---|---|\n| 启动到就绪 | 83-94 s | **30 s** | 25-35 s |\n| 冷启动 / 新提示解码 | 28.1-30.4 / 25.1-30.7 | 29.7 / 26.7（持平） | 31.4 / 27.2 |\n| 预填充 @4.75K | 322 | **324**（持平） | 210 |\n| pp4096 | **372-391** | 312 | 210 |\n| pp4096 @ 16K 深度 | 273-281 | **342-353** | 229 |\n| tg128 @ d0 / 16K | 21.8-22.8 / 16.3-19.4（无 MTP） | 19.9 / **21.7** | 20.6 / 20.2 |\n| 重复提示 | **58.6**（n-gram 草稿） | 30.7 | 30-31 |\n\n也就是说 UD-IQ4_XS 的预填充提升了 50%（210-236 → 312-353），短提示 llama.cpp 仍领先约 20%，长提示 Strata 领先约 25%，解码两者持平，启动 Strata 快 3 倍。解码没变——之前发现的\"UD-IQ4_XS 解码不随缓存大小变化\"的问题仍在（TODO 7）。\n\n表头和总结句已相应改写，UD-IQ4_XS 一节也加了今晚的数据行；原始数据在 `docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`。",
+      "metrics": {
+        "prompt_tokens": 651433,
+        "completion_tokens": 828,
+        "cached_tokens": 651401,
+        "extra": {
+          "cache_creation_input_tokens": 3769,
+          "cache_read_input_tokens": 651401,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3769,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 828,
+              "cache_read_input_tokens": 651401,
+              "cache_creation_input_tokens": 3769,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3769
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 194569967,
-    "total_completion_tokens": 1074545,
-    "total_cached_tokens": 194556287,
-    "total_steps": 572,
+    "total_prompt_tokens": 197171519,
+    "total_completion_tokens": 1083305,
+    "total_cached_tokens": 197157739,
+    "total_steps": 577,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 4403915,
-      "total_cache_read_input_tokens": 194556287
+      "total_cache_creation_input_tokens": 4410592,
+      "total_cache_read_input_tokens": 197157739
     }
   }
 }
