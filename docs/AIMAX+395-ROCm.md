@@ -589,6 +589,37 @@ and **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrow
 - The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path
   streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.
 
+## Summary: the best of this PC against the 3060M PC, both models
+
+The Halo column is the best configuration measured on this PC for each model (Strata unless llama.cpp was
+faster on that row; llama.cpp's numbers are windows.md's, on the 96/32 split). The 3060M column is 3060M.md's
+Strata (its tables' `--pcie-frac 0.55`; its later 0.2 result in the last row). MTP on in every decode row;
+prefill rows 1 token out; n = 1 per row everywhere.
+
+| | **Coder IQ1_M, Halo** | Coder IQ1_M, 3060M PC | **UD-IQ4_XS, Halo** | UD-IQ4_XS, 3060M PC |
+|---|---|---|---|---|
+| machine | Ryzen AI MAX+ 395, Radeon 8060S, 128 GB LPDDR5X (236 GB/s shared), Windows 11 | Ryzen 9 8945HX, RTX 3060 Laptop 12 GB (336 GB/s), 92 GiB DDR5 (55 GB/s), PCIe 26.8 GB/s, Linux | as left | as left |
+| best memory split | **64 GiB GPU / 64 GiB RAM** | (fixed: 12 GB card) | **32 GiB GPU / 96 GiB RAM** (64/64 cannot pin the 55.4 GiB arena beside the OS) | (fixed) |
+| engine | **Strata** (HIP, ROCm 10.0.0, `ROCBLAS_USE_HIPBLASLT=1`) | Strata (CUDA 13) | **Strata** (HIP, same; `STRATA_ARENA_PIN_GIB=24`) | Strata (CUDA 13) |
+| expert placement | all 12,288 on the GPU (23.4 GiB), 100% hits | 2,666 on the GPU, the CPU computes the rest (64.6% hits) | 14,358 of 24,576 on the GPU (32.4 GiB), 97% hits; a 2,683-slot cache gives the same speed | 1,864 on the GPU (48.3% hits) |
+| model load to listening | 15 s | 11.5 s | 35 s | 42 s |
+| cold first request, decode | **38.6 t/s** | 43.3 t/s | **31.4 t/s** | 37.6 t/s |
+| fresh code prompt, decode | **35.1** | 42.1 | **27.2** | 38.7 |
+| decode tail after a 4.75K prompt | **34.7** | 39.3 | **22.1** | 33.1 |
+| repeated prompt (reference) | 39.5 (llama.cpp here: 49.9, its n-gram speculator) | 45.1 | 30.1 (llama.cpp here: 58.6) | 42.6 |
+| tg128 @ d0 / @ d16384 | **28.5 / 28.8** | 36.2 / 37.4 | **20.6 / 20.2** | 32.2 / 31.7 |
+| prefill @ ~4.75K | 274 t/s (llama.cpp here: **321**) | 961 t/s | 210 t/s (llama.cpp here: **277**) | 663 t/s |
+| pp4096 @ d0 | 268 (llama.cpp here: **318**) | 927 | 210 (llama.cpp here: **340**) | 819 |
+| pp4096 @ d16384 | ~260 derived; **274 over all 20,421** (llama.cpp here: 270) | ~1,126 derived | ~220 derived; 229 over all 20,421 (llama.cpp here: 244) | ~949 derived |
+| decode at the 3060's best `--pcie-frac 0.2` (274-token prompt, median of 3) | 38.6 (the cold row above, a comparable prompt) | 62.3 | 31.4 | 55.4 |
+
+In one line each: on the Coder the Halo with Strata decodes at 0.8-0.9x the 3060M PC (0.6x its best setting)
+and reads prompts at 0.23-0.29x, where llama.cpp on the Halo is 1.2x faster than Strata on 4K prompts and 0.6x
+on decode; on UD-IQ4_XS the Halo with Strata decodes at 0.65-0.85x the 3060M PC (0.57x its best setting) and
+reads prompts at 0.23-0.32x, where llama.cpp on the Halo is 1.3-1.6x faster on prompts and about even on decode.
+The Halo's prefill, with either engine, is a fraction of a 12 GB Ampere laptop GPU's: the GEMM-and-kernel
+problem of RDNA 3.5 measured above.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's
