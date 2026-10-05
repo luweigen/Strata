@@ -192,9 +192,9 @@ on the card, 45-60 tok/s decode on a 640 GB/s card). Four details:
 
 The BIOS carve-out could be changed (64/64, or a smaller GPU share), and the engine would then split the experts
 between the cache and RAM as it does on a discrete card. Written before the run: "there is no reason to". The run
-showed one: the prompt path streams the experts from the host-side source for every chunk, and on 31.6 GiB that
-source has no file cache (see [Step 5](#execution-log-2026-10-05-the-same-afternoon)). For decode the reasoning
-holds.
+showed one: the prompt path streams the non-resident experts from the host-side source for every chunk, and in
+the in-place mode on 31.6 GiB that source had no file cache and read 47.6 GB per 16K prompt (see
+[Step 5](#execution-log-2026-10-05-the-same-afternoon)). For decode the reasoning holds.
 
 **What bounds decode.** The GPU's 235 GB/s read bandwidth is the ceiling for a memory-bound decode: at that rate
 every token can read at most ~10 GB of weights at 23 t/s, ~5 GB at 47 t/s. The Coder's per-token expert bytes
@@ -344,11 +344,14 @@ code reasoning on every row (the JSON keeps the last 300 characters of each).
 **Reading it.** On the same hardware Strata decodes the Coder **1.3-1.6x faster than llama.cpp** (35-37 vs 22-26
 t/s with MTP on both; 27 vs 21 t/s at tg128 where llama.cpp has no MTP), the first Strata-vs-llama.cpp numbers on
 one machine. **Prefill is the problem: 141-146 t/s, 2.2x slower than llama.cpp here and 6.5x slower than the
-RTX 3060 PC.** The log says why. The prompt path does not use the GPU-resident experts; per 8192-token chunk it
-streams every expert of every layer from the expert source, which here is the GGUF in place: `expert tiers: ...
-files 0 blobs 47584.5 MB read (the GGUF in place)` after the 16K prompt, 75.5 GB after the session. On a discrete
-card that source is the pinned RAM arena (the R9700 read 4K prompts at ~1,000-1,800 t/s with the same 12,288
-resident experts). Here the source is the OS file cache, and there is none: with the server up, Windows had
+RTX 3060 PC.** The log says why. Per 8192-token chunk the prompt path streams the experts it does not find in the
+GPU cache from the expert source (`prefill.cpp`: "every non-resident expert of every layer"; the cache lends it
+1,945 of its slots for buffers, so those experts are among the streamed), and in this run the source was the GGUF
+in place: `expert tiers: ... files 0 blobs 47584.5 MB read (the GGUF in place)` after the 16K prompt, 75.5 GB
+after the session - a volume that says the file tier was read far beyond the lent slots' experts (the routing
+prefetch of whole layers is a candidate; not isolated). On a discrete card that source is the pinned RAM arena
+(the R9700 read 4K prompts at ~1,000-1,800 t/s with the same 12,288 resident experts). Here the source was the OS
+file cache, and there was none: with the server up, Windows had
 **1.2 GiB free and 0.6 GiB of standby cache** of its 31.6 GiB (the engine 22 GiB working set, 26 GiB private),
 so each chunk's 23.4 GB come from the NVMe again, in the in-place mode's three reads per expert: 47.6 GB in 114 s
 is 416 MB/s against the drive's 2.6 GB/s sequential. Decode is untouched because it needs no expert from the
@@ -521,8 +524,8 @@ borrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-f
 
 At `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /
 34.7) with 81-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than
-its 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert
-either way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on
+its 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: streaming the 72% non-resident experts from pinned RAM
+costs little, `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on
 decode with the same placement. **`--pcie-frac 0.2` changes nothing here** (28.0 / 26.9 / 25.3 and 23.3 / 22.1
 t/s: every row within 1-2 t/s of 0.55, both ways), where on the 3060 PC it gained 20%. That gain came from the
 PCIe link (26.8 GB/s) and the CPU's RAM (55 GB/s) being separate, finite resources that 0.2 balanced; here the
@@ -588,6 +591,46 @@ and **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrow
   `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.
 - The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path
   streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.
+
+## Which GEMMs and kernels the prompt path's time goes to
+
+The phase timing of the 4,165-token prompt with hipBLASLt routing (GPU timeline 14,725 ms, 207 -> 279 t/s after
+the switch), mapped to the calls in `src/prefill/prefill.cpp` between its timing marks. The model's width N is
+2,560, an expert's gate+up is 1,280 wide and its down 640; T is the chunk's tokens (up to 8,192), ne the tokens
+routed to one expert. Every dense projection goes through `Gemm::bf16` / `Gemm::f16` (one `hipblasGemmEx` each,
+`src/prefill/gemm.cu:388/407`), `Gemm::native` being a `dequant_f16` kernel of the quantized weight into FP16
+scratch followed by the same FP16 GEMM.
+
+| phase | ms | share | what runs | kind |
+|---|---|---|---|---|
+| gdn (projections in) | ~990 | 6.7% | `attn_qkv`, `attn_gate` (native: dequant + FP16 GEMM), `ssm_alpha`, `ssm_beta` (BF16 GEMM), 36 GDN layers | GEMM |
+| gdn out proj | 1,320 | 9.0% | `ssm_out` (native) | GEMM |
+| gdn recurrence | 835 | 5.7% | `gdn_recurrence`: the delta-rule state update, token after token, one wave per head (`gdn.cu` / `fused_gdn.cu`) | own kernel, serial in T |
+| gdn conv+gates | 117 | 0.8% | `gdn_gates`, `gdn_conv` | own kernels |
+| hc read | 1,768 | 12.0% | per layer and half (attn, ffn): `hc_*_down`, `hc_*_up`, `hc_*_inject` BF16 GEMMs, with `gr_norm_rs`, `gr_silu`, `gr_mix_r` around them (`fused_gr.cu`); 2 x 48 layers | GEMM + own kernels |
+| qsa proj | 1,443 | 9.8% | `attn_k`, `attn_v`, `attn_q`, `attn_output` (native), `indexer.k_proj`, `indexer.q_proj` (BF16); `rms_rows`, `rope`, `gate_attn`, `kv_append`; 12 QSA layers | GEMM + small kernels |
+| qsa attn | 1,944 | 13.2% | `qsa_prompt_attn_batch`: the portable FP32 prompt attention. The matrix-core version (`STRATA_HIP_WMMA`) is compiled for gfx12 only; gfx1151 has WMMA with gfx11's fragment layout and no kernel for it. On gfx1201 the WMMA kernel is 7.2-7.5x faster | own kernel |
+| qsa select, indexer | 35 | 0.2% | `qsa_block_topk` | own kernel |
+| router + shared | 591 | 4.0% | `ffn_gate_inp` (BF16 GEMM), `route`, shared expert `ffn_gate_shexp` / `ffn_up_shexp` / `ffn_down_shexp` (native), `swiglu_pair`, the shared-gate BF16 GEMV | GEMM + kernels |
+| dequant | 473 | 3.2% | `iq_dequant_gu_f16`, `iq_dequant_f16`: each streamed or resident expert's IQ blocks to FP16 (`iq_kernels.cu`) | own kernels |
+| gemm gate/up | 1,705 | 11.6% | per expert `Gemm::f16`: [ne x 2560] x [2560 x 1280], then `swiglu_interleaved`; about 512 GEMMs per layer with ne of a few dozen to a few hundred rows | GEMM, small M |
+| gemm down | 763 | 5.2% | per expert `Gemm::f16`: [ne x 640] x [640 x 2560] | GEMM, small M |
+| combine | 225 | 1.5% | `moe_combine` | own kernel |
+| gather, wait copy, host grouping | 152 | 1.0% | the expert stream (resident experts are computed from their cache slot; the non-resident ones copied from the arena) | copies |
+| ple, embed, kv stage | 93 | 0.6% | `ple_block`, embedding | own kernels |
+| unattributed | ~2,270 | 15% | gaps between marks (launch overhead of the many small kernels and GEMMs, stream waits) | |
+
+In sums: the hipBLAS GEMMs of the dense layers and the expert GEMMs are 7.5-8 s of the 14.7 s; the engine's two
+sequential-shaped kernels, the FP32 prompt attention and the GDN recurrence, 2.8 s; small kernels and gaps the
+rest. What the hipBLASLt switch did and did not do is in the same table's history: hc read 3,438 -> 1,768, GDN
+projections 4,969 -> 3,263, QSA proj 2,077 -> 1,443, router 909 -> 591 (the big-M GEMMs halved), while gemm
+gate/up and gemm down stayed at 1,772 -> 1,705 and 785 -> 763: at ne rows per expert hipBLASLt's gfx1151
+kernels are no better than rocBLAS's, and 512 separate GEMM launches per layer is the shape ggml's MMQ path
+(grouped, quantized, no dequant pass) was built for - the path that fails `hip_prefill_mmq_parity` on this card.
+The work list, in the order of the time at stake: the expert GEMMs (2.9 s with their dequant: a grouped GEMM or
+a fixed MMQ), the prompt attention on gfx11 WMMA (1.9 s), the dense GEMMs' library efficiency (4 TFLOP/s against
+the card's matrix-core peak), the GDN recurrence (0.8 s; llama.cpp's chunked form gained it 8% of a whole prompt
+on this card).
 
 ## One table: the best Halo setup per model against the 3060M PC
 
