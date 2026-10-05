@@ -9,8 +9,10 @@ assumptions on the card ([What was checked](#what-was-checked-on-this-pc-2026-10
 list of places where Strata names its supported architectures and does not know gfx1151
 ([What stops it today](#what-stops-it-today)). **Later the same day the port was made, built and run** (the
 [Execution log](#execution-log-2026-10-05-the-same-afternoon)): the Coder IQ1_M serves on the 8060S with every
-expert on the GPU, decodes 1.3-1.6x faster than llama.cpp on this same PC (35-37 vs 22-26 tokens/s with MTP), and
-reads prompts 2.2x slower (146 vs 321 tokens/s) for a reason the log shows and a BIOS setting should fix.
+expert on the GPU, decodes 1.3-1.6x faster than llama.cpp on this same PC (35-40 vs 22-26 tokens/s with MTP), and
+read prompts 2.2x slower at first (146 vs 321 tokens/s). The BIOS split, a hipBLASLt switch and the engine's own
+calibrated hipBLASLt table for gfx1151 took that to 434-451 tokens/s, 1.4x llama.cpp
+([the evening's section](#a-better-gemm-what-was-searched-what-was-measured-what-it-gave-2026-10-05-evening)).
 
 The analysis is the record of one afternoon's checks, in the order they were made. The three probe programs are in
 `docs/benchmarks/2026-10-05-halo-*`.
@@ -600,24 +602,26 @@ its 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC
 every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo
 engine wins a row, its number is in brackets.
 
-| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, hipBLASLt** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |
+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, the gfx1151 hipBLASLt table** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |
 |---|---|---|---|---|
 | model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |
-| cold first request, decode | **38.6 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |
-| fresh code prompt, decode | **35.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |
-| prefill @ ~4.75K | 274.0 t/s (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |
-| decode tail after that prefill | **34.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |
-| repeated prompt (reference) | 39.5 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |
-| pp4096 @ d0 | 268.4 t/s (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |
-| tg128 @ d0 | **28.5 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |
-| pp4096 @ d16384 | ~260 t/s (llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |
-| tg128 @ d16384 | **28.8 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |
+| cold first request, decode | **39.9 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |
+| fresh code prompt, decode | **36.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |
+| prefill @ ~4.75K | **451.0 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |
+| decode tail after that prefill | **30.9 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |
+| repeated prompt (reference) | 40.1 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |
+| pp4096 @ d0 | **440.9 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |
+| tg128 @ d0 | **28.2 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |
+| pp4096 @ d16384 | **~430 t/s** (433.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |
+| tg128 @ d16384 | **29.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |
 | ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |
-| ratio to the 3060M PC, prefill | 0.23-0.29 | 1 | 0.3-0.5 | 1 |
+| ratio to the 3060M PC, prefill | 0.38-0.48 | 1 | 0.3-0.5 | 1 |
 
-What the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which puts its
-decode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x; its prefill is a sixth to a quarter of the
-3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64
+(The Coder column is the evening's configuration with the calibrated hipBLASLt table, see
+[A better GEMM](#a-better-gemm-what-was-searched-what-was-measured-what-it-gave-2026-10-05-evening); before it,
+prefill was 268-277 t/s.) What the table says: for the Coder the Halo's best is Strata with the whole model on the
+GPU, which puts its decode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x, and its prefill 1.4-1.6x
+llama.cpp's on this PC and 0.4-0.5x the 3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64
 limits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie
 between the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap
 to the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.
@@ -661,6 +665,99 @@ The work list, in the order of the time at stake: the expert GEMMs (2.9 s with t
 a fixed MMQ), the prompt attention on gfx11 WMMA (1.9 s), the dense GEMMs' library efficiency (4 TFLOP/s against
 the card's matrix-core peak), the GDN recurrence (0.8 s; llama.cpp's chunked form gained it 8% of a whole prompt
 on this card).
+
+## A better GEMM: what was searched, what was measured, what it gave (2026-10-05, evening)
+
+**First, the clock.** A search turns up a Windows Strix Halo problem that would explain a 4 TFLOP/s GEMM
+outright: the GPU drops to ~600 MHz for compute whenever the console display is off (lid closed, display
+timeout), FP16 GEMM 31 -> 8 TFLOPS ([ROCm/legacy-rocm-build #6675](https://github.com/ROCm/legacy-rocm-build/issues/6675);
+workarounds: `SetThreadExecutionState(ES_DISPLAY_REQUIRED)` in the process, or an injected 1-pixel mouse move).
+This PC is driven over RDP with a 4K panel on the 8060S and a 300 s display timeout. Measured with
+`docs/benchmarks/2026-10-05-halo-hip-clock.hip` (the 20-bit `SHADER_CYCLES` register over 100 us windows of the
+100 MHz wall clock; gfx11 has no `s_memtime`, so `clock64()` reads 0): **2,780-2,900 MHz** under a spin load,
+2,240-2,950 MHz while the hipBLASLt GEMM probe ran. Not throttled here, and the benchmark rows measured minutes
+apart agree with each other. The risk stays for unattended runs longer than the display timeout; the engine does
+not hold a display request.
+
+**Second, the library, by variant** (`docs/benchmarks/2026-10-05-halo-gemm-variants.cpp`: `hipblasGemmEx` on
+constant nonzero data, 10 timed calls, `ROCBLAS_USE_HIPBLASLT=1`; rocBLAS alone is 20-45% lower on every row):
+
+| shape, layout, types | TFLOP/s |
+|---|---|
+| the engine's dense shape N=3072 T=8192 K=2048, T/N, **BF16 or FP16 in -> FP32 out** | **4.3** |
+| the same, FP16 -> FP16 out, or BF16 -> BF16 out | **23.6-24.0** |
+| N/N layout, FP16 -> FP32 / FP16 -> FP16 | 5.3 / 20.3 |
+| 4096^3, FP16 -> FP32 / FP16 -> FP16 / BF16 -> BF16 | 4.3 / 25.4 / 26.1 |
+| the expert shape N=1280 T=160 K=2560, FP16 -> FP32 / FP16 -> FP16 | 3.5 / 18.7 |
+| the expert down shape N=2560 T=160 K=640, FP16 -> FP32 | 3.7 |
+| decode-like N=3072 T=8 K=2048, FP16 -> FP32 | 1.0 |
+
+So the slow path is one thing: **a 32-bit output**. With a 16-bit output the same library runs 5-6x faster on this
+card, 24-26 TFLOP/s, which is the 32-37 TFLOP/s others measure on gfx1151 with hipBLASLt on big shapes
+([llm-tracker](https://llm-tracker.info/AMD-Strix-Halo-(Ryzen-AI-Max+-395)-GPU-Performance): 36.9 peak, "59.4
+theoretical"), less the FP32 accumulate and this shape. Every `cublasGemmEx` the engine issues asks for FP32 out
+(`gemm.cu:388/407`), because the consumers accumulate into FP32 (`beta`, the hi/lo split GEMMs). A 16-bit output
+with a cast would cap those at 11 bits: a numerical change for the maintainers, not a setting. `hipBLASLt`'s
+`compute 16F` variant is faster still on rocBLAS (17 TFLOP/s) but accumulates in FP16: 1.2e-2 relative error
+against 3.3e-4, unusable here. Checked with `docs/benchmarks/2026-10-05-halo-gemm-f16out.cpp` on random data.
+
+**Third, the engine's own answer to this: its hipBLASLt solution table.** `tools/hip/tune_hipblaslt` asks
+hipBLASLt for every heuristic solution of each of the engine's 32 dense GEMM shapes (T = 4096 and 8192), times
+them against `hipblasGemmEx`, checks them against it (finite, max abs, relative L2 tolerances) and writes the
+best ids. On gfx1151 with hipBLASLt 1.4.1 (60 s): **every shape found a 5.2-5.4x faster solution with FP32
+output** (f16 T=8192 N=12288 K=2560: 201.0 -> 38.4 ms, 2.6 -> 13.4 TFLOP/s; T=4096: 101.5 -> 18.9 ms; the
+96x96x32 macro-tile `SAV` kernels), shipped as `tools/hip/gfx1151-hipblaslt-100401.txt` (setup uses it when the
+installed hipBLASLt reports 1.4.1; the configs here carry `STRATA_HIPBLASLT_TUNING`). The engine with the table:
+
+| Coder IQ1_M, 64/64, arena | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |
+|---|---|---|---|
+| pp4096 (`pp4k.py`, 2 requests) | 199-207 t/s | 264-279 t/s | **404-452 t/s** |
+| 4,165-token prompt, GPU timeline | 19,955 ms | 14,725 ms | **9,188 ms** |
+| hc read / GDN projections / QSA proj / router | 3,438 / 4,969 / 2,077 / 909 ms | 1,768 / 3,263 / 1,443 / 591 | **673 / 938 / 468 / 274** |
+| QSA attn / expert GEMMs gate-up + down / dequant | 1,986 / 1,772 + 785 / 489 | 1,944 / 1,705 + 763 / 473 | 2,034 / 1,803 + 798 / 482 (untouched: not in the table) |
+| the benchmark, prefill @ 4.75K / pp4096 / 16K prefix / 20K | 209 / 209 / 213 / 211 | 274 / 268 / 277 / 274 | **451 / 441 / 440 / 434 t/s** |
+| the benchmark, decode (cold / fresh / after 4.75K / tg128 @ 16K) | 35.0 / 33.0 / 31.3 / 27.5 | 38.6 / 35.1 / 34.7 / 28.8 | 39.9 / 36.1 / 30.9 / 29.2 |
+
+(`benchmarks/2026-10-05-halo-coder-iq1_m-arena-lt-table.json`.) Prefill is now 1.6x what the day started with
+at 64/64 and **ahead of llama.cpp on this PC at every length** (its 322-391 t/s at 4K with the chunked GDN
+kernel, 273-281 at 16K); still 0.4-0.5x the RTX 3060 PC. The table only covers the dense shapes at the two chunk
+sizes (`Lt fallback; no calibration for dtype=bf16 T=4165 N=256` for the partial last chunk and the 256-wide
+alpha/beta projections: those take the plain path).
+
+**What is left, and the candidates found for it.** Of the 9.2 s: the FP32 prompt attention 2.0 s (22%), the
+expert GEMMs 2.6 s + their dequant 0.5 s (34%), the remaining dense work 2.4 s, gaps 1.5 s.
+
+- **Strata's own PR #313** ([Niko1221/Strata#313](https://github.com/Niko1221/Strata/pull/313), branch
+  `wmma-optin`, open, the maintainer asked for a rebase and per-arch guards): a 300-line `src/prefill/wmma_gemm.cu`
+  (FP16/BF16 in, **FP32 out**, `__builtin_amdgcn_wmma_f32_16x16x16_{f16,bf16}_w32`, a 1-wave 16x16 and a 4-wave
+  64x64 double-buffered LDS tile, beta 0/1 and ldy, dispatched from `Gemm::f16`/`bf16` ahead of hipBLAS; 440-shape
+  parity test, <= 1 ULP) and a gfx11 WMMA prompt attention in `qsa_prompt_attn.cu`, opt-in by `STRATA_WMMA_GEMM=1`
+  and `STRATA_PA_WMMA=1`. On the RX 7900 XTX: 1K prefill 376 -> 471 t/s with the GEMM, 619 with both; 32K 790 ->
+  1,501. Its device guards are `__gfx1100__ || __gfx1101__ || __gfx1102__` and the runtime check is the `gfx11`
+  prefix, which gfx1151 passes: the port is one `|| defined(__gfx1151__)` per guard. This is the direct route to the
+  2.0 s of attention, and its GEMM is a second opinion on the dense shapes the table does not cover; no attention
+  parity test comes with it.
+- **The expert GEMMs** (512 FP16 GEMMs of ne rows per layer, FP32 out, 3.5-3.7 TFLOP/s): a shape no table can
+  hold (ne varies). Three routes: (a) 16-bit output for these only (18.7 TFLOP/s measured at the shape, 5x; the
+  consumers are `swiglu_interleaved` and `moe_combine`, the inputs are 1-4 bit experts: a precision change that
+  needs the parity tests), (b) a WMMA kernel with FP32 accumulate at full speed - PR #313's 64x64 tile handles
+  any ne, or the self-contained kernel of [ROCm/hip-ep#1002](https://github.com/ROCm/hip-ep/pull/1002) (gfx1151-tuned
+  tiles 256x128 / 128x128, +19% over hipBLASLt on small/mid-M prefill, +22-344% at M=1), (c) ggml's MMQ path
+  (`STRATA_PREFILL_MMQ`, grouped, INT8 dot, no dequant), which fails parity on this card; llama.cpp's own gfx1151
+  work on it is in [ggml-org/llama.cpp#21284](https://github.com/ggml-org/llama.cpp/issues/21284) (MMQ tile
+  `mmq_x=48, mmq_y=64, nwarps=4` against VGPR spills, `__builtin_amdgcn_sudot4`, `__expf`: pp128 +61-74%).
+- **Other references found**: [glovepost/wmma_ops](https://github.com/glovepost/wmma_ops) (FP16 WMMA GEMM for
+  gfx1151, 41.3 TFLOP/s at 4096^3, FP32 accumulate - but no license file); [ROCm/ROCm#4748](https://github.com/ROCm/ROCm/issues/4748)
+  (gfx1151's rocBLAS kernels 2x slower than gfx1100's on the same card, `HSA_OVERRIDE_GFX_VERSION=11.0.0` on
+  Linux - no Windows equivalent); [ROCm/ROCm#4566](https://github.com/ROCm/ROCm/issues/4566) and
+  [#5643](https://github.com/ROCm/ROCm/issues/5643) (hipBLASLt on gfx1151: FP32 GEMMs slower than hipBLAS, the
+  fast path refusing the arch on ROCm 7.1); [ggml-org/llama.cpp#16827](https://github.com/ggml-org/llama.cpp/pull/16827)
+  (rocWMMA flash attention retuned for gfx1151: pp512 at 64K depth -58% -> +66% against the HIP baseline) and
+  [#24437](https://github.com/ggml-org/llama.cpp/issues/24437) (its regression at long context);
+  [Atlas-Inf/atlas#41](https://github.com/Atlas-Inf/atlas/pull/41) (another engine's Windows gfx1151 port of this
+  model: BF16 GEMM fallback kernels, 17 t/s decode, grouped MoE GEMMs dominating its prefill);
+  [pytorch/pytorch#171687](https://github.com/pytorch/pytorch/issues/171687) (gfx1151 decode 90% in
+  `hipMemcpyWithStream`: a lead for the UD-IQ4_XS decode question above).
 
 ## The RTX 5090 over Thunderbolt (not pursued)
 
