@@ -49690,19 +49690,535 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 565,
+      "timestamp": "2026-10-05T16:43:20.357Z",
+      "source": "user",
+      "message": "“## One table: the best Halo setup per model against the 3060M PC”的表格现在会如何变化",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 566,
+      "timestamp": "2026-10-05T16:43:48.305Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 30379,
+        "completion_tokens": 2576,
+        "cached_tokens": 30377,
+        "extra": {
+          "cache_creation_input_tokens": 615113,
+          "cache_read_input_tokens": 30377,
+          "output_tokens_details": {
+            "thinking_tokens": 733
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 615113,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2576,
+              "cache_read_input_tokens": 30377,
+              "cache_creation_input_tokens": 615113,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 615113
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 567,
+      "timestamp": "2026-10-05T16:43:50.872Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "表里 Coder 一列我已经换成今晚的数字，但 UD-IQ4_XS 一列里 Strata 的括号数字还是上午老引擎的（无调优表、无 WMMA 注意力），\"IQ4_XS 最佳 = llama.cpp\"这个结论可能已经翻转。现在 BIOS 正好在 32/96，直接用新引擎重跑一次 UD-IQ4_XS 再回答。",
+      "metrics": {
+        "prompt_tokens": 30379,
+        "completion_tokens": 2576,
+        "cached_tokens": 30377,
+        "extra": {
+          "cache_creation_input_tokens": 615113,
+          "cache_read_input_tokens": 30377,
+          "output_tokens_details": {
+            "thinking_tokens": 733
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 615113,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2576,
+              "cache_read_input_tokens": 30377,
+              "cache_creation_input_tokens": 615113,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 615113
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 568,
+      "timestamp": "2026-10-05T16:43:55.373Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01RX5FC15sRaiGQSSBKnacdr",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01RX5FC15sRaiGQSSBKnacdr",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "/c/conda_envs/strata/python.exe - <<'EOF'\nimport json, pathlib\nfor name in (\"strata-unsloth-ud-iq4_xs.json\", \"strata-unsloth-ud-iq4_xs-cache1864.json\"):\n    p = pathlib.Path(name); c = json.loads(p.read_text(encoding=\"utf-8\"))\n    c[\"env\"] = {\"ROCBLAS_USE_HIPBLASLT\": \"1\", \"STRATA_HIPBLASLT_TUNING\": r\"E:\\work\\AI\\Strata\\tools\\hip\\gfx1151-hipblaslt-100401.txt\",\n                \"STRATA_PA_WMMA\": \"1\", \"STRATA_ARENA_PIN_GIB\": \"24\"}\n    p.write_text(json.dumps(c, indent=1, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\"); print(name, c[\"env\"][\"STRATA_ARENA_PIN_GIB\"], c[\"args\"][c[\"args\"].index(\"--expert-cache\") + 1])\nEOF",
+            "description": "Give the UD-IQ4_XS configs the table, the routing switch, the WMMA attention and the pin cap"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01RX5FC15sRaiGQSSBKnacdr",
+            "content": "strata-unsloth-ud-iq4_xs.json 24 10000\r\nstrata-unsloth-ud-iq4_xs-cache1864.json 24 1864\n\n[stdout]\nstrata-unsloth-ud-iq4_xs.json 24 10000\r\nstrata-unsloth-ud-iq4_xs-cache1864.json 24 1864\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 30379,
+        "completion_tokens": 2576,
+        "cached_tokens": 30377,
+        "extra": {
+          "cache_creation_input_tokens": 615113,
+          "cache_read_input_tokens": 30377,
+          "output_tokens_details": {
+            "thinking_tokens": 733
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 615113,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2576,
+              "cache_read_input_tokens": 30377,
+              "cache_creation_input_tokens": 615113,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 615113
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "strata-unsloth-ud-iq4_xs.json 24 10000\r\nstrata-unsloth-ud-iq4_xs-cache1864.json 24 1864",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01RX5FC15sRaiGQSSBKnacdr",
+            "type": "tool_result",
+            "content": "strata-unsloth-ud-iq4_xs.json 24 10000\r\nstrata-unsloth-ud-iq4_xs-cache1864.json 24 1864",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "strata-unsloth-ud-iq4_xs.json 24 10000\r\nstrata-unsloth-ud-iq4_xs-cache1864.json 24 1864",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01RX5FC15sRaiGQSSBKnacdr",
+            "type": "tool_result",
+            "content": "strata-unsloth-ud-iq4_xs.json 24 10000\r\nstrata-unsloth-ud-iq4_xs-cache1864.json 24 1864",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "/c/conda_envs/strata/python.exe - <<'EOF'\nimport json, pathlib\nfor name in (\"strata-unsloth-ud-iq4_xs.json\", \"strata-unsloth-ud-iq4_xs-cache1864.json\"):\n    p = pathlib.Path(name); c = json.loads(p.read_text(encoding=\"utf-8\"))\n    c[\"env\"] = {\"ROCBLAS_USE_HIPBLASLT\": \"1\", \"STRATA_HIPBLASLT_TUNING\": r\"E:\\work\\AI\\Strata\\tools\\hip\\gfx1151-hipblaslt-100401.txt\",\n                \"STRATA_PA_WMMA\": \"1\", \"STRATA_ARENA_PIN_GIB\": \"24\"}\n    p.write_text(json.dumps(c, indent=1, ensure_ascii=False) + \"\\n\", encoding=\"utf-8\"); print(name, c[\"env\"][\"STRATA_ARENA_PIN_GIB\"], c[\"args\"][c[\"args\"].index(\"--expert-cache\") + 1])\nEOF",
+          "description": "Give the UD-IQ4_XS configs the table, the routing switch, the WMMA attention and the pin cap"
+        }
+      }
+    },
+    {
+      "step_id": 569,
+      "timestamp": "2026-10-05T16:44:06.943Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed PowerShell toolu_01WhmwXY3cDkG29qM8HhGJDr",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01WhmwXY3cDkG29qM8HhGJDr",
+          "function_name": "PowerShell",
+          "arguments": {
+            "command": "Set-Location E:\\work\\AI\\Strata; Start-Sleep 3; Get-Process strata -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; $env:STRATA_PREFILL_TIMING=\"1\"; $env:STRATA_ENGRAM_SRC=\"E:\\work\\AI\\EngramHalo.cpp\\src\"; $env:PYTHONUTF8=\"1\"; $srv = Start-Process -FilePath C:\\conda_envs\\strata\\python.exe -ArgumentList 'serve\\server.py','--engine','strata','--config','strata-unsloth-ud-iq4_xs.json','--port','8080' -RedirectStandardOutput docs\\benchmarks\\server-ud-iq4_xs-pa-wmma.out -RedirectStandardError docs\\benchmarks\\server-ud-iq4_xs-pa-wmma.err -PassThru -WindowStyle Hidden; $ready=$false; for ($i=0; $i -lt 120; $i++) { Start-Sleep 5; try { $r = Invoke-WebRequest -UseBasicParsing -TimeoutSec 3 http://127.0.0.1:8080/v1/models; if ($r.Content -match '\"id\"') { $ready=$true; break } } catch {}; if ($srv.HasExited) { break } }; \"ready=$ready after $(($i+1)*5) s\"; if ($ready) { cmd /c \"C:\\conda_envs\\strata\\python.exe docs\\benchmarks\\2026-10-02-3060m-bench_halo.py halo-8060S-ud-iq4_xs-32-96-cache10000-table-pa-wmma docs\\benchmarks\\2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json > docs\\benchmarks\\2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.log 2>&1\"; \"bench exit $LASTEXITCODE\"; Get-Content docs\\benchmarks\\2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.log; Select-String -Path docs\\benchmarks\\strata-unsloth-ud-iq4_xs.log -Pattern \"expert cache [0-9]+ slots|Lt fallback|hit rate\" | Select-Object -Last 4 | ForEach-Object { $_.Line.Substring(0, [Math]::Min(160, $_.Line.Length)) } } else { Get-Content docs\\benchmarks\\strata-unsloth-ud-iq4_xs.log -Tail 5 }; Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like \"*serve\\server.py*\" } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; Start-Sleep 2; Get-Process strata -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue",
+            "description": "Run UD-IQ4_XS (32/96, 10,000-slot cache) with the new engine, the table and the WMMA attention through the full benchmark",
+            "run_in_background": true,
+            "timeout": 3600000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01WhmwXY3cDkG29qM8HhGJDr",
+            "content": "Command running in background with ID: b4k1f2gqv. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\b4k1f2gqv.output. You will be notified when it completes. To check interim output, use Read on that file path.\n\n[metadata] {\"backgroundTaskId\": \"b4k1f2gqv\"}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 30379,
+        "completion_tokens": 2576,
+        "cached_tokens": 30377,
+        "extra": {
+          "cache_creation_input_tokens": 615113,
+          "cache_read_input_tokens": 30377,
+          "output_tokens_details": {
+            "thinking_tokens": 733
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 615113,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2576,
+              "cache_read_input_tokens": 30377,
+              "cache_creation_input_tokens": 615113,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 615113
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "PowerShell",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "backgroundTaskId": "b4k1f2gqv"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01WhmwXY3cDkG29qM8HhGJDr",
+            "type": "tool_result",
+            "content": "Command running in background with ID: b4k1f2gqv. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\b4k1f2gqv.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "backgroundTaskId": "b4k1f2gqv"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01WhmwXY3cDkG29qM8HhGJDr",
+            "type": "tool_result",
+            "content": "Command running in background with ID: b4k1f2gqv. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\b4k1f2gqv.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "Set-Location E:\\work\\AI\\Strata; Start-Sleep 3; Get-Process strata -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; $env:STRATA_PREFILL_TIMING=\"1\"; $env:STRATA_ENGRAM_SRC=\"E:\\work\\AI\\EngramHalo.cpp\\src\"; $env:PYTHONUTF8=\"1\"; $srv = Start-Process -FilePath C:\\conda_envs\\strata\\python.exe -ArgumentList 'serve\\server.py','--engine','strata','--config','strata-unsloth-ud-iq4_xs.json','--port','8080' -RedirectStandardOutput docs\\benchmarks\\server-ud-iq4_xs-pa-wmma.out -RedirectStandardError docs\\benchmarks\\server-ud-iq4_xs-pa-wmma.err -PassThru -WindowStyle Hidden; $ready=$false; for ($i=0; $i -lt 120; $i++) { Start-Sleep 5; try { $r = Invoke-WebRequest -UseBasicParsing -TimeoutSec 3 http://127.0.0.1:8080/v1/models; if ($r.Content -match '\"id\"') { $ready=$true; break } } catch {}; if ($srv.HasExited) { break } }; \"ready=$ready after $(($i+1)*5) s\"; if ($ready) { cmd /c \"C:\\conda_envs\\strata\\python.exe docs\\benchmarks\\2026-10-02-3060m-bench_halo.py halo-8060S-ud-iq4_xs-32-96-cache10000-table-pa-wmma docs\\benchmarks\\2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json > docs\\benchmarks\\2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.log 2>&1\"; \"bench exit $LASTEXITCODE\"; Get-Content docs\\benchmarks\\2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.log; Select-String -Path docs\\benchmarks\\strata-unsloth-ud-iq4_xs.log -Pattern \"expert cache [0-9]+ slots|Lt fallback|hit rate\" | Select-Object -Last 4 | ForEach-Object { $_.Line.Substring(0, [Math]::Min(160, $_.Line.Length)) } } else { Get-Content docs\\benchmarks\\strata-unsloth-ud-iq4_xs.log -Tail 5 }; Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like \"*serve\\server.py*\" } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; Start-Sleep 2; Get-Process strata -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue",
+          "description": "Run UD-IQ4_XS (32/96, 10,000-slot cache) with the new engine, the table and the WMMA attention through the full benchmark",
+          "run_in_background": true,
+          "timeout": 3600000
+        }
+      }
+    },
+    {
+      "step_id": 570,
+      "timestamp": "2026-10-05T16:44:23.388Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 645522,
+        "completion_tokens": 215,
+        "cached_tokens": 645490,
+        "extra": {
+          "cache_creation_input_tokens": 2843,
+          "cache_read_input_tokens": 645490,
+          "output_tokens_details": {
+            "thinking_tokens": 49
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2843,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 215,
+              "cache_read_input_tokens": 645490,
+              "cache_creation_input_tokens": 2843,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2843
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 571,
+      "timestamp": "2026-10-05T16:44:24.965Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_017Nt9pbD1fUxVLzJYmUwyZj",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_017Nt9pbD1fUxVLzJYmUwyZj",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "awk '/^## One table:/{p=1} p&&/^## Which GEMMs/{p=0} p' \"docs/AIMAX+395-ROCm.md\" | grep \"^|\" | cut -c1-260",
+            "description": "Show the current one-table section as it stands in the document"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_017Nt9pbD1fUxVLzJYmUwyZj",
+            "content": "| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN ke\n|---|---|---|---|---|\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\n| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\n| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\n| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\n| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\n| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\n| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\n| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\n| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\n| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |\n\n[stdout]\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN ke\n|---|---|---|---|---|\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\n| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\n| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\n| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\n| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\n| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\n| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\n| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\n| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\n| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 645522,
+        "completion_tokens": 215,
+        "cached_tokens": 645490,
+        "extra": {
+          "cache_creation_input_tokens": 2843,
+          "cache_read_input_tokens": 645490,
+          "output_tokens_details": {
+            "thinking_tokens": 49
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2843,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 215,
+              "cache_read_input_tokens": 645490,
+              "cache_creation_input_tokens": 2843,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2843
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN ke\n|---|---|---|---|---|\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\n| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\n| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\n| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\n| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\n| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\n| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\n| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\n| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\n| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_017Nt9pbD1fUxVLzJYmUwyZj",
+            "type": "tool_result",
+            "content": "| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN ke\n|---|---|---|---|---|\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\n| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\n| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\n| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\n| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\n| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\n| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\n| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\n| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\n| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN ke\n|---|---|---|---|---|\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\n| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\n| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\n| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\n| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\n| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\n| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\n| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\n| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\n| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_017Nt9pbD1fUxVLzJYmUwyZj",
+            "type": "tool_result",
+            "content": "| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN ke\n|---|---|---|---|---|\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\n| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\n| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\n| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\n| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\n| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\n| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\n| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\n| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\n| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.3-0.5 | 1 |",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "awk '/^## One table:/{p=1} p&&/^## Which GEMMs/{p=0} p' \"docs/AIMAX+395-ROCm.md\" | grep \"^|\" | cut -c1-260",
+          "description": "Show the current one-table section as it stands in the document"
+        }
+      }
+    },
+    {
+      "step_id": 572,
+      "timestamp": "2026-10-05T16:44:31.150Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "The Coder column already carries the night's numbers; the UD-IQ4_XS column is being re-measured with the new engine right now, which is the one thing that can still change the table. Waiting for that run.",
+      "metrics": {
+        "prompt_tokens": 648365,
+        "completion_tokens": 64,
+        "cached_tokens": 648333,
+        "extra": {
+          "cache_creation_input_tokens": 1340,
+          "cache_read_input_tokens": 648333,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1340,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 64,
+              "cache_read_input_tokens": 648333,
+              "cache_creation_input_tokens": 1340,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1340
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 192509042,
-    "total_completion_tokens": 1063747,
-    "total_cached_tokens": 192495466,
-    "total_steps": 564,
+    "total_prompt_tokens": 194569967,
+    "total_completion_tokens": 1074545,
+    "total_cached_tokens": 194556287,
+    "total_steps": 572,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1936437,
-      "total_cache_read_input_tokens": 192495466
+      "total_cache_creation_input_tokens": 4403915,
+      "total_cache_read_input_tokens": 194556287
     }
   }
 }
