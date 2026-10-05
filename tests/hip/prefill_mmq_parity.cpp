@@ -33,7 +33,7 @@ void hip_check(hipError_t e, const char * what) {
 struct DeviceBuffer {
     void * p = nullptr;
     explicit DeviceBuffer(size_t n) { hip_check(hipMalloc(&p, n), "hipMalloc"); }
-    ~DeviceBuffer() { if (p) hipFree(p); }
+    ~DeviceBuffer() { if (p) (void) hipFree(p); }
     DeviceBuffer(const DeviceBuffer &) = delete;
     DeviceBuffer & operator=(const DeviceBuffer &) = delete;
     template<class T> T * as() const { return static_cast<T *>(p); }
@@ -137,7 +137,10 @@ Metrics run_product(Context & ctx, hipStream_t stream, const std::string & name,
     hip_check(hipMemcpy(ddst.p, dst_ids.data(), dst_ids.size() * sizeof(int32_t), hipMemcpyHostToDevice), "copy dst ids");
     hip_check(hipMemcpy(dbounds.p, bounds.data(), bounds.size() * sizeof(int32_t), hipMemcpyHostToDevice), "copy bounds");
     hip_check(hipMemcpy(dw.p, w.data(), w.size(), hipMemcpyHostToDevice), "copy weights and zero tail");
-    hip_check(hipMemset(dy.p, 0xff, (size_t) rows * (size_t) out_rows * sizeof(float)), "initialize output sentinel");
+    // On `stream`, which is non-blocking: a hipMemset on the null stream is not ordered before the products, and on
+    // Windows HIP it ran after them (gfx1151, 2026-10-05: every output "unwritten", docs/TODO.md item 3).
+    hip_check(hipMemsetAsync(dy.p, 0xff, (size_t) rows * (size_t) out_rows * sizeof(float), stream),
+              "initialize output sentinel");
 
     quantize(dx.as<float>(), dsrc.as<int32_t>(), dxq.p, (int) type, cols, cols, rows, (void *) stream);
     const int max_rows = *std::max_element(counts.begin(), counts.end());

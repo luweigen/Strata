@@ -289,7 +289,9 @@ WMMA attention and the hipBLASLt table test (no table for gfx1151). Four failure
 `hip_prefill_mmq_parity` fails with "synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output": ggml's MMQ
 prefill kernels, compiled for gfx1151, do not write their output here. The engine uses that path only when
 `STRATA_PREFILL_MMQ=1` is set at run time (off by default: `src/prefill/prefill.cpp:476`), so the model runs below
-are not affected; it is the first gfx1151-specific defect, to be looked at after the baseline. Everything else -
+are not affected; it is the first gfx1151-specific defect, to be looked at after the baseline (it was not one: the
+test's own stream order, [TODO 3 done](#todo-3-done-the-mmq-parity-failure-was-the-tests-stream-order-not-the-kernels-2026-10-05-night);
+and TODO 2 found the path on by default). Everything else -
 the HIP intrinsics, the router, the native QSA score, the expert cache staging, the hipBLAS prefill batch, the
 sampler, the KV cache modes, the GDN and GR kernels - passes on the 8060S.
 
@@ -780,7 +782,8 @@ which skipped off gfx12, now drives the gfx11 kernel on gfx11 with both KV forma
 of FP64 against the FP32 kernel's 2.5e-6, 116.1 -> 34.3 ms per chunk (3.39x); FP16 KV 4.4e-6, 2.88x; 1,500-cell and
 2,100-cell contexts 3.3x. `ctest` on the new build: 56 tests, 49 pass, the same 5 known failures as before
 (`hip_handoff`, `ple_parity`, `expert_parity`, `pool_test` want fixtures or Linux; `hip_prefill_mmq_parity` is the
-gfx1151 MMQ defect), `hip_prefill_hipblaslt_gemm` skips without `STRATA_HIPBLASLT_TUNING` in its environment.
+gfx1151 MMQ defect - later the test's stream order, [TODO 3 done](#todo-3-done-the-mmq-parity-failure-was-the-tests-stream-order-not-the-kernels-2026-10-05-night)),
+`hip_prefill_hipblaslt_gemm` skips without `STRATA_HIPBLASLT_TUNING` in its environment.
 
 **The engine, 4K prompts** (`pp4k.py`, 2 requests each, on top of the hipBLASLt table and the routing switch):
 
@@ -978,6 +981,51 @@ engine). UD-IQ4_XS did not move (317-354 against 312-353): its prompt chunks str
 (`host staging` 4.7-39.5 s per chunk in its timing lines), so the sort does not apply and the products wait on the
 staging; TODO items 10 and 11 are its lever, not the tile. The day's prompt speed for the Coder, then: 146 -> 209 ->
 274 -> 451 -> 528 -> 548 t/s at 4.75K.
+
+## TODO 3 done: the MMQ parity failure was the test's stream order, not the kernels (2026-10-05, night)
+
+[TODO.md](TODO.md) item 3 asked whether `hip_prefill_mmq_parity`'s "synthetic-Q2_0-GU-pass0: non-finite or unwritten
+MMQ output" is ggml's gfx1151 handling or Strata's host glue. It is neither: the kernels compute the right numbers on
+this card; the test filled its output with a sentinel on the null stream and ran the products on a non-blocking
+stream, nothing ordered the two, and on Windows HIP the fill ran after the products. Three probes, their sources
+and logs in `docs/benchmarks/2026-10-05-halo-mmq-*-probe*`:
+
+**What was unwritten.** The test stops at its first bad value. `2026-10-05-halo-mmq-parity-probe.cpp` runs the same
+products through the same glue (`strata_mmq.lib`) and classifies every output element: 17 cases over five types
+(Q2_0, Q8_0, IQ4_NL, IQ3_XXS, IQ2_S), both shapes (gate/up [1280 x 2560], down [2560 x 640]), 1 to 135 rows per
+launch, permuted and identity row maps, `opt_rows` smaller than the largest expert. In the test's order every case
+failed the same way: every element still the 0xffffffff fill (8,960 of 8,960 for the test's {1,3,3} gate/up case),
+no NaN, no inf, no error from `hipGetLastError`, `hipStreamSynchronize` or the copy back. Nothing type- or
+shape-specific, and a kernel that returned at once could not have taken the 1.6 s per 4K chunk that TODO 2 timed.
+
+**The tables agree.** `2026-10-05-halo-mmq-config-probe.hip` includes `mmq.cuh` and prints the tile table the host
+picks from the compute-capability number (the glue maps `gfx1151` to 0x1151: RDNA 3.5) next to the one the device
+code picks from its compiler macros (`RDNA3`, `RDNA3_5`, `AMD_WMMA_AVAILABLE`, `__gfx1151__` all set): identical rows
+for Q2_0 and IQ3_XXS at every J (J 16 and 32: 128 threads, I 64; J 48 to 128: 256 threads, I 128; no stream-k).
+`NO_DEVICE_CODE`, the kernel's exit when its table has no entry, does trap on this HIP - but the trap was not
+reported by `hipDeviceSynchronize`, only by the next `hipMemcpy` ("unspecified launch failure"), so a sync that
+returns success is not proof a kernel ran clean here.
+
+**The kernel is right.** `2026-10-05-halo-mmq-kernel-probe.hip` instantiates `mul_mat_q<Q2_0, 16, false>` itself:
+one Q2_0 expert [1280 x 2560] times 16 rows (J 16, 22,080 B of shared memory), against a CPU double product over
+ggml's dequantizer. The library's kernel and this unit's, MoE mode and plain GEMM mode, built at -O3 and at -O1, on
+the null stream, a blocking stream and a non-blocking stream, read after a stream or a device sync: 20,480 of
+20,480 elements written, rel_l2 0.0010, max/rms 0.004 every time. The test's order - `hipMemset` on the null stream,
+then the quantizer and the product on the non-blocking stream, `hipStreamSynchronize`, copy back - on the same
+setup: 0 of 20,480 written. The parity probe with its fill moved to `hipMemsetAsync` on the compute stream: 17 of 17
+pass, rel_l2 0.0005-0.0013, max/rms 0.001-0.005.
+
+**The fix and the check.** `tests/hip/prefill_mmq_parity.cpp` now fills its sentinel with `hipMemsetAsync` on the
+stream the products run on. Rebuilt, the test passes its six products (rel_l2 0.0005-0.0012, max_abs/ref_rms
+0.002-0.0044, every all-zero activation row exactly zero), `ctest -R hip_prefill_mmq_parity` 0.68 s; the ctest
+tally for this card is 4 known failures (fixtures or Linux), not 5. For the day's benchmark outputs: the prompt
+path (`src/prefill`) has no synchronous memset, the glue launches on the stream it is given, and the kernel wrote
+the right numbers in every ordered run, so the Coder's and UD-IQ4_XS's expert products were computed, not skipped.
+And measured in the engine (`2026-10-05-halo-mmq-ab.py`: one server start per variant from `strata-coder-iq1_m.json`,
+a 1,173-token prompt - the start of `serve/server.py` - temperature 0, thinking off, 64 tokens out): the default
+and `STRATA_PREFILL_MMQ=0` continue the file with the same code (`self.n = 0`, the `generate` signature, the
+`self.scripts[min(...)]` line), the one difference the run of spaces that opens the first line (12 against 35: the
+int8 against the FP16 rounding of the expert products), 5.05 against 5.34 s for the request.
 
 ## The RTX 5090 over Thunderbolt (not pursued)
 

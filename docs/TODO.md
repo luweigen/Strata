@@ -41,12 +41,24 @@ the measurement that decides it. Test outputs (engine logs, server output, bench
    threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles (128
    threads, I = 64, J = 48; closed unmerged, pp128 +61-74% claimed) are untested here. The harness links
    `strata_mmq.lib`, so a config edit and `cmake --build build-hip-win --target strata_mmq` measure it.
-3. **`hip_prefill_mmq_parity` fails on gfx1151** ("synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output").
+3. ~~**`hip_prefill_mmq_parity` fails on gfx1151** ("synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output").
    Find out whether it is ggml's gfx1151 handling (llama.cpp#21284: MMQ tile `mmq_x=48, mmq_y=64, nwarps=4`
    against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). This
    matters more than it looked: the Coder's and UD-IQ4_XS's experts run through MMQ by default on this card (item 2),
    including layers whose down matrix is Q2_0 (`native_experts.txt`: layer 1 and others), and the day's benchmark
-   outputs came from that path.
+   outputs came from that path.~~ **Done 2026-10-05 night: neither**
+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-3-done-the-mmq-parity-failure-was-the-tests-stream-order-not-the-kernels-2026-10-05-night)):
+   the test filled its output sentinel with `hipMemset` on the null stream and ran the products on a non-blocking
+   stream; on Windows HIP the fill landed after the products, so every element read back as the sentinel (a probe
+   over 5 types, both shapes, 1-135 rows: 17 of 17 cases, 100% of the elements, no error reported). The host and
+   device tile tables agree for gfx1151, and the kernel itself - the library's and a fresh instantiation, MoE and
+   plain mode, -O3 and -O1, any stream - writes every element at rel_l2 0.0010 against a CPU double product. The
+   test now fills with `hipMemsetAsync` on its stream and passes (6 products, rel_l2 0.0005-0.0012); the ctest tally
+   on this card is 4 known failures. The engine's prompt path has no synchronous memset, and the engine with the
+   default and with `STRATA_PREFILL_MMQ=0` continues a 1,173-token code prompt with the same code (one whitespace
+   run differs: int8 against FP16 rounding), so the day's benchmark outputs were computed. Probes:
+   `docs/benchmarks/2026-10-05-halo-mmq-{parity,config,kernel}-probe*`, the engine A/B `2026-10-05-halo-mmq-ab.py`. Also seen:
+   a kernel trap on this HIP is reported by the next `hipMemcpy`, not by `hipDeviceSynchronize`.
 4. **The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and
    8192 and, since item 2, the two expert shapes at T = 16-512; the engine still logs `Lt fallback; no calibration
    for dtype=bf16 T=4165 N=256 K=2560` for the 256-wide alpha/beta projections. Calibrate those (the tuner takes
