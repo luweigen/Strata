@@ -427,17 +427,66 @@ kernel is 7x faster on gfx12 and gfx11.5 has WMMA with gfx11's layout), the GDN 
 hyper-connection read (1.8 s), and the expert GEMMs (2.5 s, not through rocBLAS). Those are kernel work for
 later, each with this phase timing to measure against.
 
-**Where this leaves the 8060S against the two references** (the Coder IQ1_M, MTP on):
+**The whole sequence again with the final configuration** (pinned arena, hipBLASLt routing; the server started
+once; `benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json`): decode 38.6 / 35.1 / 34.7 t/s on the three
+server rows (86.2 / 86.5 / 80.5% drafts accepted), 39.5 on the repeated prompt; prefill 274.0 t/s at 4.75K,
+268.4 at pp4096, 277.1 on the 16,384-token prefix, 273.7 over 20,421 tokens (~260 derived for the 4,037 at depth:
+4037 / (74.76 - 59.24) s), 276.7 before tg128 at depth; tg128 28.5 t/s at depth 0 and 28.8 at 16K (60-66%
+accepted). Prefill is now flat from 4K to 20K: compute-bound, not memory- or transfer-bound.
 
-| | 8060S, Strata (64/64, hipBLASLt) | 8060S, llama.cpp | RTX 3060 Laptop, Strata |
+## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC
+
+[3060M.md](3060M.md) ran this benchmark (and the prime request) with the same Coder IQ1_M, the same 32K / 8-bit
+KV / `--spec 4` configuration, on 2026-10-02 to 04. The two machines, as measured in their pages:
+
+| | this PC (EVO-X2) | the 3060M PC |
+|---|---|---|
+| GPU | Radeon 8060S, 40 CUs RDNA 3.5, integrated | RTX 3060 Laptop GPU, 30 SMs Ampere, 80 W, on a desktop card |
+| GPU memory | 64 GiB of the shared LPDDR5X; **236 GB/s measured** (one pool for CPU and GPU) | 12 GB GDDR6, 336 GB/s spec; PCIe 4.0 x16, 26.8 GB/s measured |
+| host | 16 Zen 5 cores, 63.6 GiB of the same memory | 16 Zen 4 cores (AVX-512), 92 GiB DDR5-5200, 55 GB/s measured |
+| the Coder's experts | **all 12,288 on the GPU**; the CPU computes none | 2,666 on the GPU (5.1 GiB); the CPU computes the rest from RAM, `--pcie-frac` 0.55 (0.2 later) |
+| engine | HIP (ROCm 10.0.0, hipBLAS -> hipBLASLt), Windows 11 | CUDA 13.0, Linux |
+
+The numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on both):
+
+| | **8060S, Strata (final config)** | RTX 3060 Laptop, Strata (3060M.md) | ratio |
 |---|---|---|---|
-| decode, short prompts | 33-36 t/s | 22-26 t/s | 42-43 t/s |
-| decode after a 4.75K prompt | 31 t/s | 21 t/s | 39 t/s |
-| prefill, 4K | 264-279 t/s | 318-322 t/s | 927-961 t/s |
-| prefill, 16-20K | ~210 t/s (before the switch; not re-measured) | 270 t/s | ~1,100 t/s |
+| model load to listening | 15 s | 11.5 s | |
+| cold first request, decode | 38.6 t/s, 86.2% acc | 43.3 t/s, 88.1% acc | 0.89 |
+| fresh code prompt, decode | 35.1 t/s, 86.5% acc | 42.1 t/s, 80.0% acc | 0.83 |
+| prefill @ ~4.75K | 274.0 t/s | 961.3 t/s | **0.29** |
+| decode tail after that prefill | 34.7 t/s, 80.5% acc | 39.3 t/s, 77.5% acc | 0.88 |
+| repeated prompt (reference) | 39.5 t/s | 45.1 t/s | 0.88 |
+| the prime request, decode | 35.9 t/s (162 of 212 drafts) | 41.0 t/s (164 of 197) | 0.88 |
+| pp4096 @ d0 | 268.4 t/s | 926.9 t/s | **0.29** |
+| tg128 @ d0 | 28.5 t/s, 60.4% acc | 36.2 t/s, 61.4% acc | 0.79 |
+| 16,384-token prefix | 277.1 t/s | ~1,065 t/s (the 16K prefill of the `--pcie-frac` table) | **0.26** |
+| pp4096 @ d16384 (derived on both) | ~260 t/s | ~1,126 t/s | **0.23** |
+| tg128 @ d16384 | 28.8 t/s, 66.3% acc | 37.4 t/s, 65.3% acc | 0.77 |
+| decode at the 3060's best `--pcie-frac` (0.2; a 274-token prompt, median of 3) | 38.6 (the cold row above, a comparable prompt) | 62.3 t/s | 0.62 |
 
-Decode: 1.3-1.6x llama.cpp on the same machine, 0.8x a 12 GB RTX 3060 with a 92 GB host. Prefill: 0.85x
-llama.cpp at 4K after the switch, and a GEMM-and-kernel problem on RDNA 3.5 rather than a memory one.
+**Reading it.**
+
+- **Decode is close: 0.8-0.9x** of the RTX 3060 PC as 3060M.md's tables measured it, 0.6x of that PC's best
+  setting (`--pcie-frac 0.2`, found two days later; its token-weighted BFCL rate was 54 t/s). This although the
+  two machines do the work very differently: the 3060 holds a fifth of the experts and its 16 Zen 4 cores compute
+  the other four fifths from 55 GB/s of RAM; the 8060S holds every expert and runs the whole token on one GPU
+  with 236 GB/s. The draft acceptance is the same (80-87% here, 77-88% there), so the per-round cost is what
+  differs.
+- **Prefill is 0.23-0.29x**, and flat with length here (268-277 t/s from 4K to 20K) where the 3060 rises from
+  927 to ~1,100. The 3060 PC's prefill streams the experts over PCIe (26.8 GB/s) and runs the dense GEMMs on
+  Ampere tensor cores through cuBLAS; here the streaming is free (0.2% of the time) and the GEMMs and the engine's
+  own kernels are the whole cost: hipBLASLt at 4.0 TFLOP/s on gfx1151, FP32 prompt attention (the tensor-core
+  attention the 3060 uses has no gfx11 twin yet), the GDN recurrence and the hyper-connection read. The phase
+  timing above is the work list.
+- **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,
+  after the earlier starts) and 2.86 GiB/s there.
+- **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4
+  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB
+  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that
+  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.
+- The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata
+  on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.
 
 ## The RTX 5090 over Thunderbolt (not pursued)
 

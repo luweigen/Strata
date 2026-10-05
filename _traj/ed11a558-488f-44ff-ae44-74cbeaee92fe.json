@@ -23273,19 +23273,556 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 268,
+      "timestamp": "2026-10-05T10:38:24.266Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>bfqb72owt</task-id>\n<tool-use-id>toolu_018G59GsJ5pm8B1VMNKYL8zK</tool-use-id>\n<output-file>C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\bfqb72owt.output</output-file>\n<status>completed</status>\n<summary>Background command \"Run the 3060M benchmark sequence against the final configuration (pinned arena, hipBLASLt routing)\" completed (exit code 0)</summary>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 269,
+      "timestamp": "2026-10-05T10:38:29.450Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01F8xC79d26ZCNz1mab9fkPb",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01F8xC79d26ZCNz1mab9fkPb",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "/c/conda_envs/strata/python.exe - <<'EOF' 2>&1\nimport json\nd=json.load(open('docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json', encoding='utf-8')); print('==', d['label'])\nfor r in d['rows']:\n    print('  %-50s prompt %6s %7s t/s | pred %4s %6s t/s | acc %5s | wall %7s' % (r['test'][:50], r.get('prompt_n'), r.get('prompt_per_second'), r.get('predicted_n'), r.get('predicted_per_second'), r.get('accept_pct'), r.get('wall_s')))\nEOF",
+            "description": "Print the final-configuration benchmark rows"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01F8xC79d26ZCNz1mab9fkPb",
+            "content": "== halo-8060S-coder-iq1_m-arena-hipblaslt\r\n  server: cold first request (short code prompt)     prompt    314   145.9 t/s | pred  400   38.6 t/s | acc  86.2 | wall   12.53\r\n  server: fresh code prompt                          prompt    218   132.0 t/s | pred  400   35.1 t/s | acc  86.5 | wall   13.06\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   274.0 t/s | pred  400   34.7 t/s | acc  80.5 | wall   28.92\r\n  server: repeated first prompt (reference only)     prompt    314   156.5 t/s | pred  400   39.5 t/s | acc  86.8 | wall   12.15\r\n  pp4096 @ d0                                        prompt   4085   268.4 t/s | pred    1   23.4 t/s | acc  None | wall    15.3\r\n  tg128 @ d0                                         prompt     68    56.3 t/s | pred  128   28.5 t/s | acc  60.4 | wall    5.71\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   277.1 t/s | pred    1   23.3 t/s | acc  None | wall   59.24\r\n  pp4096 @ d16384                                    prompt  20421   273.7 t/s | pred    1   22.8 t/s | acc  None | wall   74.76\r\n  tg128 @ d16384                                     prompt  16401   276.7 t/s | pred  128   28.8 t/s | acc  66.3 | wall   63.79\n\n[stdout]\n== halo-8060S-coder-iq1_m-arena-hipblaslt\r\n  server: cold first request (short code prompt)     prompt    314   145.9 t/s | pred  400   38.6 t/s | acc  86.2 | wall   12.53\r\n  server: fresh code prompt                          prompt    218   132.0 t/s | pred  400   35.1 t/s | acc  86.5 | wall   13.06\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   274.0 t/s | pred  400   34.7 t/s | acc  80.5 | wall   28.92\r\n  server: repeated first prompt (reference only)     prompt    314   156.5 t/s | pred  400   39.5 t/s | acc  86.8 | wall   12.15\r\n  pp4096 @ d0                                        prompt   4085   268.4 t/s | pred    1   23.4 t/s | acc  None | wall    15.3\r\n  tg128 @ d0                                         prompt     68    56.3 t/s | pred  128   28.5 t/s | acc  60.4 | wall    5.71\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   277.1 t/s | pred    1   23.3 t/s | acc  None | wall   59.24\r\n  pp4096 @ d16384                                    prompt  20421   273.7 t/s | pred    1   22.8 t/s | acc  None | wall   74.76\r\n  tg128 @ d16384                                     prompt  16401   276.7 t/s | pred  128   28.8 t/s | acc  66.3 | wall   63.79\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 368073,
+        "completion_tokens": 333,
+        "cached_tokens": 368069,
+        "extra": {
+          "cache_creation_input_tokens": 403,
+          "cache_read_input_tokens": 368069,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 403,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 333,
+              "cache_read_input_tokens": 368069,
+              "cache_creation_input_tokens": 403,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 403
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "== halo-8060S-coder-iq1_m-arena-hipblaslt\r\n  server: cold first request (short code prompt)     prompt    314   145.9 t/s | pred  400   38.6 t/s | acc  86.2 | wall   12.53\r\n  server: fresh code prompt                          prompt    218   132.0 t/s | pred  400   35.1 t/s | acc  86.5 | wall   13.06\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   274.0 t/s | pred  400   34.7 t/s | acc  80.5 | wall   28.92\r\n  server: repeated first prompt (reference only)     prompt    314   156.5 t/s | pred  400   39.5 t/s | acc  86.8 | wall   12.15\r\n  pp4096 @ d0                                        prompt   4085   268.4 t/s | pred    1   23.4 t/s | acc  None | wall    15.3\r\n  tg128 @ d0                                         prompt     68    56.3 t/s | pred  128   28.5 t/s | acc  60.4 | wall    5.71\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   277.1 t/s | pred    1   23.3 t/s | acc  None | wall   59.24\r\n  pp4096 @ d16384                                    prompt  20421   273.7 t/s | pred    1   22.8 t/s | acc  None | wall   74.76\r\n  tg128 @ d16384                                     prompt  16401   276.7 t/s | pred  128   28.8 t/s | acc  66.3 | wall   63.79",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01F8xC79d26ZCNz1mab9fkPb",
+            "type": "tool_result",
+            "content": "== halo-8060S-coder-iq1_m-arena-hipblaslt\r\n  server: cold first request (short code prompt)     prompt    314   145.9 t/s | pred  400   38.6 t/s | acc  86.2 | wall   12.53\r\n  server: fresh code prompt                          prompt    218   132.0 t/s | pred  400   35.1 t/s | acc  86.5 | wall   13.06\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   274.0 t/s | pred  400   34.7 t/s | acc  80.5 | wall   28.92\r\n  server: repeated first prompt (reference only)     prompt    314   156.5 t/s | pred  400   39.5 t/s | acc  86.8 | wall   12.15\r\n  pp4096 @ d0                                        prompt   4085   268.4 t/s | pred    1   23.4 t/s | acc  None | wall    15.3\r\n  tg128 @ d0                                         prompt     68    56.3 t/s | pred  128   28.5 t/s | acc  60.4 | wall    5.71\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   277.1 t/s | pred    1   23.3 t/s | acc  None | wall   59.24\r\n  pp4096 @ d16384                                    prompt  20421   273.7 t/s | pred    1   22.8 t/s | acc  None | wall   74.76\r\n  tg128 @ d16384                                     prompt  16401   276.7 t/s | pred  128   28.8 t/s | acc  66.3 | wall   63.79",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "== halo-8060S-coder-iq1_m-arena-hipblaslt\r\n  server: cold first request (short code prompt)     prompt    314   145.9 t/s | pred  400   38.6 t/s | acc  86.2 | wall   12.53\r\n  server: fresh code prompt                          prompt    218   132.0 t/s | pred  400   35.1 t/s | acc  86.5 | wall   13.06\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   274.0 t/s | pred  400   34.7 t/s | acc  80.5 | wall   28.92\r\n  server: repeated first prompt (reference only)     prompt    314   156.5 t/s | pred  400   39.5 t/s | acc  86.8 | wall   12.15\r\n  pp4096 @ d0                                        prompt   4085   268.4 t/s | pred    1   23.4 t/s | acc  None | wall    15.3\r\n  tg128 @ d0                                         prompt     68    56.3 t/s | pred  128   28.5 t/s | acc  60.4 | wall    5.71\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   277.1 t/s | pred    1   23.3 t/s | acc  None | wall   59.24\r\n  pp4096 @ d16384                                    prompt  20421   273.7 t/s | pred    1   22.8 t/s | acc  None | wall   74.76\r\n  tg128 @ d16384                                     prompt  16401   276.7 t/s | pred  128   28.8 t/s | acc  66.3 | wall   63.79",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01F8xC79d26ZCNz1mab9fkPb",
+            "type": "tool_result",
+            "content": "== halo-8060S-coder-iq1_m-arena-hipblaslt\r\n  server: cold first request (short code prompt)     prompt    314   145.9 t/s | pred  400   38.6 t/s | acc  86.2 | wall   12.53\r\n  server: fresh code prompt                          prompt    218   132.0 t/s | pred  400   35.1 t/s | acc  86.5 | wall   13.06\r\n  server: ~4.75K-token prompt, prefill + decode tail prompt   4749   274.0 t/s | pred  400   34.7 t/s | acc  80.5 | wall   28.92\r\n  server: repeated first prompt (reference only)     prompt    314   156.5 t/s | pred  400   39.5 t/s | acc  86.8 | wall   12.15\r\n  pp4096 @ d0                                        prompt   4085   268.4 t/s | pred    1   23.4 t/s | acc  None | wall    15.3\r\n  tg128 @ d0                                         prompt     68    56.3 t/s | pred  128   28.5 t/s | acc  60.4 | wall    5.71\r\n  depth 16384 prefix (cached for the next rows)      prompt  16384   277.1 t/s | pred    1   23.3 t/s | acc  None | wall   59.24\r\n  pp4096 @ d16384                                    prompt  20421   273.7 t/s | pred    1   22.8 t/s | acc  None | wall   74.76\r\n  tg128 @ d16384                                     prompt  16401   276.7 t/s | pred  128   28.8 t/s | acc  66.3 | wall   63.79",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "/c/conda_envs/strata/python.exe - <<'EOF' 2>&1\nimport json\nd=json.load(open('docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json', encoding='utf-8')); print('==', d['label'])\nfor r in d['rows']:\n    print('  %-50s prompt %6s %7s t/s | pred %4s %6s t/s | acc %5s | wall %7s' % (r['test'][:50], r.get('prompt_n'), r.get('prompt_per_second'), r.get('predicted_n'), r.get('predicted_per_second'), r.get('accept_pct'), r.get('wall_s')))\nEOF",
+          "description": "Print the final-configuration benchmark rows"
+        }
+      }
+    },
+    {
+      "step_id": 270,
+      "timestamp": "2026-10-05T10:38:48.321Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 368504,
+        "completion_tokens": 3994,
+        "cached_tokens": 368472,
+        "extra": {
+          "cache_creation_input_tokens": 947,
+          "cache_read_input_tokens": 368472,
+          "output_tokens_details": {
+            "thinking_tokens": 1046
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 947,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3994,
+              "cache_read_input_tokens": 368472,
+              "cache_creation_input_tokens": 947,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 947
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 271,
+      "timestamp": "2026-10-05T10:39:21.329Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Edit toolu_011UkXJ1Yw73yEonppim9qhQ",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_011UkXJ1Yw73yEonppim9qhQ",
+          "function_name": "Edit",
+          "arguments": {
+            "replace_all": false,
+            "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "old_string": "**Where this leaves the 8060S against the two references** (the Coder IQ1_M, MTP on):\n\n| | 8060S, Strata (64/64, hipBLASLt) | 8060S, llama.cpp | RTX 3060 Laptop, Strata |\n|---|---|---|---|\n| decode, short prompts | 33-36 t/s | 22-26 t/s | 42-43 t/s |\n| decode after a 4.75K prompt | 31 t/s | 21 t/s | 39 t/s |\n| prefill, 4K | 264-279 t/s | 318-322 t/s | 927-961 t/s |\n| prefill, 16-20K | ~210 t/s (before the switch; not re-measured) | 270 t/s | ~1,100 t/s |\n\nDecode: 1.3-1.6x llama.cpp on the same machine, 0.8x a 12 GB RTX 3060 with a 92 GB host. Prefill: 0.85x\nllama.cpp at 4K after the switch, and a GEMM-and-kernel problem on RDNA 3.5 rather than a memory one.",
+            "new_string": "**The whole sequence again with the final configuration** (pinned arena, hipBLASLt routing; the server started\nonce; `benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json`): decode 38.6 / 35.1 / 34.7 t/s on the three\nserver rows (86.2 / 86.5 / 80.5% drafts accepted), 39.5 on the repeated prompt; prefill 274.0 t/s at 4.75K,\n268.4 at pp4096, 277.1 on the 16,384-token prefix, 273.7 over 20,421 tokens (~260 derived for the 4,037 at depth:\n4037 / (74.76 - 59.24) s), 276.7 before tg128 at depth; tg128 28.5 t/s at depth 0 and 28.8 at 16K (60-66%\naccepted). Prefill is now flat from 4K to 20K: compute-bound, not memory- or transfer-bound.\n\n## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\n\n[3060M.md](3060M.md) ran this benchmark (and the prime request) with the same Coder IQ1_M, the same 32K / 8-bit\nKV / `--spec 4` configuration, on 2026-10-02 to 04. The two machines, as measured in their pages:\n\n| | this PC (EVO-X2) | the 3060M PC |\n|---|---|---|\n| GPU | Radeon 8060S, 40 CUs RDNA 3.5, integrated | RTX 3060 Laptop GPU, 30 SMs Ampere, 80 W, on a desktop card |\n| GPU memory | 64 GiB of the shared LPDDR5X; **236 GB/s measured** (one pool for CPU and GPU) | 12 GB GDDR6, 336 GB/s spec; PCIe 4.0 x16, 26.8 GB/s measured |\n| host | 16 Zen 5 cores, 63.6 GiB of the same memory | 16 Zen 4 cores (AVX-512), 92 GiB DDR5-5200, 55 GB/s measured |\n| the Coder's experts | **all 12,288 on the GPU**; the CPU computes none | 2,666 on the GPU (5.1 GiB); the CPU computes the rest from RAM, `--pcie-frac` 0.55 (0.2 later) |\n| engine | HIP (ROCm 10.0.0, hipBLAS -> hipBLASLt), Windows 11 | CUDA 13.0, Linux |\n\nThe numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on both):\n\n| | **8060S, Strata (final config)** | RTX 3060 Laptop, Strata (3060M.md) | ratio |\n|---|---|---|---|\n| model load to listening | 15 s | 11.5 s | |\n| cold first request, decode | 38.6 t/s, 86.2% acc | 43.3 t/s, 88.1% acc | 0.89 |\n| fresh code prompt, decode | 35.1 t/s, 86.5% acc | 42.1 t/s, 80.0% acc | 0.83 |\n| prefill @ ~4.75K | 274.0 t/s | 961.3 t/s | **0.29** |\n| decode tail after that prefill | 34.7 t/s, 80.5% acc | 39.3 t/s, 77.5% acc | 0.88 |\n| repeated prompt (reference) | 39.5 t/s | 45.1 t/s | 0.88 |\n| the prime request, decode | 35.9 t/s (162 of 212 drafts) | 41.0 t/s (164 of 197) | 0.88 |\n| pp4096 @ d0 | 268.4 t/s | 926.9 t/s | **0.29** |\n| tg128 @ d0 | 28.5 t/s, 60.4% acc | 36.2 t/s, 61.4% acc | 0.79 |\n| 16,384-token prefix | 277.1 t/s | ~1,065 t/s (the 16K prefill of the `--pcie-frac` table) | **0.26** |\n| pp4096 @ d16384 (derived on both) | ~260 t/s | ~1,126 t/s | **0.23** |\n| tg128 @ d16384 | 28.8 t/s, 66.3% acc | 37.4 t/s, 65.3% acc | 0.77 |\n| decode at the 3060's best `--pcie-frac` (0.2; a 274-token prompt, median of 3) | 38.6 (the cold row above, a comparable prompt) | 62.3 t/s | 0.62 |\n\n**Reading it.**\n\n- **Decode is close: 0.8-0.9x** of the RTX 3060 PC as 3060M.md's tables measured it, 0.6x of that PC's best\n  setting (`--pcie-frac 0.2`, found two days later; its token-weighted BFCL rate was 54 t/s). This although the\n  two machines do the work very differently: the 3060 holds a fifth of the experts and its 16 Zen 4 cores compute\n  the other four fifths from 55 GB/s of RAM; the 8060S holds every expert and runs the whole token on one GPU\n  with 236 GB/s. The draft acceptance is the same (80-87% here, 77-88% there), so the per-round cost is what\n  differs.\n- **Prefill is 0.23-0.29x**, and flat with length here (268-277 t/s from 4K to 20K) where the 3060 rises from\n  927 to ~1,100. The 3060 PC's prefill streams the experts over PCIe (26.8 GB/s) and runs the dense GEMMs on\n  Ampere tensor cores through cuBLAS; here the streaming is free (0.2% of the time) and the GEMMs and the engine's\n  own kernels are the whole cost: hipBLASLt at 4.0 TFLOP/s on gfx1151, FP32 prompt attention (the tensor-core\n  attention the 3060 uses has no gfx11 twin yet), the GDN recurrence and the hyper-connection read. The phase\n  timing above is the work list.\n- **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,\n  after the earlier starts) and 2.86 GiB/s there.\n- **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4\n  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\n  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\n  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.\n- The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata\n  on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x."
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_011UkXJ1Yw73yEonppim9qhQ",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully.\n\n[metadata] {\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"oldString\": \"**Where this leaves the 8060S against the two references** (the Coder IQ1_M, MTP on):\\n\\n| | 8060S, Strata (64/64, hipBLASLt) | 8060S, llama.cpp | RTX 3060 Laptop, Strata |\\n|---|---|---|---|\\n| decode, short prompts | 33-36 t/s | 22-26 t/s | 42-43 t/s |\\n| decode after a 4.75K prompt | 31 t/s | 21 t/s | 39 t/s |\\n| prefill, 4K | 264-279 t/s | 318-322 t/s | 927-961 t/s |\\n| prefill, 16-20K | ~210 t/s (before the switch; not re-measured) | 270 t/s | ~1,100 t/s |\\n\\nDecode: 1.3-1.6x llama.cpp on the same machine, 0.8x a 12 GB RTX 3060 with a 92 GB host. Prefill: 0.85x\\nllama.cpp at 4K after the switch, and a GEMM-and-kernel problem on RDNA 3.5 rather than a memory one.\", \"newString\": \"**The whole sequence again with the final configuration** (pinned arena, hipBLASLt routing; the server started\\nonce; `benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json`): decode 38.6 / 35.1 / 34.7 t/s on the three\\nserver rows (86.2 / 86.5 / 80.5% drafts accepted), 39.5 on the repeated prompt; prefill 274.0 t/s at 4.75K,\\n268.4 at pp4096, 277.1 on the 16,384-token prefix, 273.7 over 20,421 tokens (~260 derived for the 4,037 at depth:\\n4037 / (74.76 - 59.24) s), 276.7 before tg128 at depth; tg128 28.5 t/s at depth 0 and 28.8 at 16K (60-66%\\naccepted). Prefill is now flat from 4K to 20K: compute-bound, not memory- or transfer-bound.\\n\\n## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\\n\\n[3060M.md](3060M.md) ran this benchmark (and the prime request) with the same Coder IQ1_M, the same 32K / 8-bit\\nKV / `--spec 4` configuration, on 2026-10-02 to 04. The two machines, as measured in their pages:\\n\\n| | this PC (EVO-X2) | the 3060M PC |\\n|---|---|---|\\n| GPU | Radeon 8060S, 40 CUs RDNA 3.5, integrated | RTX 3060 Laptop GPU, 30 SMs Ampere, 80 W, on a desktop card |\\n| GPU memory | 64 GiB of the shared LPDDR5X; **236 GB/s measured** (one pool for CPU and GPU) | 12 GB GDDR6, 336 GB/s spec; PCIe 4.0 x16, 26.8 GB/s measured |\\n| host | 16 Zen 5 cores, 63.6 GiB of the same memory | 16 Zen 4 cores (AVX-512), 92 GiB DDR5-5200, 55 GB/s measured |\\n| the Coder's experts | **all 12,288 on the GPU**; the CPU computes none | 2,666 on the GPU (5.1 GiB); the CPU computes the rest from RAM, `--pcie-frac` 0.55 (0.2 later) |\\n| engine | HIP (ROCm 10.0.0, hipBLAS -> hipBLASLt), Windows 11 | CUDA 13.0, Linux |\\n\\nThe numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on both):\\n\\n| | **8060S, Strata (final config)** | RTX 3060 Laptop, Strata (3060M.md) | ratio |\\n|---|---|---|---|\\n| model load to listening | 15 s | 11.5 s | |\\n| cold first request, decode | 38.6 t/s, 86.2% acc | 43.3 t/s, 88.1% acc | 0.89 |\\n| fresh code prompt, decode | 35.1 t/s, 86.5% acc | 42.1 t/s, 80.0% acc | 0.83 |\\n| prefill @ ~4.75K | 274.0 t/s | 961.3 t/s | **0.29** |\\n| decode tail after that prefill | 34.7 t/s, 80.5% acc | 39.3 t/s, 77.5% acc | 0.88 |\\n| repeated prompt (reference) | 39.5 t/s | 45.1 t/s | 0.88 |\\n| the prime request, decode | 35.9 t/s (162 of 212 drafts) | 41.0 t/s (164 of 197) | 0.88 |\\n| pp4096 @ d0 | 268.4 t/s | 926.9 t/s | **0.29** |\\n| tg128 @ d0 | 28.5 t/s, 60.4% acc | 36.2 t/s, 61.4% acc | 0.79 |\\n| 16,384-token prefix | 277.1 t/s | ~1,065 t/s (the 16K prefill of the `--pcie-frac` table) | **0.26** |\\n| pp4096 @ d16384 (derived on both) | ~260 t/s | ~1,126 t/s | **0.23** |\\n| tg128 @ d16384 | 28.8 t/s, 66.3% acc | 37.4 t/s, 65.3% acc | 0.77 |\\n| decode at the 3060's best `--pcie-frac` (0.2; a 274-token prompt, median of 3) | 38.6 (the cold row above, a comparable prompt) | 62.3 t/s | 0.62 |\\n\\n**Reading it.**\\n\\n- **Decode is close: 0.8-0.9x** of the RTX 3060 PC as 3060M.md's tables measured it, 0.6x of that PC's best\\n  setting (`--pcie-frac 0.2`, found two days later; its token-weighted BFCL rate was 54 t/s). This although the\\n  two machines do the work very differently: the 3060 holds a fifth of the experts and its 16 Zen 4 cores compute\\n  the other four fifths from 55 GB/s of RAM; the 8060S holds every expert and runs the whole token on one GPU\\n  with 236 GB/s. The draft acceptance is the same (80-87% here, 77-88% there), so the per-round cost is what\\n  differs.\\n- **Prefill is 0.23-0.29x**, and flat with length here (268-277 t/s from 4K to 20K) where the 3060 rises from\\n  927 to ~1,100. The 3060 PC's prefill streams the experts over PCIe (26.8 GB/s) and runs the dense GEMMs on\\n  Ampere tensor cores through cuBLAS; here the streaming is free (0.2% of the time) and the GEMMs and the engine's\\n  own kernels are the whole cost: hipBLASLt at 4.0 TFLOP/s on gfx1151, FP32 prompt attention (the tensor-core\\n  attention the 3060 uses has no gfx11 twin yet), the GDN recurrence and the hyper-connection read. The phase\\n  timing above is the work list.\\n- **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,\\n  after the earlier starts) and 2.86 GiB/s there.\\n- **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4\\n  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\\n  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\\n  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.\\n- The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata\\n  on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.\", \"originalFile\": null, \"structuredPatch\": [{\"oldStart\": 427, \"oldLines\": 18, \"newStart\": 427, \"newLines\": 67, \"lines\": [\" hyper-connection read (1.8 s), and the expert GEMMs (2.5 s, not through rocBLAS). Those are kernel work for\", \" later, each with this phase timing to measure against.\", \" \", \"-**Where this leaves the 8060S against the two references** (the Coder IQ1_M, MTP on):\", \"+**The whole sequence again with the final configuration** (pinned arena, hipBLASLt routing; the server started\", \"+once; `benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json`): decode 38.6 / 35.1 / 34.7 t/s on the three\", \"+server rows (86.2 / 86.5 / 80.5% drafts accepted), 39.5 on the repeated prompt; prefill 274.0 t/s at 4.75K,\", \"+268.4 at pp4096, 277.1 on the 16,384-token prefix, 273.7 over 20,421 tokens (~260 derived for the 4,037 at depth:\", \"+4037 / (74.76 - 59.24) s), 276.7 before tg128 at depth; tg128 28.5 t/s at depth 0 and 28.8 at 16K (60-66%\", \"+accepted). Prefill is now flat from 4K to 20K: compute-bound, not memory- or transfer-bound.\", \" \", \"-| | 8060S, Strata (64/64, hipBLASLt) | 8060S, llama.cpp | RTX 3060 Laptop, Strata |\", \"+## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\", \"+\", \"+[3060M.md](3060M.md) ran this benchmark (and the prime request) with the same Coder IQ1_M, the same 32K / 8-bit\", \"+KV / `--spec 4` configuration, on 2026-10-02 to 04. The two machines, as measured in their pages:\", \"+\", \"+| | this PC (EVO-X2) | the 3060M PC |\", \"+|---|---|---|\", \"+| GPU | Radeon 8060S, 40 CUs RDNA 3.5, integrated | RTX 3060 Laptop GPU, 30 SMs Ampere, 80 W, on a desktop card |\", \"+| GPU memory | 64 GiB of the shared LPDDR5X; **236 GB/s measured** (one pool for CPU and GPU) | 12 GB GDDR6, 336 GB/s spec; PCIe 4.0 x16, 26.8 GB/s measured |\", \"+| host | 16 Zen 5 cores, 63.6 GiB of the same memory | 16 Zen 4 cores (AVX-512), 92 GiB DDR5-5200, 55 GB/s measured |\", \"+| the Coder's experts | **all 12,288 on the GPU**; the CPU computes none | 2,666 on the GPU (5.1 GiB); the CPU computes the rest from RAM, `--pcie-frac` 0.55 (0.2 later) |\", \"+| engine | HIP (ROCm 10.0.0, hipBLAS -> hipBLASLt), Windows 11 | CUDA 13.0, Linux |\", \"+\", \"+The numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on both):\", \"+\", \"+| | **8060S, Strata (final config)** | RTX 3060 Laptop, Strata (3060M.md) | ratio |\", \" |---|---|---|---|\", \"-| decode, short prompts | 33-36 t/s | 22-26 t/s | 42-43 t/s |\", \"-| decode after a 4.75K prompt | 31 t/s | 21 t/s | 39 t/s |\", \"-| prefill, 4K | 264-279 t/s | 318-322 t/s | 927-961 t/s |\", \"-| prefill, 16-20K | ~210 t/s (before the switch; not re-measured) | 270 t/s | ~1,100 t/s |\", \"+| model load to listening | 15 s | 11.5 s | |\", \"+| cold first request, decode | 38.6 t/s, 86.2% acc | 43.3 t/s, 88.1% acc | 0.89 |\", \"+| fresh code prompt, decode | 35.1 t/s, 86.5% acc | 42.1 t/s, 80.0% acc | 0.83 |\", \"+| prefill @ ~4.75K | 274.0 t/s | 961.3 t/s | **0.29** |\", \"+| decode tail after that prefill | 34.7 t/s, 80.5% acc | 39.3 t/s, 77.5% acc | 0.88 |\", \"+| repeated prompt (reference) | 39.5 t/s | 45.1 t/s | 0.88 |\", \"+| the prime request, decode | 35.9 t/s (162 of 212 drafts) | 41.0 t/s (164 of 197) | 0.88 |\", \"+| pp4096 @ d0 | 268.4 t/s | 926.9 t/s | **0.29** |\", \"+| tg128 @ d0 | 28.5 t/s, 60.4% acc | 36.2 t/s, 61.4% acc | 0.79 |\", \"+| 16,384-token prefix | 277.1 t/s | ~1,065 t/s (the 16K prefill of the `--pcie-frac` table) | **0.26** |\", \"+| pp4096 @ d16384 (derived on both) | ~260 t/s | ~1,126 t/s | **0.23** |\", \"+| tg128 @ d16384 | 28.8 t/s, 66.3% acc | 37.4 t/s, 65.3% acc | 0.77 |\", \"+| decode at the 3060's best `--pcie-frac` (0.2; a 274-token prompt, median of 3) | 38.6 (the cold row above, a comparable prompt) | 62.3 t/s | 0.62 |\", \" \", \"-Decode: 1.3-1.6x llama.cpp on the same machine, 0.8x a 12 GB RTX 3060 with a 92 GB host. Prefill: 0.85x\", \"-llama.cpp at 4K after the switch, and a GEMM-and-kernel problem on RDNA 3.5 rather than a memory one.\", \"+**Reading it.**\", \" \", \"+- **Decode is close: 0.8-0.9x** of the RTX 3060 PC as 3060M.md's tables measured it, 0.6x of that PC's best\", \"+  setting (`--pcie-frac 0.2`, found two days later; its token-weighted BFCL rate was 54 t/s). This although the\", \"+  two machines do the work very differently: the 3060 holds a fifth of the experts and its 16 Zen 4 cores compute\", \"+  the other four fifths from 55 GB/s of RAM; the 8060S holds every expert and runs the whole token on one GPU\", \"+  with 236 GB/s. The draft acceptance is the same (80-87% here, 77-88% there), so the per-round cost is what\", \"+  differs.\", \"+- **Prefill is 0.23-0.29x**, and flat with length here (268-277 t/s from 4K to 20K) where the 3060 rises from\", \"+  927 to ~1,100. The 3060 PC's prefill streams the experts over PCIe (26.8 GB/s) and runs the dense GEMMs on\", \"+  Ampere tensor cores through cuBLAS; here the streaming is free (0.2% of the time) and the GEMMs and the engine's\", \"+  own kernels are the whole cost: hipBLASLt at 4.0 TFLOP/s on gfx1151, FP32 prompt attention (the tensor-core\", \"+  attention the 3060 uses has no gfx11 twin yet), the GDN recurrence and the hyper-connection read. The phase\", \"+  timing above is the work list.\", \"+- **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,\", \"+  after the earlier starts) and 2.86 GiB/s there.\", \"+- **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4\", \"+  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\", \"+  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\", \"+  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.\", \"+- The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata\", \"+  on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.\", \"+\", \" ## The RTX 5090 over Thunderbolt (not pursued)\", \" \", \" Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's\"]}], \"userModified\": false, \"replaceAll\": false, \"contentNotInModelContext\": true}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 368504,
+        "completion_tokens": 3994,
+        "cached_tokens": 368472,
+        "extra": {
+          "cache_creation_input_tokens": 947,
+          "cache_read_input_tokens": 368472,
+          "output_tokens_details": {
+            "thinking_tokens": 1046
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 947,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3994,
+              "cache_read_input_tokens": 368472,
+              "cache_creation_input_tokens": 947,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 947
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Edit",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "**Where this leaves the 8060S against the two references** (the Coder IQ1_M, MTP on):\n\n| | 8060S, Strata (64/64, hipBLASLt) | 8060S, llama.cpp | RTX 3060 Laptop, Strata |\n|---|---|---|---|\n| decode, short prompts | 33-36 t/s | 22-26 t/s | 42-43 t/s |\n| decode after a 4.75K prompt | 31 t/s | 21 t/s | 39 t/s |\n| prefill, 4K | 264-279 t/s | 318-322 t/s | 927-961 t/s |\n| prefill, 16-20K | ~210 t/s (before the switch; not re-measured) | 270 t/s | ~1,100 t/s |\n\nDecode: 1.3-1.6x llama.cpp on the same machine, 0.8x a 12 GB RTX 3060 with a 92 GB host. Prefill: 0.85x\nllama.cpp at 4K after the switch, and a GEMM-and-kernel problem on RDNA 3.5 rather than a memory one.",
+            "newString": "**The whole sequence again with the final configuration** (pinned arena, hipBLASLt routing; the server started\nonce; `benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json`): decode 38.6 / 35.1 / 34.7 t/s on the three\nserver rows (86.2 / 86.5 / 80.5% drafts accepted), 39.5 on the repeated prompt; prefill 274.0 t/s at 4.75K,\n268.4 at pp4096, 277.1 on the 16,384-token prefix, 273.7 over 20,421 tokens (~260 derived for the 4,037 at depth:\n4037 / (74.76 - 59.24) s), 276.7 before tg128 at depth; tg128 28.5 t/s at depth 0 and 28.8 at 16K (60-66%\naccepted). Prefill is now flat from 4K to 20K: compute-bound, not memory- or transfer-bound.\n\n## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\n\n[3060M.md](3060M.md) ran this benchmark (and the prime request) with the same Coder IQ1_M, the same 32K / 8-bit\nKV / `--spec 4` configuration, on 2026-10-02 to 04. The two machines, as measured in their pages:\n\n| | this PC (EVO-X2) | the 3060M PC |\n|---|---|---|\n| GPU | Radeon 8060S, 40 CUs RDNA 3.5, integrated | RTX 3060 Laptop GPU, 30 SMs Ampere, 80 W, on a desktop card |\n| GPU memory | 64 GiB of the shared LPDDR5X; **236 GB/s measured** (one pool for CPU and GPU) | 12 GB GDDR6, 336 GB/s spec; PCIe 4.0 x16, 26.8 GB/s measured |\n| host | 16 Zen 5 cores, 63.6 GiB of the same memory | 16 Zen 4 cores (AVX-512), 92 GiB DDR5-5200, 55 GB/s measured |\n| the Coder's experts | **all 12,288 on the GPU**; the CPU computes none | 2,666 on the GPU (5.1 GiB); the CPU computes the rest from RAM, `--pcie-frac` 0.55 (0.2 later) |\n| engine | HIP (ROCm 10.0.0, hipBLAS -> hipBLASLt), Windows 11 | CUDA 13.0, Linux |\n\nThe numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on both):\n\n| | **8060S, Strata (final config)** | RTX 3060 Laptop, Strata (3060M.md) | ratio |\n|---|---|---|---|\n| model load to listening | 15 s | 11.5 s | |\n| cold first request, decode | 38.6 t/s, 86.2% acc | 43.3 t/s, 88.1% acc | 0.89 |\n| fresh code prompt, decode | 35.1 t/s, 86.5% acc | 42.1 t/s, 80.0% acc | 0.83 |\n| prefill @ ~4.75K | 274.0 t/s | 961.3 t/s | **0.29** |\n| decode tail after that prefill | 34.7 t/s, 80.5% acc | 39.3 t/s, 77.5% acc | 0.88 |\n| repeated prompt (reference) | 39.5 t/s | 45.1 t/s | 0.88 |\n| the prime request, decode | 35.9 t/s (162 of 212 drafts) | 41.0 t/s (164 of 197) | 0.88 |\n| pp4096 @ d0 | 268.4 t/s | 926.9 t/s | **0.29** |\n| tg128 @ d0 | 28.5 t/s, 60.4% acc | 36.2 t/s, 61.4% acc | 0.79 |\n| 16,384-token prefix | 277.1 t/s | ~1,065 t/s (the 16K prefill of the `--pcie-frac` table) | **0.26** |\n| pp4096 @ d16384 (derived on both) | ~260 t/s | ~1,126 t/s | **0.23** |\n| tg128 @ d16384 | 28.8 t/s, 66.3% acc | 37.4 t/s, 65.3% acc | 0.77 |\n| decode at the 3060's best `--pcie-frac` (0.2; a 274-token prompt, median of 3) | 38.6 (the cold row above, a comparable prompt) | 62.3 t/s | 0.62 |\n\n**Reading it.**\n\n- **Decode is close: 0.8-0.9x** of the RTX 3060 PC as 3060M.md's tables measured it, 0.6x of that PC's best\n  setting (`--pcie-frac 0.2`, found two days later; its token-weighted BFCL rate was 54 t/s). This although the\n  two machines do the work very differently: the 3060 holds a fifth of the experts and its 16 Zen 4 cores compute\n  the other four fifths from 55 GB/s of RAM; the 8060S holds every expert and runs the whole token on one GPU\n  with 236 GB/s. The draft acceptance is the same (80-87% here, 77-88% there), so the per-round cost is what\n  differs.\n- **Prefill is 0.23-0.29x**, and flat with length here (268-277 t/s from 4K to 20K) where the 3060 rises from\n  927 to ~1,100. The 3060 PC's prefill streams the experts over PCIe (26.8 GB/s) and runs the dense GEMMs on\n  Ampere tensor cores through cuBLAS; here the streaming is free (0.2% of the time) and the GEMMs and the engine's\n  own kernels are the whole cost: hipBLASLt at 4.0 TFLOP/s on gfx1151, FP32 prompt attention (the tensor-core\n  attention the 3060 uses has no gfx11 twin yet), the GDN recurrence and the hyper-connection read. The phase\n  timing above is the work list.\n- **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,\n  after the earlier starts) and 2.86 GiB/s there.\n- **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4\n  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\n  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\n  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.\n- The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata\n  on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 427,
+                "oldLines": 18,
+                "newStart": 427,
+                "newLines": 67,
+                "lines": [
+                  " hyper-connection read (1.8 s), and the expert GEMMs (2.5 s, not through rocBLAS). Those are kernel work for",
+                  " later, each with this phase timing to measure against.",
+                  " ",
+                  "-**Where this leaves the 8060S against the two references** (the Coder IQ1_M, MTP on):",
+                  "+**The whole sequence again with the final configuration** (pinned arena, hipBLASLt routing; the server started",
+                  "+once; `benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json`): decode 38.6 / 35.1 / 34.7 t/s on the three",
+                  "+server rows (86.2 / 86.5 / 80.5% drafts accepted), 39.5 on the repeated prompt; prefill 274.0 t/s at 4.75K,",
+                  "+268.4 at pp4096, 277.1 on the 16,384-token prefix, 273.7 over 20,421 tokens (~260 derived for the 4,037 at depth:",
+                  "+4037 / (74.76 - 59.24) s), 276.7 before tg128 at depth; tg128 28.5 t/s at depth 0 and 28.8 at 16K (60-66%",
+                  "+accepted). Prefill is now flat from 4K to 20K: compute-bound, not memory- or transfer-bound.",
+                  " ",
+                  "-| | 8060S, Strata (64/64, hipBLASLt) | 8060S, llama.cpp | RTX 3060 Laptop, Strata |",
+                  "+## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC",
+                  "+",
+                  "+[3060M.md](3060M.md) ran this benchmark (and the prime request) with the same Coder IQ1_M, the same 32K / 8-bit",
+                  "+KV / `--spec 4` configuration, on 2026-10-02 to 04. The two machines, as measured in their pages:",
+                  "+",
+                  "+| | this PC (EVO-X2) | the 3060M PC |",
+                  "+|---|---|---|",
+                  "+| GPU | Radeon 8060S, 40 CUs RDNA 3.5, integrated | RTX 3060 Laptop GPU, 30 SMs Ampere, 80 W, on a desktop card |",
+                  "+| GPU memory | 64 GiB of the shared LPDDR5X; **236 GB/s measured** (one pool for CPU and GPU) | 12 GB GDDR6, 336 GB/s spec; PCIe 4.0 x16, 26.8 GB/s measured |",
+                  "+| host | 16 Zen 5 cores, 63.6 GiB of the same memory | 16 Zen 4 cores (AVX-512), 92 GiB DDR5-5200, 55 GB/s measured |",
+                  "+| the Coder's experts | **all 12,288 on the GPU**; the CPU computes none | 2,666 on the GPU (5.1 GiB); the CPU computes the rest from RAM, `--pcie-frac` 0.55 (0.2 later) |",
+                  "+| engine | HIP (ROCm 10.0.0, hipBLAS -> hipBLASLt), Windows 11 | CUDA 13.0, Linux |",
+                  "+",
+                  "+The numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on both):",
+                  "+",
+                  "+| | **8060S, Strata (final config)** | RTX 3060 Laptop, Strata (3060M.md) | ratio |",
+                  " |---|---|---|---|",
+                  "-| decode, short prompts | 33-36 t/s | 22-26 t/s | 42-43 t/s |",
+                  "-| decode after a 4.75K prompt | 31 t/s | 21 t/s | 39 t/s |",
+                  "-| prefill, 4K | 264-279 t/s | 318-322 t/s | 927-961 t/s |",
+                  "-| prefill, 16-20K | ~210 t/s (before the switch; not re-measured) | 270 t/s | ~1,100 t/s |",
+                  "+| model load to listening | 15 s | 11.5 s | |",
+                  "+| cold first request, decode | 38.6 t/s, 86.2% acc | 43.3 t/s, 88.1% acc | 0.89 |",
+                  "+| fresh code prompt, decode | 35.1 t/s, 86.5% acc | 42.1 t/s, 80.0% acc | 0.83 |",
+                  "+| prefill @ ~4.75K | 274.0 t/s | 961.3 t/s | **0.29** |",
+                  "+| decode tail after that prefill | 34.7 t/s, 80.5% acc | 39.3 t/s, 77.5% acc | 0.88 |",
+                  "+| repeated prompt (reference) | 39.5 t/s | 45.1 t/s | 0.88 |",
+                  "+| the prime request, decode | 35.9 t/s (162 of 212 drafts) | 41.0 t/s (164 of 197) | 0.88 |",
+                  "+| pp4096 @ d0 | 268.4 t/s | 926.9 t/s | **0.29** |",
+                  "+| tg128 @ d0 | 28.5 t/s, 60.4% acc | 36.2 t/s, 61.4% acc | 0.79 |",
+                  "+| 16,384-token prefix | 277.1 t/s | ~1,065 t/s (the 16K prefill of the `--pcie-frac` table) | **0.26** |",
+                  "+| pp4096 @ d16384 (derived on both) | ~260 t/s | ~1,126 t/s | **0.23** |",
+                  "+| tg128 @ d16384 | 28.8 t/s, 66.3% acc | 37.4 t/s, 65.3% acc | 0.77 |",
+                  "+| decode at the 3060's best `--pcie-frac` (0.2; a 274-token prompt, median of 3) | 38.6 (the cold row above, a comparable prompt) | 62.3 t/s | 0.62 |",
+                  " ",
+                  "-Decode: 1.3-1.6x llama.cpp on the same machine, 0.8x a 12 GB RTX 3060 with a 92 GB host. Prefill: 0.85x",
+                  "-llama.cpp at 4K after the switch, and a GEMM-and-kernel problem on RDNA 3.5 rather than a memory one.",
+                  "+**Reading it.**",
+                  " ",
+                  "+- **Decode is close: 0.8-0.9x** of the RTX 3060 PC as 3060M.md's tables measured it, 0.6x of that PC's best",
+                  "+  setting (`--pcie-frac 0.2`, found two days later; its token-weighted BFCL rate was 54 t/s). This although the",
+                  "+  two machines do the work very differently: the 3060 holds a fifth of the experts and its 16 Zen 4 cores compute",
+                  "+  the other four fifths from 55 GB/s of RAM; the 8060S holds every expert and runs the whole token on one GPU",
+                  "+  with 236 GB/s. The draft acceptance is the same (80-87% here, 77-88% there), so the per-round cost is what",
+                  "+  differs.",
+                  "+- **Prefill is 0.23-0.29x**, and flat with length here (268-277 t/s from 4K to 20K) where the 3060 rises from",
+                  "+  927 to ~1,100. The 3060 PC's prefill streams the experts over PCIe (26.8 GB/s) and runs the dense GEMMs on",
+                  "+  Ampere tensor cores through cuBLAS; here the streaming is free (0.2% of the time) and the GEMMs and the engine's",
+                  "+  own kernels are the whole cost: hipBLASLt at 4.0 TFLOP/s on gfx1151, FP32 prompt attention (the tensor-core",
+                  "+  attention the 3060 uses has no gfx11 twin yet), the GDN recurrence and the hyper-connection read. The phase",
+                  "+  timing above is the work list.",
+                  "+- **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,",
+                  "+  after the earlier starts) and 2.86 GiB/s there.",
+                  "+- **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4",
+                  "+  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB",
+                  "+  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that",
+                  "+  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+                  "+- The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata",
+                  "+  on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_011UkXJ1Yw73yEonppim9qhQ",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "**Where this leaves the 8060S against the two references** (the Coder IQ1_M, MTP on):\n\n| | 8060S, Strata (64/64, hipBLASLt) | 8060S, llama.cpp | RTX 3060 Laptop, Strata |\n|---|---|---|---|\n| decode, short prompts | 33-36 t/s | 22-26 t/s | 42-43 t/s |\n| decode after a 4.75K prompt | 31 t/s | 21 t/s | 39 t/s |\n| prefill, 4K | 264-279 t/s | 318-322 t/s | 927-961 t/s |\n| prefill, 16-20K | ~210 t/s (before the switch; not re-measured) | 270 t/s | ~1,100 t/s |\n\nDecode: 1.3-1.6x llama.cpp on the same machine, 0.8x a 12 GB RTX 3060 with a 92 GB host. Prefill: 0.85x\nllama.cpp at 4K after the switch, and a GEMM-and-kernel problem on RDNA 3.5 rather than a memory one.",
+            "newString": "**The whole sequence again with the final configuration** (pinned arena, hipBLASLt routing; the server started\nonce; `benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json`): decode 38.6 / 35.1 / 34.7 t/s on the three\nserver rows (86.2 / 86.5 / 80.5% drafts accepted), 39.5 on the repeated prompt; prefill 274.0 t/s at 4.75K,\n268.4 at pp4096, 277.1 on the 16,384-token prefix, 273.7 over 20,421 tokens (~260 derived for the 4,037 at depth:\n4037 / (74.76 - 59.24) s), 276.7 before tg128 at depth; tg128 28.5 t/s at depth 0 and 28.8 at 16K (60-66%\naccepted). Prefill is now flat from 4K to 20K: compute-bound, not memory- or transfer-bound.\n\n## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\n\n[3060M.md](3060M.md) ran this benchmark (and the prime request) with the same Coder IQ1_M, the same 32K / 8-bit\nKV / `--spec 4` configuration, on 2026-10-02 to 04. The two machines, as measured in their pages:\n\n| | this PC (EVO-X2) | the 3060M PC |\n|---|---|---|\n| GPU | Radeon 8060S, 40 CUs RDNA 3.5, integrated | RTX 3060 Laptop GPU, 30 SMs Ampere, 80 W, on a desktop card |\n| GPU memory | 64 GiB of the shared LPDDR5X; **236 GB/s measured** (one pool for CPU and GPU) | 12 GB GDDR6, 336 GB/s spec; PCIe 4.0 x16, 26.8 GB/s measured |\n| host | 16 Zen 5 cores, 63.6 GiB of the same memory | 16 Zen 4 cores (AVX-512), 92 GiB DDR5-5200, 55 GB/s measured |\n| the Coder's experts | **all 12,288 on the GPU**; the CPU computes none | 2,666 on the GPU (5.1 GiB); the CPU computes the rest from RAM, `--pcie-frac` 0.55 (0.2 later) |\n| engine | HIP (ROCm 10.0.0, hipBLAS -> hipBLASLt), Windows 11 | CUDA 13.0, Linux |\n\nThe numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on both):\n\n| | **8060S, Strata (final config)** | RTX 3060 Laptop, Strata (3060M.md) | ratio |\n|---|---|---|---|\n| model load to listening | 15 s | 11.5 s | |\n| cold first request, decode | 38.6 t/s, 86.2% acc | 43.3 t/s, 88.1% acc | 0.89 |\n| fresh code prompt, decode | 35.1 t/s, 86.5% acc | 42.1 t/s, 80.0% acc | 0.83 |\n| prefill @ ~4.75K | 274.0 t/s | 961.3 t/s | **0.29** |\n| decode tail after that prefill | 34.7 t/s, 80.5% acc | 39.3 t/s, 77.5% acc | 0.88 |\n| repeated prompt (reference) | 39.5 t/s | 45.1 t/s | 0.88 |\n| the prime request, decode | 35.9 t/s (162 of 212 drafts) | 41.0 t/s (164 of 197) | 0.88 |\n| pp4096 @ d0 | 268.4 t/s | 926.9 t/s | **0.29** |\n| tg128 @ d0 | 28.5 t/s, 60.4% acc | 36.2 t/s, 61.4% acc | 0.79 |\n| 16,384-token prefix | 277.1 t/s | ~1,065 t/s (the 16K prefill of the `--pcie-frac` table) | **0.26** |\n| pp4096 @ d16384 (derived on both) | ~260 t/s | ~1,126 t/s | **0.23** |\n| tg128 @ d16384 | 28.8 t/s, 66.3% acc | 37.4 t/s, 65.3% acc | 0.77 |\n| decode at the 3060's best `--pcie-frac` (0.2; a 274-token prompt, median of 3) | 38.6 (the cold row above, a comparable prompt) | 62.3 t/s | 0.62 |\n\n**Reading it.**\n\n- **Decode is close: 0.8-0.9x** of the RTX 3060 PC as 3060M.md's tables measured it, 0.6x of that PC's best\n  setting (`--pcie-frac 0.2`, found two days later; its token-weighted BFCL rate was 54 t/s). This although the\n  two machines do the work very differently: the 3060 holds a fifth of the experts and its 16 Zen 4 cores compute\n  the other four fifths from 55 GB/s of RAM; the 8060S holds every expert and runs the whole token on one GPU\n  with 236 GB/s. The draft acceptance is the same (80-87% here, 77-88% there), so the per-round cost is what\n  differs.\n- **Prefill is 0.23-0.29x**, and flat with length here (268-277 t/s from 4K to 20K) where the 3060 rises from\n  927 to ~1,100. The 3060 PC's prefill streams the experts over PCIe (26.8 GB/s) and runs the dense GEMMs on\n  Ampere tensor cores through cuBLAS; here the streaming is free (0.2% of the time) and the GEMMs and the engine's\n  own kernels are the whole cost: hipBLASLt at 4.0 TFLOP/s on gfx1151, FP32 prompt attention (the tensor-core\n  attention the 3060 uses has no gfx11 twin yet), the GDN recurrence and the hyper-connection read. The phase\n  timing above is the work list.\n- **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,\n  after the earlier starts) and 2.86 GiB/s there.\n- **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4\n  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\n  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\n  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.\n- The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata\n  on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 427,
+                "oldLines": 18,
+                "newStart": 427,
+                "newLines": 67,
+                "lines": [
+                  " hyper-connection read (1.8 s), and the expert GEMMs (2.5 s, not through rocBLAS). Those are kernel work for",
+                  " later, each with this phase timing to measure against.",
+                  " ",
+                  "-**Where this leaves the 8060S against the two references** (the Coder IQ1_M, MTP on):",
+                  "+**The whole sequence again with the final configuration** (pinned arena, hipBLASLt routing; the server started",
+                  "+once; `benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json`): decode 38.6 / 35.1 / 34.7 t/s on the three",
+                  "+server rows (86.2 / 86.5 / 80.5% drafts accepted), 39.5 on the repeated prompt; prefill 274.0 t/s at 4.75K,",
+                  "+268.4 at pp4096, 277.1 on the 16,384-token prefix, 273.7 over 20,421 tokens (~260 derived for the 4,037 at depth:",
+                  "+4037 / (74.76 - 59.24) s), 276.7 before tg128 at depth; tg128 28.5 t/s at depth 0 and 28.8 at 16K (60-66%",
+                  "+accepted). Prefill is now flat from 4K to 20K: compute-bound, not memory- or transfer-bound.",
+                  " ",
+                  "-| | 8060S, Strata (64/64, hipBLASLt) | 8060S, llama.cpp | RTX 3060 Laptop, Strata |",
+                  "+## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC",
+                  "+",
+                  "+[3060M.md](3060M.md) ran this benchmark (and the prime request) with the same Coder IQ1_M, the same 32K / 8-bit",
+                  "+KV / `--spec 4` configuration, on 2026-10-02 to 04. The two machines, as measured in their pages:",
+                  "+",
+                  "+| | this PC (EVO-X2) | the 3060M PC |",
+                  "+|---|---|---|",
+                  "+| GPU | Radeon 8060S, 40 CUs RDNA 3.5, integrated | RTX 3060 Laptop GPU, 30 SMs Ampere, 80 W, on a desktop card |",
+                  "+| GPU memory | 64 GiB of the shared LPDDR5X; **236 GB/s measured** (one pool for CPU and GPU) | 12 GB GDDR6, 336 GB/s spec; PCIe 4.0 x16, 26.8 GB/s measured |",
+                  "+| host | 16 Zen 5 cores, 63.6 GiB of the same memory | 16 Zen 4 cores (AVX-512), 92 GiB DDR5-5200, 55 GB/s measured |",
+                  "+| the Coder's experts | **all 12,288 on the GPU**; the CPU computes none | 2,666 on the GPU (5.1 GiB); the CPU computes the rest from RAM, `--pcie-frac` 0.55 (0.2 later) |",
+                  "+| engine | HIP (ROCm 10.0.0, hipBLAS -> hipBLASLt), Windows 11 | CUDA 13.0, Linux |",
+                  "+",
+                  "+The numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on both):",
+                  "+",
+                  "+| | **8060S, Strata (final config)** | RTX 3060 Laptop, Strata (3060M.md) | ratio |",
+                  " |---|---|---|---|",
+                  "-| decode, short prompts | 33-36 t/s | 22-26 t/s | 42-43 t/s |",
+                  "-| decode after a 4.75K prompt | 31 t/s | 21 t/s | 39 t/s |",
+                  "-| prefill, 4K | 264-279 t/s | 318-322 t/s | 927-961 t/s |",
+                  "-| prefill, 16-20K | ~210 t/s (before the switch; not re-measured) | 270 t/s | ~1,100 t/s |",
+                  "+| model load to listening | 15 s | 11.5 s | |",
+                  "+| cold first request, decode | 38.6 t/s, 86.2% acc | 43.3 t/s, 88.1% acc | 0.89 |",
+                  "+| fresh code prompt, decode | 35.1 t/s, 86.5% acc | 42.1 t/s, 80.0% acc | 0.83 |",
+                  "+| prefill @ ~4.75K | 274.0 t/s | 961.3 t/s | **0.29** |",
+                  "+| decode tail after that prefill | 34.7 t/s, 80.5% acc | 39.3 t/s, 77.5% acc | 0.88 |",
+                  "+| repeated prompt (reference) | 39.5 t/s | 45.1 t/s | 0.88 |",
+                  "+| the prime request, decode | 35.9 t/s (162 of 212 drafts) | 41.0 t/s (164 of 197) | 0.88 |",
+                  "+| pp4096 @ d0 | 268.4 t/s | 926.9 t/s | **0.29** |",
+                  "+| tg128 @ d0 | 28.5 t/s, 60.4% acc | 36.2 t/s, 61.4% acc | 0.79 |",
+                  "+| 16,384-token prefix | 277.1 t/s | ~1,065 t/s (the 16K prefill of the `--pcie-frac` table) | **0.26** |",
+                  "+| pp4096 @ d16384 (derived on both) | ~260 t/s | ~1,126 t/s | **0.23** |",
+                  "+| tg128 @ d16384 | 28.8 t/s, 66.3% acc | 37.4 t/s, 65.3% acc | 0.77 |",
+                  "+| decode at the 3060's best `--pcie-frac` (0.2; a 274-token prompt, median of 3) | 38.6 (the cold row above, a comparable prompt) | 62.3 t/s | 0.62 |",
+                  " ",
+                  "-Decode: 1.3-1.6x llama.cpp on the same machine, 0.8x a 12 GB RTX 3060 with a 92 GB host. Prefill: 0.85x",
+                  "-llama.cpp at 4K after the switch, and a GEMM-and-kernel problem on RDNA 3.5 rather than a memory one.",
+                  "+**Reading it.**",
+                  " ",
+                  "+- **Decode is close: 0.8-0.9x** of the RTX 3060 PC as 3060M.md's tables measured it, 0.6x of that PC's best",
+                  "+  setting (`--pcie-frac 0.2`, found two days later; its token-weighted BFCL rate was 54 t/s). This although the",
+                  "+  two machines do the work very differently: the 3060 holds a fifth of the experts and its 16 Zen 4 cores compute",
+                  "+  the other four fifths from 55 GB/s of RAM; the 8060S holds every expert and runs the whole token on one GPU",
+                  "+  with 236 GB/s. The draft acceptance is the same (80-87% here, 77-88% there), so the per-round cost is what",
+                  "+  differs.",
+                  "+- **Prefill is 0.23-0.29x**, and flat with length here (268-277 t/s from 4K to 20K) where the 3060 rises from",
+                  "+  927 to ~1,100. The 3060 PC's prefill streams the experts over PCIe (26.8 GB/s) and runs the dense GEMMs on",
+                  "+  Ampere tensor cores through cuBLAS; here the streaming is free (0.2% of the time) and the GEMMs and the engine's",
+                  "+  own kernels are the whole cost: hipBLASLt at 4.0 TFLOP/s on gfx1151, FP32 prompt attention (the tensor-core",
+                  "+  attention the 3060 uses has no gfx11 twin yet), the GDN recurrence and the hyper-connection read. The phase",
+                  "+  timing above is the work list.",
+                  "+- **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,",
+                  "+  after the earlier starts) and 2.86 GiB/s there.",
+                  "+- **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4",
+                  "+  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB",
+                  "+  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that",
+                  "+  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+                  "+- The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata",
+                  "+  on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_011UkXJ1Yw73yEonppim9qhQ",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "raw_arguments": {
+          "replace_all": false,
+          "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+          "old_string": "**Where this leaves the 8060S against the two references** (the Coder IQ1_M, MTP on):\n\n| | 8060S, Strata (64/64, hipBLASLt) | 8060S, llama.cpp | RTX 3060 Laptop, Strata |\n|---|---|---|---|\n| decode, short prompts | 33-36 t/s | 22-26 t/s | 42-43 t/s |\n| decode after a 4.75K prompt | 31 t/s | 21 t/s | 39 t/s |\n| prefill, 4K | 264-279 t/s | 318-322 t/s | 927-961 t/s |\n| prefill, 16-20K | ~210 t/s (before the switch; not re-measured) | 270 t/s | ~1,100 t/s |\n\nDecode: 1.3-1.6x llama.cpp on the same machine, 0.8x a 12 GB RTX 3060 with a 92 GB host. Prefill: 0.85x\nllama.cpp at 4K after the switch, and a GEMM-and-kernel problem on RDNA 3.5 rather than a memory one.",
+          "new_string": "**The whole sequence again with the final configuration** (pinned arena, hipBLASLt routing; the server started\nonce; `benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json`): decode 38.6 / 35.1 / 34.7 t/s on the three\nserver rows (86.2 / 86.5 / 80.5% drafts accepted), 39.5 on the repeated prompt; prefill 274.0 t/s at 4.75K,\n268.4 at pp4096, 277.1 on the 16,384-token prefix, 273.7 over 20,421 tokens (~260 derived for the 4,037 at depth:\n4037 / (74.76 - 59.24) s), 276.7 before tg128 at depth; tg128 28.5 t/s at depth 0 and 28.8 at 16K (60-66%\naccepted). Prefill is now flat from 4K to 20K: compute-bound, not memory- or transfer-bound.\n\n## Against 3060M.md: the same prompts on the RTX 3060 Laptop PC\n\n[3060M.md](3060M.md) ran this benchmark (and the prime request) with the same Coder IQ1_M, the same 32K / 8-bit\nKV / `--spec 4` configuration, on 2026-10-02 to 04. The two machines, as measured in their pages:\n\n| | this PC (EVO-X2) | the 3060M PC |\n|---|---|---|\n| GPU | Radeon 8060S, 40 CUs RDNA 3.5, integrated | RTX 3060 Laptop GPU, 30 SMs Ampere, 80 W, on a desktop card |\n| GPU memory | 64 GiB of the shared LPDDR5X; **236 GB/s measured** (one pool for CPU and GPU) | 12 GB GDDR6, 336 GB/s spec; PCIe 4.0 x16, 26.8 GB/s measured |\n| host | 16 Zen 5 cores, 63.6 GiB of the same memory | 16 Zen 4 cores (AVX-512), 92 GiB DDR5-5200, 55 GB/s measured |\n| the Coder's experts | **all 12,288 on the GPU**; the CPU computes none | 2,666 on the GPU (5.1 GiB); the CPU computes the rest from RAM, `--pcie-frac` 0.55 (0.2 later) |\n| engine | HIP (ROCm 10.0.0, hipBLAS -> hipBLASLt), Windows 11 | CUDA 13.0, Linux |\n\nThe numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on both):\n\n| | **8060S, Strata (final config)** | RTX 3060 Laptop, Strata (3060M.md) | ratio |\n|---|---|---|---|\n| model load to listening | 15 s | 11.5 s | |\n| cold first request, decode | 38.6 t/s, 86.2% acc | 43.3 t/s, 88.1% acc | 0.89 |\n| fresh code prompt, decode | 35.1 t/s, 86.5% acc | 42.1 t/s, 80.0% acc | 0.83 |\n| prefill @ ~4.75K | 274.0 t/s | 961.3 t/s | **0.29** |\n| decode tail after that prefill | 34.7 t/s, 80.5% acc | 39.3 t/s, 77.5% acc | 0.88 |\n| repeated prompt (reference) | 39.5 t/s | 45.1 t/s | 0.88 |\n| the prime request, decode | 35.9 t/s (162 of 212 drafts) | 41.0 t/s (164 of 197) | 0.88 |\n| pp4096 @ d0 | 268.4 t/s | 926.9 t/s | **0.29** |\n| tg128 @ d0 | 28.5 t/s, 60.4% acc | 36.2 t/s, 61.4% acc | 0.79 |\n| 16,384-token prefix | 277.1 t/s | ~1,065 t/s (the 16K prefill of the `--pcie-frac` table) | **0.26** |\n| pp4096 @ d16384 (derived on both) | ~260 t/s | ~1,126 t/s | **0.23** |\n| tg128 @ d16384 | 28.8 t/s, 66.3% acc | 37.4 t/s, 65.3% acc | 0.77 |\n| decode at the 3060's best `--pcie-frac` (0.2; a 274-token prompt, median of 3) | 38.6 (the cold row above, a comparable prompt) | 62.3 t/s | 0.62 |\n\n**Reading it.**\n\n- **Decode is close: 0.8-0.9x** of the RTX 3060 PC as 3060M.md's tables measured it, 0.6x of that PC's best\n  setting (`--pcie-frac 0.2`, found two days later; its token-weighted BFCL rate was 54 t/s). This although the\n  two machines do the work very differently: the 3060 holds a fifth of the experts and its 16 Zen 4 cores compute\n  the other four fifths from 55 GB/s of RAM; the 8060S holds every expert and runs the whole token on one GPU\n  with 236 GB/s. The draft acceptance is the same (80-87% here, 77-88% there), so the per-round cost is what\n  differs.\n- **Prefill is 0.23-0.29x**, and flat with length here (268-277 t/s from 4K to 20K) where the 3060 rises from\n  927 to ~1,100. The 3060 PC's prefill streams the experts over PCIe (26.8 GB/s) and runs the dense GEMMs on\n  Ampere tensor cores through cuBLAS; here the streaming is free (0.2% of the time) and the GEMMs and the engine's\n  own kernels are the whole cost: hipBLASLt at 4.0 TFLOP/s on gfx1151, FP32 prompt attention (the tensor-core\n  attention the 3060 uses has no gfx11 twin yet), the GDN recurrence and the hyper-connection read. The phase\n  timing above is the work list.\n- **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,\n  after the earlier starts) and 2.86 GiB/s there.\n- **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4\n  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\n  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\n  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.\n- The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata\n  on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x."
+        }
+      }
+    },
+    {
+      "step_id": 272,
+      "timestamp": "2026-10-05T10:39:40.501Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 369451,
+        "completion_tokens": 1273,
+        "cached_tokens": 369419,
+        "extra": {
+          "cache_creation_input_tokens": 4062,
+          "cache_read_input_tokens": 369419,
+          "output_tokens_details": {
+            "thinking_tokens": 47
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4062,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1273,
+              "cache_read_input_tokens": 369419,
+              "cache_creation_input_tokens": 4062,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 4062
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 273,
+      "timestamp": "2026-10-05T10:39:41.497Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "对比已写入 `docs/AIMAX+395-ROCm.md` 新一节 \"Against 3060M.md\"，并用最终配置（pinned + hipBLASLt）重跑了整套 3060M.md 的提示词（`docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena-hipblaslt.json`）。\n\n**两台机器的差别**：3060M 那台是 RTX 3060 Laptop 12 GB（336 GB/s，PCIe 26.8 GB/s）+ 16 核 Zen 4 + 92 GiB 内存，GPU 只装 2,666 个专家，其余由 CPU 从 55 GB/s 的内存算；本机是 8060S 独占 236 GB/s 的共享内存，12,288 个专家全在 GPU 上。\n\n| Coder IQ1_M，MTP 开 | **本机 8060S** | RTX 3060 Laptop（3060M.md） | 比值 |\n|---|---|---|---|\n| 启动到就绪 | 15 s | 11.5 s | |\n| 冷启动首请求解码 | 38.6 t/s | 43.3 t/s | 0.89 |\n| 新代码提示解码 | 35.1 t/s | 42.1 t/s | 0.83 |\n| 4.75K 预填充 | 274 t/s | 961 t/s | **0.29** |\n| 4.75K 后解码 | 34.7 t/s | 39.3 t/s | 0.88 |\n| prime 请求解码 | 35.9 t/s | 41.0 t/s | 0.88 |\n| pp4096 | 268 t/s | 927 t/s | **0.29** |\n| tg128 | 28.5 t/s | 36.2 t/s | 0.79 |\n| 16K 前缀预填充 | 277 t/s | ~1,065 t/s | **0.26** |\n| pp4096 @ 16K 深度 | ~260 t/s | ~1,126 t/s | **0.23** |\n| tg128 @ 16K 深度 | 28.8 t/s | 37.4 t/s | 0.77 |\n| 对 3060 最佳 `--pcie-frac 0.2` 的解码 | 38.6 | 62.3 | 0.62 |\n\n**解读**\n\n- **解码接近**：是 3060 表格数据的 0.8-0.9 倍，是它两天后找到的最佳设置的 0.6 倍。两边 MTP 接受率一样（80-87% 对 77-88%），差的是每轮的开销。\n- **预填充差 3.4-4.3 倍**，而且本机从 4K 到 20K 平坦在 268-277 t/s，是纯算力瓶颈：专家传输只占 0.2%，时间全在 GEMM（gfx1151 上 hipBLASLt 只有 4 TFLOP/s）和引擎自己的 kernel（FP32 提示注意力、GDN 递归、hc read）。3060 那边走 Ampere tensor core 和 cuBLAS。\n- **与之前记录的对照**：3060M.md 里 3060 对本机 llama.cpp 是解码 2 倍、预填充 3 倍；换成本机跑 Strata 后，解码差距缩到 1.1-1.2 倍，预填充差距仍是 3.4-4.3 倍。\n- **未比较**：UD-IQ4_XS 本机还没跑（55.4 GiB 专家在 64/64 下装不进默认 pinned 模式，要用 mmap 或改 48/80 划分）；BFCL 多轮没有重跑。",
+      "metrics": {
+        "prompt_tokens": 369451,
+        "completion_tokens": 1273,
+        "cached_tokens": 369419,
+        "extra": {
+          "cache_creation_input_tokens": 4062,
+          "cache_read_input_tokens": 369419,
+          "output_tokens_details": {
+            "thinking_tokens": 47
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 4062,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1273,
+              "cache_read_input_tokens": 369419,
+              "cache_creation_input_tokens": 4062,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 4062
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 60604477,
-    "total_completion_tokens": 545309,
-    "total_cached_tokens": 60597779,
-    "total_steps": 267,
+    "total_prompt_tokens": 62448460,
+    "total_completion_tokens": 556176,
+    "total_cached_tokens": 62441630,
+    "total_steps": 273,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1214938,
-      "total_cache_read_input_tokens": 60597779
+      "total_cache_creation_input_tokens": 1225359,
+      "total_cache_read_input_tokens": 62441630
     }
   }
 }
