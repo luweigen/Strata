@@ -364,6 +364,50 @@ Until the BIOS is changed, the prompt path on this PC is NVMe-bound. A second ro
 prompt path that takes resident experts from the cache instead of the source; that is a code change with its own
 measurement, not a setting.
 
+## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)
+
+The user set the BIOS split to 64/64 and rebooted. Windows now sees 63.6 GiB (50.7 free at idle), the registry
+64 GiB dedicated for the GPU, HIP 99.7 GiB total. The default mode (`strata-coder-iq1_m-arena.json`: no
+`--mmap-experts`, the experts pinned in RAM) started in **15 s**: `expert arena: cudaHostRegister PORTABLE ok;
+large pages refused ... using 4 KB pages`, `loaded 23.42 GiB at 5.94 GiB/s`, `expert cache auto: 46.43 GiB free ->
+12288 slots` (every expert on the GPU again), 22.7 GiB of VRAM left; the engine's working set 24.5 GiB, 22.5 GiB
+of RAM free with it running. The same benchmark (`benchmarks/2026-10-05-halo-coder-iq1_m-arena.json`):
+
+| | 96/32, mmap (above) | **64/64, arena (pinned RAM)** | this PC, llama.cpp | RTX 3060 Laptop, Strata |
+|---|---|---|---|---|
+| model load to listening | 45 s | **15 s** | 30 s | 11.5 s |
+| cold first request, decode | 36.8 t/s | **35.0 t/s**, 88.7% acc | 26.1 | 43.3 |
+| fresh code prompt, decode | 34.7 t/s | **33.0 t/s**, 81.4% acc | 21.9 | 42.1 |
+| prefill @ ~4.75K | 146.1 t/s | **208.7 t/s** | 321.5 | 961.3 |
+| decode tail after it | 30.2 t/s | **31.3 t/s** | 20.8 | 39.3 |
+| pp4096 @ d0 | 146.4 | **208.8** | 318.1 | 926.9 |
+| tg128 @ d0 (MTP here) | 27.3 | **26.5** | 20.92 | 36.2 |
+| 16384-token prefix | 143.3 | **213.3** | | |
+| pp4096 @ d16384 | ~137 (derived) | **~204** (derived: 4037 tokens in 96.6 - 76.9 s); 211.4 over all 20421 | 269.9 | ~1126 |
+| tg128 @ d16384 (MTP here) | 26.9 | **27.5** | 17.98 | 37.4 |
+
+So the file-cache starvation was worth 1.45x on prompts (146 -> 209-214 t/s) and nothing on decode, as
+expected. Prompts are still 1.5x slower than llama.cpp on this PC. Three more measurements say why, and it is not
+the transfer:
+
+- **Host-to-device copies are fast here** (`docs/benchmarks/2026-10-05-halo-hip-h2d.hip`, host-clock timed,
+  2 GiB): `hipMemcpy` from pinned memory 63-74 GB/s, from pageable 19.5 GB/s, `hipMemcpyAsync` + stream sync
+  64-72 GB/s, a kernel reading mapped host memory into device memory 94-100 GB/s, 512 copies of 2.66 MB (one
+  Coder expert blob each) 71.5 GB/s. The earlier "0 ms" event timing of H2D was the event, not the copy. A chunk's
+  23.4 GB of experts take about 0.35 s to move; the prompt path spends 38 s on a chunk.
+- **The prompt path's own phase timing** (`STRATA_PREFILL_TIMING=1`, a 4164-token prompt at 207 t/s, GPU timeline
+  19,955 ms, host work under 300 ms): hc read 3,438 ms (17.2%), GDN 4,969 (24.9%: out proj 1,948, recurrence 799,
+  conv+gates 128), QSA proj 2,077 (10.4%), QSA attn 1,986 (10.0%), router+shared 909 (4.6%), the expert GEMMs
+  gate/up 1,772 (8.9%) + down 785 (3.9%) + dequant 489 (2.4%), gather 89, **wait copy 34 (0.2%)**, combine 225,
+  PLE 187. The experts' streaming is 0.6% of the time. The time is in the dense parts: the hipBLAS GEMMs (QSA and
+  GDN projections, the router, the expert GEMMs: about 7.5 s of 20) and the engine's own kernels for the
+  hyper-connection read, the GDN recurrence and the FP32 prompt attention (about 8 s).
+- **hipBLAS on gfx1151 runs at 2.0-2.6 TFLOP/s; routed to hipBLASLt it runs at 4.0** (the GEMM probe at the
+  engine's shapes, T = 512 and 8192, BF16 and FP16: `ROCBLAS_USE_HIPBLASLT=1`, an environment variable rocBLAS
+  honours, no code change; results correct, 3e-6 relative). The engine's `cublasGemmEx` calls go through hipBLAS ->
+  rocBLAS, so this switch reaches every dense GEMM of the prompt path. The 8060S's matrix-core peak is far above
+  either number: rocBLAS's gfx1151 kernels are plainly not tuned, hipBLASLt's less so.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's

@@ -20407,19 +20407,939 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 237,
+      "timestamp": "2026-10-05T10:22:51.922Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>bcp2wperw</task-id>\n<tool-use-id>toolu_01C46HqQXziGd28ExfHt6ym9</tool-use-id>\n<output-file>C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\bcp2wperw.output</output-file>\n<status>completed</status>\n<summary>Background command \"Wait for the old server to go down and the new one to answer\" completed (exit code 0)</summary>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 238,
+      "timestamp": "2026-10-05T10:22:56.381Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_016Bszvot51GuSS5vrrx7wTK",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_016Bszvot51GuSS5vrrx7wTK",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "export STRATA_ENGRAM_SRC=\"E:\\\\work\\\\AI\\\\EngramHalo.cpp\\\\src\" PYTHONUTF8=1 && /c/conda_envs/strata/python.exe docs/benchmarks/2026-10-05-halo-pp4k.py arena-timing 2 && echo =====TIMING && grep -iE \"prefill timing|timing:|phase|ms\\b\" strata-coder-iq1_m-arena.log | grep -v \"strata serve: prompt\" | tail -30 | cut -c1-240",
+            "description": "Send two pp4096 requests and read the prompt path's phase timing from the engine log",
+            "timeout": 600000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_016Bszvot51GuSS5vrrx7wTK",
+            "content": "{\"label\": \"arena-timing\", \"i\": 0, \"wall_s\": 21.0, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 199.4}\r\n{\"label\": \"arena-timing\", \"i\": 1, \"wall_s\": 20.26, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 206.6}\r\n=====TIMING\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata prefill timing: 4164 tokens, GPU timeline 20569 ms, wall 20655 ms, host staging 7 ms: embed+steps 173 (0.8%) hc read 4124 (20.0%) gdn 4848 (23.6%) qsa proj 2059 (10.0%) qsa indexer 0 (0.0%) qsa select 39 (0.2%) qsa attn 1969 (9.6%) r\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 174 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 84 ms, PLE 155 ms\nstrata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 11 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 57 ms, PLE 162 ms\n\n[stdout]\n{\"label\": \"arena-timing\", \"i\": 0, \"wall_s\": 21.0, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 199.4}\r\n{\"label\": \"arena-timing\", \"i\": 1, \"wall_s\": 20.26, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 206.6}\r\n=====TIMING\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata prefill timing: 4164 tokens, GPU timeline 20569 ms, wall 20655 ms, host staging 7 ms: embed+steps 173 (0.8%) hc read 4124 (20.0%) gdn 4848 (23.6%) qsa proj 2059 (10.0%) qsa indexer 0 (0.0%) qsa select 39 (0.2%) qsa attn 1969 (9.6%) r\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 174 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 84 ms, PLE 155 ms\nstrata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 11 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 57 ms, PLE 162 ms\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\server-coder-iq1_m-arena.out\", \"hunks\": [{\"oldStart\": 7, \"oldLines\": 3, \"newStart\": 7, \"newLines\": 9, \"lines\": [\" [strata] filling the GPU's expert cache (12288 experts, 23.42 GiB of VRAM) ...\\r\", \" ready: http://127.0.0.1:8080/v1  (OpenAI: /v1/chat/completions, Anthropic: /v1/messages, context 32768 tokens)\\r\", \"        open http://127.0.0.1:8080/ in a browser to chat; close this window to stop the model\\r\", \"+[strata] reading the prompt: 4,169 tokens, 10 s so far\\r\", \"+[strata] reading the prompt: 4,169 tokens, 20 s so far\\r\", \"+[strata] done: 1 tokens in 21 s (108.0 tok/s) (length, cancel=False), expert cache 100.0% hit\\r\", \"+[strata] reading the prompt: 4,169 tokens, 10 s so far\\r\", \"+[strata] reading the prompt: 4,164 of 4,169 tokens, 20 s so far\\r\", \"+[strata] done: 1 tokens in 20 s (460.8 tok/s) (length, cancel=False), expert cache 100.0% hit\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"E:\\\\work\\\\AI\\\\Strata\\\\server-coder-iq1_m-arena.out\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 345234,
+        "completion_tokens": 314,
+        "cached_tokens": 345230,
+        "extra": {
+          "cache_creation_input_tokens": 413,
+          "cache_read_input_tokens": 345230,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 413,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 314,
+              "cache_read_input_tokens": 345230,
+              "cache_creation_input_tokens": 413,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 413
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "{\"label\": \"arena-timing\", \"i\": 0, \"wall_s\": 21.0, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 199.4}\r\n{\"label\": \"arena-timing\", \"i\": 1, \"wall_s\": 20.26, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 206.6}\r\n=====TIMING\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata prefill timing: 4164 tokens, GPU timeline 20569 ms, wall 20655 ms, host staging 7 ms: embed+steps 173 (0.8%) hc read 4124 (20.0%) gdn 4848 (23.6%) qsa proj 2059 (10.0%) qsa indexer 0 (0.0%) qsa select 39 (0.2%) qsa attn 1969 (9.6%) r\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 174 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 84 ms, PLE 155 ms\nstrata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 11 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 57 ms, PLE 162 ms",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\server-coder-iq1_m-arena.out",
+                  "hunks": [
+                    {
+                      "oldStart": 7,
+                      "oldLines": 3,
+                      "newStart": 7,
+                      "newLines": 9,
+                      "lines": [
+                        " [strata] filling the GPU's expert cache (12288 experts, 23.42 GiB of VRAM) ...\r",
+                        " ready: http://127.0.0.1:8080/v1  (OpenAI: /v1/chat/completions, Anthropic: /v1/messages, context 32768 tokens)\r",
+                        "        open http://127.0.0.1:8080/ in a browser to chat; close this window to stop the model\r",
+                        "+[strata] reading the prompt: 4,169 tokens, 10 s so far\r",
+                        "+[strata] reading the prompt: 4,169 tokens, 20 s so far\r",
+                        "+[strata] done: 1 tokens in 21 s (108.0 tok/s) (length, cancel=False), expert cache 100.0% hit\r",
+                        "+[strata] reading the prompt: 4,169 tokens, 10 s so far\r",
+                        "+[strata] reading the prompt: 4,164 of 4,169 tokens, 20 s so far\r",
+                        "+[strata] done: 1 tokens in 20 s (460.8 tok/s) (length, cancel=False), expert cache 100.0% hit"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\server-coder-iq1_m-arena.out"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_016Bszvot51GuSS5vrrx7wTK",
+            "type": "tool_result",
+            "content": "{\"label\": \"arena-timing\", \"i\": 0, \"wall_s\": 21.0, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 199.4}\r\n{\"label\": \"arena-timing\", \"i\": 1, \"wall_s\": 20.26, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 206.6}\r\n=====TIMING\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata prefill timing: 4164 tokens, GPU timeline 20569 ms, wall 20655 ms, host staging 7 ms: embed+steps 173 (0.8%) hc read 4124 (20.0%) gdn 4848 (23.6%) qsa proj 2059 (10.0%) qsa indexer 0 (0.0%) qsa select 39 (0.2%) qsa attn 1969 (9.6%) r\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 174 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 84 ms, PLE 155 ms\nstrata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 11 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 57 ms, PLE 162 ms",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "{\"label\": \"arena-timing\", \"i\": 0, \"wall_s\": 21.0, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 199.4}\r\n{\"label\": \"arena-timing\", \"i\": 1, \"wall_s\": 20.26, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 206.6}\r\n=====TIMING\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata prefill timing: 4164 tokens, GPU timeline 20569 ms, wall 20655 ms, host staging 7 ms: embed+steps 173 (0.8%) hc read 4124 (20.0%) gdn 4848 (23.6%) qsa proj 2059 (10.0%) qsa indexer 0 (0.0%) qsa select 39 (0.2%) qsa attn 1969 (9.6%) r\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 174 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 84 ms, PLE 155 ms\nstrata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 11 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 57 ms, PLE 162 ms",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\server-coder-iq1_m-arena.out",
+                  "hunks": [
+                    {
+                      "oldStart": 7,
+                      "oldLines": 3,
+                      "newStart": 7,
+                      "newLines": 9,
+                      "lines": [
+                        " [strata] filling the GPU's expert cache (12288 experts, 23.42 GiB of VRAM) ...\r",
+                        " ready: http://127.0.0.1:8080/v1  (OpenAI: /v1/chat/completions, Anthropic: /v1/messages, context 32768 tokens)\r",
+                        "        open http://127.0.0.1:8080/ in a browser to chat; close this window to stop the model\r",
+                        "+[strata] reading the prompt: 4,169 tokens, 10 s so far\r",
+                        "+[strata] reading the prompt: 4,169 tokens, 20 s so far\r",
+                        "+[strata] done: 1 tokens in 21 s (108.0 tok/s) (length, cancel=False), expert cache 100.0% hit\r",
+                        "+[strata] reading the prompt: 4,169 tokens, 10 s so far\r",
+                        "+[strata] reading the prompt: 4,164 of 4,169 tokens, 20 s so far\r",
+                        "+[strata] done: 1 tokens in 20 s (460.8 tok/s) (length, cancel=False), expert cache 100.0% hit"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\server-coder-iq1_m-arena.out"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_016Bszvot51GuSS5vrrx7wTK",
+            "type": "tool_result",
+            "content": "{\"label\": \"arena-timing\", \"i\": 0, \"wall_s\": 21.0, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 199.4}\r\n{\"label\": \"arena-timing\", \"i\": 1, \"wall_s\": 20.26, \"cache_n\": 0, \"prompt_n\": 4169, \"prompt_per_second\": 206.6}\r\n=====TIMING\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata prefill timing: 4164 tokens, GPU timeline 20569 ms, wall 20655 ms, host staging 7 ms: embed+steps 173 (0.8%) hc read 4124 (20.0%) gdn 4848 (23.6%) qsa proj 2059 (10.0%) qsa indexer 0 (0.0%) qsa select 39 (0.2%) qsa attn 1969 (9.6%) r\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 174 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 84 ms, PLE 155 ms\nstrata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.\nstrata prefill timing: host: chunk setup (PLE rows, the expert stream plan) 11 ms, waiting for each chunk 58 ms, after each chunk (the draft layer, progress) 57 ms, PLE 162 ms",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "export STRATA_ENGRAM_SRC=\"E:\\\\work\\\\AI\\\\EngramHalo.cpp\\\\src\" PYTHONUTF8=1 && /c/conda_envs/strata/python.exe docs/benchmarks/2026-10-05-halo-pp4k.py arena-timing 2 && echo =====TIMING && grep -iE \"prefill timing|timing:|phase|ms\\b\" strata-coder-iq1_m-arena.log | grep -v \"strata serve: prompt\" | tail -30 | cut -c1-240",
+          "description": "Send two pp4096 requests and read the prompt path's phase timing from the engine log",
+          "timeout": 600000
+        }
+      }
+    },
+    {
+      "step_id": 239,
+      "timestamp": "2026-10-05T10:23:42.247Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01131NqynDfdTHGcUwU7WwpG",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01131NqynDfdTHGcUwU7WwpG",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "grep \"strata prefill timing: 4164 tokens\" strata-coder-iq1_m-arena.log | tail -1 | tr ')' ')\\n' | sed 's/^ *//'",
+            "description": "Show the full phase breakdown of the last pp4096 request"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01131NqynDfdTHGcUwU7WwpG",
+            "content": "strata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.6%) host grouping 75 (0.4%) gather 89 (0.4%) wait copy 34 (0.2%) dequant 489 (2.4%) gemm gate/up 1772 (8.9%) gemm down 785 (3.9%) combine 225 (1.1%) ple 187 (0.9%) gdn conv+gates 128 (0.6%) gdn recurrence 799 (4.0%) gdn out proj 1948 (9.8%)\n\n[stdout]\nstrata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.6%) host grouping 75 (0.4%) gather 89 (0.4%) wait copy 34 (0.2%) dequant 489 (2.4%) gemm gate/up 1772 (8.9%) gemm down 785 (3.9%) combine 225 (1.1%) ple 187 (0.9%) gdn conv+gates 128 (0.6%) gdn recurrence 799 (4.0%) gdn out proj 1948 (9.8%)\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 345675,
+        "completion_tokens": 162,
+        "cached_tokens": 345643,
+        "extra": {
+          "cache_creation_input_tokens": 1112,
+          "cache_read_input_tokens": 345643,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1112,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 162,
+              "cache_read_input_tokens": 345643,
+              "cache_creation_input_tokens": 1112,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1112
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "strata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.6%) host grouping 75 (0.4%) gather 89 (0.4%) wait copy 34 (0.2%) dequant 489 (2.4%) gemm gate/up 1772 (8.9%) gemm down 785 (3.9%) combine 225 (1.1%) ple 187 (0.9%) gdn conv+gates 128 (0.6%) gdn recurrence 799 (4.0%) gdn out proj 1948 (9.8%)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01131NqynDfdTHGcUwU7WwpG",
+            "type": "tool_result",
+            "content": "strata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.6%) host grouping 75 (0.4%) gather 89 (0.4%) wait copy 34 (0.2%) dequant 489 (2.4%) gemm gate/up 1772 (8.9%) gemm down 785 (3.9%) combine 225 (1.1%) ple 187 (0.9%) gdn conv+gates 128 (0.6%) gdn recurrence 799 (4.0%) gdn out proj 1948 (9.8%)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "strata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.6%) host grouping 75 (0.4%) gather 89 (0.4%) wait copy 34 (0.2%) dequant 489 (2.4%) gemm gate/up 1772 (8.9%) gemm down 785 (3.9%) combine 225 (1.1%) ple 187 (0.9%) gdn conv+gates 128 (0.6%) gdn recurrence 799 (4.0%) gdn out proj 1948 (9.8%)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01131NqynDfdTHGcUwU7WwpG",
+            "type": "tool_result",
+            "content": "strata prefill timing: 4164 tokens, GPU timeline 19955 ms, wall 20012 ms, host staging 13 ms: embed+steps 11 (0.1%) hc read 3438 (17.2%) gdn 4969 (24.9%) qsa proj 2077 (10.4%) qsa select 37 (0.2%) qsa attn 1986 (10.0%) router+shared 909 (4.6%) host grouping 75 (0.4%) gather 89 (0.4%) wait copy 34 (0.2%) dequant 489 (2.4%) gemm gate/up 1772 (8.9%) gemm down 785 (3.9%) combine 225 (1.1%) ple 187 (0.9%) gdn conv+gates 128 (0.6%) gdn recurrence 799 (4.0%) gdn out proj 1948 (9.8%)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "grep \"strata prefill timing: 4164 tokens\" strata-coder-iq1_m-arena.log | tail -1 | tr ')' ')\\n' | sed 's/^ *//'",
+          "description": "Show the full phase breakdown of the last pp4096 request"
+        }
+      }
+    },
+    {
+      "step_id": 240,
+      "timestamp": "2026-10-05T10:23:57.218Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 346787,
+        "completion_tokens": 3405,
+        "cached_tokens": 346755,
+        "extra": {
+          "cache_creation_input_tokens": 484,
+          "cache_read_input_tokens": 346755,
+          "output_tokens_details": {
+            "thinking_tokens": 587
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 484,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3405,
+              "cache_read_input_tokens": 346755,
+              "cache_creation_input_tokens": 484,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 484
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 241,
+      "timestamp": "2026-10-05T10:24:01.665Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed PowerShell toolu_01FfenqgkdaUjMVJosQgz7Mh",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01FfenqgkdaUjMVJosQgz7Mh",
+          "function_name": "PowerShell",
+          "arguments": {
+            "command": "Set-Location E:\\work\\AI\\Strata; Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like \"*serve\\server.py*\" } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }; Start-Sleep 2; Get-Process strata -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep 3; $env:STRATA_PREFILL_TIMING=\"1\"; $env:ROCBLAS_USE_HIPBLASLT=\"1\"; & C:\\conda_envs\\strata\\python.exe serve\\server.py --engine strata --config strata-coder-iq1_m-arena.json --port 8080 2>&1 | Tee-Object -FilePath server-coder-iq1_m-arena.out",
+            "description": "Restart the arena-mode server with rocBLAS routed to hipBLASLt and the phase timing on",
+            "run_in_background": true,
+            "timeout": 600000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01FfenqgkdaUjMVJosQgz7Mh",
+            "content": "Command running in background with ID: b4dfl1pkf. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\b4dfl1pkf.output. You will be notified when it completes. To check interim output, use Read on that file path.\n\n[metadata] {\"backgroundTaskId\": \"b4dfl1pkf\"}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 346787,
+        "completion_tokens": 3405,
+        "cached_tokens": 346755,
+        "extra": {
+          "cache_creation_input_tokens": 484,
+          "cache_read_input_tokens": 346755,
+          "output_tokens_details": {
+            "thinking_tokens": 587
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 484,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3405,
+              "cache_read_input_tokens": 346755,
+              "cache_creation_input_tokens": 484,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 484
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "PowerShell",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "backgroundTaskId": "b4dfl1pkf"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FfenqgkdaUjMVJosQgz7Mh",
+            "type": "tool_result",
+            "content": "Command running in background with ID: b4dfl1pkf. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\b4dfl1pkf.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "backgroundTaskId": "b4dfl1pkf"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FfenqgkdaUjMVJosQgz7Mh",
+            "type": "tool_result",
+            "content": "Command running in background with ID: b4dfl1pkf. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\b4dfl1pkf.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "Set-Location E:\\work\\AI\\Strata; Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like \"*serve\\server.py*\" } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }; Start-Sleep 2; Get-Process strata -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep 3; $env:STRATA_PREFILL_TIMING=\"1\"; $env:ROCBLAS_USE_HIPBLASLT=\"1\"; & C:\\conda_envs\\strata\\python.exe serve\\server.py --engine strata --config strata-coder-iq1_m-arena.json --port 8080 2>&1 | Tee-Object -FilePath server-coder-iq1_m-arena.out",
+          "description": "Restart the arena-mode server with rocBLAS routed to hipBLASLt and the phase timing on",
+          "run_in_background": true,
+          "timeout": 600000
+        }
+      }
+    },
+    {
+      "step_id": 242,
+      "timestamp": "2026-10-05T10:24:04.676Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_016jA8ehNRiyjDyqjDEZm6ce",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_016jA8ehNRiyjDyqjDEZm6ce",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "for i in $(seq 1 30); do curl -s -m 2 http://127.0.0.1:8080/v1/models >/dev/null 2>&1 || break; sleep 2; done; echo \"old server down after ~$((i*2)) s\"; for i in $(seq 1 120); do if curl -s -m 3 http://127.0.0.1:8080/v1/models | grep -q '\"id\"'; then echo \"READY after ~$((i*5)) s\"; exit 0; fi; sleep 5; done; echo TIMEOUT; tail -n 5 strata-coder-iq1_m-arena.log | cut -c1-200",
+            "description": "Wait for the old server to go down and the hipBLASLt-routed one to answer",
+            "timeout": 700000,
+            "run_in_background": true
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_016jA8ehNRiyjDyqjDEZm6ce",
+            "content": "Command running in background with ID: btbxjcq7r. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\btbxjcq7r.output. You will be notified when it completes. To check interim output, use Read on that file path.\n\n[metadata] {\"noOutputExpected\": false, \"backgroundTaskId\": \"btbxjcq7r\"}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 346787,
+        "completion_tokens": 3405,
+        "cached_tokens": 346755,
+        "extra": {
+          "cache_creation_input_tokens": 484,
+          "cache_read_input_tokens": 346755,
+          "output_tokens_details": {
+            "thinking_tokens": 587
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 484,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3405,
+              "cache_read_input_tokens": 346755,
+              "cache_creation_input_tokens": 484,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 484
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "backgroundTaskId": "btbxjcq7r"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_016jA8ehNRiyjDyqjDEZm6ce",
+            "type": "tool_result",
+            "content": "Command running in background with ID: btbxjcq7r. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\btbxjcq7r.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "backgroundTaskId": "btbxjcq7r"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_016jA8ehNRiyjDyqjDEZm6ce",
+            "type": "tool_result",
+            "content": "Command running in background with ID: btbxjcq7r. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\btbxjcq7r.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "for i in $(seq 1 30); do curl -s -m 2 http://127.0.0.1:8080/v1/models >/dev/null 2>&1 || break; sleep 2; done; echo \"old server down after ~$((i*2)) s\"; for i in $(seq 1 120); do if curl -s -m 3 http://127.0.0.1:8080/v1/models | grep -q '\"id\"'; then echo \"READY after ~$((i*5)) s\"; exit 0; fi; sleep 5; done; echo TIMEOUT; tail -n 5 strata-coder-iq1_m-arena.log | cut -c1-200",
+          "description": "Wait for the old server to go down and the hipBLASLt-routed one to answer",
+          "timeout": 700000,
+          "run_in_background": true
+        }
+      }
+    },
+    {
+      "step_id": 243,
+      "timestamp": "2026-10-05T10:24:35.029Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Edit toolu_013LMwM9EDzXLT5XxArKMS21",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_013LMwM9EDzXLT5XxArKMS21",
+          "function_name": "Edit",
+          "arguments": {
+            "replace_all": false,
+            "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "old_string": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "new_string": "## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\n\nThe user set the BIOS split to 64/64 and rebooted. Windows now sees 63.6 GiB (50.7 free at idle), the registry\n64 GiB dedicated for the GPU, HIP 99.7 GiB total. The default mode (`strata-coder-iq1_m-arena.json`: no\n`--mmap-experts`, the experts pinned in RAM) started in **15 s**: `expert arena: cudaHostRegister PORTABLE ok;\nlarge pages refused ... using 4 KB pages`, `loaded 23.42 GiB at 5.94 GiB/s`, `expert cache auto: 46.43 GiB free ->\n12288 slots` (every expert on the GPU again), 22.7 GiB of VRAM left; the engine's working set 24.5 GiB, 22.5 GiB\nof RAM free with it running. The same benchmark (`benchmarks/2026-10-05-halo-coder-iq1_m-arena.json`):\n\n| | 96/32, mmap (above) | **64/64, arena (pinned RAM)** | this PC, llama.cpp | RTX 3060 Laptop, Strata |\n|---|---|---|---|---|\n| model load to listening | 45 s | **15 s** | 30 s | 11.5 s |\n| cold first request, decode | 36.8 t/s | **35.0 t/s**, 88.7% acc | 26.1 | 43.3 |\n| fresh code prompt, decode | 34.7 t/s | **33.0 t/s**, 81.4% acc | 21.9 | 42.1 |\n| prefill @ ~4.75K | 146.1 t/s | **208.7 t/s** | 321.5 | 961.3 |\n| decode tail after it | 30.2 t/s | **31.3 t/s** | 20.8 | 39.3 |\n| pp4096 @ d0 | 146.4 | **208.8** | 318.1 | 926.9 |\n| tg128 @ d0 (MTP here) | 27.3 | **26.5** | 20.92 | 36.2 |\n| 16384-token prefix | 143.3 | **213.3** | | |\n| pp4096 @ d16384 | ~137 (derived) | **~204** (derived: 4037 tokens in 96.6 - 76.9 s); 211.4 over all 20421 | 269.9 | ~1126 |\n| tg128 @ d16384 (MTP here) | 26.9 | **27.5** | 17.98 | 37.4 |\n\nSo the file-cache starvation was worth 1.45x on prompts (146 -> 209-214 t/s) and nothing on decode, as\nexpected. Prompts are still 1.5x slower than llama.cpp on this PC. Three more measurements say why, and it is not\nthe transfer:\n\n- **Host-to-device copies are fast here** (`docs/benchmarks/2026-10-05-halo-hip-h2d.hip`, host-clock timed,\n  2 GiB): `hipMemcpy` from pinned memory 63-74 GB/s, from pageable 19.5 GB/s, `hipMemcpyAsync` + stream sync\n  64-72 GB/s, a kernel reading mapped host memory into device memory 94-100 GB/s, 512 copies of 2.66 MB (one\n  Coder expert blob each) 71.5 GB/s. The earlier \"0 ms\" event timing of H2D was the event, not the copy. A chunk's\n  23.4 GB of experts take about 0.35 s to move; the prompt path spends 38 s on a chunk.\n- **The prompt path's own phase timing** (`STRATA_PREFILL_TIMING=1`, a 4164-token prompt at 207 t/s, GPU timeline\n  19,955 ms, host work under 300 ms): hc read 3,438 ms (17.2%), GDN 4,969 (24.9%: out proj 1,948, recurrence 799,\n  conv+gates 128), QSA proj 2,077 (10.4%), QSA attn 1,986 (10.0%), router+shared 909 (4.6%), the expert GEMMs\n  gate/up 1,772 (8.9%) + down 785 (3.9%) + dequant 489 (2.4%), gather 89, **wait copy 34 (0.2%)**, combine 225,\n  PLE 187. The experts' streaming is 0.6% of the time. The time is in the dense parts: the hipBLAS GEMMs (QSA and\n  GDN projections, the router, the expert GEMMs: about 7.5 s of 20) and the engine's own kernels for the\n  hyper-connection read, the GDN recurrence and the FP32 prompt attention (about 8 s).\n- **hipBLAS on gfx1151 runs at 2.0-2.6 TFLOP/s; routed to hipBLASLt it runs at 4.0** (the GEMM probe at the\n  engine's shapes, T = 512 and 8192, BF16 and FP16: `ROCBLAS_USE_HIPBLASLT=1`, an environment variable rocBLAS\n  honours, no code change; results correct, 3e-6 relative). The engine's `cublasGemmEx` calls go through hipBLAS ->\n  rocBLAS, so this switch reaches every dense GEMM of the prompt path. The 8060S's matrix-core peak is far above\n  either number: rocBLAS's gfx1151 kernels are plainly not tuned, hipBLASLt's less so.\n\n## The RTX 5090 over Thunderbolt (not pursued)"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_013LMwM9EDzXLT5XxArKMS21",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully.\n\n[metadata] {\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"oldString\": \"## The RTX 5090 over Thunderbolt (not pursued)\", \"newString\": \"## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\\n\\nThe user set the BIOS split to 64/64 and rebooted. Windows now sees 63.6 GiB (50.7 free at idle), the registry\\n64 GiB dedicated for the GPU, HIP 99.7 GiB total. The default mode (`strata-coder-iq1_m-arena.json`: no\\n`--mmap-experts`, the experts pinned in RAM) started in **15 s**: `expert arena: cudaHostRegister PORTABLE ok;\\nlarge pages refused ... using 4 KB pages`, `loaded 23.42 GiB at 5.94 GiB/s`, `expert cache auto: 46.43 GiB free ->\\n12288 slots` (every expert on the GPU again), 22.7 GiB of VRAM left; the engine's working set 24.5 GiB, 22.5 GiB\\nof RAM free with it running. The same benchmark (`benchmarks/2026-10-05-halo-coder-iq1_m-arena.json`):\\n\\n| | 96/32, mmap (above) | **64/64, arena (pinned RAM)** | this PC, llama.cpp | RTX 3060 Laptop, Strata |\\n|---|---|---|---|---|\\n| model load to listening | 45 s | **15 s** | 30 s | 11.5 s |\\n| cold first request, decode | 36.8 t/s | **35.0 t/s**, 88.7% acc | 26.1 | 43.3 |\\n| fresh code prompt, decode | 34.7 t/s | **33.0 t/s**, 81.4% acc | 21.9 | 42.1 |\\n| prefill @ ~4.75K | 146.1 t/s | **208.7 t/s** | 321.5 | 961.3 |\\n| decode tail after it | 30.2 t/s | **31.3 t/s** | 20.8 | 39.3 |\\n| pp4096 @ d0 | 146.4 | **208.8** | 318.1 | 926.9 |\\n| tg128 @ d0 (MTP here) | 27.3 | **26.5** | 20.92 | 36.2 |\\n| 16384-token prefix | 143.3 | **213.3** | | |\\n| pp4096 @ d16384 | ~137 (derived) | **~204** (derived: 4037 tokens in 96.6 - 76.9 s); 211.4 over all 20421 | 269.9 | ~1126 |\\n| tg128 @ d16384 (MTP here) | 26.9 | **27.5** | 17.98 | 37.4 |\\n\\nSo the file-cache starvation was worth 1.45x on prompts (146 -> 209-214 t/s) and nothing on decode, as\\nexpected. Prompts are still 1.5x slower than llama.cpp on this PC. Three more measurements say why, and it is not\\nthe transfer:\\n\\n- **Host-to-device copies are fast here** (`docs/benchmarks/2026-10-05-halo-hip-h2d.hip`, host-clock timed,\\n  2 GiB): `hipMemcpy` from pinned memory 63-74 GB/s, from pageable 19.5 GB/s, `hipMemcpyAsync` + stream sync\\n  64-72 GB/s, a kernel reading mapped host memory into device memory 94-100 GB/s, 512 copies of 2.66 MB (one\\n  Coder expert blob each) 71.5 GB/s. The earlier \\\"0 ms\\\" event timing of H2D was the event, not the copy. A chunk's\\n  23.4 GB of experts take about 0.35 s to move; the prompt path spends 38 s on a chunk.\\n- **The prompt path's own phase timing** (`STRATA_PREFILL_TIMING=1`, a 4164-token prompt at 207 t/s, GPU timeline\\n  19,955 ms, host work under 300 ms): hc read 3,438 ms (17.2%), GDN 4,969 (24.9%: out proj 1,948, recurrence 799,\\n  conv+gates 128), QSA proj 2,077 (10.4%), QSA attn 1,986 (10.0%), router+shared 909 (4.6%), the expert GEMMs\\n  gate/up 1,772 (8.9%) + down 785 (3.9%) + dequant 489 (2.4%), gather 89, **wait copy 34 (0.2%)**, combine 225,\\n  PLE 187. The experts' streaming is 0.6% of the time. The time is in the dense parts: the hipBLAS GEMMs (QSA and\\n  GDN projections, the router, the expert GEMMs: about 7.5 s of 20) and the engine's own kernels for the\\n  hyper-connection read, the GDN recurrence and the FP32 prompt attention (about 8 s).\\n- **hipBLAS on gfx1151 runs at 2.0-2.6 TFLOP/s; routed to hipBLASLt it runs at 4.0** (the GEMM probe at the\\n  engine's shapes, T = 512 and 8192, BF16 and FP16: `ROCBLAS_USE_HIPBLASLT=1`, an environment variable rocBLAS\\n  honours, no code change; results correct, 3e-6 relative). The engine's `cublasGemmEx` calls go through hipBLAS ->\\n  rocBLAS, so this switch reaches every dense GEMM of the prompt path. The 8060S's matrix-core peak is far above\\n  either number: rocBLAS's gfx1151 kernels are plainly not tuned, hipBLASLt's less so.\\n\\n## The RTX 5090 over Thunderbolt (not pursued)\", \"originalFile\": null, \"structuredPatch\": [{\"oldStart\": 364, \"oldLines\": 6, \"newStart\": 364, \"newLines\": 50, \"lines\": [\" prompt path that takes resident experts from the cache instead of the source; that is a code change with its own\", \" measurement, not a setting.\", \" \", \"+## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\", \"+\", \"+The user set the BIOS split to 64/64 and rebooted. Windows now sees 63.6 GiB (50.7 free at idle), the registry\", \"+64 GiB dedicated for the GPU, HIP 99.7 GiB total. The default mode (`strata-coder-iq1_m-arena.json`: no\", \"+`--mmap-experts`, the experts pinned in RAM) started in **15 s**: `expert arena: cudaHostRegister PORTABLE ok;\", \"+large pages refused ... using 4 KB pages`, `loaded 23.42 GiB at 5.94 GiB/s`, `expert cache auto: 46.43 GiB free ->\", \"+12288 slots` (every expert on the GPU again), 22.7 GiB of VRAM left; the engine's working set 24.5 GiB, 22.5 GiB\", \"+of RAM free with it running. The same benchmark (`benchmarks/2026-10-05-halo-coder-iq1_m-arena.json`):\", \"+\", \"+| | 96/32, mmap (above) | **64/64, arena (pinned RAM)** | this PC, llama.cpp | RTX 3060 Laptop, Strata |\", \"+|---|---|---|---|---|\", \"+| model load to listening | 45 s | **15 s** | 30 s | 11.5 s |\", \"+| cold first request, decode | 36.8 t/s | **35.0 t/s**, 88.7% acc | 26.1 | 43.3 |\", \"+| fresh code prompt, decode | 34.7 t/s | **33.0 t/s**, 81.4% acc | 21.9 | 42.1 |\", \"+| prefill @ ~4.75K | 146.1 t/s | **208.7 t/s** | 321.5 | 961.3 |\", \"+| decode tail after it | 30.2 t/s | **31.3 t/s** | 20.8 | 39.3 |\", \"+| pp4096 @ d0 | 146.4 | **208.8** | 318.1 | 926.9 |\", \"+| tg128 @ d0 (MTP here) | 27.3 | **26.5** | 20.92 | 36.2 |\", \"+| 16384-token prefix | 143.3 | **213.3** | | |\", \"+| pp4096 @ d16384 | ~137 (derived) | **~204** (derived: 4037 tokens in 96.6 - 76.9 s); 211.4 over all 20421 | 269.9 | ~1126 |\", \"+| tg128 @ d16384 (MTP here) | 26.9 | **27.5** | 17.98 | 37.4 |\", \"+\", \"+So the file-cache starvation was worth 1.45x on prompts (146 -> 209-214 t/s) and nothing on decode, as\", \"+expected. Prompts are still 1.5x slower than llama.cpp on this PC. Three more measurements say why, and it is not\", \"+the transfer:\", \"+\", \"+- **Host-to-device copies are fast here** (`docs/benchmarks/2026-10-05-halo-hip-h2d.hip`, host-clock timed,\", \"+  2 GiB): `hipMemcpy` from pinned memory 63-74 GB/s, from pageable 19.5 GB/s, `hipMemcpyAsync` + stream sync\", \"+  64-72 GB/s, a kernel reading mapped host memory into device memory 94-100 GB/s, 512 copies of 2.66 MB (one\", \"+  Coder expert blob each) 71.5 GB/s. The earlier \\\"0 ms\\\" event timing of H2D was the event, not the copy. A chunk's\", \"+  23.4 GB of experts take about 0.35 s to move; the prompt path spends 38 s on a chunk.\", \"+- **The prompt path's own phase timing** (`STRATA_PREFILL_TIMING=1`, a 4164-token prompt at 207 t/s, GPU timeline\", \"+  19,955 ms, host work under 300 ms): hc read 3,438 ms (17.2%), GDN 4,969 (24.9%: out proj 1,948, recurrence 799,\", \"+  conv+gates 128), QSA proj 2,077 (10.4%), QSA attn 1,986 (10.0%), router+shared 909 (4.6%), the expert GEMMs\", \"+  gate/up 1,772 (8.9%) + down 785 (3.9%) + dequant 489 (2.4%), gather 89, **wait copy 34 (0.2%)**, combine 225,\", \"+  PLE 187. The experts' streaming is 0.6% of the time. The time is in the dense parts: the hipBLAS GEMMs (QSA and\", \"+  GDN projections, the router, the expert GEMMs: about 7.5 s of 20) and the engine's own kernels for the\", \"+  hyper-connection read, the GDN recurrence and the FP32 prompt attention (about 8 s).\", \"+- **hipBLAS on gfx1151 runs at 2.0-2.6 TFLOP/s; routed to hipBLASLt it runs at 4.0** (the GEMM probe at the\", \"+  engine's shapes, T = 512 and 8192, BF16 and FP16: `ROCBLAS_USE_HIPBLASLT=1`, an environment variable rocBLAS\", \"+  honours, no code change; results correct, 3e-6 relative). The engine's `cublasGemmEx` calls go through hipBLAS ->\", \"+  rocBLAS, so this switch reaches every dense GEMM of the prompt path. The 8060S's matrix-core peak is far above\", \"+  either number: rocBLAS's gfx1151 kernels are plainly not tuned, hipBLASLt's less so.\", \"+\", \" ## The RTX 5090 over Thunderbolt (not pursued)\", \" \", \" Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's\"]}], \"userModified\": false, \"replaceAll\": false, \"contentNotInModelContext\": true}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 346787,
+        "completion_tokens": 3405,
+        "cached_tokens": 346755,
+        "extra": {
+          "cache_creation_input_tokens": 484,
+          "cache_read_input_tokens": 346755,
+          "output_tokens_details": {
+            "thinking_tokens": 587
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 484,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3405,
+              "cache_read_input_tokens": 346755,
+              "cache_creation_input_tokens": 484,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 484
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Edit",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "newString": "## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\n\nThe user set the BIOS split to 64/64 and rebooted. Windows now sees 63.6 GiB (50.7 free at idle), the registry\n64 GiB dedicated for the GPU, HIP 99.7 GiB total. The default mode (`strata-coder-iq1_m-arena.json`: no\n`--mmap-experts`, the experts pinned in RAM) started in **15 s**: `expert arena: cudaHostRegister PORTABLE ok;\nlarge pages refused ... using 4 KB pages`, `loaded 23.42 GiB at 5.94 GiB/s`, `expert cache auto: 46.43 GiB free ->\n12288 slots` (every expert on the GPU again), 22.7 GiB of VRAM left; the engine's working set 24.5 GiB, 22.5 GiB\nof RAM free with it running. The same benchmark (`benchmarks/2026-10-05-halo-coder-iq1_m-arena.json`):\n\n| | 96/32, mmap (above) | **64/64, arena (pinned RAM)** | this PC, llama.cpp | RTX 3060 Laptop, Strata |\n|---|---|---|---|---|\n| model load to listening | 45 s | **15 s** | 30 s | 11.5 s |\n| cold first request, decode | 36.8 t/s | **35.0 t/s**, 88.7% acc | 26.1 | 43.3 |\n| fresh code prompt, decode | 34.7 t/s | **33.0 t/s**, 81.4% acc | 21.9 | 42.1 |\n| prefill @ ~4.75K | 146.1 t/s | **208.7 t/s** | 321.5 | 961.3 |\n| decode tail after it | 30.2 t/s | **31.3 t/s** | 20.8 | 39.3 |\n| pp4096 @ d0 | 146.4 | **208.8** | 318.1 | 926.9 |\n| tg128 @ d0 (MTP here) | 27.3 | **26.5** | 20.92 | 36.2 |\n| 16384-token prefix | 143.3 | **213.3** | | |\n| pp4096 @ d16384 | ~137 (derived) | **~204** (derived: 4037 tokens in 96.6 - 76.9 s); 211.4 over all 20421 | 269.9 | ~1126 |\n| tg128 @ d16384 (MTP here) | 26.9 | **27.5** | 17.98 | 37.4 |\n\nSo the file-cache starvation was worth 1.45x on prompts (146 -> 209-214 t/s) and nothing on decode, as\nexpected. Prompts are still 1.5x slower than llama.cpp on this PC. Three more measurements say why, and it is not\nthe transfer:\n\n- **Host-to-device copies are fast here** (`docs/benchmarks/2026-10-05-halo-hip-h2d.hip`, host-clock timed,\n  2 GiB): `hipMemcpy` from pinned memory 63-74 GB/s, from pageable 19.5 GB/s, `hipMemcpyAsync` + stream sync\n  64-72 GB/s, a kernel reading mapped host memory into device memory 94-100 GB/s, 512 copies of 2.66 MB (one\n  Coder expert blob each) 71.5 GB/s. The earlier \"0 ms\" event timing of H2D was the event, not the copy. A chunk's\n  23.4 GB of experts take about 0.35 s to move; the prompt path spends 38 s on a chunk.\n- **The prompt path's own phase timing** (`STRATA_PREFILL_TIMING=1`, a 4164-token prompt at 207 t/s, GPU timeline\n  19,955 ms, host work under 300 ms): hc read 3,438 ms (17.2%), GDN 4,969 (24.9%: out proj 1,948, recurrence 799,\n  conv+gates 128), QSA proj 2,077 (10.4%), QSA attn 1,986 (10.0%), router+shared 909 (4.6%), the expert GEMMs\n  gate/up 1,772 (8.9%) + down 785 (3.9%) + dequant 489 (2.4%), gather 89, **wait copy 34 (0.2%)**, combine 225,\n  PLE 187. The experts' streaming is 0.6% of the time. The time is in the dense parts: the hipBLAS GEMMs (QSA and\n  GDN projections, the router, the expert GEMMs: about 7.5 s of 20) and the engine's own kernels for the\n  hyper-connection read, the GDN recurrence and the FP32 prompt attention (about 8 s).\n- **hipBLAS on gfx1151 runs at 2.0-2.6 TFLOP/s; routed to hipBLASLt it runs at 4.0** (the GEMM probe at the\n  engine's shapes, T = 512 and 8192, BF16 and FP16: `ROCBLAS_USE_HIPBLASLT=1`, an environment variable rocBLAS\n  honours, no code change; results correct, 3e-6 relative). The engine's `cublasGemmEx` calls go through hipBLAS ->\n  rocBLAS, so this switch reaches every dense GEMM of the prompt path. The 8060S's matrix-core peak is far above\n  either number: rocBLAS's gfx1151 kernels are plainly not tuned, hipBLASLt's less so.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 364,
+                "oldLines": 6,
+                "newStart": 364,
+                "newLines": 50,
+                "lines": [
+                  " prompt path that takes resident experts from the cache instead of the source; that is a code change with its own",
+                  " measurement, not a setting.",
+                  " ",
+                  "+## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)",
+                  "+",
+                  "+The user set the BIOS split to 64/64 and rebooted. Windows now sees 63.6 GiB (50.7 free at idle), the registry",
+                  "+64 GiB dedicated for the GPU, HIP 99.7 GiB total. The default mode (`strata-coder-iq1_m-arena.json`: no",
+                  "+`--mmap-experts`, the experts pinned in RAM) started in **15 s**: `expert arena: cudaHostRegister PORTABLE ok;",
+                  "+large pages refused ... using 4 KB pages`, `loaded 23.42 GiB at 5.94 GiB/s`, `expert cache auto: 46.43 GiB free ->",
+                  "+12288 slots` (every expert on the GPU again), 22.7 GiB of VRAM left; the engine's working set 24.5 GiB, 22.5 GiB",
+                  "+of RAM free with it running. The same benchmark (`benchmarks/2026-10-05-halo-coder-iq1_m-arena.json`):",
+                  "+",
+                  "+| | 96/32, mmap (above) | **64/64, arena (pinned RAM)** | this PC, llama.cpp | RTX 3060 Laptop, Strata |",
+                  "+|---|---|---|---|---|",
+                  "+| model load to listening | 45 s | **15 s** | 30 s | 11.5 s |",
+                  "+| cold first request, decode | 36.8 t/s | **35.0 t/s**, 88.7% acc | 26.1 | 43.3 |",
+                  "+| fresh code prompt, decode | 34.7 t/s | **33.0 t/s**, 81.4% acc | 21.9 | 42.1 |",
+                  "+| prefill @ ~4.75K | 146.1 t/s | **208.7 t/s** | 321.5 | 961.3 |",
+                  "+| decode tail after it | 30.2 t/s | **31.3 t/s** | 20.8 | 39.3 |",
+                  "+| pp4096 @ d0 | 146.4 | **208.8** | 318.1 | 926.9 |",
+                  "+| tg128 @ d0 (MTP here) | 27.3 | **26.5** | 20.92 | 36.2 |",
+                  "+| 16384-token prefix | 143.3 | **213.3** | | |",
+                  "+| pp4096 @ d16384 | ~137 (derived) | **~204** (derived: 4037 tokens in 96.6 - 76.9 s); 211.4 over all 20421 | 269.9 | ~1126 |",
+                  "+| tg128 @ d16384 (MTP here) | 26.9 | **27.5** | 17.98 | 37.4 |",
+                  "+",
+                  "+So the file-cache starvation was worth 1.45x on prompts (146 -> 209-214 t/s) and nothing on decode, as",
+                  "+expected. Prompts are still 1.5x slower than llama.cpp on this PC. Three more measurements say why, and it is not",
+                  "+the transfer:",
+                  "+",
+                  "+- **Host-to-device copies are fast here** (`docs/benchmarks/2026-10-05-halo-hip-h2d.hip`, host-clock timed,",
+                  "+  2 GiB): `hipMemcpy` from pinned memory 63-74 GB/s, from pageable 19.5 GB/s, `hipMemcpyAsync` + stream sync",
+                  "+  64-72 GB/s, a kernel reading mapped host memory into device memory 94-100 GB/s, 512 copies of 2.66 MB (one",
+                  "+  Coder expert blob each) 71.5 GB/s. The earlier \"0 ms\" event timing of H2D was the event, not the copy. A chunk's",
+                  "+  23.4 GB of experts take about 0.35 s to move; the prompt path spends 38 s on a chunk.",
+                  "+- **The prompt path's own phase timing** (`STRATA_PREFILL_TIMING=1`, a 4164-token prompt at 207 t/s, GPU timeline",
+                  "+  19,955 ms, host work under 300 ms): hc read 3,438 ms (17.2%), GDN 4,969 (24.9%: out proj 1,948, recurrence 799,",
+                  "+  conv+gates 128), QSA proj 2,077 (10.4%), QSA attn 1,986 (10.0%), router+shared 909 (4.6%), the expert GEMMs",
+                  "+  gate/up 1,772 (8.9%) + down 785 (3.9%) + dequant 489 (2.4%), gather 89, **wait copy 34 (0.2%)**, combine 225,",
+                  "+  PLE 187. The experts' streaming is 0.6% of the time. The time is in the dense parts: the hipBLAS GEMMs (QSA and",
+                  "+  GDN projections, the router, the expert GEMMs: about 7.5 s of 20) and the engine's own kernels for the",
+                  "+  hyper-connection read, the GDN recurrence and the FP32 prompt attention (about 8 s).",
+                  "+- **hipBLAS on gfx1151 runs at 2.0-2.6 TFLOP/s; routed to hipBLASLt it runs at 4.0** (the GEMM probe at the",
+                  "+  engine's shapes, T = 512 and 8192, BF16 and FP16: `ROCBLAS_USE_HIPBLASLT=1`, an environment variable rocBLAS",
+                  "+  honours, no code change; results correct, 3e-6 relative). The engine's `cublasGemmEx` calls go through hipBLAS ->",
+                  "+  rocBLAS, so this switch reaches every dense GEMM of the prompt path. The 8060S's matrix-core peak is far above",
+                  "+  either number: rocBLAS's gfx1151 kernels are plainly not tuned, hipBLASLt's less so.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_013LMwM9EDzXLT5XxArKMS21",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "newString": "## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\n\nThe user set the BIOS split to 64/64 and rebooted. Windows now sees 63.6 GiB (50.7 free at idle), the registry\n64 GiB dedicated for the GPU, HIP 99.7 GiB total. The default mode (`strata-coder-iq1_m-arena.json`: no\n`--mmap-experts`, the experts pinned in RAM) started in **15 s**: `expert arena: cudaHostRegister PORTABLE ok;\nlarge pages refused ... using 4 KB pages`, `loaded 23.42 GiB at 5.94 GiB/s`, `expert cache auto: 46.43 GiB free ->\n12288 slots` (every expert on the GPU again), 22.7 GiB of VRAM left; the engine's working set 24.5 GiB, 22.5 GiB\nof RAM free with it running. The same benchmark (`benchmarks/2026-10-05-halo-coder-iq1_m-arena.json`):\n\n| | 96/32, mmap (above) | **64/64, arena (pinned RAM)** | this PC, llama.cpp | RTX 3060 Laptop, Strata |\n|---|---|---|---|---|\n| model load to listening | 45 s | **15 s** | 30 s | 11.5 s |\n| cold first request, decode | 36.8 t/s | **35.0 t/s**, 88.7% acc | 26.1 | 43.3 |\n| fresh code prompt, decode | 34.7 t/s | **33.0 t/s**, 81.4% acc | 21.9 | 42.1 |\n| prefill @ ~4.75K | 146.1 t/s | **208.7 t/s** | 321.5 | 961.3 |\n| decode tail after it | 30.2 t/s | **31.3 t/s** | 20.8 | 39.3 |\n| pp4096 @ d0 | 146.4 | **208.8** | 318.1 | 926.9 |\n| tg128 @ d0 (MTP here) | 27.3 | **26.5** | 20.92 | 36.2 |\n| 16384-token prefix | 143.3 | **213.3** | | |\n| pp4096 @ d16384 | ~137 (derived) | **~204** (derived: 4037 tokens in 96.6 - 76.9 s); 211.4 over all 20421 | 269.9 | ~1126 |\n| tg128 @ d16384 (MTP here) | 26.9 | **27.5** | 17.98 | 37.4 |\n\nSo the file-cache starvation was worth 1.45x on prompts (146 -> 209-214 t/s) and nothing on decode, as\nexpected. Prompts are still 1.5x slower than llama.cpp on this PC. Three more measurements say why, and it is not\nthe transfer:\n\n- **Host-to-device copies are fast here** (`docs/benchmarks/2026-10-05-halo-hip-h2d.hip`, host-clock timed,\n  2 GiB): `hipMemcpy` from pinned memory 63-74 GB/s, from pageable 19.5 GB/s, `hipMemcpyAsync` + stream sync\n  64-72 GB/s, a kernel reading mapped host memory into device memory 94-100 GB/s, 512 copies of 2.66 MB (one\n  Coder expert blob each) 71.5 GB/s. The earlier \"0 ms\" event timing of H2D was the event, not the copy. A chunk's\n  23.4 GB of experts take about 0.35 s to move; the prompt path spends 38 s on a chunk.\n- **The prompt path's own phase timing** (`STRATA_PREFILL_TIMING=1`, a 4164-token prompt at 207 t/s, GPU timeline\n  19,955 ms, host work under 300 ms): hc read 3,438 ms (17.2%), GDN 4,969 (24.9%: out proj 1,948, recurrence 799,\n  conv+gates 128), QSA proj 2,077 (10.4%), QSA attn 1,986 (10.0%), router+shared 909 (4.6%), the expert GEMMs\n  gate/up 1,772 (8.9%) + down 785 (3.9%) + dequant 489 (2.4%), gather 89, **wait copy 34 (0.2%)**, combine 225,\n  PLE 187. The experts' streaming is 0.6% of the time. The time is in the dense parts: the hipBLAS GEMMs (QSA and\n  GDN projections, the router, the expert GEMMs: about 7.5 s of 20) and the engine's own kernels for the\n  hyper-connection read, the GDN recurrence and the FP32 prompt attention (about 8 s).\n- **hipBLAS on gfx1151 runs at 2.0-2.6 TFLOP/s; routed to hipBLASLt it runs at 4.0** (the GEMM probe at the\n  engine's shapes, T = 512 and 8192, BF16 and FP16: `ROCBLAS_USE_HIPBLASLT=1`, an environment variable rocBLAS\n  honours, no code change; results correct, 3e-6 relative). The engine's `cublasGemmEx` calls go through hipBLAS ->\n  rocBLAS, so this switch reaches every dense GEMM of the prompt path. The 8060S's matrix-core peak is far above\n  either number: rocBLAS's gfx1151 kernels are plainly not tuned, hipBLASLt's less so.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 364,
+                "oldLines": 6,
+                "newStart": 364,
+                "newLines": 50,
+                "lines": [
+                  " prompt path that takes resident experts from the cache instead of the source; that is a code change with its own",
+                  " measurement, not a setting.",
+                  " ",
+                  "+## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)",
+                  "+",
+                  "+The user set the BIOS split to 64/64 and rebooted. Windows now sees 63.6 GiB (50.7 free at idle), the registry",
+                  "+64 GiB dedicated for the GPU, HIP 99.7 GiB total. The default mode (`strata-coder-iq1_m-arena.json`: no",
+                  "+`--mmap-experts`, the experts pinned in RAM) started in **15 s**: `expert arena: cudaHostRegister PORTABLE ok;",
+                  "+large pages refused ... using 4 KB pages`, `loaded 23.42 GiB at 5.94 GiB/s`, `expert cache auto: 46.43 GiB free ->",
+                  "+12288 slots` (every expert on the GPU again), 22.7 GiB of VRAM left; the engine's working set 24.5 GiB, 22.5 GiB",
+                  "+of RAM free with it running. The same benchmark (`benchmarks/2026-10-05-halo-coder-iq1_m-arena.json`):",
+                  "+",
+                  "+| | 96/32, mmap (above) | **64/64, arena (pinned RAM)** | this PC, llama.cpp | RTX 3060 Laptop, Strata |",
+                  "+|---|---|---|---|---|",
+                  "+| model load to listening | 45 s | **15 s** | 30 s | 11.5 s |",
+                  "+| cold first request, decode | 36.8 t/s | **35.0 t/s**, 88.7% acc | 26.1 | 43.3 |",
+                  "+| fresh code prompt, decode | 34.7 t/s | **33.0 t/s**, 81.4% acc | 21.9 | 42.1 |",
+                  "+| prefill @ ~4.75K | 146.1 t/s | **208.7 t/s** | 321.5 | 961.3 |",
+                  "+| decode tail after it | 30.2 t/s | **31.3 t/s** | 20.8 | 39.3 |",
+                  "+| pp4096 @ d0 | 146.4 | **208.8** | 318.1 | 926.9 |",
+                  "+| tg128 @ d0 (MTP here) | 27.3 | **26.5** | 20.92 | 36.2 |",
+                  "+| 16384-token prefix | 143.3 | **213.3** | | |",
+                  "+| pp4096 @ d16384 | ~137 (derived) | **~204** (derived: 4037 tokens in 96.6 - 76.9 s); 211.4 over all 20421 | 269.9 | ~1126 |",
+                  "+| tg128 @ d16384 (MTP here) | 26.9 | **27.5** | 17.98 | 37.4 |",
+                  "+",
+                  "+So the file-cache starvation was worth 1.45x on prompts (146 -> 209-214 t/s) and nothing on decode, as",
+                  "+expected. Prompts are still 1.5x slower than llama.cpp on this PC. Three more measurements say why, and it is not",
+                  "+the transfer:",
+                  "+",
+                  "+- **Host-to-device copies are fast here** (`docs/benchmarks/2026-10-05-halo-hip-h2d.hip`, host-clock timed,",
+                  "+  2 GiB): `hipMemcpy` from pinned memory 63-74 GB/s, from pageable 19.5 GB/s, `hipMemcpyAsync` + stream sync",
+                  "+  64-72 GB/s, a kernel reading mapped host memory into device memory 94-100 GB/s, 512 copies of 2.66 MB (one",
+                  "+  Coder expert blob each) 71.5 GB/s. The earlier \"0 ms\" event timing of H2D was the event, not the copy. A chunk's",
+                  "+  23.4 GB of experts take about 0.35 s to move; the prompt path spends 38 s on a chunk.",
+                  "+- **The prompt path's own phase timing** (`STRATA_PREFILL_TIMING=1`, a 4164-token prompt at 207 t/s, GPU timeline",
+                  "+  19,955 ms, host work under 300 ms): hc read 3,438 ms (17.2%), GDN 4,969 (24.9%: out proj 1,948, recurrence 799,",
+                  "+  conv+gates 128), QSA proj 2,077 (10.4%), QSA attn 1,986 (10.0%), router+shared 909 (4.6%), the expert GEMMs",
+                  "+  gate/up 1,772 (8.9%) + down 785 (3.9%) + dequant 489 (2.4%), gather 89, **wait copy 34 (0.2%)**, combine 225,",
+                  "+  PLE 187. The experts' streaming is 0.6% of the time. The time is in the dense parts: the hipBLAS GEMMs (QSA and",
+                  "+  GDN projections, the router, the expert GEMMs: about 7.5 s of 20) and the engine's own kernels for the",
+                  "+  hyper-connection read, the GDN recurrence and the FP32 prompt attention (about 8 s).",
+                  "+- **hipBLAS on gfx1151 runs at 2.0-2.6 TFLOP/s; routed to hipBLASLt it runs at 4.0** (the GEMM probe at the",
+                  "+  engine's shapes, T = 512 and 8192, BF16 and FP16: `ROCBLAS_USE_HIPBLASLT=1`, an environment variable rocBLAS",
+                  "+  honours, no code change; results correct, 3e-6 relative). The engine's `cublasGemmEx` calls go through hipBLAS ->",
+                  "+  rocBLAS, so this switch reaches every dense GEMM of the prompt path. The 8060S's matrix-core peak is far above",
+                  "+  either number: rocBLAS's gfx1151 kernels are plainly not tuned, hipBLASLt's less so.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_013LMwM9EDzXLT5XxArKMS21",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "raw_arguments": {
+          "replace_all": false,
+          "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+          "old_string": "## The RTX 5090 over Thunderbolt (not pursued)",
+          "new_string": "## After the BIOS change: 64 GiB / 64 GiB (2026-10-05, later)\n\nThe user set the BIOS split to 64/64 and rebooted. Windows now sees 63.6 GiB (50.7 free at idle), the registry\n64 GiB dedicated for the GPU, HIP 99.7 GiB total. The default mode (`strata-coder-iq1_m-arena.json`: no\n`--mmap-experts`, the experts pinned in RAM) started in **15 s**: `expert arena: cudaHostRegister PORTABLE ok;\nlarge pages refused ... using 4 KB pages`, `loaded 23.42 GiB at 5.94 GiB/s`, `expert cache auto: 46.43 GiB free ->\n12288 slots` (every expert on the GPU again), 22.7 GiB of VRAM left; the engine's working set 24.5 GiB, 22.5 GiB\nof RAM free with it running. The same benchmark (`benchmarks/2026-10-05-halo-coder-iq1_m-arena.json`):\n\n| | 96/32, mmap (above) | **64/64, arena (pinned RAM)** | this PC, llama.cpp | RTX 3060 Laptop, Strata |\n|---|---|---|---|---|\n| model load to listening | 45 s | **15 s** | 30 s | 11.5 s |\n| cold first request, decode | 36.8 t/s | **35.0 t/s**, 88.7% acc | 26.1 | 43.3 |\n| fresh code prompt, decode | 34.7 t/s | **33.0 t/s**, 81.4% acc | 21.9 | 42.1 |\n| prefill @ ~4.75K | 146.1 t/s | **208.7 t/s** | 321.5 | 961.3 |\n| decode tail after it | 30.2 t/s | **31.3 t/s** | 20.8 | 39.3 |\n| pp4096 @ d0 | 146.4 | **208.8** | 318.1 | 926.9 |\n| tg128 @ d0 (MTP here) | 27.3 | **26.5** | 20.92 | 36.2 |\n| 16384-token prefix | 143.3 | **213.3** | | |\n| pp4096 @ d16384 | ~137 (derived) | **~204** (derived: 4037 tokens in 96.6 - 76.9 s); 211.4 over all 20421 | 269.9 | ~1126 |\n| tg128 @ d16384 (MTP here) | 26.9 | **27.5** | 17.98 | 37.4 |\n\nSo the file-cache starvation was worth 1.45x on prompts (146 -> 209-214 t/s) and nothing on decode, as\nexpected. Prompts are still 1.5x slower than llama.cpp on this PC. Three more measurements say why, and it is not\nthe transfer:\n\n- **Host-to-device copies are fast here** (`docs/benchmarks/2026-10-05-halo-hip-h2d.hip`, host-clock timed,\n  2 GiB): `hipMemcpy` from pinned memory 63-74 GB/s, from pageable 19.5 GB/s, `hipMemcpyAsync` + stream sync\n  64-72 GB/s, a kernel reading mapped host memory into device memory 94-100 GB/s, 512 copies of 2.66 MB (one\n  Coder expert blob each) 71.5 GB/s. The earlier \"0 ms\" event timing of H2D was the event, not the copy. A chunk's\n  23.4 GB of experts take about 0.35 s to move; the prompt path spends 38 s on a chunk.\n- **The prompt path's own phase timing** (`STRATA_PREFILL_TIMING=1`, a 4164-token prompt at 207 t/s, GPU timeline\n  19,955 ms, host work under 300 ms): hc read 3,438 ms (17.2%), GDN 4,969 (24.9%: out proj 1,948, recurrence 799,\n  conv+gates 128), QSA proj 2,077 (10.4%), QSA attn 1,986 (10.0%), router+shared 909 (4.6%), the expert GEMMs\n  gate/up 1,772 (8.9%) + down 785 (3.9%) + dequant 489 (2.4%), gather 89, **wait copy 34 (0.2%)**, combine 225,\n  PLE 187. The experts' streaming is 0.6% of the time. The time is in the dense parts: the hipBLAS GEMMs (QSA and\n  GDN projections, the router, the expert GEMMs: about 7.5 s of 20) and the engine's own kernels for the\n  hyper-connection read, the GDN recurrence and the FP32 prompt attention (about 8 s).\n- **hipBLAS on gfx1151 runs at 2.0-2.6 TFLOP/s; routed to hipBLASLt it runs at 4.0** (the GEMM probe at the\n  engine's shapes, T = 512 and 8192, BF16 and FP16: `ROCBLAS_USE_HIPBLASLT=1`, an environment variable rocBLAS\n  honours, no code change; results correct, 3e-6 relative). The engine's `cublasGemmEx` calls go through hipBLAS ->\n  rocBLAS, so this switch reaches every dense GEMM of the prompt path. The 8060S's matrix-core peak is far above\n  either number: rocBLAS's gfx1151 kernels are plainly not tuned, hipBLASLt's less so.\n\n## The RTX 5090 over Thunderbolt (not pursued)"
+        }
+      }
+    },
+    {
+      "step_id": 244,
+      "timestamp": "2026-10-05T10:24:39.571Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01BUUFqiFrjzrrDGY1Eu1jrE",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01BUUFqiFrjzrrDGY1Eu1jrE",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cp \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/scratchpad/hiptest/h2d.hip\" /e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-h2d.hip && ls /e/work/AI/Strata/docs/benchmarks/2026-10-05-*",
+            "description": "Keep the host-to-device probe source with the other benchmark sources"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01BUUFqiFrjzrrDGY1Eu1jrE",
+            "content": "/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hipblas-gemm.cu\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-h2d.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-membw.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-probe.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-pp4k.py\n\n[stdout]\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hipblas-gemm.cu\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-h2d.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-membw.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-probe.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-pp4k.py\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 347271,
+        "completion_tokens": 245,
+        "cached_tokens": 347239,
+        "extra": {
+          "cache_creation_input_tokens": 3811,
+          "cache_read_input_tokens": 347239,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3811,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 245,
+              "cache_read_input_tokens": 347239,
+              "cache_creation_input_tokens": 3811,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3811
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hipblas-gemm.cu\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-h2d.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-membw.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-probe.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-pp4k.py",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01BUUFqiFrjzrrDGY1Eu1jrE",
+            "type": "tool_result",
+            "content": "/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hipblas-gemm.cu\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-h2d.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-membw.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-probe.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-pp4k.py",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hipblas-gemm.cu\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-h2d.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-membw.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-probe.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-pp4k.py",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01BUUFqiFrjzrrDGY1Eu1jrE",
+            "type": "tool_result",
+            "content": "/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.json\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-coder-iq1_m-arena.log\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hipblas-gemm.cu\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-h2d.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-membw.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-probe.hip\n/e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-pp4k.py",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cp \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/scratchpad/hiptest/h2d.hip\" /e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-h2d.hip && ls /e/work/AI/Strata/docs/benchmarks/2026-10-05-*",
+          "description": "Keep the host-to-device probe source with the other benchmark sources"
+        }
+      }
+    },
+    {
+      "step_id": 245,
+      "timestamp": "2026-10-05T10:24:43.614Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "That notification is the previous server being stopped, as intended. Waiting for the hipBLASLt-routed server's readiness notification, then I'll send the same pp4096 requests.",
+      "metrics": {
+        "prompt_tokens": 351052,
+        "completion_tokens": 58,
+        "cached_tokens": 351050,
+        "extra": {
+          "cache_creation_input_tokens": 1068,
+          "cache_read_input_tokens": 351050,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1068,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 58,
+              "cache_read_input_tokens": 351050,
+              "cache_creation_input_tokens": 1068,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1068
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 50668321,
-    "total_completion_tokens": 505403,
-    "total_cached_tokens": 50662313,
-    "total_steps": 236,
+    "total_prompt_tokens": 53444701,
+    "total_completion_tokens": 519802,
+    "total_cached_tokens": 53438495,
+    "total_steps": 245,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1177773,
-      "total_cache_read_input_tokens": 50662313
+      "total_cache_creation_input_tokens": 1186113,
+      "total_cache_read_input_tokens": 53438495
     }
   }
 }
