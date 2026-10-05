@@ -531,6 +531,28 @@ about what computing it on the CPU costs. The misses themselves cost more here t
 core count, for the same reason: the 16 Zen 5 cores and the GPU share one memory. The placement that pays on
 this APU is all experts on the GPU, which needs the 64 GiB (or larger) carve-out.
 
+## UD-IQ4_XS on the 32/96 split
+
+The pack as in 3060M.md (`tools/iq_pack.py --compat-bf16`, 25 s: 1079 tensors, 303 served natively, 195 tensors
+to BF16, `native_experts.txt` v4 for layer 14's split roles), the Coder's config with the pack, shard 1 as
+`--native` (no `--ple-gguf`: the engine found the PLE table in shard 2), the original model's
+`data/expert-profile.bin`, the same draft layer.
+
+**The first start failed, and the failure is a property of this APU worth knowing.** With `--expert-cache auto`
+the engine pinned the 55.4 GiB arena (`cudaHostRegister PORTABLE ok`, loaded at 2.5 GiB/s) and then found
+`expert cache auto: 0.00 GiB free ... -> 0 slots` and stopped; with `--expert-cache 1864` the same (the count is
+clamped to the free figure). `docs/benchmarks/2026-10-05-halo-hip-pinfree.hip` measured what the engine saw:
+**registering N GiB of mapped pinned host memory lowers `hipMemGetInfo`'s free figure by 2N GiB** (16 GiB pinned:
+89.2 -> 57.2 free; 40 GiB: 89.2 -> 9.2), and the figure is a budget, not the memory: a 20 GiB `hipMalloc` with
+9.2 GiB "free" succeeded and a kernel ran over it (free then read 0.0). The engine knows the mechanism from a
+discrete-GPU Windows PC (#243 in `src/core/pinned.cu`: page-locked memory the GPU maps is charged to WDDM's
+shared segment, about half the RAM) and has the remedy, `STRATA_ARENA_PIN_GIB=N`: only N GiB of the arena are
+pinned, the rest stays pageable and is read by the CPU as before (its streamed copies go through the pinned
+staging ring). The Coder's 23.4 GiB arena never hit this because 2 x 23.4 fit beside the cache in every split.
+So for 32/96: `STRATA_ARENA_PIN_GIB=24` (costing 48 of the 89.4 GiB figure) and an explicit cache of 10,000
+slots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the
+dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.
+
 ## The RTX 5090 over Thunderbolt (not pursued)
 
 Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's

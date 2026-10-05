@@ -27143,19 +27143,1545 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 326,
+      "timestamp": "2026-10-05T11:20:45.909Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>bj6m5sfar</task-id>\n<tool-use-id>toolu_01Gj2WUhvy63jRQtVR1ThxfJ</tool-use-id>\n<output-file>C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\bj6m5sfar.output</output-file>\n<status>completed</status>\n<summary>Background command \"Run UD-IQ4_XS twice on the 32/96 split: expert cache auto, then 1,864 experts like the 3060; each with the full benchmark; servers stopped afterwards\" completed (exit code 0)</summary>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 327,
+      "timestamp": "2026-10-05T11:20:54.500Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01RJ2QANMXKe6YDzUfU2DX4U",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01RJ2QANMXKe6YDzUfU2DX4U",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cat \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/tasks/bj6m5sfar.output\" | grep -v \"^$\" | cut -c1-160; /c/conda_envs/strata/python.exe - <<'EOF' 2>&1\nimport json, os\nfor f in ('docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json','docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-cache1864.json'):\n    if not os.path.exists(f): print('missing', f); continue\n    d=json.load(open(f, encoding='utf-8')); print('==', d['label'])\n    for r in d['rows']:\n        print('  %-50s prompt %6s %7s t/s | pred %4s %6s t/s | acc %5s | wall %7s' % (r['test'][:50], r.get('prompt_n'), r.get('prompt_per_second'), r.get('predicted_n'), r.get('predicted_per_second'), r.get('accept_pct'), r.get('wall_s')))\nEOF\nfor l in strata-unsloth-ud-iq4_xs.log strata-unsloth-ud-iq4_xs-cache1864.log; do echo \"== $l\"; grep -E \"loaded .* GiB|expert cache [0-9]+ slots|expert cache auto|PCIe probe|VRAM free|hit rate\" $l | tail -8 | cut -c1-150; done",
+            "description": "Show the two UD-IQ4_XS benchmark runs, their startup lines and hit rates"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01RJ2QANMXKe6YDzUfU2DX4U",
+            "content": "strata processes left: 0\nstrata-unsloth-ud-iq4_xs: ready=False after 30 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nstrata-unsloth-ud-iq4_xs-cache1864: ready=False after 20 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nall done\n[exited with code 0]\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json\r\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-cache1864.json\r\n== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s\n\n[stdout]\nstrata processes left: 0\nstrata-unsloth-ud-iq4_xs: ready=False after 30 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nstrata-unsloth-ud-iq4_xs-cache1864: ready=False after 20 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nall done\n[exited with code 0]\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json\r\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-cache1864.json\r\n== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 405572,
+        "completion_tokens": 651,
+        "cached_tokens": 405568,
+        "extra": {
+          "cache_creation_input_tokens": 432,
+          "cache_read_input_tokens": 405568,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 432,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 651,
+              "cache_read_input_tokens": 405568,
+              "cache_creation_input_tokens": 432,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 432
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "strata processes left: 0\nstrata-unsloth-ud-iq4_xs: ready=False after 30 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nstrata-unsloth-ud-iq4_xs-cache1864: ready=False after 20 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nall done\n[exited with code 0]\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json\r\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-cache1864.json\r\n== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01RJ2QANMXKe6YDzUfU2DX4U",
+            "type": "tool_result",
+            "content": "strata processes left: 0\nstrata-unsloth-ud-iq4_xs: ready=False after 30 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nstrata-unsloth-ud-iq4_xs-cache1864: ready=False after 20 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nall done\n[exited with code 0]\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json\r\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-cache1864.json\r\n== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "strata processes left: 0\nstrata-unsloth-ud-iq4_xs: ready=False after 30 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nstrata-unsloth-ud-iq4_xs-cache1864: ready=False after 20 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nall done\n[exited with code 0]\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json\r\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-cache1864.json\r\n== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01RJ2QANMXKe6YDzUfU2DX4U",
+            "type": "tool_result",
+            "content": "strata processes left: 0\nstrata-unsloth-ud-iq4_xs: ready=False after 30 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nstrata-unsloth-ud-iq4_xs-cache1864: ready=False after 20 s\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked \nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower \nall done\n[exited with code 0]\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json\r\nmissing docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-cache1864.json\r\n== strata-unsloth-ud-iq4_xs.log\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\n== strata-unsloth-ud-iq4_xs-cache1864.log\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cat \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/tasks/bj6m5sfar.output\" | grep -v \"^$\" | cut -c1-160; /c/conda_envs/strata/python.exe - <<'EOF' 2>&1\nimport json, os\nfor f in ('docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs.json','docs/benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-cache1864.json'):\n    if not os.path.exists(f): print('missing', f); continue\n    d=json.load(open(f, encoding='utf-8')); print('==', d['label'])\n    for r in d['rows']:\n        print('  %-50s prompt %6s %7s t/s | pred %4s %6s t/s | acc %5s | wall %7s' % (r['test'][:50], r.get('prompt_n'), r.get('prompt_per_second'), r.get('predicted_n'), r.get('predicted_per_second'), r.get('accept_pct'), r.get('wall_s')))\nEOF\nfor l in strata-unsloth-ud-iq4_xs.log strata-unsloth-ud-iq4_xs-cache1864.log; do echo \"== $l\"; grep -E \"loaded .* GiB|expert cache [0-9]+ slots|expert cache auto|PCIe probe|VRAM free|hit rate\" $l | tail -8 | cut -c1-150; done",
+          "description": "Show the two UD-IQ4_XS benchmark runs, their startup lines and hit rates"
+        }
+      }
+    },
+    {
+      "step_id": 328,
+      "timestamp": "2026-10-05T11:21:03.885Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 406032,
+        "completion_tokens": 1117,
+        "cached_tokens": 406000,
+        "extra": {
+          "cache_creation_input_tokens": 1485,
+          "cache_read_input_tokens": 406000,
+          "output_tokens_details": {
+            "thinking_tokens": 527
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1485,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1117,
+              "cache_read_input_tokens": 406000,
+              "cache_creation_input_tokens": 1485,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1485
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 329,
+      "timestamp": "2026-10-05T11:21:06.853Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01PHtebNtMQG7SEkWG1UTzAk",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01PHtebNtMQG7SEkWG1UTzAk",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "echo \"== auto\"; grep -vE \"verify: captured|^ *$\" strata-unsloth-ud-iq4_xs.log | cut -c1-260 | head -40; echo; echo \"== 1864\"; grep -vE \"verify: captured|^ *$\" strata-unsloth-ud-iq4_xs-cache1864.log | cut -c1-260 | sed -n 1,40p; echo \"== server err\"; tail -n 5 server-strata-unsloth-ud-iq4_xs.err 2>/dev/null | cut -c1-200",
+            "description": "Read both UD-IQ4_XS startup logs to see why the expert cache got no VRAM"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01PHtebNtMQG7SEkWG1UTzAk",
+            "content": "== auto\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.23 s (3435 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\nstrata generate: no VRAM is left for the expert cache: lower --max-context, use --kv k8v4, run images on the CPU, or close other programs that use the GPU\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n\n== 1864\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.36 s (2157 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n== server err\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 2632, in main\r\n    engine = StrataEngine(exe, engine_args(cfg), cwd=cfg.get(\"cwd\"), log=cfg.get(\"log\"), env=env, lazy=lazy)\r\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 262, in __init__\r\n    raise RuntimeError(\"the engine exited before it was ready\" + (f\" (see {log})\" if log else \"\"))\r\nRuntimeError: the engine exited before it was ready (see E:\\work\\AI\\Strata\\strata-unsloth-ud-iq4_xs.log)\n\n[stdout]\n== auto\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.23 s (3435 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\nstrata generate: no VRAM is left for the expert cache: lower --max-context, use --kv k8v4, run images on the CPU, or close other programs that use the GPU\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n\n== 1864\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.36 s (2157 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n== server err\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 2632, in main\r\n    engine = StrataEngine(exe, engine_args(cfg), cwd=cfg.get(\"cwd\"), log=cfg.get(\"log\"), env=env, lazy=lazy)\r\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 262, in __init__\r\n    raise RuntimeError(\"the engine exited before it was ready\" + (f\" (see {log})\" if log else \"\"))\r\nRuntimeError: the engine exited before it was ready (see E:\\work\\AI\\Strata\\strata-unsloth-ud-iq4_xs.log)\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 406032,
+        "completion_tokens": 1117,
+        "cached_tokens": 406000,
+        "extra": {
+          "cache_creation_input_tokens": 1485,
+          "cache_read_input_tokens": 406000,
+          "output_tokens_details": {
+            "thinking_tokens": 527
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1485,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1117,
+              "cache_read_input_tokens": 406000,
+              "cache_creation_input_tokens": 1485,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1485
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "== auto\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.23 s (3435 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\nstrata generate: no VRAM is left for the expert cache: lower --max-context, use --kv k8v4, run images on the CPU, or close other programs that use the GPU\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n\n== 1864\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.36 s (2157 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n== server err\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 2632, in main\r\n    engine = StrataEngine(exe, engine_args(cfg), cwd=cfg.get(\"cwd\"), log=cfg.get(\"log\"), env=env, lazy=lazy)\r\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 262, in __init__\r\n    raise RuntimeError(\"the engine exited before it was ready\" + (f\" (see {log})\" if log else \"\"))\r\nRuntimeError: the engine exited before it was ready (see E:\\work\\AI\\Strata\\strata-unsloth-ud-iq4_xs.log)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01PHtebNtMQG7SEkWG1UTzAk",
+            "type": "tool_result",
+            "content": "== auto\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.23 s (3435 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\nstrata generate: no VRAM is left for the expert cache: lower --max-context, use --kv k8v4, run images on the CPU, or close other programs that use the GPU\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n\n== 1864\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.36 s (2157 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n== server err\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 2632, in main\r\n    engine = StrataEngine(exe, engine_args(cfg), cwd=cfg.get(\"cwd\"), log=cfg.get(\"log\"), env=env, lazy=lazy)\r\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 262, in __init__\r\n    raise RuntimeError(\"the engine exited before it was ready\" + (f\" (see {log})\" if log else \"\"))\r\nRuntimeError: the engine exited before it was ready (see E:\\work\\AI\\Strata\\strata-unsloth-ud-iq4_xs.log)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "== auto\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.23 s (3435 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\nstrata generate: no VRAM is left for the expert cache: lower --max-context, use --kv k8v4, run images on the CPU, or close other programs that use the GPU\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n\n== 1864\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.36 s (2157 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n== server err\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 2632, in main\r\n    engine = StrataEngine(exe, engine_args(cfg), cwd=cfg.get(\"cwd\"), log=cfg.get(\"log\"), env=env, lazy=lazy)\r\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 262, in __init__\r\n    raise RuntimeError(\"the engine exited before it was ready\" + (f\" (see {log})\" if log else \"\"))\r\nRuntimeError: the engine exited before it was ready (see E:\\work\\AI\\Strata\\strata-unsloth-ud-iq4_xs.log)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01PHtebNtMQG7SEkWG1UTzAk",
+            "type": "tool_result",
+            "content": "== auto\nstrata generate: PCIe probe: 16002.1 GB/s host->device, host RAM read 55.2 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.23 s (3435 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 2.47 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: expert cache auto: 0.00 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 0 slots\nstrata generate: no VRAM is left for the expert cache: lower --max-context, use --kv k8v4, run images on the CPU, or close other programs that use the GPU\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n\n== 1864\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata generate: the SSD is kept awake while rows are read: one page of the table after 100 ms without a read, until 60 s after the last request (STRATA_SSD_KEEPALIVE=0 turns it off)\nstrata generate: profile E:\\work\\AI\\Strata\\data\\expert-profile.bin: 24576 ranked pairs, built for 24576 slots\nstrata generate: PLE on, table 320001536 rows of C:\\Users\\Wei Lu\\Documents\\Qwen3.8-Flash-Next\\Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.36 s (2157 MiB/s)\nstrata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 59523465216 B (GetLargePageMinimum=2097152, VirtualAlloc error 1314); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 5.76 GiB/s\nstrata generate: experimental native Q5_K head, 521472000 bytes\nstrata generate: pre-filled 0 of 0 slots from the profile; slot 0 verified\nstrata generate: 15 expert-pool workers + the host thread\nstrata generate: session is up (engine 0.1.34)\nstrata serve: the prompt path allocates its own buffers (too few cache slots to borrow)\nstrata hc: CUDA0: the hyper-connection read runs as staged (the norm per token and stream, the down projection's activations staged ahead by cp.async); checked bit for bit against the plain read on this card (STRATA_HC_SPLIT=1 or 0 for the earlier ones)\nstrata serve: verify: needs the profile-filled VRAM expert tier (--expert-profile and --expert-cache); with --expert-cache auto, no VRAM was left for it: lower --max-context, use --kv k8v4 or images on the CPU\n== server err\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 2632, in main\r\n    engine = StrataEngine(exe, engine_args(cfg), cwd=cfg.get(\"cwd\"), log=cfg.get(\"log\"), env=env, lazy=lazy)\r\n  File \"E:\\work\\AI\\Strata\\serve\\server.py\", line 262, in __init__\r\n    raise RuntimeError(\"the engine exited before it was ready\" + (f\" (see {log})\" if log else \"\"))\r\nRuntimeError: the engine exited before it was ready (see E:\\work\\AI\\Strata\\strata-unsloth-ud-iq4_xs.log)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "echo \"== auto\"; grep -vE \"verify: captured|^ *$\" strata-unsloth-ud-iq4_xs.log | cut -c1-260 | head -40; echo; echo \"== 1864\"; grep -vE \"verify: captured|^ *$\" strata-unsloth-ud-iq4_xs-cache1864.log | cut -c1-260 | sed -n 1,40p; echo \"== server err\"; tail -n 5 server-strata-unsloth-ud-iq4_xs.err 2>/dev/null | cut -c1-200",
+          "description": "Read both UD-IQ4_XS startup logs to see why the expert cache got no VRAM"
+        }
+      }
+    },
+    {
+      "step_id": 330,
+      "timestamp": "2026-10-05T11:21:09.547Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed PowerShell toolu_01StoZKSAR97XWfZ4xNYuftL",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01StoZKSAR97XWfZ4xNYuftL",
+          "function_name": "PowerShell",
+          "arguments": {
+            "command": "Set-Location E:\\work\\AI\\Strata; $env:PATH=\"E:\\work\\AI\\Strata\\engine\\rocm\\bin;$env:PATH\"; & engine\\strata-device.exe --selftest 2>&1 | Select-String \"VRAM total|card free\"; $os=Get-CimInstance Win32_OperatingSystem; \"free RAM GiB: {0:N1} of {1:N1}\" -f ($os.FreePhysicalMemory/1MB),($os.TotalVisibleMemorySize/1MB); (Get-Process strata -ErrorAction SilentlyContinue).Count",
+            "description": "Check the GPU's free memory as HIP reports it now and the system's free RAM"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01StoZKSAR97XWfZ4xNYuftL",
+            "content": "VRAM total / free   89.388 GiB (95980027904 B) / 89.237 GiB (95817568256 B)\r\n  card free           89.237 GiB (95817568256 B)\r\nfree RAM GiB: 80.7 of 95.6\r\n0\n\n[stdout]\n  VRAM total / free   89.388 GiB (95980027904 B) / 89.237 GiB (95817568256 B)\r\n  card free           89.237 GiB (95817568256 B)\r\nfree RAM GiB: 80.7 of 95.6\r\n0"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 406032,
+        "completion_tokens": 1117,
+        "cached_tokens": 406000,
+        "extra": {
+          "cache_creation_input_tokens": 1485,
+          "cache_read_input_tokens": 406000,
+          "output_tokens_details": {
+            "thinking_tokens": 527
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1485,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1117,
+              "cache_read_input_tokens": 406000,
+              "cache_creation_input_tokens": 1485,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1485
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "PowerShell",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "  VRAM total / free   89.388 GiB (95980027904 B) / 89.237 GiB (95817568256 B)\r\n  card free           89.237 GiB (95817568256 B)\r\nfree RAM GiB: 80.7 of 95.6\r\n0",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01StoZKSAR97XWfZ4xNYuftL",
+            "type": "tool_result",
+            "content": "  VRAM total / free   89.388 GiB (95980027904 B) / 89.237 GiB (95817568256 B)\r\n  card free           89.237 GiB (95817568256 B)\r\nfree RAM GiB: 80.7 of 95.6\r\n0",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "  VRAM total / free   89.388 GiB (95980027904 B) / 89.237 GiB (95817568256 B)\r\n  card free           89.237 GiB (95817568256 B)\r\nfree RAM GiB: 80.7 of 95.6\r\n0",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01StoZKSAR97XWfZ4xNYuftL",
+            "type": "tool_result",
+            "content": "  VRAM total / free   89.388 GiB (95980027904 B) / 89.237 GiB (95817568256 B)\r\n  card free           89.237 GiB (95817568256 B)\r\nfree RAM GiB: 80.7 of 95.6\r\n0",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "Set-Location E:\\work\\AI\\Strata; $env:PATH=\"E:\\work\\AI\\Strata\\engine\\rocm\\bin;$env:PATH\"; & engine\\strata-device.exe --selftest 2>&1 | Select-String \"VRAM total|card free\"; $os=Get-CimInstance Win32_OperatingSystem; \"free RAM GiB: {0:N1} of {1:N1}\" -f ($os.FreePhysicalMemory/1MB),($os.TotalVisibleMemorySize/1MB); (Get-Process strata -ErrorAction SilentlyContinue).Count",
+          "description": "Check the GPU's free memory as HIP reports it now and the system's free RAM"
+        }
+      }
+    },
+    {
+      "step_id": 331,
+      "timestamp": "2026-10-05T11:21:37.486Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 407517,
+        "completion_tokens": 3041,
+        "cached_tokens": 407485,
+        "extra": {
+          "cache_creation_input_tokens": 3543,
+          "cache_read_input_tokens": 407485,
+          "output_tokens_details": {
+            "thinking_tokens": 1936
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3543,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3041,
+              "cache_read_input_tokens": 407485,
+              "cache_creation_input_tokens": 3543,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3543
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 332,
+      "timestamp": "2026-10-05T11:21:46.555Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Write toolu_018JuAQQ8YrHCkcgofu8Km7o",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_018JuAQQ8YrHCkcgofu8Km7o",
+          "function_name": "Write",
+          "arguments": {
+            "file_path": "C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\scratchpad\\hiptest\\pinfree.hip",
+            "content": "// does pinning (registering, mapped) host memory lower hipMemGetInfo's free figure on this APU, and by how much?\n#include <hip/hip_runtime.h>\n#include <cstdio>\n#include <cstdlib>\n#include <cstring>\n#include <windows.h>\nstatic void info(const char* what) {\n    size_t fr = 0, tot = 0; hipMemGetInfo(&fr, &tot);\n    std::printf(\"%-46s free %6.1f GiB of %6.1f\\n\", what, fr / 1073741824.0, tot / 1073741824.0);\n}\n__global__ void touch(float* p, size_t n) { size_t i = blockIdx.x * (size_t) blockDim.x + threadIdx.x; if (i < n) p[i] = 1.f; }\nint main(int argc, char** argv) {\n    const size_t gib = argc > 1 ? std::atoi(argv[1]) : 16;\n    info(\"start\");\n    void* h = VirtualAlloc(nullptr, gib << 30, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);\n    std::memset(h, 1, gib << 30);\n    info(\"after VirtualAlloc + memset (pageable)\");\n    hipError_t e = hipHostRegister(h, gib << 30, hipHostRegisterPortable | hipHostRegisterMapped);\n    std::printf(\"hipHostRegister %zu GiB: %s\\n\", gib, hipGetErrorString(e));\n    info(\"after hipHostRegister (pinned, mapped)\");\n    float* d = nullptr; const size_t dsz = 20ull << 30;\n    e = hipMalloc(&d, dsz);\n    std::printf(\"hipMalloc 20 GiB: %s\\n\", hipGetErrorString(e));\n    if (e == hipSuccess) {\n        touch<<<(unsigned) ((dsz / 4 + 255) / 256), 256>>>(d, dsz / 4);\n        std::printf(\"kernel over it: %s\\n\", hipGetErrorString(hipDeviceSynchronize()));\n        info(\"after hipMalloc 20 GiB\");\n    }\n    hipHostUnregister(h);\n    info(\"after hipHostUnregister\");\n    return 0;\n}\n"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_018JuAQQ8YrHCkcgofu8Km7o",
+            "content": "File created successfully at: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\scratchpad\\hiptest\\pinfree.hip (file state is current in your context — no need to Read it back)\n\n[metadata] {\"type\": \"create\", \"filePath\": \"C:\\\\Users\\\\WEILU~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\E--work-AI-Strata\\\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\\\scratchpad\\\\hiptest\\\\pinfree.hip\", \"content\": \"// does pinning (registering, mapped) host memory lower hipMemGetInfo's free figure on this APU, and by how much?\\n#include <hip/hip_runtime.h>\\n#include <cstdio>\\n#include <cstdlib>\\n#include <cstring>\\n#include <windows.h>\\nstatic void info(const char* what) {\\n    size_t fr = 0, tot = 0; hipMemGetInfo(&fr, &tot);\\n    std::printf(\\\"%-46s free %6.1f GiB of %6.1f\\\\n\\\", what, fr / 1073741824.0, tot / 1073741824.0);\\n}\\n__global__ void touch(float* p, size_t n) { size_t i = blockIdx.x * (size_t) blockDim.x + threadIdx.x; if (i < n) p[i] = 1.f; }\\nint main(int argc, char** argv) {\\n    const size_t gib = argc > 1 ? std::atoi(argv[1]) : 16;\\n    info(\\\"start\\\");\\n    void* h = VirtualAlloc(nullptr, gib << 30, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);\\n    std::memset(h, 1, gib << 30);\\n    info(\\\"after VirtualAlloc + memset (pageable)\\\");\\n    hipError_t e = hipHostRegister(h, gib << 30, hipHostRegisterPortable | hipHostRegisterMapped);\\n    std::printf(\\\"hipHostRegister %zu GiB: %s\\\\n\\\", gib, hipGetErrorString(e));\\n    info(\\\"after hipHostRegister (pinned, mapped)\\\");\\n    float* d = nullptr; const size_t dsz = 20ull << 30;\\n    e = hipMalloc(&d, dsz);\\n    std::printf(\\\"hipMalloc 20 GiB: %s\\\\n\\\", hipGetErrorString(e));\\n    if (e == hipSuccess) {\\n        touch<<<(unsigned) ((dsz / 4 + 255) / 256), 256>>>(d, dsz / 4);\\n        std::printf(\\\"kernel over it: %s\\\\n\\\", hipGetErrorString(hipDeviceSynchronize()));\\n        info(\\\"after hipMalloc 20 GiB\\\");\\n    }\\n    hipHostUnregister(h);\\n    info(\\\"after hipHostUnregister\\\");\\n    return 0;\\n}\\n\", \"structuredPatch\": [], \"originalFile\": null, \"userModified\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 407517,
+        "completion_tokens": 3041,
+        "cached_tokens": 407485,
+        "extra": {
+          "cache_creation_input_tokens": 3543,
+          "cache_read_input_tokens": 407485,
+          "output_tokens_details": {
+            "thinking_tokens": 1936
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3543,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3041,
+              "cache_read_input_tokens": 407485,
+              "cache_creation_input_tokens": 3543,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3543
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Write",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "type": "create",
+            "filePath": "C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\scratchpad\\hiptest\\pinfree.hip",
+            "content": "// does pinning (registering, mapped) host memory lower hipMemGetInfo's free figure on this APU, and by how much?\n#include <hip/hip_runtime.h>\n#include <cstdio>\n#include <cstdlib>\n#include <cstring>\n#include <windows.h>\nstatic void info(const char* what) {\n    size_t fr = 0, tot = 0; hipMemGetInfo(&fr, &tot);\n    std::printf(\"%-46s free %6.1f GiB of %6.1f\\n\", what, fr / 1073741824.0, tot / 1073741824.0);\n}\n__global__ void touch(float* p, size_t n) { size_t i = blockIdx.x * (size_t) blockDim.x + threadIdx.x; if (i < n) p[i] = 1.f; }\nint main(int argc, char** argv) {\n    const size_t gib = argc > 1 ? std::atoi(argv[1]) : 16;\n    info(\"start\");\n    void* h = VirtualAlloc(nullptr, gib << 30, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);\n    std::memset(h, 1, gib << 30);\n    info(\"after VirtualAlloc + memset (pageable)\");\n    hipError_t e = hipHostRegister(h, gib << 30, hipHostRegisterPortable | hipHostRegisterMapped);\n    std::printf(\"hipHostRegister %zu GiB: %s\\n\", gib, hipGetErrorString(e));\n    info(\"after hipHostRegister (pinned, mapped)\");\n    float* d = nullptr; const size_t dsz = 20ull << 30;\n    e = hipMalloc(&d, dsz);\n    std::printf(\"hipMalloc 20 GiB: %s\\n\", hipGetErrorString(e));\n    if (e == hipSuccess) {\n        touch<<<(unsigned) ((dsz / 4 + 255) / 256), 256>>>(d, dsz / 4);\n        std::printf(\"kernel over it: %s\\n\", hipGetErrorString(hipDeviceSynchronize()));\n        info(\"after hipMalloc 20 GiB\");\n    }\n    hipHostUnregister(h);\n    info(\"after hipHostUnregister\");\n    return 0;\n}\n",
+            "structuredPatch": [],
+            "originalFile": null,
+            "userModified": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_018JuAQQ8YrHCkcgofu8Km7o",
+            "type": "tool_result",
+            "content": "File created successfully at: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\scratchpad\\hiptest\\pinfree.hip (file state is current in your context — no need to Read it back)"
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "type": "create",
+            "filePath": "C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\scratchpad\\hiptest\\pinfree.hip",
+            "content": "// does pinning (registering, mapped) host memory lower hipMemGetInfo's free figure on this APU, and by how much?\n#include <hip/hip_runtime.h>\n#include <cstdio>\n#include <cstdlib>\n#include <cstring>\n#include <windows.h>\nstatic void info(const char* what) {\n    size_t fr = 0, tot = 0; hipMemGetInfo(&fr, &tot);\n    std::printf(\"%-46s free %6.1f GiB of %6.1f\\n\", what, fr / 1073741824.0, tot / 1073741824.0);\n}\n__global__ void touch(float* p, size_t n) { size_t i = blockIdx.x * (size_t) blockDim.x + threadIdx.x; if (i < n) p[i] = 1.f; }\nint main(int argc, char** argv) {\n    const size_t gib = argc > 1 ? std::atoi(argv[1]) : 16;\n    info(\"start\");\n    void* h = VirtualAlloc(nullptr, gib << 30, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);\n    std::memset(h, 1, gib << 30);\n    info(\"after VirtualAlloc + memset (pageable)\");\n    hipError_t e = hipHostRegister(h, gib << 30, hipHostRegisterPortable | hipHostRegisterMapped);\n    std::printf(\"hipHostRegister %zu GiB: %s\\n\", gib, hipGetErrorString(e));\n    info(\"after hipHostRegister (pinned, mapped)\");\n    float* d = nullptr; const size_t dsz = 20ull << 30;\n    e = hipMalloc(&d, dsz);\n    std::printf(\"hipMalloc 20 GiB: %s\\n\", hipGetErrorString(e));\n    if (e == hipSuccess) {\n        touch<<<(unsigned) ((dsz / 4 + 255) / 256), 256>>>(d, dsz / 4);\n        std::printf(\"kernel over it: %s\\n\", hipGetErrorString(hipDeviceSynchronize()));\n        info(\"after hipMalloc 20 GiB\");\n    }\n    hipHostUnregister(h);\n    info(\"after hipHostUnregister\");\n    return 0;\n}\n",
+            "structuredPatch": [],
+            "originalFile": null,
+            "userModified": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_018JuAQQ8YrHCkcgofu8Km7o",
+            "type": "tool_result",
+            "content": "File created successfully at: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\scratchpad\\hiptest\\pinfree.hip (file state is current in your context — no need to Read it back)"
+          }
+        },
+        "raw_arguments": {
+          "file_path": "C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\scratchpad\\hiptest\\pinfree.hip",
+          "content": "// does pinning (registering, mapped) host memory lower hipMemGetInfo's free figure on this APU, and by how much?\n#include <hip/hip_runtime.h>\n#include <cstdio>\n#include <cstdlib>\n#include <cstring>\n#include <windows.h>\nstatic void info(const char* what) {\n    size_t fr = 0, tot = 0; hipMemGetInfo(&fr, &tot);\n    std::printf(\"%-46s free %6.1f GiB of %6.1f\\n\", what, fr / 1073741824.0, tot / 1073741824.0);\n}\n__global__ void touch(float* p, size_t n) { size_t i = blockIdx.x * (size_t) blockDim.x + threadIdx.x; if (i < n) p[i] = 1.f; }\nint main(int argc, char** argv) {\n    const size_t gib = argc > 1 ? std::atoi(argv[1]) : 16;\n    info(\"start\");\n    void* h = VirtualAlloc(nullptr, gib << 30, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);\n    std::memset(h, 1, gib << 30);\n    info(\"after VirtualAlloc + memset (pageable)\");\n    hipError_t e = hipHostRegister(h, gib << 30, hipHostRegisterPortable | hipHostRegisterMapped);\n    std::printf(\"hipHostRegister %zu GiB: %s\\n\", gib, hipGetErrorString(e));\n    info(\"after hipHostRegister (pinned, mapped)\");\n    float* d = nullptr; const size_t dsz = 20ull << 30;\n    e = hipMalloc(&d, dsz);\n    std::printf(\"hipMalloc 20 GiB: %s\\n\", hipGetErrorString(e));\n    if (e == hipSuccess) {\n        touch<<<(unsigned) ((dsz / 4 + 255) / 256), 256>>>(d, dsz / 4);\n        std::printf(\"kernel over it: %s\\n\", hipGetErrorString(hipDeviceSynchronize()));\n        info(\"after hipMalloc 20 GiB\");\n    }\n    hipHostUnregister(h);\n    info(\"after hipHostUnregister\");\n    return 0;\n}\n"
+        }
+      }
+    },
+    {
+      "step_id": 333,
+      "timestamp": "2026-10-05T11:21:48.234Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01RCrHP4N3YoNvTbtH5TPybd",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01RCrHP4N3YoNvTbtH5TPybd",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "sed -n 236,262p src/core/pinned.cu | cut -c1-200; grep -n \"pin_limit\\|STRATA_ARENA_PIN_GIB\" src/core/expert_source.cpp | head -8 | cut -c1-200",
+            "description": "Read how STRATA_ARENA_PIN_GIB caps the pinned part of the expert arena"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01RCrHP4N3YoNvTbtH5TPybd",
+            "content": "namespace {\nbool clear_error() { (void) cudaGetLastError(); return true; }\n}  // namespace\n\nint arena_pin_cap_gib() {\n    const char* e = std::getenv(\"STRATA_ARENA_PIN_GIB\");\n    if (e == nullptr || *e == '\\0') return -1;\n    if (std::string(e) == \"auto\") return -2;   // #243: the Windows shared-memory budget sets the sliced pin's cap\n    const int v = std::atoi(e);\n    return v < 0 ? -1 : v;\n}\n\nnamespace {\n#ifdef _WIN32\n// #243: how much of the arena the sliced registration may pin on Windows when the whole arena was refused.\n// Page-locked memory the GPU maps is charged to its shared (non-local) WDDM segment; pinned slice by slice until\n// the driver refused one (28 GiB of a 63 GB PC), that segment was left full and every later cudaMalloc failed\n// \"out of memory\".  4 GiB of the budget stay free for what the engine allocates after the arena; without the DXGI\n// numbers, RAM/2 - 8 GiB (the budget is about half the RAM).  False: no limit could be worked out.\nbool sliced_pin_limit(uint64_t& limit, std::string& why) {\n    constexpr uint64_t GiB = 1ull << 30;\n    char buf[256];\n    int dev = 0;\n    cudaDeviceProp p{};\n    uint64_t budget = 0, usage = 0;\n    std::string err = \"no CUDA device properties\";\n488:    complement_pin_limit_ = 0;\n1312:    complement_pin_limit_ = pinned_ok ? bytes : partial_pin;\n1441:           complement_offsets_[index] + layer_blob_bytes_[(size_t) layer] <= complement_pin_limit_;\n\n[stdout]\nnamespace {\nbool clear_error() { (void) cudaGetLastError(); return true; }\n}  // namespace\n\nint arena_pin_cap_gib() {\n    const char* e = std::getenv(\"STRATA_ARENA_PIN_GIB\");\n    if (e == nullptr || *e == '\\0') return -1;\n    if (std::string(e) == \"auto\") return -2;   // #243: the Windows shared-memory budget sets the sliced pin's cap\n    const int v = std::atoi(e);\n    return v < 0 ? -1 : v;\n}\n\nnamespace {\n#ifdef _WIN32\n// #243: how much of the arena the sliced registration may pin on Windows when the whole arena was refused.\n// Page-locked memory the GPU maps is charged to its shared (non-local) WDDM segment; pinned slice by slice until\n// the driver refused one (28 GiB of a 63 GB PC), that segment was left full and every later cudaMalloc failed\n// \"out of memory\".  4 GiB of the budget stay free for what the engine allocates after the arena; without the DXGI\n// numbers, RAM/2 - 8 GiB (the budget is about half the RAM).  False: no limit could be worked out.\nbool sliced_pin_limit(uint64_t& limit, std::string& why) {\n    constexpr uint64_t GiB = 1ull << 30;\n    char buf[256];\n    int dev = 0;\n    cudaDeviceProp p{};\n    uint64_t budget = 0, usage = 0;\n    std::string err = \"no CUDA device properties\";\n488:    complement_pin_limit_ = 0;\n1312:    complement_pin_limit_ = pinned_ok ? bytes : partial_pin;\n1441:           complement_offsets_[index] + layer_blob_bytes_[(size_t) layer] <= complement_pin_limit_;\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 407517,
+        "completion_tokens": 3041,
+        "cached_tokens": 407485,
+        "extra": {
+          "cache_creation_input_tokens": 3543,
+          "cache_read_input_tokens": 407485,
+          "output_tokens_details": {
+            "thinking_tokens": 1936
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3543,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 3041,
+              "cache_read_input_tokens": 407485,
+              "cache_creation_input_tokens": 3543,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3543
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "namespace {\nbool clear_error() { (void) cudaGetLastError(); return true; }\n}  // namespace\n\nint arena_pin_cap_gib() {\n    const char* e = std::getenv(\"STRATA_ARENA_PIN_GIB\");\n    if (e == nullptr || *e == '\\0') return -1;\n    if (std::string(e) == \"auto\") return -2;   // #243: the Windows shared-memory budget sets the sliced pin's cap\n    const int v = std::atoi(e);\n    return v < 0 ? -1 : v;\n}\n\nnamespace {\n#ifdef _WIN32\n// #243: how much of the arena the sliced registration may pin on Windows when the whole arena was refused.\n// Page-locked memory the GPU maps is charged to its shared (non-local) WDDM segment; pinned slice by slice until\n// the driver refused one (28 GiB of a 63 GB PC), that segment was left full and every later cudaMalloc failed\n// \"out of memory\".  4 GiB of the budget stay free for what the engine allocates after the arena; without the DXGI\n// numbers, RAM/2 - 8 GiB (the budget is about half the RAM).  False: no limit could be worked out.\nbool sliced_pin_limit(uint64_t& limit, std::string& why) {\n    constexpr uint64_t GiB = 1ull << 30;\n    char buf[256];\n    int dev = 0;\n    cudaDeviceProp p{};\n    uint64_t budget = 0, usage = 0;\n    std::string err = \"no CUDA device properties\";\n488:    complement_pin_limit_ = 0;\n1312:    complement_pin_limit_ = pinned_ok ? bytes : partial_pin;\n1441:           complement_offsets_[index] + layer_blob_bytes_[(size_t) layer] <= complement_pin_limit_;",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01RCrHP4N3YoNvTbtH5TPybd",
+            "type": "tool_result",
+            "content": "namespace {\nbool clear_error() { (void) cudaGetLastError(); return true; }\n}  // namespace\n\nint arena_pin_cap_gib() {\n    const char* e = std::getenv(\"STRATA_ARENA_PIN_GIB\");\n    if (e == nullptr || *e == '\\0') return -1;\n    if (std::string(e) == \"auto\") return -2;   // #243: the Windows shared-memory budget sets the sliced pin's cap\n    const int v = std::atoi(e);\n    return v < 0 ? -1 : v;\n}\n\nnamespace {\n#ifdef _WIN32\n// #243: how much of the arena the sliced registration may pin on Windows when the whole arena was refused.\n// Page-locked memory the GPU maps is charged to its shared (non-local) WDDM segment; pinned slice by slice until\n// the driver refused one (28 GiB of a 63 GB PC), that segment was left full and every later cudaMalloc failed\n// \"out of memory\".  4 GiB of the budget stay free for what the engine allocates after the arena; without the DXGI\n// numbers, RAM/2 - 8 GiB (the budget is about half the RAM).  False: no limit could be worked out.\nbool sliced_pin_limit(uint64_t& limit, std::string& why) {\n    constexpr uint64_t GiB = 1ull << 30;\n    char buf[256];\n    int dev = 0;\n    cudaDeviceProp p{};\n    uint64_t budget = 0, usage = 0;\n    std::string err = \"no CUDA device properties\";\n488:    complement_pin_limit_ = 0;\n1312:    complement_pin_limit_ = pinned_ok ? bytes : partial_pin;\n1441:           complement_offsets_[index] + layer_blob_bytes_[(size_t) layer] <= complement_pin_limit_;",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "namespace {\nbool clear_error() { (void) cudaGetLastError(); return true; }\n}  // namespace\n\nint arena_pin_cap_gib() {\n    const char* e = std::getenv(\"STRATA_ARENA_PIN_GIB\");\n    if (e == nullptr || *e == '\\0') return -1;\n    if (std::string(e) == \"auto\") return -2;   // #243: the Windows shared-memory budget sets the sliced pin's cap\n    const int v = std::atoi(e);\n    return v < 0 ? -1 : v;\n}\n\nnamespace {\n#ifdef _WIN32\n// #243: how much of the arena the sliced registration may pin on Windows when the whole arena was refused.\n// Page-locked memory the GPU maps is charged to its shared (non-local) WDDM segment; pinned slice by slice until\n// the driver refused one (28 GiB of a 63 GB PC), that segment was left full and every later cudaMalloc failed\n// \"out of memory\".  4 GiB of the budget stay free for what the engine allocates after the arena; without the DXGI\n// numbers, RAM/2 - 8 GiB (the budget is about half the RAM).  False: no limit could be worked out.\nbool sliced_pin_limit(uint64_t& limit, std::string& why) {\n    constexpr uint64_t GiB = 1ull << 30;\n    char buf[256];\n    int dev = 0;\n    cudaDeviceProp p{};\n    uint64_t budget = 0, usage = 0;\n    std::string err = \"no CUDA device properties\";\n488:    complement_pin_limit_ = 0;\n1312:    complement_pin_limit_ = pinned_ok ? bytes : partial_pin;\n1441:           complement_offsets_[index] + layer_blob_bytes_[(size_t) layer] <= complement_pin_limit_;",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01RCrHP4N3YoNvTbtH5TPybd",
+            "type": "tool_result",
+            "content": "namespace {\nbool clear_error() { (void) cudaGetLastError(); return true; }\n}  // namespace\n\nint arena_pin_cap_gib() {\n    const char* e = std::getenv(\"STRATA_ARENA_PIN_GIB\");\n    if (e == nullptr || *e == '\\0') return -1;\n    if (std::string(e) == \"auto\") return -2;   // #243: the Windows shared-memory budget sets the sliced pin's cap\n    const int v = std::atoi(e);\n    return v < 0 ? -1 : v;\n}\n\nnamespace {\n#ifdef _WIN32\n// #243: how much of the arena the sliced registration may pin on Windows when the whole arena was refused.\n// Page-locked memory the GPU maps is charged to its shared (non-local) WDDM segment; pinned slice by slice until\n// the driver refused one (28 GiB of a 63 GB PC), that segment was left full and every later cudaMalloc failed\n// \"out of memory\".  4 GiB of the budget stay free for what the engine allocates after the arena; without the DXGI\n// numbers, RAM/2 - 8 GiB (the budget is about half the RAM).  False: no limit could be worked out.\nbool sliced_pin_limit(uint64_t& limit, std::string& why) {\n    constexpr uint64_t GiB = 1ull << 30;\n    char buf[256];\n    int dev = 0;\n    cudaDeviceProp p{};\n    uint64_t budget = 0, usage = 0;\n    std::string err = \"no CUDA device properties\";\n488:    complement_pin_limit_ = 0;\n1312:    complement_pin_limit_ = pinned_ok ? bytes : partial_pin;\n1441:           complement_offsets_[index] + layer_blob_bytes_[(size_t) layer] <= complement_pin_limit_;",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "sed -n 236,262p src/core/pinned.cu | cut -c1-200; grep -n \"pin_limit\\|STRATA_ARENA_PIN_GIB\" src/core/expert_source.cpp | head -8 | cut -c1-200",
+          "description": "Read how STRATA_ARENA_PIN_GIB caps the pinned part of the expert arena"
+        }
+      }
+    },
+    {
+      "step_id": 334,
+      "timestamp": "2026-10-05T11:21:57.110Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 411060,
+        "completion_tokens": 745,
+        "cached_tokens": 411028,
+        "extra": {
+          "cache_creation_input_tokens": 3891,
+          "cache_read_input_tokens": 411028,
+          "output_tokens_details": {
+            "thinking_tokens": 374
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3891,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 745,
+              "cache_read_input_tokens": 411028,
+              "cache_creation_input_tokens": 3891,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3891
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 335,
+      "timestamp": "2026-10-05T11:22:00.801Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01AbRMEVJsKrk3fTRLY6nbFW",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01AbRMEVJsKrk3fTRLY6nbFW",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/scratchpad/hiptest\" && export PATH=\"/c/conda_envs/rocm100-py312/Scripts:/c/conda_envs/rocm100-py312/Lib/site-packages/_rocm_sdk_devel/bin:$PATH\" && hipcc.exe --offload-arch=gfx1151 -O2 -o pinfree.exe pinfree.hip 2>&1 | grep -i \" error\"; ./pinfree.exe 16; echo ----; ./pinfree.exe 40",
+            "description": "Measure how much pinned mapped host memory lowers HIP's free figure on this APU (16 GiB, then 40 GiB)",
+            "timeout": 600000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01AbRMEVJsKrk3fTRLY6nbFW",
+            "content": "start                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 16 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free   57.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free   37.2 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4\r\n----\nstart                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 40 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free    9.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free    0.0 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4\nShell cwd was reset to E:\\work\\AI\\Strata\n\n[stdout]\nstart                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 16 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free   57.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free   37.2 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4\r\n----\nstart                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 40 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free    9.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free    0.0 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4\n[stderr]\n\nShell cwd was reset to E:\\work\\AI\\Strata\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 411060,
+        "completion_tokens": 745,
+        "cached_tokens": 411028,
+        "extra": {
+          "cache_creation_input_tokens": 3891,
+          "cache_read_input_tokens": 411028,
+          "output_tokens_details": {
+            "thinking_tokens": 374
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3891,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 745,
+              "cache_read_input_tokens": 411028,
+              "cache_creation_input_tokens": 3891,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3891
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "start                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 16 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free   57.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free   37.2 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4\r\n----\nstart                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 40 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free    9.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free    0.0 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4",
+            "stderr": "\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01AbRMEVJsKrk3fTRLY6nbFW",
+            "type": "tool_result",
+            "content": "start                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 16 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free   57.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free   37.2 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4\r\n----\nstart                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 40 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free    9.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free    0.0 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "start                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 16 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free   57.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free   37.2 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4\r\n----\nstart                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 40 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free    9.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free    0.0 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4",
+            "stderr": "\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01AbRMEVJsKrk3fTRLY6nbFW",
+            "type": "tool_result",
+            "content": "start                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 16 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free   57.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free   37.2 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4\r\n----\nstart                                          free   89.2 GiB of   89.4\r\nafter VirtualAlloc + memset (pageable)         free   89.2 GiB of   89.4\r\nhipHostRegister 40 GiB: no error\r\nafter hipHostRegister (pinned, mapped)         free    9.2 GiB of   89.4\r\nhipMalloc 20 GiB: no error\r\nkernel over it: no error\r\nafter hipMalloc 20 GiB                         free    0.0 GiB of   89.4\r\nafter hipHostUnregister                        free   69.2 GiB of   89.4\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/scratchpad/hiptest\" && export PATH=\"/c/conda_envs/rocm100-py312/Scripts:/c/conda_envs/rocm100-py312/Lib/site-packages/_rocm_sdk_devel/bin:$PATH\" && hipcc.exe --offload-arch=gfx1151 -O2 -o pinfree.exe pinfree.hip 2>&1 | grep -i \" error\"; ./pinfree.exe 16; echo ----; ./pinfree.exe 40",
+          "description": "Measure how much pinned mapped host memory lowers HIP's free figure on this APU (16 GiB, then 40 GiB)",
+          "timeout": 600000
+        }
+      }
+    },
+    {
+      "step_id": 336,
+      "timestamp": "2026-10-05T11:22:26.471Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 414951,
+        "completion_tokens": 1995,
+        "cached_tokens": 414919,
+        "extra": {
+          "cache_creation_input_tokens": 1208,
+          "cache_read_input_tokens": 414919,
+          "output_tokens_details": {
+            "thinking_tokens": 645
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1208,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1995,
+              "cache_read_input_tokens": 414919,
+              "cache_creation_input_tokens": 1208,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1208
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 337,
+      "timestamp": "2026-10-05T11:22:28.599Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_012Whfqz6B9GQtmouX4VWMtn",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_012Whfqz6B9GQtmouX4VWMtn",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "sed -i 's/\"--expert-cache\", \"auto\"/\"--expert-cache\", \"10000\"/' strata-unsloth-ud-iq4_xs.json && grep -o '\"--expert-cache\", \"[a-z0-9]*\"' strata-unsloth-ud-iq4_xs.json strata-unsloth-ud-iq4_xs-cache1864.json",
+            "description": "Set the first UD-IQ4_XS config to an explicit 10,000-slot expert cache (about 24 GiB, within the 32 GiB carve-out)"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_012Whfqz6B9GQtmouX4VWMtn",
+            "content": "strata-unsloth-ud-iq4_xs.json:\"--expert-cache\", \"10000\"\nstrata-unsloth-ud-iq4_xs-cache1864.json:\"--expert-cache\", \"1864\"\n\n[stdout]\nstrata-unsloth-ud-iq4_xs.json:\"--expert-cache\", \"10000\"\nstrata-unsloth-ud-iq4_xs-cache1864.json:\"--expert-cache\", \"1864\"\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 414951,
+        "completion_tokens": 1995,
+        "cached_tokens": 414919,
+        "extra": {
+          "cache_creation_input_tokens": 1208,
+          "cache_read_input_tokens": 414919,
+          "output_tokens_details": {
+            "thinking_tokens": 645
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1208,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1995,
+              "cache_read_input_tokens": 414919,
+              "cache_creation_input_tokens": 1208,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1208
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "strata-unsloth-ud-iq4_xs.json:\"--expert-cache\", \"10000\"\nstrata-unsloth-ud-iq4_xs-cache1864.json:\"--expert-cache\", \"1864\"",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_012Whfqz6B9GQtmouX4VWMtn",
+            "type": "tool_result",
+            "content": "strata-unsloth-ud-iq4_xs.json:\"--expert-cache\", \"10000\"\nstrata-unsloth-ud-iq4_xs-cache1864.json:\"--expert-cache\", \"1864\"",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "strata-unsloth-ud-iq4_xs.json:\"--expert-cache\", \"10000\"\nstrata-unsloth-ud-iq4_xs-cache1864.json:\"--expert-cache\", \"1864\"",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_012Whfqz6B9GQtmouX4VWMtn",
+            "type": "tool_result",
+            "content": "strata-unsloth-ud-iq4_xs.json:\"--expert-cache\", \"10000\"\nstrata-unsloth-ud-iq4_xs-cache1864.json:\"--expert-cache\", \"1864\"",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "sed -i 's/\"--expert-cache\", \"auto\"/\"--expert-cache\", \"10000\"/' strata-unsloth-ud-iq4_xs.json && grep -o '\"--expert-cache\", \"[a-z0-9]*\"' strata-unsloth-ud-iq4_xs.json strata-unsloth-ud-iq4_xs-cache1864.json",
+          "description": "Set the first UD-IQ4_XS config to an explicit 10,000-slot expert cache (about 24 GiB, within the 32 GiB carve-out)"
+        }
+      }
+    },
+    {
+      "step_id": 338,
+      "timestamp": "2026-10-05T11:22:37.242Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed PowerShell toolu_01Bu8i26TuaxhGbdXWmDPZdN",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01Bu8i26TuaxhGbdXWmDPZdN",
+          "function_name": "PowerShell",
+          "arguments": {
+            "command": "Set-Location E:\\work\\AI\\Strata; $env:STRATA_PREFILL_TIMING=\"1\"; $env:STRATA_ARENA_PIN_GIB=\"24\"; $env:STRATA_ENGRAM_SRC=\"E:\\work\\AI\\EngramHalo.cpp\\src\"; $env:PYTHONUTF8=\"1\"; foreach ($cfg in @(@{name=\"strata-unsloth-ud-iq4_xs\"; label=\"halo-8060S-ud-iq4_xs-32-96-cache10000-pin24\"}, @{name=\"strata-unsloth-ud-iq4_xs-cache1864\"; label=\"halo-8060S-ud-iq4_xs-32-96-cache1864-pcie055-pin24\"})) { $srv = Start-Process -FilePath C:\\conda_envs\\strata\\python.exe -ArgumentList 'serve\\server.py','--engine','strata','--config',\"$($cfg.name).json\",'--port','8080' -RedirectStandardOutput \"server-$($cfg.name).out\" -RedirectStandardError \"server-$($cfg.name).err\" -PassThru -WindowStyle Hidden; $ready=$false; for ($i=0; $i -lt 180; $i++) { Start-Sleep 5; try { $r = Invoke-WebRequest -UseBasicParsing -TimeoutSec 3 http://127.0.0.1:8080/v1/models; if ($r.Content -match '\"id\"') { $ready=$true; break } } catch {}; if ($srv.HasExited) { break } }; \"$($cfg.name): ready=$ready after $(($i+1)*5) s\"; if ($ready) { cmd /c \"C:\\conda_envs\\strata\\python.exe docs\\benchmarks\\2026-10-02-3060m-bench_halo.py $($cfg.label) docs\\benchmarks\\2026-10-05-$($cfg.name).json > docs\\benchmarks\\2026-10-05-$($cfg.name).log 2>&1\"; \"bench exit $LASTEXITCODE\" } else { Get-Content \"strata-$($cfg.name.Substring(7)).log\" -Tail 5 -ErrorAction SilentlyContinue }; Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like \"*serve\\server.py*\" } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; Start-Sleep 2; Get-Process strata -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; Start-Sleep 5 }; \"all done\"",
+            "description": "Run UD-IQ4_XS twice on the 32/96 split with the pinned arena capped at 24 GiB: a 10,000-expert cache, then 1,864 like the 3060; full benchmark each",
+            "run_in_background": true,
+            "timeout": 7200000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01Bu8i26TuaxhGbdXWmDPZdN",
+            "content": "Command running in background with ID: btreezkpk. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\btreezkpk.output. You will be notified when it completes. To check interim output, use Read on that file path.\n\n[metadata] {\"backgroundTaskId\": \"btreezkpk\"}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 414951,
+        "completion_tokens": 1995,
+        "cached_tokens": 414919,
+        "extra": {
+          "cache_creation_input_tokens": 1208,
+          "cache_read_input_tokens": 414919,
+          "output_tokens_details": {
+            "thinking_tokens": 645
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1208,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1995,
+              "cache_read_input_tokens": 414919,
+              "cache_creation_input_tokens": 1208,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1208
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "PowerShell",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "backgroundTaskId": "btreezkpk"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Bu8i26TuaxhGbdXWmDPZdN",
+            "type": "tool_result",
+            "content": "Command running in background with ID: btreezkpk. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\btreezkpk.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "",
+            "stderr": "",
+            "interrupted": false,
+            "backgroundTaskId": "btreezkpk"
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Bu8i26TuaxhGbdXWmDPZdN",
+            "type": "tool_result",
+            "content": "Command running in background with ID: btreezkpk. Output is being written to: C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\ed11a558-488f-44ff-ae44-74cbeaee92fe\\tasks\\btreezkpk.output. You will be notified when it completes. To check interim output, use Read on that file path.",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "Set-Location E:\\work\\AI\\Strata; $env:STRATA_PREFILL_TIMING=\"1\"; $env:STRATA_ARENA_PIN_GIB=\"24\"; $env:STRATA_ENGRAM_SRC=\"E:\\work\\AI\\EngramHalo.cpp\\src\"; $env:PYTHONUTF8=\"1\"; foreach ($cfg in @(@{name=\"strata-unsloth-ud-iq4_xs\"; label=\"halo-8060S-ud-iq4_xs-32-96-cache10000-pin24\"}, @{name=\"strata-unsloth-ud-iq4_xs-cache1864\"; label=\"halo-8060S-ud-iq4_xs-32-96-cache1864-pcie055-pin24\"})) { $srv = Start-Process -FilePath C:\\conda_envs\\strata\\python.exe -ArgumentList 'serve\\server.py','--engine','strata','--config',\"$($cfg.name).json\",'--port','8080' -RedirectStandardOutput \"server-$($cfg.name).out\" -RedirectStandardError \"server-$($cfg.name).err\" -PassThru -WindowStyle Hidden; $ready=$false; for ($i=0; $i -lt 180; $i++) { Start-Sleep 5; try { $r = Invoke-WebRequest -UseBasicParsing -TimeoutSec 3 http://127.0.0.1:8080/v1/models; if ($r.Content -match '\"id\"') { $ready=$true; break } } catch {}; if ($srv.HasExited) { break } }; \"$($cfg.name): ready=$ready after $(($i+1)*5) s\"; if ($ready) { cmd /c \"C:\\conda_envs\\strata\\python.exe docs\\benchmarks\\2026-10-02-3060m-bench_halo.py $($cfg.label) docs\\benchmarks\\2026-10-05-$($cfg.name).json > docs\\benchmarks\\2026-10-05-$($cfg.name).log 2>&1\"; \"bench exit $LASTEXITCODE\" } else { Get-Content \"strata-$($cfg.name.Substring(7)).log\" -Tail 5 -ErrorAction SilentlyContinue }; Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like \"*serve\\server.py*\" } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; Start-Sleep 2; Get-Process strata -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; Start-Sleep 5 }; \"all done\"",
+          "description": "Run UD-IQ4_XS twice on the 32/96 split with the pinned arena capped at 24 GiB: a 10,000-expert cache, then 1,864 like the 3060; full benchmark each",
+          "run_in_background": true,
+          "timeout": 7200000
+        }
+      }
+    },
+    {
+      "step_id": 339,
+      "timestamp": "2026-10-05T11:22:45.978Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 416159,
+        "completion_tokens": 1800,
+        "cached_tokens": 416127,
+        "extra": {
+          "cache_creation_input_tokens": 3015,
+          "cache_read_input_tokens": 416127,
+          "output_tokens_details": {
+            "thinking_tokens": 323
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3015,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1800,
+              "cache_read_input_tokens": 416127,
+              "cache_creation_input_tokens": 3015,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3015
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 340,
+      "timestamp": "2026-10-05T11:22:45.982Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "reasoning_content": "查清了 UD-IQ4_XS 首次启动失败的原因：在这台 APU 上每钉住 1 GiB 主机内存会让 HIP 报告的空闲显存少 2 GiB，55.4 GiB 的专家区因此把\"空闲\"压到 0，导致专家缓存槽数被设为 0。现在用 `STRATA_ARENA_PIN_GIB=24` 限制钉住量重跑两组测试，同时把这个发现写入文档。",
+      "metrics": {
+        "prompt_tokens": 416159,
+        "completion_tokens": 1800,
+        "cached_tokens": 416127,
+        "extra": {
+          "cache_creation_input_tokens": 3015,
+          "cache_read_input_tokens": 416127,
+          "output_tokens_details": {
+            "thinking_tokens": 323
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3015,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1800,
+              "cache_read_input_tokens": 416127,
+              "cache_creation_input_tokens": 3015,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3015
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 341,
+      "timestamp": "2026-10-05T11:22:56.167Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Edit toolu_01U7W6xiUSwhFM66ogWN2de2",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01U7W6xiUSwhFM66ogWN2de2",
+          "function_name": "Edit",
+          "arguments": {
+            "replace_all": false,
+            "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "old_string": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "new_string": "## UD-IQ4_XS on the 32/96 split\n\nThe pack as in 3060M.md (`tools/iq_pack.py --compat-bf16`, 25 s: 1079 tensors, 303 served natively, 195 tensors\nto BF16, `native_experts.txt` v4 for layer 14's split roles), the Coder's config with the pack, shard 1 as\n`--native` (no `--ple-gguf`: the engine found the PLE table in shard 2), the original model's\n`data/expert-profile.bin`, the same draft layer.\n\n**The first start failed, and the failure is a property of this APU worth knowing.** With `--expert-cache auto`\nthe engine pinned the 55.4 GiB arena (`cudaHostRegister PORTABLE ok`, loaded at 2.5 GiB/s) and then found\n`expert cache auto: 0.00 GiB free ... -> 0 slots` and stopped; with `--expert-cache 1864` the same (the count is\nclamped to the free figure). `docs/benchmarks/2026-10-05-halo-hip-pinfree.hip` measured what the engine saw:\n**registering N GiB of mapped pinned host memory lowers `hipMemGetInfo`'s free figure by 2N GiB** (16 GiB pinned:\n89.2 -> 57.2 free; 40 GiB: 89.2 -> 9.2), and the figure is a budget, not the memory: a 20 GiB `hipMalloc` with\n9.2 GiB \"free\" succeeded and a kernel ran over it (free then read 0.0). The engine knows the mechanism from a\ndiscrete-GPU Windows PC (#243 in `src/core/pinned.cu`: page-locked memory the GPU maps is charged to WDDM's\nshared segment, about half the RAM) and has the remedy, `STRATA_ARENA_PIN_GIB=N`: only N GiB of the arena are\npinned, the rest stays pageable and is read by the CPU as before (its streamed copies go through the pinned\nstaging ring). The Coder's 23.4 GiB arena never hit this because 2 x 23.4 fit beside the cache in every split.\nSo for 32/96: `STRATA_ARENA_PIN_GIB=24` (costing 48 of the 89.4 GiB figure) and an explicit cache of 10,000\nslots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the\ndedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\n## The RTX 5090 over Thunderbolt (not pursued)"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01U7W6xiUSwhFM66ogWN2de2",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully.\n\n[metadata] {\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"oldString\": \"## The RTX 5090 over Thunderbolt (not pursued)\", \"newString\": \"## UD-IQ4_XS on the 32/96 split\\n\\nThe pack as in 3060M.md (`tools/iq_pack.py --compat-bf16`, 25 s: 1079 tensors, 303 served natively, 195 tensors\\nto BF16, `native_experts.txt` v4 for layer 14's split roles), the Coder's config with the pack, shard 1 as\\n`--native` (no `--ple-gguf`: the engine found the PLE table in shard 2), the original model's\\n`data/expert-profile.bin`, the same draft layer.\\n\\n**The first start failed, and the failure is a property of this APU worth knowing.** With `--expert-cache auto`\\nthe engine pinned the 55.4 GiB arena (`cudaHostRegister PORTABLE ok`, loaded at 2.5 GiB/s) and then found\\n`expert cache auto: 0.00 GiB free ... -> 0 slots` and stopped; with `--expert-cache 1864` the same (the count is\\nclamped to the free figure). `docs/benchmarks/2026-10-05-halo-hip-pinfree.hip` measured what the engine saw:\\n**registering N GiB of mapped pinned host memory lowers `hipMemGetInfo`'s free figure by 2N GiB** (16 GiB pinned:\\n89.2 -> 57.2 free; 40 GiB: 89.2 -> 9.2), and the figure is a budget, not the memory: a 20 GiB `hipMalloc` with\\n9.2 GiB \\\"free\\\" succeeded and a kernel ran over it (free then read 0.0). The engine knows the mechanism from a\\ndiscrete-GPU Windows PC (#243 in `src/core/pinned.cu`: page-locked memory the GPU maps is charged to WDDM's\\nshared segment, about half the RAM) and has the remedy, `STRATA_ARENA_PIN_GIB=N`: only N GiB of the arena are\\npinned, the rest stays pageable and is read by the CPU as before (its streamed copies go through the pinned\\nstaging ring). The Coder's 23.4 GiB arena never hit this because 2 x 23.4 fit beside the cache in every split.\\nSo for 32/96: `STRATA_ARENA_PIN_GIB=24` (costing 48 of the 89.4 GiB figure) and an explicit cache of 10,000\\nslots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the\\ndedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\\n\\n## The RTX 5090 over Thunderbolt (not pursued)\", \"originalFile\": null, \"structuredPatch\": [{\"oldStart\": 531, \"oldLines\": 6, \"newStart\": 531, \"newLines\": 28, \"lines\": [\" core count, for the same reason: the 16 Zen 5 cores and the GPU share one memory. The placement that pays on\", \" this APU is all experts on the GPU, which needs the 64 GiB (or larger) carve-out.\", \" \", \"+## UD-IQ4_XS on the 32/96 split\", \"+\", \"+The pack as in 3060M.md (`tools/iq_pack.py --compat-bf16`, 25 s: 1079 tensors, 303 served natively, 195 tensors\", \"+to BF16, `native_experts.txt` v4 for layer 14's split roles), the Coder's config with the pack, shard 1 as\", \"+`--native` (no `--ple-gguf`: the engine found the PLE table in shard 2), the original model's\", \"+`data/expert-profile.bin`, the same draft layer.\", \"+\", \"+**The first start failed, and the failure is a property of this APU worth knowing.** With `--expert-cache auto`\", \"+the engine pinned the 55.4 GiB arena (`cudaHostRegister PORTABLE ok`, loaded at 2.5 GiB/s) and then found\", \"+`expert cache auto: 0.00 GiB free ... -> 0 slots` and stopped; with `--expert-cache 1864` the same (the count is\", \"+clamped to the free figure). `docs/benchmarks/2026-10-05-halo-hip-pinfree.hip` measured what the engine saw:\", \"+**registering N GiB of mapped pinned host memory lowers `hipMemGetInfo`'s free figure by 2N GiB** (16 GiB pinned:\", \"+89.2 -> 57.2 free; 40 GiB: 89.2 -> 9.2), and the figure is a budget, not the memory: a 20 GiB `hipMalloc` with\", \"+9.2 GiB \\\"free\\\" succeeded and a kernel ran over it (free then read 0.0). The engine knows the mechanism from a\", \"+discrete-GPU Windows PC (#243 in `src/core/pinned.cu`: page-locked memory the GPU maps is charged to WDDM's\", \"+shared segment, about half the RAM) and has the remedy, `STRATA_ARENA_PIN_GIB=N`: only N GiB of the arena are\", \"+pinned, the rest stays pageable and is read by the CPU as before (its streamed copies go through the pinned\", \"+staging ring). The Coder's 23.4 GiB arena never hit this because 2 x 23.4 fit beside the cache in every split.\", \"+So for 32/96: `STRATA_ARENA_PIN_GIB=24` (costing 48 of the 89.4 GiB figure) and an explicit cache of 10,000\", \"+slots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the\", \"+dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\", \"+\", \" ## The RTX 5090 over Thunderbolt (not pursued)\", \" \", \" Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's\"]}], \"userModified\": false, \"replaceAll\": false, \"contentNotInModelContext\": true}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 416159,
+        "completion_tokens": 1800,
+        "cached_tokens": 416127,
+        "extra": {
+          "cache_creation_input_tokens": 3015,
+          "cache_read_input_tokens": 416127,
+          "output_tokens_details": {
+            "thinking_tokens": 323
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3015,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1800,
+              "cache_read_input_tokens": 416127,
+              "cache_creation_input_tokens": 3015,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3015
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Edit",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "newString": "## UD-IQ4_XS on the 32/96 split\n\nThe pack as in 3060M.md (`tools/iq_pack.py --compat-bf16`, 25 s: 1079 tensors, 303 served natively, 195 tensors\nto BF16, `native_experts.txt` v4 for layer 14's split roles), the Coder's config with the pack, shard 1 as\n`--native` (no `--ple-gguf`: the engine found the PLE table in shard 2), the original model's\n`data/expert-profile.bin`, the same draft layer.\n\n**The first start failed, and the failure is a property of this APU worth knowing.** With `--expert-cache auto`\nthe engine pinned the 55.4 GiB arena (`cudaHostRegister PORTABLE ok`, loaded at 2.5 GiB/s) and then found\n`expert cache auto: 0.00 GiB free ... -> 0 slots` and stopped; with `--expert-cache 1864` the same (the count is\nclamped to the free figure). `docs/benchmarks/2026-10-05-halo-hip-pinfree.hip` measured what the engine saw:\n**registering N GiB of mapped pinned host memory lowers `hipMemGetInfo`'s free figure by 2N GiB** (16 GiB pinned:\n89.2 -> 57.2 free; 40 GiB: 89.2 -> 9.2), and the figure is a budget, not the memory: a 20 GiB `hipMalloc` with\n9.2 GiB \"free\" succeeded and a kernel ran over it (free then read 0.0). The engine knows the mechanism from a\ndiscrete-GPU Windows PC (#243 in `src/core/pinned.cu`: page-locked memory the GPU maps is charged to WDDM's\nshared segment, about half the RAM) and has the remedy, `STRATA_ARENA_PIN_GIB=N`: only N GiB of the arena are\npinned, the rest stays pageable and is read by the CPU as before (its streamed copies go through the pinned\nstaging ring). The Coder's 23.4 GiB arena never hit this because 2 x 23.4 fit beside the cache in every split.\nSo for 32/96: `STRATA_ARENA_PIN_GIB=24` (costing 48 of the 89.4 GiB figure) and an explicit cache of 10,000\nslots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the\ndedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 531,
+                "oldLines": 6,
+                "newStart": 531,
+                "newLines": 28,
+                "lines": [
+                  " core count, for the same reason: the 16 Zen 5 cores and the GPU share one memory. The placement that pays on",
+                  " this APU is all experts on the GPU, which needs the 64 GiB (or larger) carve-out.",
+                  " ",
+                  "+## UD-IQ4_XS on the 32/96 split",
+                  "+",
+                  "+The pack as in 3060M.md (`tools/iq_pack.py --compat-bf16`, 25 s: 1079 tensors, 303 served natively, 195 tensors",
+                  "+to BF16, `native_experts.txt` v4 for layer 14's split roles), the Coder's config with the pack, shard 1 as",
+                  "+`--native` (no `--ple-gguf`: the engine found the PLE table in shard 2), the original model's",
+                  "+`data/expert-profile.bin`, the same draft layer.",
+                  "+",
+                  "+**The first start failed, and the failure is a property of this APU worth knowing.** With `--expert-cache auto`",
+                  "+the engine pinned the 55.4 GiB arena (`cudaHostRegister PORTABLE ok`, loaded at 2.5 GiB/s) and then found",
+                  "+`expert cache auto: 0.00 GiB free ... -> 0 slots` and stopped; with `--expert-cache 1864` the same (the count is",
+                  "+clamped to the free figure). `docs/benchmarks/2026-10-05-halo-hip-pinfree.hip` measured what the engine saw:",
+                  "+**registering N GiB of mapped pinned host memory lowers `hipMemGetInfo`'s free figure by 2N GiB** (16 GiB pinned:",
+                  "+89.2 -> 57.2 free; 40 GiB: 89.2 -> 9.2), and the figure is a budget, not the memory: a 20 GiB `hipMalloc` with",
+                  "+9.2 GiB \"free\" succeeded and a kernel ran over it (free then read 0.0). The engine knows the mechanism from a",
+                  "+discrete-GPU Windows PC (#243 in `src/core/pinned.cu`: page-locked memory the GPU maps is charged to WDDM's",
+                  "+shared segment, about half the RAM) and has the remedy, `STRATA_ARENA_PIN_GIB=N`: only N GiB of the arena are",
+                  "+pinned, the rest stays pageable and is read by the CPU as before (its streamed copies go through the pinned",
+                  "+staging ring). The Coder's 23.4 GiB arena never hit this because 2 x 23.4 fit beside the cache in every split.",
+                  "+So for 32/96: `STRATA_ARENA_PIN_GIB=24` (costing 48 of the 89.4 GiB figure) and an explicit cache of 10,000",
+                  "+slots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the",
+                  "+dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01U7W6xiUSwhFM66ogWN2de2",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "newString": "## UD-IQ4_XS on the 32/96 split\n\nThe pack as in 3060M.md (`tools/iq_pack.py --compat-bf16`, 25 s: 1079 tensors, 303 served natively, 195 tensors\nto BF16, `native_experts.txt` v4 for layer 14's split roles), the Coder's config with the pack, shard 1 as\n`--native` (no `--ple-gguf`: the engine found the PLE table in shard 2), the original model's\n`data/expert-profile.bin`, the same draft layer.\n\n**The first start failed, and the failure is a property of this APU worth knowing.** With `--expert-cache auto`\nthe engine pinned the 55.4 GiB arena (`cudaHostRegister PORTABLE ok`, loaded at 2.5 GiB/s) and then found\n`expert cache auto: 0.00 GiB free ... -> 0 slots` and stopped; with `--expert-cache 1864` the same (the count is\nclamped to the free figure). `docs/benchmarks/2026-10-05-halo-hip-pinfree.hip` measured what the engine saw:\n**registering N GiB of mapped pinned host memory lowers `hipMemGetInfo`'s free figure by 2N GiB** (16 GiB pinned:\n89.2 -> 57.2 free; 40 GiB: 89.2 -> 9.2), and the figure is a budget, not the memory: a 20 GiB `hipMalloc` with\n9.2 GiB \"free\" succeeded and a kernel ran over it (free then read 0.0). The engine knows the mechanism from a\ndiscrete-GPU Windows PC (#243 in `src/core/pinned.cu`: page-locked memory the GPU maps is charged to WDDM's\nshared segment, about half the RAM) and has the remedy, `STRATA_ARENA_PIN_GIB=N`: only N GiB of the arena are\npinned, the rest stays pageable and is read by the CPU as before (its streamed copies go through the pinned\nstaging ring). The Coder's 23.4 GiB arena never hit this because 2 x 23.4 fit beside the cache in every split.\nSo for 32/96: `STRATA_ARENA_PIN_GIB=24` (costing 48 of the 89.4 GiB figure) and an explicit cache of 10,000\nslots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the\ndedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 531,
+                "oldLines": 6,
+                "newStart": 531,
+                "newLines": 28,
+                "lines": [
+                  " core count, for the same reason: the 16 Zen 5 cores and the GPU share one memory. The placement that pays on",
+                  " this APU is all experts on the GPU, which needs the 64 GiB (or larger) carve-out.",
+                  " ",
+                  "+## UD-IQ4_XS on the 32/96 split",
+                  "+",
+                  "+The pack as in 3060M.md (`tools/iq_pack.py --compat-bf16`, 25 s: 1079 tensors, 303 served natively, 195 tensors",
+                  "+to BF16, `native_experts.txt` v4 for layer 14's split roles), the Coder's config with the pack, shard 1 as",
+                  "+`--native` (no `--ple-gguf`: the engine found the PLE table in shard 2), the original model's",
+                  "+`data/expert-profile.bin`, the same draft layer.",
+                  "+",
+                  "+**The first start failed, and the failure is a property of this APU worth knowing.** With `--expert-cache auto`",
+                  "+the engine pinned the 55.4 GiB arena (`cudaHostRegister PORTABLE ok`, loaded at 2.5 GiB/s) and then found",
+                  "+`expert cache auto: 0.00 GiB free ... -> 0 slots` and stopped; with `--expert-cache 1864` the same (the count is",
+                  "+clamped to the free figure). `docs/benchmarks/2026-10-05-halo-hip-pinfree.hip` measured what the engine saw:",
+                  "+**registering N GiB of mapped pinned host memory lowers `hipMemGetInfo`'s free figure by 2N GiB** (16 GiB pinned:",
+                  "+89.2 -> 57.2 free; 40 GiB: 89.2 -> 9.2), and the figure is a budget, not the memory: a 20 GiB `hipMalloc` with",
+                  "+9.2 GiB \"free\" succeeded and a kernel ran over it (free then read 0.0). The engine knows the mechanism from a",
+                  "+discrete-GPU Windows PC (#243 in `src/core/pinned.cu`: page-locked memory the GPU maps is charged to WDDM's",
+                  "+shared segment, about half the RAM) and has the remedy, `STRATA_ARENA_PIN_GIB=N`: only N GiB of the arena are",
+                  "+pinned, the rest stays pageable and is read by the CPU as before (its streamed copies go through the pinned",
+                  "+staging ring). The Coder's 23.4 GiB arena never hit this because 2 x 23.4 fit beside the cache in every split.",
+                  "+So for 32/96: `STRATA_ARENA_PIN_GIB=24` (costing 48 of the 89.4 GiB figure) and an explicit cache of 10,000",
+                  "+slots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the",
+                  "+dedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01U7W6xiUSwhFM66ogWN2de2",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "raw_arguments": {
+          "replace_all": false,
+          "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+          "old_string": "## The RTX 5090 over Thunderbolt (not pursued)",
+          "new_string": "## UD-IQ4_XS on the 32/96 split\n\nThe pack as in 3060M.md (`tools/iq_pack.py --compat-bf16`, 25 s: 1079 tensors, 303 served natively, 195 tensors\nto BF16, `native_experts.txt` v4 for layer 14's split roles), the Coder's config with the pack, shard 1 as\n`--native` (no `--ple-gguf`: the engine found the PLE table in shard 2), the original model's\n`data/expert-profile.bin`, the same draft layer.\n\n**The first start failed, and the failure is a property of this APU worth knowing.** With `--expert-cache auto`\nthe engine pinned the 55.4 GiB arena (`cudaHostRegister PORTABLE ok`, loaded at 2.5 GiB/s) and then found\n`expert cache auto: 0.00 GiB free ... -> 0 slots` and stopped; with `--expert-cache 1864` the same (the count is\nclamped to the free figure). `docs/benchmarks/2026-10-05-halo-hip-pinfree.hip` measured what the engine saw:\n**registering N GiB of mapped pinned host memory lowers `hipMemGetInfo`'s free figure by 2N GiB** (16 GiB pinned:\n89.2 -> 57.2 free; 40 GiB: 89.2 -> 9.2), and the figure is a budget, not the memory: a 20 GiB `hipMalloc` with\n9.2 GiB \"free\" succeeded and a kernel ran over it (free then read 0.0). The engine knows the mechanism from a\ndiscrete-GPU Windows PC (#243 in `src/core/pinned.cu`: page-locked memory the GPU maps is charged to WDDM's\nshared segment, about half the RAM) and has the remedy, `STRATA_ARENA_PIN_GIB=N`: only N GiB of the arena are\npinned, the rest stays pageable and is read by the CPU as before (its streamed copies go through the pinned\nstaging ring). The Coder's 23.4 GiB arena never hit this because 2 x 23.4 fit beside the cache in every split.\nSo for 32/96: `STRATA_ARENA_PIN_GIB=24` (costing 48 of the 89.4 GiB figure) and an explicit cache of 10,000\nslots (about 24 GiB, inside the 32 GiB carve-out: `auto` would have sized itself from the figure, past the\ndedicated memory into WDDM's shared pages), and the 3060-like 1,864 slots with `--pcie-frac 0.55`.\n\n## The RTX 5090 over Thunderbolt (not pursued)"
+        }
+      }
+    },
+    {
+      "step_id": 342,
+      "timestamp": "2026-10-05T11:23:01.404Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01BCij4sBa1SeWZnMBJYrXpX",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01BCij4sBa1SeWZnMBJYrXpX",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cp \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/scratchpad/hiptest/pinfree.hip\" /e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-pinfree.hip && sleep 60 && cd /e/work/AI/Strata && grep -E \"expert cache [0-9]+ slots|loaded .* GiB|pin|slots from the profile\" strata-unsloth-ud-iq4_xs.log | tail -5 | cut -c1-200; cat \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/tasks/btreezkpk.output\" 2>/dev/null | head -5",
+            "description": "Keep the pinning probe with the benchmark sources and check whether the capped-pin start sized its expert cache",
+            "timeout": 120000
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01BCij4sBa1SeWZnMBJYrXpX",
+            "content": "strata generate: loaded 55.43 GiB at 3.10 GiB/s\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata generate: pre-filled 14358 of 14358 slots from the profile; slot 0 verified\nstrata prefill timing: 309 tokens, GPU timeline 3211 ms, wall 3217 ms, host staging 829 ms: embed+steps 51 (1.6%) hc read 398 (12.4%) gdn 339 (10.6%) qsa proj 126 (3.9%) qsa indexer 0 (0.0%) qsa selec\nstrata prefill timing: 213 tokens, GPU timeline 2131 ms, wall 2135 ms, host staging 1304 ms: embed+steps 11 (0.5%) hc read 57 (2.7%) gdn 203 (9.5%) qsa proj 93 (4.4%) qsa indexer 0 (0.0%) qsa select 1\nstrata-unsloth-ud-iq4_xs: ready=True after 35 s\n\n[stdout]\nstrata generate: loaded 55.43 GiB at 3.10 GiB/s\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata generate: pre-filled 14358 of 14358 slots from the profile; slot 0 verified\nstrata prefill timing: 309 tokens, GPU timeline 3211 ms, wall 3217 ms, host staging 829 ms: embed+steps 51 (1.6%) hc read 398 (12.4%) gdn 339 (10.6%) qsa proj 126 (3.9%) qsa indexer 0 (0.0%) qsa selec\nstrata prefill timing: 213 tokens, GPU timeline 2131 ms, wall 2135 ms, host staging 1304 ms: embed+steps 11 (0.5%) hc read 57 (2.7%) gdn 203 (9.5%) qsa proj 93 (4.4%) qsa indexer 0 (0.0%) qsa select 1\nstrata-unsloth-ud-iq4_xs: ready=True after 35 s\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [], \"moreFiles\": 0, \"unavailable\": true}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 416159,
+        "completion_tokens": 1800,
+        "cached_tokens": 416127,
+        "extra": {
+          "cache_creation_input_tokens": 3015,
+          "cache_read_input_tokens": 416127,
+          "output_tokens_details": {
+            "thinking_tokens": 323
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3015,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1800,
+              "cache_read_input_tokens": 416127,
+              "cache_creation_input_tokens": 3015,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3015
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "strata generate: loaded 55.43 GiB at 3.10 GiB/s\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata generate: pre-filled 14358 of 14358 slots from the profile; slot 0 verified\nstrata prefill timing: 309 tokens, GPU timeline 3211 ms, wall 3217 ms, host staging 829 ms: embed+steps 51 (1.6%) hc read 398 (12.4%) gdn 339 (10.6%) qsa proj 126 (3.9%) qsa indexer 0 (0.0%) qsa selec\nstrata prefill timing: 213 tokens, GPU timeline 2131 ms, wall 2135 ms, host staging 1304 ms: embed+steps 11 (0.5%) hc read 57 (2.7%) gdn 203 (9.5%) qsa proj 93 (4.4%) qsa indexer 0 (0.0%) qsa select 1\nstrata-unsloth-ud-iq4_xs: ready=True after 35 s",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [],
+              "moreFiles": 0,
+              "unavailable": true
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01BCij4sBa1SeWZnMBJYrXpX",
+            "type": "tool_result",
+            "content": "strata generate: loaded 55.43 GiB at 3.10 GiB/s\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata generate: pre-filled 14358 of 14358 slots from the profile; slot 0 verified\nstrata prefill timing: 309 tokens, GPU timeline 3211 ms, wall 3217 ms, host staging 829 ms: embed+steps 51 (1.6%) hc read 398 (12.4%) gdn 339 (10.6%) qsa proj 126 (3.9%) qsa indexer 0 (0.0%) qsa selec\nstrata prefill timing: 213 tokens, GPU timeline 2131 ms, wall 2135 ms, host staging 1304 ms: embed+steps 11 (0.5%) hc read 57 (2.7%) gdn 203 (9.5%) qsa proj 93 (4.4%) qsa indexer 0 (0.0%) qsa select 1\nstrata-unsloth-ud-iq4_xs: ready=True after 35 s",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "strata generate: loaded 55.43 GiB at 3.10 GiB/s\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata generate: pre-filled 14358 of 14358 slots from the profile; slot 0 verified\nstrata prefill timing: 309 tokens, GPU timeline 3211 ms, wall 3217 ms, host staging 829 ms: embed+steps 51 (1.6%) hc read 398 (12.4%) gdn 339 (10.6%) qsa proj 126 (3.9%) qsa indexer 0 (0.0%) qsa selec\nstrata prefill timing: 213 tokens, GPU timeline 2131 ms, wall 2135 ms, host staging 1304 ms: embed+steps 11 (0.5%) hc read 57 (2.7%) gdn 203 (9.5%) qsa proj 93 (4.4%) qsa indexer 0 (0.0%) qsa select 1\nstrata-unsloth-ud-iq4_xs: ready=True after 35 s",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [],
+              "moreFiles": 0,
+              "unavailable": true
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01BCij4sBa1SeWZnMBJYrXpX",
+            "type": "tool_result",
+            "content": "strata generate: loaded 55.43 GiB at 3.10 GiB/s\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata generate: pre-filled 14358 of 14358 slots from the profile; slot 0 verified\nstrata prefill timing: 309 tokens, GPU timeline 3211 ms, wall 3217 ms, host staging 829 ms: embed+steps 51 (1.6%) hc read 398 (12.4%) gdn 339 (10.6%) qsa proj 126 (3.9%) qsa indexer 0 (0.0%) qsa selec\nstrata prefill timing: 213 tokens, GPU timeline 2131 ms, wall 2135 ms, host staging 1304 ms: embed+steps 11 (0.5%) hc read 57 (2.7%) gdn 203 (9.5%) qsa proj 93 (4.4%) qsa indexer 0 (0.0%) qsa select 1\nstrata-unsloth-ud-iq4_xs: ready=True after 35 s",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cp \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/scratchpad/hiptest/pinfree.hip\" /e/work/AI/Strata/docs/benchmarks/2026-10-05-halo-hip-pinfree.hip && sleep 60 && cd /e/work/AI/Strata && grep -E \"expert cache [0-9]+ slots|loaded .* GiB|pin|slots from the profile\" strata-unsloth-ud-iq4_xs.log | tail -5 | cut -c1-200; cat \"/c/Users/WEILU~1/AppData/Local/Temp/claude/E--work-AI-Strata/ed11a558-488f-44ff-ae44-74cbeaee92fe/tasks/btreezkpk.output\" 2>/dev/null | head -5",
+          "description": "Keep the pinning probe with the benchmark sources and check whether the capped-pin start sized its expert cache",
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "step_id": 343,
+      "timestamp": "2026-10-05T11:24:16.621Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 419174,
+        "completion_tokens": 383,
+        "cached_tokens": 419142,
+        "extra": {
+          "cache_creation_input_tokens": 2327,
+          "cache_read_input_tokens": 419142,
+          "output_tokens_details": {
+            "thinking_tokens": 208
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2327,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 383,
+              "cache_read_input_tokens": 419142,
+              "cache_creation_input_tokens": 2327,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2327
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 344,
+      "timestamp": "2026-10-05T11:24:16.635Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Both UD-IQ4_XS runs are now in progress with the pinned arena capped at 24 GiB: the first server came up in 35 s with a 14,358-slot cache (32.4 GiB: the 10,000 asked for plus the prompt path's borrowable slots, so a little over the 32 GiB carve-out), and its benchmark is running; the 1,864-slot run follows automatically. The pinning finding is already in the document with its probe source. Nothing else is independent of the results, so I'm waiting for the completion notification.",
+      "metrics": {
+        "prompt_tokens": 419174,
+        "completion_tokens": 383,
+        "cached_tokens": 419142,
+        "extra": {
+          "cache_creation_input_tokens": 2327,
+          "cache_read_input_tokens": 419142,
+          "output_tokens_details": {
+            "thinking_tokens": 208
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2327,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 383,
+              "cache_read_input_tokens": 419142,
+              "cache_creation_input_tokens": 2327,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2327
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 77996952,
-    "total_completion_tokens": 614294,
-    "total_cached_tokens": 77989374,
-    "total_steps": 325,
+    "total_prompt_tokens": 85413128,
+    "total_completion_tokens": 642860,
+    "total_cached_tokens": 85405002,
+    "total_steps": 344,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1278106,
-      "total_cache_read_input_tokens": 77989374
+      "total_cache_creation_input_tokens": 1321742,
+      "total_cache_read_input_tokens": 85405002
     }
   }
 }
