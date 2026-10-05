@@ -936,10 +936,21 @@ if(STRATA_NATIVE_EXPERTS)
       src/prefill/ggml_cuda_host.cu
       src/prefill/gdn_chunk_wmma.cu
       "${_strata_mmq}/quantize.cu")
+    set(_strata_mmq_instances "")
     foreach(_t IN LISTS _strata_mmq_types)
-      list(APPEND _strata_mmq_sources "${_strata_mmq}/template-instances/mmq-instance-${_t}.cu")
+      list(APPEND _strata_mmq_instances "${_strata_mmq}/template-instances/mmq-instance-${_t}.cu")
     endforeach()
+    list(APPEND _strata_mmq_sources ${_strata_mmq_instances})
     set_source_files_properties(${_strata_mmq_sources} PROPERTIES LANGUAGE HIP)
+    # TODO 2b: LLVM's default scheduler spills the MMQ kernels on gfx1151 (IQ3_XXS / IQ2_S at J = 128: 256 VGPRs and
+    # 132-208 bytes of scratch per lane; most types at J = 32: 108-180 bytes); its max-ilp strategy takes 5-10% off
+    # every expert product at one layer's shape (docs/benchmarks/2026-10-06-halo-mmq-tiles*). gfx1151 only, the one
+    # arch it was measured on (-Xarch_ passes it to that arch's device compile alone); empty turns it off.
+    set(STRATA_MMQ_GFX1151_SCHED "max-ilp" CACHE STRING "LLVM scheduler strategy for the MMQ kernels on gfx1151 (empty: default)")
+    if(STRATA_MMQ_GFX1151_SCHED)
+      set_source_files_properties(${_strata_mmq_instances} PROPERTIES COMPILE_OPTIONS
+        "-Xarch_gfx1151;-mllvm=-amdgpu-sched-strategy=${STRATA_MMQ_GFX1151_SCHED}")
+    endif()
     add_library(strata_mmq STATIC ${_strata_mmq_sources})
     target_include_directories(strata_mmq
       PRIVATE "${_strata_gg}/include" "${_strata_gg}/src" "${_strata_mmq}"

@@ -42,11 +42,22 @@ the measurement that decides it. Test outputs (engine logs, server output, bench
    chunk (padding 103% -> 23%), but its 4K chunks are bound by the arena staging and do not move (331-336 -> 332-333
    t/s); 1.66K 258-260 -> 280-281 t/s. The prompt path's GDN state hash is unchanged on both models. Costs 174-182
    more lent cache slots (0.32-0.42 GiB) during a prompt. Not measured on a CUDA card (other J tiles).
-2b. **The MMQ kernels themselves: 6-12 TOPS at the expert shapes** (the harness, sorted groups: 8.7-12.4), against
+2b. ~~**The MMQ kernels themselves: 6-12 TOPS at the expert shapes** (the harness, sorted groups: 8.7-12.4), against
    the card's int8 dot peak. The vendored ggml already has the RDNA 3.5 tile tables (`mmq-config-rdna3-5.cuh`: 256
-   threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles (128
-   threads, I = 64, J = 48; closed unmerged, pp128 +61-74% claimed) are untested here. The harness links
-   `strata_mmq.lib`, so a config edit and `cmake --build build-hip-win --target strata_mmq` measure it.
+   threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles ... are
+   untested here.~~ **Done 2026-10-06, with a corrected premise**
+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2b-done-the-mmq-kernels-spilled-registers-llvms-max-ilp-scheduler-takes-5-10-off-them-2026-10-06)):
+   MMQ on gfx1151 runs WMMA (`v_wmma_i32_16x16x16_iu8`), not `sudot4`. Its kernels spilled registers: IQ3_XXS /
+   IQ2_S (the Coder's gate/up) at J = 128 hit 256 VGPRs and 132-208 bytes of scratch per lane, most types at J = 32
+   108-180 bytes. Of 8 compiler settings and the #21284 tiles (`docs/benchmarks/2026-10-06-halo-mmq-tiles*`), LLVM's
+   max-ilp scheduler was the best or level with the best on every type: -5 to -10% per layer in the harness. Shipped as
+   `STRATA_MMQ_GFX1151_SCHED` (CMake, default `max-ilp`, gfx1151's device compile only, empty = off). In the engine
+   (Coder): gate/up 1,463-1,479 -> 1,396-1,430 ms per 4K chunk, pp4096 560-561 -> 566-567 t/s, 1.66K 466-468 ->
+   476-477, 1.2K 414 -> 424; the same GDN state hash and text. The one table: one run moved within its spread
+   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:
+   4.75K 577.5-577.6 -> 582.6-583.1 t/s, 16-20K +1.4%, pp4096 even, decode unchanged. The kernels still run at 9-13
+   TOPS per layer; the #21284 tiles add 2-3% on the down products only and would need a patched upstream table:
+   not taken.
 3. ~~**`hip_prefill_mmq_parity` fails on gfx1151** ("synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output").
    Find out whether it is ggml's gfx1151 handling (llama.cpp#21284: MMQ tile `mmq_x=48, mmq_y=64, nwarps=4`
    against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). This
