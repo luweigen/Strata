@@ -11528,19 +11528,1169 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 133,
+      "timestamp": "2026-10-05T21:32:45.777Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>bwz3up38a</task-id>\n<tool-use-id>toolu_01YNXfQgLKqp3fB14Gv9e3u6</tool-use-id>\n<output-file>C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\d1be491a-b33a-4ce9-9870-f25de33f7058\\tasks\\bwz3up38a.output</output-file>\n<status>completed</status>\n<summary>Background command \"Run the one-table benchmark\" completed (exit code 0)</summary>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 134,
+      "timestamp": "2026-10-05T21:32:50.398Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01Gj6NJjHwcoym2JYEFjnmvv",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01Gj6NJjHwcoym2JYEFjnmvv",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cat docs/benchmarks/2026-10-05-halo-onetable-todo2a.log | /c/conda_envs/strata/python.exe -c \"\nimport sys,json\nfor l in sys.stdin:\n    try: d=json.loads(l)\n    except: print(l.rstrip()); continue\n    if 'config' in d: print('==',d['config'],d['load_s']); continue\n    print(f\\\"{d['test'][:50]:50s} pp {d.get('prompt_n')} @ {d.get('prompt_per_second')}  tg {d.get('predicted_per_second')}  acc {d.get('accept_pct')}  cache {d.get('cache_n')}\\\")\"; grep -h \"hit rate\" docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log | tail -1",
+            "description": "Summarize new one-table results"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01Gj6NJjHwcoym2JYEFjnmvv",
+            "content": "== strata-coder-iq1_m.json 15.4\r\nserver: cold first request (short code prompt)     pp 314 @ 217.6  tg 39.1  acc 86.4  cache 0\r\nserver: fresh code prompt                          pp 218 @ 205.1  tg 38.0  acc 86.0  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 587.5  tg 33.7  acc 80.4  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 262.0  tg 39.2  acc 85.2  cache 0\r\npp4096 @ d0                                        pp 4085 @ 576.1  tg 23.4  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 56.0  tg 27.7  acc 57.6  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 597.4  tg 23.3  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 591.3  tg 23.6  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 588.5  tg 27.9  acc 63.4  cache 0\r\n== strata-unsloth-ud-iq4_xs.json 37.8\r\nserver: cold first request (short code prompt)     pp 314 @ 136.1  tg 29.9  acc 90.8  cache 0\r\nserver: fresh code prompt                          pp 218 @ 143.0  tg 26.9  acc 84.6  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 355.2  tg 22.1  acc 72.9  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 176.3  tg 29.5  acc 87.9  cache 0\r\npp4096 @ d0                                        pp 4085 @ 339.1  tg 15.1  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 41.4  tg 20.8  acc 66.7  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 365.8  tg 16.6  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 362.0  tg 16.4  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 364.9  tg 22.5  acc 72.6  cache 0\r\nstrata serve: decode expert cache hit rate: 98.9% (72997 hits / 73821 lookups)\n\n[stdout]\n== strata-coder-iq1_m.json 15.4\r\nserver: cold first request (short code prompt)     pp 314 @ 217.6  tg 39.1  acc 86.4  cache 0\r\nserver: fresh code prompt                          pp 218 @ 205.1  tg 38.0  acc 86.0  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 587.5  tg 33.7  acc 80.4  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 262.0  tg 39.2  acc 85.2  cache 0\r\npp4096 @ d0                                        pp 4085 @ 576.1  tg 23.4  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 56.0  tg 27.7  acc 57.6  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 597.4  tg 23.3  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 591.3  tg 23.6  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 588.5  tg 27.9  acc 63.4  cache 0\r\n== strata-unsloth-ud-iq4_xs.json 37.8\r\nserver: cold first request (short code prompt)     pp 314 @ 136.1  tg 29.9  acc 90.8  cache 0\r\nserver: fresh code prompt                          pp 218 @ 143.0  tg 26.9  acc 84.6  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 355.2  tg 22.1  acc 72.9  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 176.3  tg 29.5  acc 87.9  cache 0\r\npp4096 @ d0                                        pp 4085 @ 339.1  tg 15.1  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 41.4  tg 20.8  acc 66.7  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 365.8  tg 16.6  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 362.0  tg 16.4  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 364.9  tg 22.5  acc 72.6  cache 0\r\nstrata serve: decode expert cache hit rate: 98.9% (72997 hits / 73821 lookups)\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 195674,
+        "completion_tokens": 364,
+        "cached_tokens": 195670,
+        "extra": {
+          "cache_creation_input_tokens": 376,
+          "cache_read_input_tokens": 195670,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 376,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 364,
+              "cache_read_input_tokens": 195670,
+              "cache_creation_input_tokens": 376,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 376
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "== strata-coder-iq1_m.json 15.4\r\nserver: cold first request (short code prompt)     pp 314 @ 217.6  tg 39.1  acc 86.4  cache 0\r\nserver: fresh code prompt                          pp 218 @ 205.1  tg 38.0  acc 86.0  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 587.5  tg 33.7  acc 80.4  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 262.0  tg 39.2  acc 85.2  cache 0\r\npp4096 @ d0                                        pp 4085 @ 576.1  tg 23.4  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 56.0  tg 27.7  acc 57.6  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 597.4  tg 23.3  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 591.3  tg 23.6  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 588.5  tg 27.9  acc 63.4  cache 0\r\n== strata-unsloth-ud-iq4_xs.json 37.8\r\nserver: cold first request (short code prompt)     pp 314 @ 136.1  tg 29.9  acc 90.8  cache 0\r\nserver: fresh code prompt                          pp 218 @ 143.0  tg 26.9  acc 84.6  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 355.2  tg 22.1  acc 72.9  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 176.3  tg 29.5  acc 87.9  cache 0\r\npp4096 @ d0                                        pp 4085 @ 339.1  tg 15.1  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 41.4  tg 20.8  acc 66.7  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 365.8  tg 16.6  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 362.0  tg 16.4  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 364.9  tg 22.5  acc 72.6  cache 0\r\nstrata serve: decode expert cache hit rate: 98.9% (72997 hits / 73821 lookups)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Gj6NJjHwcoym2JYEFjnmvv",
+            "type": "tool_result",
+            "content": "== strata-coder-iq1_m.json 15.4\r\nserver: cold first request (short code prompt)     pp 314 @ 217.6  tg 39.1  acc 86.4  cache 0\r\nserver: fresh code prompt                          pp 218 @ 205.1  tg 38.0  acc 86.0  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 587.5  tg 33.7  acc 80.4  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 262.0  tg 39.2  acc 85.2  cache 0\r\npp4096 @ d0                                        pp 4085 @ 576.1  tg 23.4  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 56.0  tg 27.7  acc 57.6  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 597.4  tg 23.3  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 591.3  tg 23.6  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 588.5  tg 27.9  acc 63.4  cache 0\r\n== strata-unsloth-ud-iq4_xs.json 37.8\r\nserver: cold first request (short code prompt)     pp 314 @ 136.1  tg 29.9  acc 90.8  cache 0\r\nserver: fresh code prompt                          pp 218 @ 143.0  tg 26.9  acc 84.6  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 355.2  tg 22.1  acc 72.9  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 176.3  tg 29.5  acc 87.9  cache 0\r\npp4096 @ d0                                        pp 4085 @ 339.1  tg 15.1  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 41.4  tg 20.8  acc 66.7  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 365.8  tg 16.6  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 362.0  tg 16.4  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 364.9  tg 22.5  acc 72.6  cache 0\r\nstrata serve: decode expert cache hit rate: 98.9% (72997 hits / 73821 lookups)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "== strata-coder-iq1_m.json 15.4\r\nserver: cold first request (short code prompt)     pp 314 @ 217.6  tg 39.1  acc 86.4  cache 0\r\nserver: fresh code prompt                          pp 218 @ 205.1  tg 38.0  acc 86.0  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 587.5  tg 33.7  acc 80.4  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 262.0  tg 39.2  acc 85.2  cache 0\r\npp4096 @ d0                                        pp 4085 @ 576.1  tg 23.4  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 56.0  tg 27.7  acc 57.6  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 597.4  tg 23.3  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 591.3  tg 23.6  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 588.5  tg 27.9  acc 63.4  cache 0\r\n== strata-unsloth-ud-iq4_xs.json 37.8\r\nserver: cold first request (short code prompt)     pp 314 @ 136.1  tg 29.9  acc 90.8  cache 0\r\nserver: fresh code prompt                          pp 218 @ 143.0  tg 26.9  acc 84.6  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 355.2  tg 22.1  acc 72.9  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 176.3  tg 29.5  acc 87.9  cache 0\r\npp4096 @ d0                                        pp 4085 @ 339.1  tg 15.1  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 41.4  tg 20.8  acc 66.7  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 365.8  tg 16.6  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 362.0  tg 16.4  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 364.9  tg 22.5  acc 72.6  cache 0\r\nstrata serve: decode expert cache hit rate: 98.9% (72997 hits / 73821 lookups)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Gj6NJjHwcoym2JYEFjnmvv",
+            "type": "tool_result",
+            "content": "== strata-coder-iq1_m.json 15.4\r\nserver: cold first request (short code prompt)     pp 314 @ 217.6  tg 39.1  acc 86.4  cache 0\r\nserver: fresh code prompt                          pp 218 @ 205.1  tg 38.0  acc 86.0  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 587.5  tg 33.7  acc 80.4  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 262.0  tg 39.2  acc 85.2  cache 0\r\npp4096 @ d0                                        pp 4085 @ 576.1  tg 23.4  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 56.0  tg 27.7  acc 57.6  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 597.4  tg 23.3  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 591.3  tg 23.6  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 588.5  tg 27.9  acc 63.4  cache 0\r\n== strata-unsloth-ud-iq4_xs.json 37.8\r\nserver: cold first request (short code prompt)     pp 314 @ 136.1  tg 29.9  acc 90.8  cache 0\r\nserver: fresh code prompt                          pp 218 @ 143.0  tg 26.9  acc 84.6  cache 0\r\nserver: ~4.75K-token prompt, prefill + decode tail pp 4749 @ 355.2  tg 22.1  acc 72.9  cache 0\r\nserver: repeated first prompt (reference only)     pp 314 @ 176.3  tg 29.5  acc 87.9  cache 0\r\npp4096 @ d0                                        pp 4085 @ 339.1  tg 15.1  acc None  cache 0\r\ntg128 @ d0                                         pp 68 @ 41.4  tg 20.8  acc 66.7  cache 0\r\ndepth 16384 prefix (cached for the next rows)      pp 16384 @ 365.8  tg 16.6  acc None  cache 0\r\npp4096 @ d16384                                    pp 20421 @ 362.0  tg 16.4  acc None  cache 0\r\ntg128 @ d16384                                     pp 16401 @ 364.9  tg 22.5  acc 72.6  cache 0\r\nstrata serve: decode expert cache hit rate: 98.9% (72997 hits / 73821 lookups)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cat docs/benchmarks/2026-10-05-halo-onetable-todo2a.log | /c/conda_envs/strata/python.exe -c \"\nimport sys,json\nfor l in sys.stdin:\n    try: d=json.loads(l)\n    except: print(l.rstrip()); continue\n    if 'config' in d: print('==',d['config'],d['load_s']); continue\n    print(f\\\"{d['test'][:50]:50s} pp {d.get('prompt_n')} @ {d.get('prompt_per_second')}  tg {d.get('predicted_per_second')}  acc {d.get('accept_pct')}  cache {d.get('cache_n')}\\\")\"; grep -h \"hit rate\" docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log | tail -1",
+          "description": "Summarize new one-table results"
+        }
+      }
+    },
+    {
+      "step_id": 135,
+      "timestamp": "2026-10-05T21:32:54.863Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 196048,
+        "completion_tokens": 547,
+        "cached_tokens": 196046,
+        "extra": {
+          "cache_creation_input_tokens": 1283,
+          "cache_read_input_tokens": 196046,
+          "output_tokens_details": {
+            "thinking_tokens": 232
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1283,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 547,
+              "cache_read_input_tokens": 196046,
+              "cache_creation_input_tokens": 1283,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1283
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 136,
+      "timestamp": "2026-10-05T21:32:57.014Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01LZLqZSKYz2bQ1cqPfXQrCU",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01LZLqZSKYz2bQ1cqPfXQrCU",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "grep -h \"hit rate\" docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log | grep -o \"[0-9.]*%\" | sort -n | sed -n '1p;$p'; grep -h \"slots\\b.*made\\|expert cache [0-9]* slots\\|borrows\" docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log | head; grep -n \"^### The one table, redone with TODO 5\" \"docs/AIMAX+395-ROCm.md\"",
+            "description": "Get hit-rate range and cache facts"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01LZLqZSKYz2bQ1cqPfXQrCU",
+            "content": "90.6%\n98.9%\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1861 CUDA0 cache slots (4.22 GiB)\nstrata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 2480 CUDA0 cache slots (4.74 GiB)\n1142:### The one table, redone with TODO 5's engine\n\n[stdout]\n90.6%\n98.9%\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1861 CUDA0 cache slots (4.22 GiB)\nstrata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 2480 CUDA0 cache slots (4.74 GiB)\n1142:### The one table, redone with TODO 5's engine\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 196048,
+        "completion_tokens": 547,
+        "cached_tokens": 196046,
+        "extra": {
+          "cache_creation_input_tokens": 1283,
+          "cache_read_input_tokens": 196046,
+          "output_tokens_details": {
+            "thinking_tokens": 232
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1283,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 547,
+              "cache_read_input_tokens": 196046,
+              "cache_creation_input_tokens": 1283,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1283
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "90.6%\n98.9%\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1861 CUDA0 cache slots (4.22 GiB)\nstrata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 2480 CUDA0 cache slots (4.74 GiB)\n1142:### The one table, redone with TODO 5's engine",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01LZLqZSKYz2bQ1cqPfXQrCU",
+            "type": "tool_result",
+            "content": "90.6%\n98.9%\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1861 CUDA0 cache slots (4.22 GiB)\nstrata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 2480 CUDA0 cache slots (4.74 GiB)\n1142:### The one table, redone with TODO 5's engine",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "90.6%\n98.9%\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1861 CUDA0 cache slots (4.22 GiB)\nstrata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 2480 CUDA0 cache slots (4.74 GiB)\n1142:### The one table, redone with TODO 5's engine",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01LZLqZSKYz2bQ1cqPfXQrCU",
+            "type": "tool_result",
+            "content": "90.6%\n98.9%\nstrata generate: expert cache 14358 slots, 32.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 1861 CUDA0 cache slots (4.22 GiB)\nstrata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\nstrata serve: the prompt path borrows 2480 CUDA0 cache slots (4.74 GiB)\n1142:### The one table, redone with TODO 5's engine",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "grep -h \"hit rate\" docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log | grep -o \"[0-9.]*%\" | sort -n | sed -n '1p;$p'; grep -h \"slots\\b.*made\\|expert cache [0-9]* slots\\|borrows\" docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log | head; grep -n \"^### The one table, redone with TODO 5\" \"docs/AIMAX+395-ROCm.md\"",
+          "description": "Get hit-rate range and cache facts"
+        }
+      }
+    },
+    {
+      "step_id": 137,
+      "timestamp": "2026-10-05T21:33:06.161Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 197331,
+        "completion_tokens": 3277,
+        "cached_tokens": 197329,
+        "extra": {
+          "cache_creation_input_tokens": 747,
+          "cache_read_input_tokens": 197329,
+          "output_tokens_details": {
+            "thinking_tokens": 896
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 747,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 3277,
+              "cache_read_input_tokens": 197329,
+              "cache_creation_input_tokens": 747,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 747
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 138,
+      "timestamp": "2026-10-05T21:33:06.165Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Writing the subsection.",
+      "metrics": {
+        "prompt_tokens": 197331,
+        "completion_tokens": 3277,
+        "cached_tokens": 197329,
+        "extra": {
+          "cache_creation_input_tokens": 747,
+          "cache_read_input_tokens": 197329,
+          "output_tokens_details": {
+            "thinking_tokens": 896
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 747,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 3277,
+              "cache_read_input_tokens": 197329,
+              "cache_creation_input_tokens": 747,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 747
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 139,
+      "timestamp": "2026-10-05T21:33:22.462Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Edit toolu_01XmVLGHSEW2MCvswinbcZb9",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01XmVLGHSEW2MCvswinbcZb9",
+          "function_name": "Edit",
+          "arguments": {
+            "replace_all": false,
+            "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "old_string": "are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\n",
+            "new_string": "are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\n\n### The one table, redone with TODO 2a's engine\n\nThe same table as [TODO 5's](#the-one-table-redone-with-todo-5s-engine), with this section's engine (the classes on\ntop of TODO 5's) in both Strata columns; the earlier tables are left as they were. The same benchmark\n(`2026-10-02-3060m-bench_halo.py`), the same configs (`strata-coder-iq1_m.json` at 32/96, all 12,288 experts\nresident, 100% hits; `strata-unsloth-ud-iq4_xs.json` at 32/96, `STRATA_ARENA_PIN_GIB=24`, 14,358 slots, 90.6-98.9%\nhits), run back to back by `2026-10-05-halo-onetable-run.py todo2a` on 2026-10-06\n(`benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json`, `benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json`, the\nengine logs beside them, the rows in `2026-10-05-halo-onetable-todo2a.log`). llama.cpp and the 3060M PC columns are\nthe night's. MTP on in every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode).\nWhere the other Halo engine wins a row, its number is in brackets; TODO 5's Strata number follows in parentheses\nwhere it moved.\n\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU, TODO 2a's engine** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (TODO 2a's engine) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |\n|---|---|---|---|---|\n| model load to listening | 15.4 s (was 11.7) | 11.5 s | 83-94 s (**Strata: 37.8 s**) | 42 s |\n| cold first request, decode | **39.1 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.9) - even | 37.6 t/s |\n| fresh code prompt, decode | **38.0 t/s** (was 36.9; llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.9) - even | 38.7 t/s |\n| prefill @ ~4.75K | **587.5 t/s** (was 573.0; llama.cpp: 321.5) | 961.3 t/s | 322 t/s (**Strata: 355.2**, was 341.3) | 662.8 t/s |\n| decode tail after that prefill | **33.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1) - even | 33.1 t/s |\n| repeated prompt (reference) | 39.2 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 29.5) | 42.6 t/s |\n| pp4096 @ d0 | **576.1 t/s** (was 557.5; llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (Strata: 339.1, was 335.0) | 819.4 t/s |\n| tg128 @ d0 | **27.7 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.8 MTP) - even | 32.2 t/s |\n| pp4096 @ d16384 | **~595 t/s** (591.3 over 20,421, the 16,384 prefix at 597.4; was ~585; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (**Strata: 362-366** over 16-20K, was 351-356) | ~949 t/s |\n| tg128 @ d16384 | **27.9 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 22.5** MTP, was 19.1) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.75-0.90 | 1 | 0.65-0.80 (Strata) | 1 |\n| ratio to the 3060M PC, prefill | 0.52-0.62 | 1 | 0.38-0.54 (Strata; llama.cpp 0.4-0.5) | 1 |\n\nWhat moved: the Coder's prefill, +2-3% at every length (573.0 -> 587.5 at 4.75K, 557.5 -> 576.1 at pp4096, ~585 ->\n~595 at 16-20K), as the A/B above said for 4K chunks. The 16K prefix gains least (592.7 -> 597.4): its chunks are\n8,192 tokens, where most experts have more than 128 rows and fall into one class. UD-IQ4_XS +1-4% (341.3 -> 355.2\nat 4.75K, 335.0 -> 339.1 at pp4096, 351-356 -> 362-366 at 16-20K). The A/B above found its 4K chunks bound by the\narena staging, and these gains are within the run-to-run spread of its earlier tables (312-324 at pp4096 between\nTODO 2's and the night's runs). llama.cpp still leads at pp4096 @ d0. Decode does not use this path. Its rows moved\nwithin the spread, except UD-IQ4_XS's tg128 @ d16384, 19.1 -> 22.5 t/s. That row's MTP acceptance went 58.3 ->\n72.6%, back near TODO 2's 73.9% (21.8 t/s); its decode is not repeatable from run to run (above). The Coder's load\ntime, 11.7 -> 15.4 s, is the start of a server whose files were less warm in the page cache, not the engine: the\nclasses add buffers only to a prompt chunk. The day's prompt speed for the Coder at 4.75K: 146 -> 209 -> 274 -> 451\n-> 528 -> 548 -> 573 -> 588 t/s.\n"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01XmVLGHSEW2MCvswinbcZb9",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully.\n\n[metadata] {\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"oldString\": \"are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\\n\", \"newString\": \"are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\\n\\n### The one table, redone with TODO 2a's engine\\n\\nThe same table as [TODO 5's](#the-one-table-redone-with-todo-5s-engine), with this section's engine (the classes on\\ntop of TODO 5's) in both Strata columns; the earlier tables are left as they were. The same benchmark\\n(`2026-10-02-3060m-bench_halo.py`), the same configs (`strata-coder-iq1_m.json` at 32/96, all 12,288 experts\\nresident, 100% hits; `strata-unsloth-ud-iq4_xs.json` at 32/96, `STRATA_ARENA_PIN_GIB=24`, 14,358 slots, 90.6-98.9%\\nhits), run back to back by `2026-10-05-halo-onetable-run.py todo2a` on 2026-10-06\\n(`benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json`, `benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json`, the\\nengine logs beside them, the rows in `2026-10-05-halo-onetable-todo2a.log`). llama.cpp and the 3060M PC columns are\\nthe night's. MTP on in every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode).\\nWhere the other Halo engine wins a row, its number is in brackets; TODO 5's Strata number follows in parentheses\\nwhere it moved.\\n\\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU, TODO 2a's engine** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (TODO 2a's engine) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |\\n|---|---|---|---|---|\\n| model load to listening | 15.4 s (was 11.7) | 11.5 s | 83-94 s (**Strata: 37.8 s**) | 42 s |\\n| cold first request, decode | **39.1 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.9) - even | 37.6 t/s |\\n| fresh code prompt, decode | **38.0 t/s** (was 36.9; llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.9) - even | 38.7 t/s |\\n| prefill @ ~4.75K | **587.5 t/s** (was 573.0; llama.cpp: 321.5) | 961.3 t/s | 322 t/s (**Strata: 355.2**, was 341.3) | 662.8 t/s |\\n| decode tail after that prefill | **33.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1) - even | 33.1 t/s |\\n| repeated prompt (reference) | 39.2 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 29.5) | 42.6 t/s |\\n| pp4096 @ d0 | **576.1 t/s** (was 557.5; llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (Strata: 339.1, was 335.0) | 819.4 t/s |\\n| tg128 @ d0 | **27.7 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.8 MTP) - even | 32.2 t/s |\\n| pp4096 @ d16384 | **~595 t/s** (591.3 over 20,421, the 16,384 prefix at 597.4; was ~585; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (**Strata: 362-366** over 16-20K, was 351-356) | ~949 t/s |\\n| tg128 @ d16384 | **27.9 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 22.5** MTP, was 19.1) | 31.7 t/s |\\n| ratio to the 3060M PC, decode | 0.75-0.90 | 1 | 0.65-0.80 (Strata) | 1 |\\n| ratio to the 3060M PC, prefill | 0.52-0.62 | 1 | 0.38-0.54 (Strata; llama.cpp 0.4-0.5) | 1 |\\n\\nWhat moved: the Coder's prefill, +2-3% at every length (573.0 -> 587.5 at 4.75K, 557.5 -> 576.1 at pp4096, ~585 ->\\n~595 at 16-20K), as the A/B above said for 4K chunks. The 16K prefix gains least (592.7 -> 597.4): its chunks are\\n8,192 tokens, where most experts have more than 128 rows and fall into one class. UD-IQ4_XS +1-4% (341.3 -> 355.2\\nat 4.75K, 335.0 -> 339.1 at pp4096, 351-356 -> 362-366 at 16-20K). The A/B above found its 4K chunks bound by the\\narena staging, and these gains are within the run-to-run spread of its earlier tables (312-324 at pp4096 between\\nTODO 2's and the night's runs). llama.cpp still leads at pp4096 @ d0. Decode does not use this path. Its rows moved\\nwithin the spread, except UD-IQ4_XS's tg128 @ d16384, 19.1 -> 22.5 t/s. That row's MTP acceptance went 58.3 ->\\n72.6%, back near TODO 2's 73.9% (21.8 t/s); its decode is not repeatable from run to run (above). The Coder's load\\ntime, 11.7 -> 15.4 s, is the start of a server whose files were less warm in the page cache, not the engine: the\\nclasses add buffers only to a prompt chunk. The day's prompt speed for the Coder at 4.75K: 146 -> 209 -> 274 -> 451\\n-> 528 -> 548 -> 573 -> 588 t/s.\\n\", \"originalFile\": null, \"structuredPatch\": [{\"oldStart\": 1250, \"oldLines\": 6, \"newStart\": 1250, \"newLines\": 46, \"lines\": [\" card. There the J tiles differ (`mmq-config-*.cuh`) and the lent slots come out of a smaller cache. The classes\", \" are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\", \" \", \"+### The one table, redone with TODO 2a's engine\", \"+\", \"+The same table as [TODO 5's](#the-one-table-redone-with-todo-5s-engine), with this section's engine (the classes on\", \"+top of TODO 5's) in both Strata columns; the earlier tables are left as they were. The same benchmark\", \"+(`2026-10-02-3060m-bench_halo.py`), the same configs (`strata-coder-iq1_m.json` at 32/96, all 12,288 experts\", \"+resident, 100% hits; `strata-unsloth-ud-iq4_xs.json` at 32/96, `STRATA_ARENA_PIN_GIB=24`, 14,358 slots, 90.6-98.9%\", \"+hits), run back to back by `2026-10-05-halo-onetable-run.py todo2a` on 2026-10-06\", \"+(`benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json`, `benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json`, the\", \"+engine logs beside them, the rows in `2026-10-05-halo-onetable-todo2a.log`). llama.cpp and the 3060M PC columns are\", \"+the night's. MTP on in every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode).\", \"+Where the other Halo engine wins a row, its number is in brackets; TODO 5's Strata number follows in parentheses\", \"+where it moved.\", \"+\", \"+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU, TODO 2a's engine** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (TODO 2a's engine) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |\", \"+|---|---|---|---|---|\", \"+| model load to listening | 15.4 s (was 11.7) | 11.5 s | 83-94 s (**Strata: 37.8 s**) | 42 s |\", \"+| cold first request, decode | **39.1 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.9) - even | 37.6 t/s |\", \"+| fresh code prompt, decode | **38.0 t/s** (was 36.9; llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.9) - even | 38.7 t/s |\", \"+| prefill @ ~4.75K | **587.5 t/s** (was 573.0; llama.cpp: 321.5) | 961.3 t/s | 322 t/s (**Strata: 355.2**, was 341.3) | 662.8 t/s |\", \"+| decode tail after that prefill | **33.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1) - even | 33.1 t/s |\", \"+| repeated prompt (reference) | 39.2 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 29.5) | 42.6 t/s |\", \"+| pp4096 @ d0 | **576.1 t/s** (was 557.5; llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (Strata: 339.1, was 335.0) | 819.4 t/s |\", \"+| tg128 @ d0 | **27.7 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.8 MTP) - even | 32.2 t/s |\", \"+| pp4096 @ d16384 | **~595 t/s** (591.3 over 20,421, the 16,384 prefix at 597.4; was ~585; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (**Strata: 362-366** over 16-20K, was 351-356) | ~949 t/s |\", \"+| tg128 @ d16384 | **27.9 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 22.5** MTP, was 19.1) | 31.7 t/s |\", \"+| ratio to the 3060M PC, decode | 0.75-0.90 | 1 | 0.65-0.80 (Strata) | 1 |\", \"+| ratio to the 3060M PC, prefill | 0.52-0.62 | 1 | 0.38-0.54 (Strata; llama.cpp 0.4-0.5) | 1 |\", \"+\", \"+What moved: the Coder's prefill, +2-3% at every length (573.0 -> 587.5 at 4.75K, 557.5 -> 576.1 at pp4096, ~585 ->\", \"+~595 at 16-20K), as the A/B above said for 4K chunks. The 16K prefix gains least (592.7 -> 597.4): its chunks are\", \"+8,192 tokens, where most experts have more than 128 rows and fall into one class. UD-IQ4_XS +1-4% (341.3 -> 355.2\", \"+at 4.75K, 335.0 -> 339.1 at pp4096, 351-356 -> 362-366 at 16-20K). The A/B above found its 4K chunks bound by the\", \"+arena staging, and these gains are within the run-to-run spread of its earlier tables (312-324 at pp4096 between\", \"+TODO 2's and the night's runs). llama.cpp still leads at pp4096 @ d0. Decode does not use this path. Its rows moved\", \"+within the spread, except UD-IQ4_XS's tg128 @ d16384, 19.1 -> 22.5 t/s. That row's MTP acceptance went 58.3 ->\", \"+72.6%, back near TODO 2's 73.9% (21.8 t/s); its decode is not repeatable from run to run (above). The Coder's load\", \"+time, 11.7 -> 15.4 s, is the start of a server whose files were less warm in the page cache, not the engine: the\", \"+classes add buffers only to a prompt chunk. The day's prompt speed for the Coder at 4.75K: 146 -> 209 -> 274 -> 451\", \"+-> 528 -> 548 -> 573 -> 588 t/s.\", \"+\", \" ## The RTX 5090 over Thunderbolt (not pursued)\", \" \", \" Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's\"]}], \"userModified\": false, \"replaceAll\": false, \"contentNotInModelContext\": true}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 197331,
+        "completion_tokens": 3277,
+        "cached_tokens": 197329,
+        "extra": {
+          "cache_creation_input_tokens": 747,
+          "cache_read_input_tokens": 197329,
+          "output_tokens_details": {
+            "thinking_tokens": 896
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 747,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 3277,
+              "cache_read_input_tokens": 197329,
+              "cache_creation_input_tokens": 747,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 747
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Edit",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\n",
+            "newString": "are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\n\n### The one table, redone with TODO 2a's engine\n\nThe same table as [TODO 5's](#the-one-table-redone-with-todo-5s-engine), with this section's engine (the classes on\ntop of TODO 5's) in both Strata columns; the earlier tables are left as they were. The same benchmark\n(`2026-10-02-3060m-bench_halo.py`), the same configs (`strata-coder-iq1_m.json` at 32/96, all 12,288 experts\nresident, 100% hits; `strata-unsloth-ud-iq4_xs.json` at 32/96, `STRATA_ARENA_PIN_GIB=24`, 14,358 slots, 90.6-98.9%\nhits), run back to back by `2026-10-05-halo-onetable-run.py todo2a` on 2026-10-06\n(`benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json`, `benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json`, the\nengine logs beside them, the rows in `2026-10-05-halo-onetable-todo2a.log`). llama.cpp and the 3060M PC columns are\nthe night's. MTP on in every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode).\nWhere the other Halo engine wins a row, its number is in brackets; TODO 5's Strata number follows in parentheses\nwhere it moved.\n\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU, TODO 2a's engine** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (TODO 2a's engine) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |\n|---|---|---|---|---|\n| model load to listening | 15.4 s (was 11.7) | 11.5 s | 83-94 s (**Strata: 37.8 s**) | 42 s |\n| cold first request, decode | **39.1 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.9) - even | 37.6 t/s |\n| fresh code prompt, decode | **38.0 t/s** (was 36.9; llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.9) - even | 38.7 t/s |\n| prefill @ ~4.75K | **587.5 t/s** (was 573.0; llama.cpp: 321.5) | 961.3 t/s | 322 t/s (**Strata: 355.2**, was 341.3) | 662.8 t/s |\n| decode tail after that prefill | **33.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1) - even | 33.1 t/s |\n| repeated prompt (reference) | 39.2 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 29.5) | 42.6 t/s |\n| pp4096 @ d0 | **576.1 t/s** (was 557.5; llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (Strata: 339.1, was 335.0) | 819.4 t/s |\n| tg128 @ d0 | **27.7 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.8 MTP) - even | 32.2 t/s |\n| pp4096 @ d16384 | **~595 t/s** (591.3 over 20,421, the 16,384 prefix at 597.4; was ~585; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (**Strata: 362-366** over 16-20K, was 351-356) | ~949 t/s |\n| tg128 @ d16384 | **27.9 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 22.5** MTP, was 19.1) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.75-0.90 | 1 | 0.65-0.80 (Strata) | 1 |\n| ratio to the 3060M PC, prefill | 0.52-0.62 | 1 | 0.38-0.54 (Strata; llama.cpp 0.4-0.5) | 1 |\n\nWhat moved: the Coder's prefill, +2-3% at every length (573.0 -> 587.5 at 4.75K, 557.5 -> 576.1 at pp4096, ~585 ->\n~595 at 16-20K), as the A/B above said for 4K chunks. The 16K prefix gains least (592.7 -> 597.4): its chunks are\n8,192 tokens, where most experts have more than 128 rows and fall into one class. UD-IQ4_XS +1-4% (341.3 -> 355.2\nat 4.75K, 335.0 -> 339.1 at pp4096, 351-356 -> 362-366 at 16-20K). The A/B above found its 4K chunks bound by the\narena staging, and these gains are within the run-to-run spread of its earlier tables (312-324 at pp4096 between\nTODO 2's and the night's runs). llama.cpp still leads at pp4096 @ d0. Decode does not use this path. Its rows moved\nwithin the spread, except UD-IQ4_XS's tg128 @ d16384, 19.1 -> 22.5 t/s. That row's MTP acceptance went 58.3 ->\n72.6%, back near TODO 2's 73.9% (21.8 t/s); its decode is not repeatable from run to run (above). The Coder's load\ntime, 11.7 -> 15.4 s, is the start of a server whose files were less warm in the page cache, not the engine: the\nclasses add buffers only to a prompt chunk. The day's prompt speed for the Coder at 4.75K: 146 -> 209 -> 274 -> 451\n-> 528 -> 548 -> 573 -> 588 t/s.\n",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 1250,
+                "oldLines": 6,
+                "newStart": 1250,
+                "newLines": 46,
+                "lines": [
+                  " card. There the J tiles differ (`mmq-config-*.cuh`) and the lent slots come out of a smaller cache. The classes",
+                  " are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.",
+                  " ",
+                  "+### The one table, redone with TODO 2a's engine",
+                  "+",
+                  "+The same table as [TODO 5's](#the-one-table-redone-with-todo-5s-engine), with this section's engine (the classes on",
+                  "+top of TODO 5's) in both Strata columns; the earlier tables are left as they were. The same benchmark",
+                  "+(`2026-10-02-3060m-bench_halo.py`), the same configs (`strata-coder-iq1_m.json` at 32/96, all 12,288 experts",
+                  "+resident, 100% hits; `strata-unsloth-ud-iq4_xs.json` at 32/96, `STRATA_ARENA_PIN_GIB=24`, 14,358 slots, 90.6-98.9%",
+                  "+hits), run back to back by `2026-10-05-halo-onetable-run.py todo2a` on 2026-10-06",
+                  "+(`benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json`, `benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json`, the",
+                  "+engine logs beside them, the rows in `2026-10-05-halo-onetable-todo2a.log`). llama.cpp and the 3060M PC columns are",
+                  "+the night's. MTP on in every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode).",
+                  "+Where the other Halo engine wins a row, its number is in brackets; TODO 5's Strata number follows in parentheses",
+                  "+where it moved.",
+                  "+",
+                  "+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU, TODO 2a's engine** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (TODO 2a's engine) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |",
+                  "+|---|---|---|---|---|",
+                  "+| model load to listening | 15.4 s (was 11.7) | 11.5 s | 83-94 s (**Strata: 37.8 s**) | 42 s |",
+                  "+| cold first request, decode | **39.1 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.9) - even | 37.6 t/s |",
+                  "+| fresh code prompt, decode | **38.0 t/s** (was 36.9; llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.9) - even | 38.7 t/s |",
+                  "+| prefill @ ~4.75K | **587.5 t/s** (was 573.0; llama.cpp: 321.5) | 961.3 t/s | 322 t/s (**Strata: 355.2**, was 341.3) | 662.8 t/s |",
+                  "+| decode tail after that prefill | **33.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1) - even | 33.1 t/s |",
+                  "+| repeated prompt (reference) | 39.2 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 29.5) | 42.6 t/s |",
+                  "+| pp4096 @ d0 | **576.1 t/s** (was 557.5; llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (Strata: 339.1, was 335.0) | 819.4 t/s |",
+                  "+| tg128 @ d0 | **27.7 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.8 MTP) - even | 32.2 t/s |",
+                  "+| pp4096 @ d16384 | **~595 t/s** (591.3 over 20,421, the 16,384 prefix at 597.4; was ~585; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (**Strata: 362-366** over 16-20K, was 351-356) | ~949 t/s |",
+                  "+| tg128 @ d16384 | **27.9 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 22.5** MTP, was 19.1) | 31.7 t/s |",
+                  "+| ratio to the 3060M PC, decode | 0.75-0.90 | 1 | 0.65-0.80 (Strata) | 1 |",
+                  "+| ratio to the 3060M PC, prefill | 0.52-0.62 | 1 | 0.38-0.54 (Strata; llama.cpp 0.4-0.5) | 1 |",
+                  "+",
+                  "+What moved: the Coder's prefill, +2-3% at every length (573.0 -> 587.5 at 4.75K, 557.5 -> 576.1 at pp4096, ~585 ->",
+                  "+~595 at 16-20K), as the A/B above said for 4K chunks. The 16K prefix gains least (592.7 -> 597.4): its chunks are",
+                  "+8,192 tokens, where most experts have more than 128 rows and fall into one class. UD-IQ4_XS +1-4% (341.3 -> 355.2",
+                  "+at 4.75K, 335.0 -> 339.1 at pp4096, 351-356 -> 362-366 at 16-20K). The A/B above found its 4K chunks bound by the",
+                  "+arena staging, and these gains are within the run-to-run spread of its earlier tables (312-324 at pp4096 between",
+                  "+TODO 2's and the night's runs). llama.cpp still leads at pp4096 @ d0. Decode does not use this path. Its rows moved",
+                  "+within the spread, except UD-IQ4_XS's tg128 @ d16384, 19.1 -> 22.5 t/s. That row's MTP acceptance went 58.3 ->",
+                  "+72.6%, back near TODO 2's 73.9% (21.8 t/s); its decode is not repeatable from run to run (above). The Coder's load",
+                  "+time, 11.7 -> 15.4 s, is the start of a server whose files were less warm in the page cache, not the engine: the",
+                  "+classes add buffers only to a prompt chunk. The day's prompt speed for the Coder at 4.75K: 146 -> 209 -> 274 -> 451",
+                  "+-> 528 -> 548 -> 573 -> 588 t/s.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01XmVLGHSEW2MCvswinbcZb9",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\n",
+            "newString": "are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\n\n### The one table, redone with TODO 2a's engine\n\nThe same table as [TODO 5's](#the-one-table-redone-with-todo-5s-engine), with this section's engine (the classes on\ntop of TODO 5's) in both Strata columns; the earlier tables are left as they were. The same benchmark\n(`2026-10-02-3060m-bench_halo.py`), the same configs (`strata-coder-iq1_m.json` at 32/96, all 12,288 experts\nresident, 100% hits; `strata-unsloth-ud-iq4_xs.json` at 32/96, `STRATA_ARENA_PIN_GIB=24`, 14,358 slots, 90.6-98.9%\nhits), run back to back by `2026-10-05-halo-onetable-run.py todo2a` on 2026-10-06\n(`benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json`, `benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json`, the\nengine logs beside them, the rows in `2026-10-05-halo-onetable-todo2a.log`). llama.cpp and the 3060M PC columns are\nthe night's. MTP on in every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode).\nWhere the other Halo engine wins a row, its number is in brackets; TODO 5's Strata number follows in parentheses\nwhere it moved.\n\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU, TODO 2a's engine** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (TODO 2a's engine) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |\n|---|---|---|---|---|\n| model load to listening | 15.4 s (was 11.7) | 11.5 s | 83-94 s (**Strata: 37.8 s**) | 42 s |\n| cold first request, decode | **39.1 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.9) - even | 37.6 t/s |\n| fresh code prompt, decode | **38.0 t/s** (was 36.9; llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.9) - even | 38.7 t/s |\n| prefill @ ~4.75K | **587.5 t/s** (was 573.0; llama.cpp: 321.5) | 961.3 t/s | 322 t/s (**Strata: 355.2**, was 341.3) | 662.8 t/s |\n| decode tail after that prefill | **33.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1) - even | 33.1 t/s |\n| repeated prompt (reference) | 39.2 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 29.5) | 42.6 t/s |\n| pp4096 @ d0 | **576.1 t/s** (was 557.5; llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (Strata: 339.1, was 335.0) | 819.4 t/s |\n| tg128 @ d0 | **27.7 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.8 MTP) - even | 32.2 t/s |\n| pp4096 @ d16384 | **~595 t/s** (591.3 over 20,421, the 16,384 prefix at 597.4; was ~585; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (**Strata: 362-366** over 16-20K, was 351-356) | ~949 t/s |\n| tg128 @ d16384 | **27.9 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 22.5** MTP, was 19.1) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.75-0.90 | 1 | 0.65-0.80 (Strata) | 1 |\n| ratio to the 3060M PC, prefill | 0.52-0.62 | 1 | 0.38-0.54 (Strata; llama.cpp 0.4-0.5) | 1 |\n\nWhat moved: the Coder's prefill, +2-3% at every length (573.0 -> 587.5 at 4.75K, 557.5 -> 576.1 at pp4096, ~585 ->\n~595 at 16-20K), as the A/B above said for 4K chunks. The 16K prefix gains least (592.7 -> 597.4): its chunks are\n8,192 tokens, where most experts have more than 128 rows and fall into one class. UD-IQ4_XS +1-4% (341.3 -> 355.2\nat 4.75K, 335.0 -> 339.1 at pp4096, 351-356 -> 362-366 at 16-20K). The A/B above found its 4K chunks bound by the\narena staging, and these gains are within the run-to-run spread of its earlier tables (312-324 at pp4096 between\nTODO 2's and the night's runs). llama.cpp still leads at pp4096 @ d0. Decode does not use this path. Its rows moved\nwithin the spread, except UD-IQ4_XS's tg128 @ d16384, 19.1 -> 22.5 t/s. That row's MTP acceptance went 58.3 ->\n72.6%, back near TODO 2's 73.9% (21.8 t/s); its decode is not repeatable from run to run (above). The Coder's load\ntime, 11.7 -> 15.4 s, is the start of a server whose files were less warm in the page cache, not the engine: the\nclasses add buffers only to a prompt chunk. The day's prompt speed for the Coder at 4.75K: 146 -> 209 -> 274 -> 451\n-> 528 -> 548 -> 573 -> 588 t/s.\n",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 1250,
+                "oldLines": 6,
+                "newStart": 1250,
+                "newLines": 46,
+                "lines": [
+                  " card. There the J tiles differ (`mmq-config-*.cuh`) and the lent slots come out of a smaller cache. The classes",
+                  " are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.",
+                  " ",
+                  "+### The one table, redone with TODO 2a's engine",
+                  "+",
+                  "+The same table as [TODO 5's](#the-one-table-redone-with-todo-5s-engine), with this section's engine (the classes on",
+                  "+top of TODO 5's) in both Strata columns; the earlier tables are left as they were. The same benchmark",
+                  "+(`2026-10-02-3060m-bench_halo.py`), the same configs (`strata-coder-iq1_m.json` at 32/96, all 12,288 experts",
+                  "+resident, 100% hits; `strata-unsloth-ud-iq4_xs.json` at 32/96, `STRATA_ARENA_PIN_GIB=24`, 14,358 slots, 90.6-98.9%",
+                  "+hits), run back to back by `2026-10-05-halo-onetable-run.py todo2a` on 2026-10-06",
+                  "+(`benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json`, `benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json`, the",
+                  "+engine logs beside them, the rows in `2026-10-05-halo-onetable-todo2a.log`). llama.cpp and the 3060M PC columns are",
+                  "+the night's. MTP on in every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode).",
+                  "+Where the other Halo engine wins a row, its number is in brackets; TODO 5's Strata number follows in parentheses",
+                  "+where it moved.",
+                  "+",
+                  "+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU, TODO 2a's engine** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (TODO 2a's engine) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |",
+                  "+|---|---|---|---|---|",
+                  "+| model load to listening | 15.4 s (was 11.7) | 11.5 s | 83-94 s (**Strata: 37.8 s**) | 42 s |",
+                  "+| cold first request, decode | **39.1 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.9) - even | 37.6 t/s |",
+                  "+| fresh code prompt, decode | **38.0 t/s** (was 36.9; llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.9) - even | 38.7 t/s |",
+                  "+| prefill @ ~4.75K | **587.5 t/s** (was 573.0; llama.cpp: 321.5) | 961.3 t/s | 322 t/s (**Strata: 355.2**, was 341.3) | 662.8 t/s |",
+                  "+| decode tail after that prefill | **33.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1) - even | 33.1 t/s |",
+                  "+| repeated prompt (reference) | 39.2 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 29.5) | 42.6 t/s |",
+                  "+| pp4096 @ d0 | **576.1 t/s** (was 557.5; llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (Strata: 339.1, was 335.0) | 819.4 t/s |",
+                  "+| tg128 @ d0 | **27.7 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.8 MTP) - even | 32.2 t/s |",
+                  "+| pp4096 @ d16384 | **~595 t/s** (591.3 over 20,421, the 16,384 prefix at 597.4; was ~585; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (**Strata: 362-366** over 16-20K, was 351-356) | ~949 t/s |",
+                  "+| tg128 @ d16384 | **27.9 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 22.5** MTP, was 19.1) | 31.7 t/s |",
+                  "+| ratio to the 3060M PC, decode | 0.75-0.90 | 1 | 0.65-0.80 (Strata) | 1 |",
+                  "+| ratio to the 3060M PC, prefill | 0.52-0.62 | 1 | 0.38-0.54 (Strata; llama.cpp 0.4-0.5) | 1 |",
+                  "+",
+                  "+What moved: the Coder's prefill, +2-3% at every length (573.0 -> 587.5 at 4.75K, 557.5 -> 576.1 at pp4096, ~585 ->",
+                  "+~595 at 16-20K), as the A/B above said for 4K chunks. The 16K prefix gains least (592.7 -> 597.4): its chunks are",
+                  "+8,192 tokens, where most experts have more than 128 rows and fall into one class. UD-IQ4_XS +1-4% (341.3 -> 355.2",
+                  "+at 4.75K, 335.0 -> 339.1 at pp4096, 351-356 -> 362-366 at 16-20K). The A/B above found its 4K chunks bound by the",
+                  "+arena staging, and these gains are within the run-to-run spread of its earlier tables (312-324 at pp4096 between",
+                  "+TODO 2's and the night's runs). llama.cpp still leads at pp4096 @ d0. Decode does not use this path. Its rows moved",
+                  "+within the spread, except UD-IQ4_XS's tg128 @ d16384, 19.1 -> 22.5 t/s. That row's MTP acceptance went 58.3 ->",
+                  "+72.6%, back near TODO 2's 73.9% (21.8 t/s); its decode is not repeatable from run to run (above). The Coder's load",
+                  "+time, 11.7 -> 15.4 s, is the start of a server whose files were less warm in the page cache, not the engine: the",
+                  "+classes add buffers only to a prompt chunk. The day's prompt speed for the Coder at 4.75K: 146 -> 209 -> 274 -> 451",
+                  "+-> 528 -> 548 -> 573 -> 588 t/s.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01XmVLGHSEW2MCvswinbcZb9",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "raw_arguments": {
+          "replace_all": false,
+          "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+          "old_string": "are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\n",
+          "new_string": "are on by default there too; `STRATA_PREFILL_MMQ_CLASSES=0` restores the old walk.\n\n### The one table, redone with TODO 2a's engine\n\nThe same table as [TODO 5's](#the-one-table-redone-with-todo-5s-engine), with this section's engine (the classes on\ntop of TODO 5's) in both Strata columns; the earlier tables are left as they were. The same benchmark\n(`2026-10-02-3060m-bench_halo.py`), the same configs (`strata-coder-iq1_m.json` at 32/96, all 12,288 experts\nresident, 100% hits; `strata-unsloth-ud-iq4_xs.json` at 32/96, `STRATA_ARENA_PIN_GIB=24`, 14,358 slots, 90.6-98.9%\nhits), run back to back by `2026-10-05-halo-onetable-run.py todo2a` on 2026-10-06\n(`benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json`, `benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json`, the\nengine logs beside them, the rows in `2026-10-05-halo-onetable-todo2a.log`). llama.cpp and the 3060M PC columns are\nthe night's. MTP on in every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode).\nWhere the other Halo engine wins a row, its number is in brackets; TODO 5's Strata number follows in parentheses\nwhere it moved.\n\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU, TODO 2a's engine** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (TODO 2a's engine) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |\n|---|---|---|---|---|\n| model load to listening | 15.4 s (was 11.7) | 11.5 s | 83-94 s (**Strata: 37.8 s**) | 42 s |\n| cold first request, decode | **39.1 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.9) - even | 37.6 t/s |\n| fresh code prompt, decode | **38.0 t/s** (was 36.9; llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.9) - even | 38.7 t/s |\n| prefill @ ~4.75K | **587.5 t/s** (was 573.0; llama.cpp: 321.5) | 961.3 t/s | 322 t/s (**Strata: 355.2**, was 341.3) | 662.8 t/s |\n| decode tail after that prefill | **33.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1) - even | 33.1 t/s |\n| repeated prompt (reference) | 39.2 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 29.5) | 42.6 t/s |\n| pp4096 @ d0 | **576.1 t/s** (was 557.5; llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (Strata: 339.1, was 335.0) | 819.4 t/s |\n| tg128 @ d0 | **27.7 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.8 MTP) - even | 32.2 t/s |\n| pp4096 @ d16384 | **~595 t/s** (591.3 over 20,421, the 16,384 prefix at 597.4; was ~585; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (**Strata: 362-366** over 16-20K, was 351-356) | ~949 t/s |\n| tg128 @ d16384 | **27.9 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 22.5** MTP, was 19.1) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.75-0.90 | 1 | 0.65-0.80 (Strata) | 1 |\n| ratio to the 3060M PC, prefill | 0.52-0.62 | 1 | 0.38-0.54 (Strata; llama.cpp 0.4-0.5) | 1 |\n\nWhat moved: the Coder's prefill, +2-3% at every length (573.0 -> 587.5 at 4.75K, 557.5 -> 576.1 at pp4096, ~585 ->\n~595 at 16-20K), as the A/B above said for 4K chunks. The 16K prefix gains least (592.7 -> 597.4): its chunks are\n8,192 tokens, where most experts have more than 128 rows and fall into one class. UD-IQ4_XS +1-4% (341.3 -> 355.2\nat 4.75K, 335.0 -> 339.1 at pp4096, 351-356 -> 362-366 at 16-20K). The A/B above found its 4K chunks bound by the\narena staging, and these gains are within the run-to-run spread of its earlier tables (312-324 at pp4096 between\nTODO 2's and the night's runs). llama.cpp still leads at pp4096 @ d0. Decode does not use this path. Its rows moved\nwithin the spread, except UD-IQ4_XS's tg128 @ d16384, 19.1 -> 22.5 t/s. That row's MTP acceptance went 58.3 ->\n72.6%, back near TODO 2's 73.9% (21.8 t/s); its decode is not repeatable from run to run (above). The Coder's load\ntime, 11.7 -> 15.4 s, is the start of a server whose files were less warm in the page cache, not the engine: the\nclasses add buffers only to a prompt chunk. The day's prompt speed for the Coder at 4.75K: 146 -> 209 -> 274 -> 451\n-> 528 -> 548 -> 573 -> 588 t/s.\n"
+        }
+      }
+    },
+    {
+      "step_id": 140,
+      "timestamp": "2026-10-05T21:33:25.757Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 198078,
+        "completion_tokens": 923,
+        "cached_tokens": 198076,
+        "extra": {
+          "cache_creation_input_tokens": 3345,
+          "cache_read_input_tokens": 198076,
+          "output_tokens_details": {
+            "thinking_tokens": 186
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3345,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 923,
+              "cache_read_input_tokens": 198076,
+              "cache_creation_input_tokens": 3345,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3345
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 141,
+      "timestamp": "2026-10-05T21:33:31.332Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01EJC75Fh4nTYBGymNCeMWEa",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01EJC75Fh4nTYBGymNCeMWEa",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "f=\"docs/AIMAX+395-ROCm.md\" && sed -i 's|(312-324 at pp4096 between\\nTODO|X|' \"$f\" && /c/conda_envs/strata/python.exe - <<'EOF'\nfrom pathlib import Path\np=Path(\"docs/AIMAX+395-ROCm.md\"); s=p.read_text(encoding=\"utf-8\")\na=\"(312-324 at pp4096 between\\nTODO 2's and the night's runs)\"\nassert a in s\ns=s.replace(a,\"(311.9 -> 322.0 at pp4096 between\\nthe night's run and TODO 2's)\")\nb=\"\"\"The Coder's load\ntime, 11.7 -> 15.4 s, is the start of a server whose files were less warm in the page cache, not the engine: the\nclasses add buffers only to a prompt chunk.\"\"\"\nassert b in s\ns=s.replace(b,\"\"\"The Coder's load\ntime, 11.7 -> 15.4 s, is not this change: the classes only add buffers to a prompt chunk, and the A/B runs above\nwith the same engine were listening after 12.1-12.2 s. Load times here have moved by 2-4 s between runs before\n(15 -> 12.6 s in TODO 2's table).\"\"\")\np.write_text(s,encoding=\"utf-8\")\nEOF\ngit add \"$f\" docs/benchmarks/2026-10-05-halo-*todo2a* && git status --short | grep -v \"^??\\| _traj\" ; git commit -q -m \"The one table, redone with TODO 2a's engine\n\nCoder prefill +2-3% at every length (4.75K 573.0 -> 587.5, pp4096 557.5 ->\n576.1, ~585 -> ~595 t/s at 16-20K); UD-IQ4_XS +1-4%, within its spread.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\" && git log --oneline -1",
+            "description": "Fix two claims and commit table"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01EJC75Fh4nTYBGymNCeMWEa",
+            "content": "warning: in the working copy of 'docs/AIMAX+395-ROCm.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-onetable-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nM  docs/AIMAX+395-ROCm.md\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log\nM  docs/benchmarks/2026-10-05-halo-onetable-todo2a.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log\n5da3200 The one table, redone with TODO 2a's engine\n\n[stdout]\nwarning: in the working copy of 'docs/AIMAX+395-ROCm.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-onetable-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nM  docs/AIMAX+395-ROCm.md\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log\nM  docs/benchmarks/2026-10-05-halo-onetable-todo2a.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log\n5da3200 The one table, redone with TODO 2a's engine\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [], \"moreFiles\": 1, \"changedFiles\": [\"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 198078,
+        "completion_tokens": 923,
+        "cached_tokens": 198076,
+        "extra": {
+          "cache_creation_input_tokens": 3345,
+          "cache_read_input_tokens": 198076,
+          "output_tokens_details": {
+            "thinking_tokens": 186
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3345,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 923,
+              "cache_read_input_tokens": 198076,
+              "cache_creation_input_tokens": 3345,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3345
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "warning: in the working copy of 'docs/AIMAX+395-ROCm.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-onetable-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nM  docs/AIMAX+395-ROCm.md\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log\nM  docs/benchmarks/2026-10-05-halo-onetable-todo2a.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log\n5da3200 The one table, redone with TODO 2a's engine",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [],
+              "moreFiles": 1,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01EJC75Fh4nTYBGymNCeMWEa",
+            "type": "tool_result",
+            "content": "warning: in the working copy of 'docs/AIMAX+395-ROCm.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-onetable-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nM  docs/AIMAX+395-ROCm.md\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log\nM  docs/benchmarks/2026-10-05-halo-onetable-todo2a.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log\n5da3200 The one table, redone with TODO 2a's engine",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "warning: in the working copy of 'docs/AIMAX+395-ROCm.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-onetable-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nM  docs/AIMAX+395-ROCm.md\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log\nM  docs/benchmarks/2026-10-05-halo-onetable-todo2a.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log\n5da3200 The one table, redone with TODO 2a's engine",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [],
+              "moreFiles": 1,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01EJC75Fh4nTYBGymNCeMWEa",
+            "type": "tool_result",
+            "content": "warning: in the working copy of 'docs/AIMAX+395-ROCm.md', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-onetable-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log', CRLF will be replaced by LF the next time Git touches it\nM  docs/AIMAX+395-ROCm.md\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.json\nM  docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log\nM  docs/benchmarks/2026-10-05-halo-onetable-todo2a.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a-server.log\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.json\nA  docs/benchmarks/2026-10-05-halo-ud-iq4_xs-todo2a.log\n5da3200 The one table, redone with TODO 2a's engine",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "f=\"docs/AIMAX+395-ROCm.md\" && sed -i 's|(312-324 at pp4096 between\\nTODO|X|' \"$f\" && /c/conda_envs/strata/python.exe - <<'EOF'\nfrom pathlib import Path\np=Path(\"docs/AIMAX+395-ROCm.md\"); s=p.read_text(encoding=\"utf-8\")\na=\"(312-324 at pp4096 between\\nTODO 2's and the night's runs)\"\nassert a in s\ns=s.replace(a,\"(311.9 -> 322.0 at pp4096 between\\nthe night's run and TODO 2's)\")\nb=\"\"\"The Coder's load\ntime, 11.7 -> 15.4 s, is the start of a server whose files were less warm in the page cache, not the engine: the\nclasses add buffers only to a prompt chunk.\"\"\"\nassert b in s\ns=s.replace(b,\"\"\"The Coder's load\ntime, 11.7 -> 15.4 s, is not this change: the classes only add buffers to a prompt chunk, and the A/B runs above\nwith the same engine were listening after 12.1-12.2 s. Load times here have moved by 2-4 s between runs before\n(15 -> 12.6 s in TODO 2's table).\"\"\")\np.write_text(s,encoding=\"utf-8\")\nEOF\ngit add \"$f\" docs/benchmarks/2026-10-05-halo-*todo2a* && git status --short | grep -v \"^??\\| _traj\" ; git commit -q -m \"The one table, redone with TODO 2a's engine\n\nCoder prefill +2-3% at every length (4.75K 573.0 -> 587.5, pp4096 557.5 ->\n576.1, ~585 -> ~595 t/s at 16-20K); UD-IQ4_XS +1-4%, within its spread.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\" && git log --oneline -1",
+          "description": "Fix two claims and commit table"
+        }
+      }
+    },
+    {
+      "step_id": 142,
+      "timestamp": "2026-10-05T21:33:36.462Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 201423,
+        "completion_tokens": 369,
+        "cached_tokens": 201421,
+        "extra": {
+          "cache_creation_input_tokens": 1775,
+          "cache_read_input_tokens": 201421,
+          "output_tokens_details": {
+            "thinking_tokens": 72
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1775,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 369,
+              "cache_read_input_tokens": 201421,
+              "cache_creation_input_tokens": 1775,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1775
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 143,
+      "timestamp": "2026-10-05T21:33:36.466Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Some of the `todo2a` log files were already in git (shown as `M`, not `A`), so I need to check what my run overwrote.",
+      "metrics": {
+        "prompt_tokens": 201423,
+        "completion_tokens": 369,
+        "cached_tokens": 201421,
+        "extra": {
+          "cache_creation_input_tokens": 1775,
+          "cache_read_input_tokens": 201421,
+          "output_tokens_details": {
+            "thinking_tokens": 72
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1775,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 369,
+              "cache_read_input_tokens": 201421,
+              "cache_creation_input_tokens": 1775,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1775
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 144,
+      "timestamp": "2026-10-05T21:33:38.019Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_013WbbWWBqPUyrgVRSgDa3vc",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_013WbbWWBqPUyrgVRSgDa3vc",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "git log --oneline -3 -- docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log docs/benchmarks/2026-10-05-halo-onetable-todo2a.log; git show HEAD~1:docs/benchmarks/2026-10-05-halo-onetable-todo2a.log | head -5; git show HEAD~1:docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log | head -3",
+            "description": "Check history of overwritten files"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_013WbbWWBqPUyrgVRSgDa3vc",
+            "content": "5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\nstrata generate: PCIe probe: 50648.2 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m (302 canonical tensors skipped: served natively)\n\n[stdout]\n5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\nstrata generate: PCIe probe: 50648.2 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m (302 canonical tensors skipped: served natively)\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 201423,
+        "completion_tokens": 369,
+        "cached_tokens": 201421,
+        "extra": {
+          "cache_creation_input_tokens": 1775,
+          "cache_read_input_tokens": 201421,
+          "output_tokens_details": {
+            "thinking_tokens": 72
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1775,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 369,
+              "cache_read_input_tokens": 201421,
+              "cache_creation_input_tokens": 1775,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1775
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\nstrata generate: PCIe probe: 50648.2 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m (302 canonical tensors skipped: served natively)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_013WbbWWBqPUyrgVRSgDa3vc",
+            "type": "tool_result",
+            "content": "5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\nstrata generate: PCIe probe: 50648.2 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m (302 canonical tensors skipped: served natively)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\nstrata generate: PCIe probe: 50648.2 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m (302 canonical tensors skipped: served natively)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_013WbbWWBqPUyrgVRSgDa3vc",
+            "type": "tool_result",
+            "content": "5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\nstrata generate: PCIe probe: 50648.2 GB/s host->device, host RAM read 52.1 GB/s -> pcie_frac 0.55 (default 0.55)\nstrata generate: native pack: C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from C:\\Users\\Wei Lu\\Documents\\Strata-data\\packs\\coder-iq1_m (302 canonical tensors skipped: served natively)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "git log --oneline -3 -- docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log docs/benchmarks/2026-10-05-halo-onetable-todo2a.log; git show HEAD~1:docs/benchmarks/2026-10-05-halo-onetable-todo2a.log | head -5; git show HEAD~1:docs/benchmarks/2026-10-05-halo-coder-iq1_m-todo2a.log | head -3",
+          "description": "Check history of overwritten files"
+        }
+      }
+    },
+    {
+      "step_id": 145,
+      "timestamp": "2026-10-05T21:33:41.519Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_017ps4u7EmUsVTRcdeEM1yRH",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_017ps4u7EmUsVTRcdeEM1yRH",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "git log --oneline -4; git show --stat 8e4a623 | head -20",
+            "description": "Inspect the intervening commit"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_017ps4u7EmUsVTRcdeEM1yRH",
+            "content": "5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\n8edbab8 do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\nc90320c do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\ncommit 8e4a623f593edc96a7e7d2e14ef5423376e49740\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Tue Oct 6 00:24:43 2026 +0300\n\n    re-run the one-table\n      benchmark\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: d1be491a-b33a-4ce9-9870-f25de33f7058\n    Agent-Ext-Snapshot: 9021a535131799752482f5a15f37302b6787c38a\n\n _traj/INDEX.tsv                                    |   2 +-\n _traj/d1be491a-b33a-4ce9-9870-f25de33f7058.json    | 682 ++++++++++++++++++++-\n _traj/idx/d1be491a-b33a-4ce9-9870-f25de33f7058.md  |  14 +-\n .../tasks/bwz3up38a.output                         |   0\n .../2026-10-05-halo-coder-iq1_m-todo2a-server.log  |   5 +\n .../2026-10-05-halo-coder-iq1_m-todo2a.log         |   9 +\n .../benchmarks/2026-10-05-halo-onetable-todo2a.log |   0\n\n[stdout]\n5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\n8edbab8 do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\nc90320c do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\ncommit 8e4a623f593edc96a7e7d2e14ef5423376e49740\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Tue Oct 6 00:24:43 2026 +0300\n\n    re-run the one-table\n      benchmark\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: d1be491a-b33a-4ce9-9870-f25de33f7058\n    Agent-Ext-Snapshot: 9021a535131799752482f5a15f37302b6787c38a\n\n _traj/INDEX.tsv                                    |   2 +-\n _traj/d1be491a-b33a-4ce9-9870-f25de33f7058.json    | 682 ++++++++++++++++++++-\n _traj/idx/d1be491a-b33a-4ce9-9870-f25de33f7058.md  |  14 +-\n .../tasks/bwz3up38a.output                         |   0\n .../2026-10-05-halo-coder-iq1_m-todo2a-server.log  |   5 +\n .../2026-10-05-halo-coder-iq1_m-todo2a.log         |   9 +\n .../benchmarks/2026-10-05-halo-onetable-todo2a.log |   0\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 203198,
+        "completion_tokens": 115,
+        "cached_tokens": 203196,
+        "extra": {
+          "cache_creation_input_tokens": 654,
+          "cache_read_input_tokens": 203196,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 654,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 115,
+              "cache_read_input_tokens": 203196,
+              "cache_creation_input_tokens": 654,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 654
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\n8edbab8 do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\nc90320c do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\ncommit 8e4a623f593edc96a7e7d2e14ef5423376e49740\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Tue Oct 6 00:24:43 2026 +0300\n\n    re-run the one-table\n      benchmark\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: d1be491a-b33a-4ce9-9870-f25de33f7058\n    Agent-Ext-Snapshot: 9021a535131799752482f5a15f37302b6787c38a\n\n _traj/INDEX.tsv                                    |   2 +-\n _traj/d1be491a-b33a-4ce9-9870-f25de33f7058.json    | 682 ++++++++++++++++++++-\n _traj/idx/d1be491a-b33a-4ce9-9870-f25de33f7058.md  |  14 +-\n .../tasks/bwz3up38a.output                         |   0\n .../2026-10-05-halo-coder-iq1_m-todo2a-server.log  |   5 +\n .../2026-10-05-halo-coder-iq1_m-todo2a.log         |   9 +\n .../benchmarks/2026-10-05-halo-onetable-todo2a.log |   0",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_017ps4u7EmUsVTRcdeEM1yRH",
+            "type": "tool_result",
+            "content": "5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\n8edbab8 do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\nc90320c do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\ncommit 8e4a623f593edc96a7e7d2e14ef5423376e49740\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Tue Oct 6 00:24:43 2026 +0300\n\n    re-run the one-table\n      benchmark\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: d1be491a-b33a-4ce9-9870-f25de33f7058\n    Agent-Ext-Snapshot: 9021a535131799752482f5a15f37302b6787c38a\n\n _traj/INDEX.tsv                                    |   2 +-\n _traj/d1be491a-b33a-4ce9-9870-f25de33f7058.json    | 682 ++++++++++++++++++++-\n _traj/idx/d1be491a-b33a-4ce9-9870-f25de33f7058.md  |  14 +-\n .../tasks/bwz3up38a.output                         |   0\n .../2026-10-05-halo-coder-iq1_m-todo2a-server.log  |   5 +\n .../2026-10-05-halo-coder-iq1_m-todo2a.log         |   9 +\n .../benchmarks/2026-10-05-halo-onetable-todo2a.log |   0",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\n8edbab8 do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\nc90320c do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\ncommit 8e4a623f593edc96a7e7d2e14ef5423376e49740\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Tue Oct 6 00:24:43 2026 +0300\n\n    re-run the one-table\n      benchmark\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: d1be491a-b33a-4ce9-9870-f25de33f7058\n    Agent-Ext-Snapshot: 9021a535131799752482f5a15f37302b6787c38a\n\n _traj/INDEX.tsv                                    |   2 +-\n _traj/d1be491a-b33a-4ce9-9870-f25de33f7058.json    | 682 ++++++++++++++++++++-\n _traj/idx/d1be491a-b33a-4ce9-9870-f25de33f7058.md  |  14 +-\n .../tasks/bwz3up38a.output                         |   0\n .../2026-10-05-halo-coder-iq1_m-todo2a-server.log  |   5 +\n .../2026-10-05-halo-coder-iq1_m-todo2a.log         |   9 +\n .../benchmarks/2026-10-05-halo-onetable-todo2a.log |   0",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_017ps4u7EmUsVTRcdeEM1yRH",
+            "type": "tool_result",
+            "content": "5da3200 The one table, redone with TODO 2a's engine\n8e4a623 re-run the one-table   benchmark\n8edbab8 do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\nc90320c do \"E:\\work\\AI\\Strata\\docs\\TODO.md\" item 2a\ncommit 8e4a623f593edc96a7e7d2e14ef5423376e49740\nAuthor: Wei Lu <mailwlu@gmail.com>\nDate:   Tue Oct 6 00:24:43 2026 +0300\n\n    re-run the one-table\n      benchmark\n    \n    Co-authored-by: Claude <noreply@anthropic.com>\n    Agent-Tool: claude-code\n    Agent-Model: claude-opus-5-5\n    Agent-Session-Id: d1be491a-b33a-4ce9-9870-f25de33f7058\n    Agent-Ext-Snapshot: 9021a535131799752482f5a15f37302b6787c38a\n\n _traj/INDEX.tsv                                    |   2 +-\n _traj/d1be491a-b33a-4ce9-9870-f25de33f7058.json    | 682 ++++++++++++++++++++-\n _traj/idx/d1be491a-b33a-4ce9-9870-f25de33f7058.md  |  14 +-\n .../tasks/bwz3up38a.output                         |   0\n .../2026-10-05-halo-coder-iq1_m-todo2a-server.log  |   5 +\n .../2026-10-05-halo-coder-iq1_m-todo2a.log         |   9 +\n .../benchmarks/2026-10-05-halo-onetable-todo2a.log |   0",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "git log --oneline -4; git show --stat 8e4a623 | head -20",
+          "description": "Inspect the intervening commit"
+        }
+      }
+    },
+    {
+      "step_id": 146,
+      "timestamp": "2026-10-05T21:33:50.436Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 203852,
+        "completion_tokens": 853,
+        "cached_tokens": 203850,
+        "extra": {
+          "cache_creation_input_tokens": 721,
+          "cache_read_input_tokens": 203850,
+          "output_tokens_details": {
+            "thinking_tokens": 42
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 721,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 853,
+              "cache_read_input_tokens": 203850,
+              "cache_creation_input_tokens": 721,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 721
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 147,
+      "timestamp": "2026-10-05T21:33:50.442Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Nothing was lost. A commit made automatically during this session (`8e4a623`) had saved those files part-way through my own run; my commit holds the finished versions.\n\nI re-ran the one-table benchmark with the TODO 2a engine on both models. It's written up as \"The one table, redone with TODO 2a's engine\" at the end of the TODO 2a section in `docs/AIMAX+395-ROCm.md`, and committed as `5da3200`.\n\n| Strata on the 8060S | TODO 5's engine | TODO 2a's engine |\n|---|---|---|\n| Coder, prefill @ ~4.75K | 573.0 t/s | **587.5 t/s** |\n| Coder, pp4096 @ d0 | 557.5 | **576.1** |\n| Coder, pp4096 @ d16384 | ~585 | **~595** (the 16K prefix itself 597.4) |\n| UD-IQ4_XS, prefill @ ~4.75K | 341.3 | 355.2 |\n| UD-IQ4_XS, pp4096 @ d0 | 335.0 | 339.1 (llama.cpp still leads: 372-391) |\n| UD-IQ4_XS, pp4096 @ d16384 | 351-356 | 362-366 |\n\n- **Coder:** prefill is 2–3% faster at every length, as the A/B predicted. The 16K rows gain least because their 8,192-token chunks put most experts above 128 rows, into one class.\n- **UD-IQ4_XS:** +1–4%, but that is within the run-to-run spread of its earlier tables. The A/B found its 4K chunks limited by copying experts from host RAM, not by the products.\n- **Decode:** this change doesn't touch it, and the decode rows stayed within their usual spread. The one exception is UD-IQ4_XS tg128 @ d16384 (19.1 → 22.5 t/s), which follows its draft acceptance going from 58% to 73%.\n- **Coder load time:** 11.7 → 15.4 s. The A/B servers on the same engine were listening after 12.1-12.2 s, and load time has moved by 2-4 s between runs before. The table says so.\n- **Against the 3060M PC:** Coder decode is now 0.75–0.90 of it and prefill 0.52–0.62. For the Coder at 4.75K, the day's prompt speed now reads 146 → … → 573 → 588 t/s.",
+      "metrics": {
+        "prompt_tokens": 203852,
+        "completion_tokens": 853,
+        "cached_tokens": 203850,
+        "extra": {
+          "cache_creation_input_tokens": 721,
+          "cache_read_input_tokens": 203850,
+          "output_tokens_details": {
+            "thinking_tokens": 42
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 721,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 853,
+              "cache_read_input_tokens": 203850,
+              "cache_creation_input_tokens": 721,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 721
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 17881024,
-    "total_completion_tokens": 122403,
-    "total_cached_tokens": 17880764,
-    "total_steps": 132,
+    "total_prompt_tokens": 20672114,
+    "total_completion_tokens": 138466,
+    "total_cached_tokens": 20671824,
+    "total_steps": 147,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 362178,
-      "total_cache_read_input_tokens": 17880764
+      "total_cache_creation_input_tokens": 381472,
+      "total_cache_read_input_tokens": 20671824
     }
   }
 }
