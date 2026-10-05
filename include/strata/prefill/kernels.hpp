@@ -43,10 +43,22 @@ void gdn_gates(const float* ab, const float* dt, const float* ssm_a, float* gate
 /// The 4-tap causal conv + SiLU over the chunk (history [C][3] in, updated to the chunk's last three inputs), then
 /// the L2 norm of the q and k heads of every token.  h: [T, C].
 void gdn_conv(float* history, const float* qkv, const float* conv_w, float* h, int64_t T, float eps, void* stream);
-/// The recurrence over the chunk, block per value head, state in registers; y[t] = rmsnorm(o) * gamma * sigmoid(z)
-/// (FP32 and FP16 bits: the out projection is quantized).
+/// The recurrence over the chunk; y[t] = rmsnorm(o) * gamma * sigmoid(z) (FP32 and FP16 bits: the out projection is
+/// quantized).  With `scratch` (a dead buffer of `scratch_floats` floats: 6,960 per token, T rounded up to 16) and
+/// STRATA_GDN_CHUNK on, the chunked kernels run (src/prefill/gdn_chunk_wmma.cu: 16-token chunks, FP16 WMMA products,
+/// the state in FP32; they read y as scratch before writing it); otherwise the token-serial kernels, block per value
+/// head, state in registers, FP32 throughout.
 void gdn_recurrence(float* state, const float* h, const float* gate, const float* beta, const float* z,
-                    const float* gamma, float eps, float* y, uint16_t* y16, int64_t T, void* stream);
+                    const float* gamma, float eps, float* y, uint16_t* y16, int64_t T, float* scratch,
+                    size_t scratch_floats, void* stream);
+/// The chunked path alone (the parity test); false without running anything when it is not built, the scratch is too
+/// small or T < 1.
+bool gdn_recurrence_chunked(float* state, const float* h, const float* gate, const float* beta, const float* z,
+                            const float* gamma, float eps, float* y, uint16_t* y16, int64_t T, float* scratch,
+                            size_t scratch_floats, void* stream);
+/// The chunked recurrence's three kernels (gdn_chunk_wmma.cu, HIP MMQ builds): y gets o / sqrt(128), not normalized.
+bool gdn_chunk_wmma(float* state, const float* h, const float* gate, const float* beta, float* y, int64_t T,
+                    float* scratch, size_t scratch_floats, void* stream);
 
 // ---- MoE
 /// softmax over 512, top-10 (ties to the lower id), weights renormalised over the ten (the native router).

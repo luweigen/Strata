@@ -449,6 +449,41 @@ __global__ void __launch_bounds__(S) gdn_out_norm_kernel(const float* __restrict
     y16[at] = hf(v);
 }
 
+// gdn_out_norm_kernel with a wave per head and 8 heads per block (TODO 5): the kernel above is one 128-thread block
+// per (token, head), 199,920 blocks for a 4,165-token chunk, and the 8060S spent 11-25 ms per layer launching them -
+// as long as the recurrence itself; this one takes 1.5 ms.  Lane l holds columns l, l + 32, l + 64, l + 96, so each of
+// the four warp sums covers the same 32 columns as the old kernel's warp of that index, added in the same order; the
+// compiler still rounds a few values differently (at most 5 ulp, 3.5% of the FP32 outputs, 4.8e-7 absolute, in
+// tests/hip/prefill_gdn_chunk_parity.cpp's T = 333 case).  STRATA_GDN_NORM_OLD=1: the old kernel (A/B).
+constexpr int NORM_HEADS = 8;
+__global__ void __launch_bounds__(32 * NORM_HEADS) gdn_out_norm_heads_kernel(const float* __restrict__ z,
+                                                                             const float* __restrict__ gamma, float eps,
+                                                                             float* __restrict__ y,
+                                                                             uint16_t* __restrict__ y16) {
+    const int64_t t = blockIdx.y;
+    const int head = blockIdx.x * NORM_HEADS + threadIdx.y, lane = threadIdx.x;
+    const size_t base = (size_t) t * HV * S + (size_t) head * S + lane;
+    float oc[4], p[4];
+#pragma unroll
+    for (int j = 0; j < 4; ++j) oc[j] = y[base + 32 * j];
+#pragma unroll
+    for (int j = 0; j < 4; ++j) p[j] = warp_sum(oc[j] * oc[j]);
+    const float ss = p[0] + p[1] + p[2] + p[3];
+    const float r = rsqrtf(ss / (float) S + eps);
+#pragma unroll
+    for (int j = 0; j < 4; ++j) {
+        const float v = oc[j] * r * gamma[lane + 32 * j] * sigm(z[base + 32 * j]);
+        y[base + 32 * j] = v;
+        y16[base + 32 * j] = hf(v);
+    }
+}
+void gdn_out_norm(const float* z, const float* gamma, float eps, float* y, uint16_t* y16, int64_t T, cudaStream_t cs) {
+    static const bool old = std::getenv("STRATA_GDN_NORM_OLD") != nullptr;
+    if (T <= 0) return;
+    if (old) gdn_out_norm_kernel<<<dim3((unsigned) T, HV), S, 0, cs>>>(z, gamma, eps, y, y16);
+    else gdn_out_norm_heads_kernel<<<dim3(HV / NORM_HEADS, (unsigned) T), dim3(32, NORM_HEADS), 0, cs>>>(z, gamma, eps, y, y16);
+}
+
 // ---------------------------------------------------------------- MoE
 template <int REG>
 __global__ void route_kernel(const float* __restrict__ logits, int32_t* __restrict__ ids, float* __restrict__ wout,
@@ -741,18 +776,55 @@ void gdn_conv(float* history, const float* qkv, const float* conv_w, float* h, i
     gdn_l2_kernel<<<dim3(2 * HK, (unsigned) T), S, 0, (cudaStream_t) stream>>>(h, eps);
     check("gdn_conv");
 }
+bool gdn_recurrence_chunked(float* state, const float* h, const float* gate, const float* beta, const float* z,
+                            const float* gamma, float eps, float* y, uint16_t* y16, int64_t T, float* scratch,
+                            size_t scratch_floats, void* stream) {
+#ifdef STRATA_GDN_WMMA
+    // the products on the matrix cores (src/prefill/gdn_chunk_wmma.cu), then the same output norm as the serial path
+    if (!gdn_chunk_wmma(state, h, gate, beta, y, T, scratch, scratch_floats, stream)) return false;
+    gdn_out_norm(z, gamma, eps, y, y16, T, (cudaStream_t) stream);
+    check("gdn_recurrence_chunked");
+    return true;
+#else
+    (void) state; (void) h; (void) gate; (void) beta; (void) z; (void) gamma; (void) eps; (void) y; (void) y16;
+    (void) T; (void) scratch; (void) scratch_floats; (void) stream;
+    return false;
+#endif
+}
 void gdn_recurrence(float* state, const float* h, const float* gate, const float* beta, const float* z,
-                    const float* gamma, float eps, float* y, uint16_t* y16, int64_t T, void* stream) {
+                    const float* gamma, float eps, float* y, uint16_t* y16, int64_t T, float* scratch,
+                    size_t scratch_floats, void* stream) {
+    // STRATA_GDN_CHUNK=1: the chunked kernels (HIP MMQ builds; off by default: on the 8060S they are no faster than
+    // the column-split serial kernels and carry FP16 rounding, docs/AIMAX+395-ROCm.md TODO 5); STRATA_GDN_CHUNK_MIN: the
+    // prompt chunk length they start at (default 64)
+    static const bool chunked = [] { const char* v = std::getenv("STRATA_GDN_CHUNK"); return v != nullptr && std::atoi(v) != 0; }();
+    static const int64_t chunk_min = [] { const char* v = std::getenv("STRATA_GDN_CHUNK_MIN"); return v ? std::atoll(v) : 64LL; }();
+    if (chunked && T >= chunk_min &&
+        gdn_recurrence_chunked(state, h, gate, beta, z, gamma, eps, y, y16, T, scratch, scratch_floats, stream))
+        return;
     static const bool serial = std::getenv("STRATA_GDN_REC_HEADS") != nullptr;   // the one-block-per-head kernel (A/B)
     if (serial || T <= 0) {
         gdn_rec_kernel<<<HV, dim3(S, RG), 0, (cudaStream_t) stream>>>(state, h, gate, beta, z, gamma, eps, y, y16, T);
     } else {
         static const bool pipe = [] { const char* v = std::getenv("STRATA_GDN_PIPELINE"); return v == nullptr || std::atoi(v) != 0; }();
+        static const bool timing = std::getenv("STRATA_GDN_CHUNK_TIMING") != nullptr;   // debug, as in gdn_chunk_wmma
+        cudaEvent_t ev[3];
+        if (timing) { for (auto& e : ev) (void) cudaEventCreate(&e); (void) cudaEventRecord(ev[0], (cudaStream_t) stream); }
         if (pipe)   // the software-pipelined loads (same bits)
             gdn_rec_cols_pipe_kernel<<<HV * NCB, dim3(CB, RG), 0, (cudaStream_t) stream>>>(state, h, gate, beta, y, T);
         else
             gdn_rec_cols_kernel<<<HV * NCB, dim3(CB, RG), 0, (cudaStream_t) stream>>>(state, h, gate, beta, y, T);
-        gdn_out_norm_kernel<<<dim3((unsigned) T, HV), S, 0, (cudaStream_t) stream>>>(z, gamma, eps, y, y16);
+        if (timing) (void) cudaEventRecord(ev[1], (cudaStream_t) stream);
+        gdn_out_norm(z, gamma, eps, y, y16, T, (cudaStream_t) stream);
+        if (timing) {
+            (void) cudaEventRecord(ev[2], (cudaStream_t) stream);
+            (void) cudaEventSynchronize(ev[2]);
+            float a = 0, b = 0;
+            (void) cudaEventElapsedTime(&a, ev[0], ev[1]);
+            (void) cudaEventElapsedTime(&b, ev[1], ev[2]);
+            std::fprintf(stderr, "gdn serial T=%lld: recurrence %.2f ms, out norm %.2f ms\n", (long long) T, a, b);
+            for (auto& e : ev) (void) cudaEventDestroy(e);
+        }
     }
     check("gdn_recurrence");
 }

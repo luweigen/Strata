@@ -1,0 +1,12 @@
+barrier (128 threads, 42 KB LDS)                     grid 192,  20000 reps:    0.851 ms =    42.6 ns per rep per block,  42.55 ns per unit
+LDS store, lanes down a column (stride 68)           grid 192,  20000 reps:    1.522 ms =    76.1 ns per rep per block,  76.09 ns per unit
+LDS store, lanes contiguous                          grid 192,  20000 reps:    1.282 ms =    64.1 ns per rep per block,  64.11 ns per unit
+4x4 tile step: 2 float4 LDS loads + 16 FMAs          grid 192,  20000 reps:    4.294 ms =   214.7 ns per rep per block,  13.42 ns per unit
+32 dependent FMAs                                    grid 192,  20000 reps:    5.905 ms =   295.2 ns per rep per block,   9.23 ns per unit
+16 coalesced global loads (40 KB row stride)         grid 192,   2000 reps:    4.376 ms =  2188.1 ns per rep per block, 136.75 ns per unit
+barrier (128 threads, 42 KB LDS)                     grid  20,  20000 reps:    0.192 ms =     9.6 ns per rep per block,   9.61 ns per unit
+LDS store, lanes down a column (stride 68)           grid  20,  20000 reps:    0.231 ms =    11.6 ns per rep per block,  11.57 ns per unit
+LDS store, lanes contiguous                          grid  20,  20000 reps:    0.240 ms =    12.0 ns per rep per block,  12.02 ns per unit
+4x4 tile step: 2 float4 LDS loads + 16 FMAs          grid  20,  20000 reps:    0.716 ms =    35.8 ns per rep per block,   2.24 ns per unit
+32 dependent FMAs                                    grid  20,  20000 reps:    1.493 ms =    74.6 ns per rep per block,   2.33 ns per unit
+16 coalesced global loads (40 KB row stride)         grid  20,   2000 reps:    0.705 ms =   352.7 ns per rep per block,  22.04 ns per unit

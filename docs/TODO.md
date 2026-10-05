@@ -72,8 +72,18 @@ the measurement that decides it. Test outputs (engine logs, server output, bench
    engine's "router+shared" phase 222-223 -> 161-162 ms per 4K chunk, pp4096 543-546 -> 547-553 t/s, no fallback
    logged (`2026-10-05-halo-router-lt-ab.py`). On a wheel change the engine refuses the file (its header carries the
    arch and version) and says so; re-tune then.
-5. **The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card
-   (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.
+5. ~~**The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card
+   (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.~~
+   **Done 2026-10-05 night, with a corrected premise**
+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-5-done-the-gdn-phases-time-was-the-output-norms-launch-not-the-recurrence-2026-10-05-night)):
+   Strata's recurrence is already column-split and pipelined (192 blocks), 14-15 ms per layer at T = 4,165. The
+   output norm after it took 11-25 ms launching one tiny block per token and head. Shipped: a wave-per-head norm,
+   1.5 ms (within 5 ulp of the old one; `STRATA_GDN_NORM_OLD=1` restores it). The engine's "gdn recurrence" phase
+   went 816-836 -> 592-600 ms per 4K chunk, pp4096 550-551 -> 562-566 t/s. llama.cpp's chunked kernels, ported onto
+   the vendored ggml's WMMA (`src/prefill/gdn_chunk_wmma.cu`), match to FP16 rounding (rel_l2 4.5e-4) but their walk
+   is no faster here (12-16 ms; engine 689-693 ms): opt-in as `STRATA_GDN_CHUNK=1`. An FP32 chunked form was 0.6x
+   (same FMA count, no matrix cores). Test: `hip_prefill_gdn_chunk_parity`. Left open: the serial walk itself,
+   at ~0.5 TFMA/s.
 6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any
    fusing.
 

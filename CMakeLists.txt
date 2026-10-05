@@ -474,11 +474,21 @@ if(STRATA_ENABLE_CUDA OR STRATA_ENABLE_HIP)
       set_tests_properties(hip_prefill_wmma_gemm_parity PROPERTIES TIMEOUT 600)
       list(APPEND _strata_hip_tests hip_prefill_wmma_gemm_parity)
     endif()
+    # the chunked GDN prompt recurrence (HIP MMQ builds) against the token-serial kernels and a double reference
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/hip/prefill_gdn_chunk_parity.cpp")
+      add_executable(hip_prefill_gdn_chunk_parity tests/hip/prefill_gdn_chunk_parity.cpp)
+      target_link_libraries(hip_prefill_gdn_chunk_parity PRIVATE strata_prefill strata_hip_runtime)
+      add_test(NAME hip_prefill_gdn_chunk_parity COMMAND hip_prefill_gdn_chunk_parity)
+      list(APPEND _strata_hip_tests hip_prefill_gdn_chunk_parity)
+    endif()
     if(_strata_hip_tests)
       set_tests_properties(${_strata_hip_tests} PROPERTIES TIMEOUT 60)
     endif()
     if(TARGET hip_prefill_native_batch)
       set_tests_properties(hip_prefill_native_batch PROPERTIES TIMEOUT 120)
+    endif()
+    if(TARGET hip_prefill_gdn_chunk_parity)
+      set_tests_properties(hip_prefill_gdn_chunk_parity PROPERTIES TIMEOUT 600 SKIP_RETURN_CODE 77)
     endif()
     if(TARGET hip_prefill_hipblaslt_gemm)
       set_tests_properties(hip_prefill_hipblaslt_gemm PROPERTIES TIMEOUT 120 SKIP_RETURN_CODE 77)
@@ -924,6 +934,7 @@ if(STRATA_NATIVE_EXPERTS)
     set(_strata_mmq_sources
       src/prefill/moe_mmq.cu
       src/prefill/ggml_cuda_host.cu
+      src/prefill/gdn_chunk_wmma.cu
       "${_strata_mmq}/quantize.cu")
     foreach(_t IN LISTS _strata_mmq_types)
       list(APPEND _strata_mmq_sources "${_strata_mmq}/template-instances/mmq-instance-${_t}.cu")
@@ -940,6 +951,8 @@ if(STRATA_NATIVE_EXPERTS)
     target_link_libraries(strata_mmq PUBLIC ggml-base hip::host roc::hipblas)
     target_link_libraries(strata_prefill PUBLIC strata_mmq)
     target_compile_definitions(strata_prefill PUBLIC STRATA_PREFILL_MMQ=1)
+    # the chunked GDN prompt recurrence (llama.cpp's kernels on ggml's mma.cuh, TODO 5)
+    target_compile_definitions(strata_prefill PRIVATE STRATA_GDN_WMMA=1)
 
     # Numerical diagnostic: synthetic layouts by default, optional first-expert IQ3_XXS/IQ4_NL check with a pack.
     add_executable(hip_prefill_mmq_parity tests/hip/prefill_mmq_parity.cpp)
