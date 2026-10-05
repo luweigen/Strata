@@ -29552,19 +29552,639 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 356,
+      "timestamp": "2026-10-05T12:45:23.737Z",
+      "source": "user",
+      "message": "把coder和IQ4_XS最好的Halo方案（显存配比和推理程序——Strata和\"E:\\work\\AI\\EngramHalo.cpp\\docs\\strix-halo\\windows.md\"中记录的llama.cpp）和3060M放在一张表对比",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 357,
+      "timestamp": "2026-10-05T12:45:50.800Z",
+      "source": "user",
+      "message": "把coder和IQ4_XS最好的Halo方案（显存配比和推理程序——Strata和\"E:\\work\\AI\\EngramHalo.cpp\\docs\\strix-halo\\windows.md\"中记录的llama.cpp——组合）和3060M放在一张表对比",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 358,
+      "timestamp": "2026-10-05T12:46:13.039Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 431131,
+        "completion_tokens": 1193,
+        "cached_tokens": 431129,
+        "extra": {
+          "cache_creation_input_tokens": 120,
+          "cache_read_input_tokens": 431129,
+          "output_tokens_details": {
+            "thinking_tokens": 967
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 120,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1193,
+              "cache_read_input_tokens": 431129,
+              "cache_creation_input_tokens": 120,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 120
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 359,
+      "timestamp": "2026-10-05T12:46:15.416Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01FuBdThKi3hrP8HH6urBj9W",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01FuBdThKi3hrP8HH6urBj9W",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /e/work/AI/EngramHalo.cpp/docs/strix-halo && grep -n \"^## \\|^### \" windows.md | head -40; echo =====; grep -nE \"^\\| *(model load|cold first|fresh code|prefill @|decode tail|repeated|pp4096|tg128|pp512|tg128 @|load)\" windows.md | cut -c1-200 | head -40",
+            "description": "Read the llama.cpp result tables in EngramHalo's windows.md for both models"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01FuBdThKi3hrP8HH6urBj9W",
+            "content": "10:## Test machine\n40:## Toolchain setup\n69:## Build\n101:## Running\n134:## Using it with Claude Code\n194:## LAN access\n215:## Memory configuration\n226:## System RAM footprint while serving\n257:## What behaves differently on Windows\n273:## Measured results (2026-09-02)\n334:### Toolchain A/B: building against ROCm 7.14 on Windows, step by step\n429:### Real-workload statistics (Claude Code session, same day)\n465:## Chunked GDN prefill kernel A/B (2026-10-04)\n557:## Expert-pruned GSQ-RCO Coder vs IQ4_XS (2026-10-01)\n=====\n282:| model load to listening | 1m28s-1m34s | \"seconds\" (mmap) |\n285:| prefill @ ~4.4K depth, lazy SSD | **277.6-283.6 t/s** (4 runs, 2 sessions) | 395.6 t/s (IQ3 @4K; IQ4 llama-bench pp4096: 501.6 warm) |\n292:| pp4096 @ d0 | 314.05 +/- 52.35 | 501.6 |\n293:| tg128 @ d0 | **22.77 +/- 0.18** | 22.8 |\n294:| pp4096 @ d16384 | 258.79 +/- 2.56 | 379.3 |\n295:| tg128 @ d16384 | **19.44 +/- 0.18** | 20.1 |\n404:| pp4096 @ d0 (warm rep) | ~345 | ~345-351 |\n405:| pp4096 @ d16384 | 260.15 +/- 0.80 | 258.9 |\n406:| tg128 / @16K | 22.33 / 19.10 | 22.7 / 19.4 |\n504:| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n505:| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n506:| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n597:| pp4096 @ d0 | 318.1 +/- 70.0 (warm-up pass: 365.3) | 339.5 +/- 6.0 (warm-up pass: 337.2) | 314.1 +/- 52.4 (warm 350.8) |\n598:| tg128 @ d0 | 20.92 +/- 0.19 | 21.83 +/- 0.52 | 22.77 +/- 0.18 |\n599:| pp4096 @ d16384 | **269.9 +/- 1.2** | 244.1 +/- 19.5 | 258.8 +/- 2.6 |\n600:| tg128 @ d16384 | 17.98 +/- 0.15 | 16.25 +/- 4.23 | 19.44 +/- 0.18 |\n611:| model load to listening | **30 s** | 83 s | 1m28s-1m34s |\n612:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s |\n613:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc |\n614:| prefill @ 4754 depth | **321.5 t/s** | 277.2 t/s | 277.6-283.6 t/s |\n615:| decode tail after that prefill | 20.8 t/s, 81.9% acc | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s |\n616:| repeated prompt (reference only) | 49.9 t/s | 58.6 t/s, 99.2% acc | |\nShell cwd was reset to E:\\work\\AI\\Strata\n\n[stdout]\n10:## Test machine\n40:## Toolchain setup\n69:## Build\n101:## Running\n134:## Using it with Claude Code\n194:## LAN access\n215:## Memory configuration\n226:## System RAM footprint while serving\n257:## What behaves differently on Windows\n273:## Measured results (2026-09-02)\n334:### Toolchain A/B: building against ROCm 7.14 on Windows, step by step\n429:### Real-workload statistics (Claude Code session, same day)\n465:## Chunked GDN prefill kernel A/B (2026-10-04)\n557:## Expert-pruned GSQ-RCO Coder vs IQ4_XS (2026-10-01)\n=====\n282:| model load to listening | 1m28s-1m34s | \"seconds\" (mmap) |\n285:| prefill @ ~4.4K depth, lazy SSD | **277.6-283.6 t/s** (4 runs, 2 sessions) | 395.6 t/s (IQ3 @4K; IQ4 llama-bench pp4096: 501.6 warm) |\n292:| pp4096 @ d0 | 314.05 +/- 52.35 | 501.6 |\n293:| tg128 @ d0 | **22.77 +/- 0.18** | 22.8 |\n294:| pp4096 @ d16384 | 258.79 +/- 2.56 | 379.3 |\n295:| tg128 @ d16384 | **19.44 +/- 0.18** | 20.1 |\n404:| pp4096 @ d0 (warm rep) | ~345 | ~345-351 |\n405:| pp4096 @ d16384 | 260.15 +/- 0.80 | 258.9 |\n406:| tg128 / @16K | 22.33 / 19.10 | 22.7 / 19.4 |\n504:| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n505:| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n506:| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n597:| pp4096 @ d0 | 318.1 +/- 70.0 (warm-up pass: 365.3) | 339.5 +/- 6.0 (warm-up pass: 337.2) | 314.1 +/- 52.4 (warm 350.8) |\n598:| tg128 @ d0 | 20.92 +/- 0.19 | 21.83 +/- 0.52 | 22.77 +/- 0.18 |\n599:| pp4096 @ d16384 | **269.9 +/- 1.2** | 244.1 +/- 19.5 | 258.8 +/- 2.6 |\n600:| tg128 @ d16384 | 17.98 +/- 0.15 | 16.25 +/- 4.23 | 19.44 +/- 0.18 |\n611:| model load to listening | **30 s** | 83 s | 1m28s-1m34s |\n612:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s |\n613:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc |\n614:| prefill @ 4754 depth | **321.5 t/s** | 277.2 t/s | 277.6-283.6 t/s |\n615:| decode tail after that prefill | 20.8 t/s, 81.9% acc | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s |\n616:| repeated prompt (reference only) | 49.9 t/s | 58.6 t/s, 99.2% acc | |\n[stderr]\n\nShell cwd was reset to E:\\work\\AI\\Strata\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 431131,
+        "completion_tokens": 1193,
+        "cached_tokens": 431129,
+        "extra": {
+          "cache_creation_input_tokens": 120,
+          "cache_read_input_tokens": 431129,
+          "output_tokens_details": {
+            "thinking_tokens": 967
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 120,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1193,
+              "cache_read_input_tokens": 431129,
+              "cache_creation_input_tokens": 120,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 120
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "10:## Test machine\n40:## Toolchain setup\n69:## Build\n101:## Running\n134:## Using it with Claude Code\n194:## LAN access\n215:## Memory configuration\n226:## System RAM footprint while serving\n257:## What behaves differently on Windows\n273:## Measured results (2026-09-02)\n334:### Toolchain A/B: building against ROCm 7.14 on Windows, step by step\n429:### Real-workload statistics (Claude Code session, same day)\n465:## Chunked GDN prefill kernel A/B (2026-10-04)\n557:## Expert-pruned GSQ-RCO Coder vs IQ4_XS (2026-10-01)\n=====\n282:| model load to listening | 1m28s-1m34s | \"seconds\" (mmap) |\n285:| prefill @ ~4.4K depth, lazy SSD | **277.6-283.6 t/s** (4 runs, 2 sessions) | 395.6 t/s (IQ3 @4K; IQ4 llama-bench pp4096: 501.6 warm) |\n292:| pp4096 @ d0 | 314.05 +/- 52.35 | 501.6 |\n293:| tg128 @ d0 | **22.77 +/- 0.18** | 22.8 |\n294:| pp4096 @ d16384 | 258.79 +/- 2.56 | 379.3 |\n295:| tg128 @ d16384 | **19.44 +/- 0.18** | 20.1 |\n404:| pp4096 @ d0 (warm rep) | ~345 | ~345-351 |\n405:| pp4096 @ d16384 | 260.15 +/- 0.80 | 258.9 |\n406:| tg128 / @16K | 22.33 / 19.10 | 22.7 / 19.4 |\n504:| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n505:| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n506:| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n597:| pp4096 @ d0 | 318.1 +/- 70.0 (warm-up pass: 365.3) | 339.5 +/- 6.0 (warm-up pass: 337.2) | 314.1 +/- 52.4 (warm 350.8) |\n598:| tg128 @ d0 | 20.92 +/- 0.19 | 21.83 +/- 0.52 | 22.77 +/- 0.18 |\n599:| pp4096 @ d16384 | **269.9 +/- 1.2** | 244.1 +/- 19.5 | 258.8 +/- 2.6 |\n600:| tg128 @ d16384 | 17.98 +/- 0.15 | 16.25 +/- 4.23 | 19.44 +/- 0.18 |\n611:| model load to listening | **30 s** | 83 s | 1m28s-1m34s |\n612:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s |\n613:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc |\n614:| prefill @ 4754 depth | **321.5 t/s** | 277.2 t/s | 277.6-283.6 t/s |\n615:| decode tail after that prefill | 20.8 t/s, 81.9% acc | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s |\n616:| repeated prompt (reference only) | 49.9 t/s | 58.6 t/s, 99.2% acc | |",
+            "stderr": "\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FuBdThKi3hrP8HH6urBj9W",
+            "type": "tool_result",
+            "content": "10:## Test machine\n40:## Toolchain setup\n69:## Build\n101:## Running\n134:## Using it with Claude Code\n194:## LAN access\n215:## Memory configuration\n226:## System RAM footprint while serving\n257:## What behaves differently on Windows\n273:## Measured results (2026-09-02)\n334:### Toolchain A/B: building against ROCm 7.14 on Windows, step by step\n429:### Real-workload statistics (Claude Code session, same day)\n465:## Chunked GDN prefill kernel A/B (2026-10-04)\n557:## Expert-pruned GSQ-RCO Coder vs IQ4_XS (2026-10-01)\n=====\n282:| model load to listening | 1m28s-1m34s | \"seconds\" (mmap) |\n285:| prefill @ ~4.4K depth, lazy SSD | **277.6-283.6 t/s** (4 runs, 2 sessions) | 395.6 t/s (IQ3 @4K; IQ4 llama-bench pp4096: 501.6 warm) |\n292:| pp4096 @ d0 | 314.05 +/- 52.35 | 501.6 |\n293:| tg128 @ d0 | **22.77 +/- 0.18** | 22.8 |\n294:| pp4096 @ d16384 | 258.79 +/- 2.56 | 379.3 |\n295:| tg128 @ d16384 | **19.44 +/- 0.18** | 20.1 |\n404:| pp4096 @ d0 (warm rep) | ~345 | ~345-351 |\n405:| pp4096 @ d16384 | 260.15 +/- 0.80 | 258.9 |\n406:| tg128 / @16K | 22.33 / 19.10 | 22.7 / 19.4 |\n504:| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n505:| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n506:| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n597:| pp4096 @ d0 | 318.1 +/- 70.0 (warm-up pass: 365.3) | 339.5 +/- 6.0 (warm-up pass: 337.2) | 314.1 +/- 52.4 (warm 350.8) |\n598:| tg128 @ d0 | 20.92 +/- 0.19 | 21.83 +/- 0.52 | 22.77 +/- 0.18 |\n599:| pp4096 @ d16384 | **269.9 +/- 1.2** | 244.1 +/- 19.5 | 258.8 +/- 2.6 |\n600:| tg128 @ d16384 | 17.98 +/- 0.15 | 16.25 +/- 4.23 | 19.44 +/- 0.18 |\n611:| model load to listening | **30 s** | 83 s | 1m28s-1m34s |\n612:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s |\n613:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc |\n614:| prefill @ 4754 depth | **321.5 t/s** | 277.2 t/s | 277.6-283.6 t/s |\n615:| decode tail after that prefill | 20.8 t/s, 81.9% acc | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s |\n616:| repeated prompt (reference only) | 49.9 t/s | 58.6 t/s, 99.2% acc | |\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "10:## Test machine\n40:## Toolchain setup\n69:## Build\n101:## Running\n134:## Using it with Claude Code\n194:## LAN access\n215:## Memory configuration\n226:## System RAM footprint while serving\n257:## What behaves differently on Windows\n273:## Measured results (2026-09-02)\n334:### Toolchain A/B: building against ROCm 7.14 on Windows, step by step\n429:### Real-workload statistics (Claude Code session, same day)\n465:## Chunked GDN prefill kernel A/B (2026-10-04)\n557:## Expert-pruned GSQ-RCO Coder vs IQ4_XS (2026-10-01)\n=====\n282:| model load to listening | 1m28s-1m34s | \"seconds\" (mmap) |\n285:| prefill @ ~4.4K depth, lazy SSD | **277.6-283.6 t/s** (4 runs, 2 sessions) | 395.6 t/s (IQ3 @4K; IQ4 llama-bench pp4096: 501.6 warm) |\n292:| pp4096 @ d0 | 314.05 +/- 52.35 | 501.6 |\n293:| tg128 @ d0 | **22.77 +/- 0.18** | 22.8 |\n294:| pp4096 @ d16384 | 258.79 +/- 2.56 | 379.3 |\n295:| tg128 @ d16384 | **19.44 +/- 0.18** | 20.1 |\n404:| pp4096 @ d0 (warm rep) | ~345 | ~345-351 |\n405:| pp4096 @ d16384 | 260.15 +/- 0.80 | 258.9 |\n406:| tg128 / @16K | 22.33 / 19.10 | 22.7 / 19.4 |\n504:| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n505:| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n506:| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n597:| pp4096 @ d0 | 318.1 +/- 70.0 (warm-up pass: 365.3) | 339.5 +/- 6.0 (warm-up pass: 337.2) | 314.1 +/- 52.4 (warm 350.8) |\n598:| tg128 @ d0 | 20.92 +/- 0.19 | 21.83 +/- 0.52 | 22.77 +/- 0.18 |\n599:| pp4096 @ d16384 | **269.9 +/- 1.2** | 244.1 +/- 19.5 | 258.8 +/- 2.6 |\n600:| tg128 @ d16384 | 17.98 +/- 0.15 | 16.25 +/- 4.23 | 19.44 +/- 0.18 |\n611:| model load to listening | **30 s** | 83 s | 1m28s-1m34s |\n612:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s |\n613:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc |\n614:| prefill @ 4754 depth | **321.5 t/s** | 277.2 t/s | 277.6-283.6 t/s |\n615:| decode tail after that prefill | 20.8 t/s, 81.9% acc | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s |\n616:| repeated prompt (reference only) | 49.9 t/s | 58.6 t/s, 99.2% acc | |",
+            "stderr": "\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FuBdThKi3hrP8HH6urBj9W",
+            "type": "tool_result",
+            "content": "10:## Test machine\n40:## Toolchain setup\n69:## Build\n101:## Running\n134:## Using it with Claude Code\n194:## LAN access\n215:## Memory configuration\n226:## System RAM footprint while serving\n257:## What behaves differently on Windows\n273:## Measured results (2026-09-02)\n334:### Toolchain A/B: building against ROCm 7.14 on Windows, step by step\n429:### Real-workload statistics (Claude Code session, same day)\n465:## Chunked GDN prefill kernel A/B (2026-10-04)\n557:## Expert-pruned GSQ-RCO Coder vs IQ4_XS (2026-10-01)\n=====\n282:| model load to listening | 1m28s-1m34s | \"seconds\" (mmap) |\n285:| prefill @ ~4.4K depth, lazy SSD | **277.6-283.6 t/s** (4 runs, 2 sessions) | 395.6 t/s (IQ3 @4K; IQ4 llama-bench pp4096: 501.6 warm) |\n292:| pp4096 @ d0 | 314.05 +/- 52.35 | 501.6 |\n293:| tg128 @ d0 | **22.77 +/- 0.18** | 22.8 |\n294:| pp4096 @ d16384 | 258.79 +/- 2.56 | 379.3 |\n295:| tg128 @ d16384 | **19.44 +/- 0.18** | 20.1 |\n404:| pp4096 @ d0 (warm rep) | ~345 | ~345-351 |\n405:| pp4096 @ d16384 | 260.15 +/- 0.80 | 258.9 |\n406:| tg128 / @16K | 22.33 / 19.10 | 22.7 / 19.4 |\n504:| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n505:| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n506:| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n597:| pp4096 @ d0 | 318.1 +/- 70.0 (warm-up pass: 365.3) | 339.5 +/- 6.0 (warm-up pass: 337.2) | 314.1 +/- 52.4 (warm 350.8) |\n598:| tg128 @ d0 | 20.92 +/- 0.19 | 21.83 +/- 0.52 | 22.77 +/- 0.18 |\n599:| pp4096 @ d16384 | **269.9 +/- 1.2** | 244.1 +/- 19.5 | 258.8 +/- 2.6 |\n600:| tg128 @ d16384 | 17.98 +/- 0.15 | 16.25 +/- 4.23 | 19.44 +/- 0.18 |\n611:| model load to listening | **30 s** | 83 s | 1m28s-1m34s |\n612:| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s |\n613:| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc |\n614:| prefill @ 4754 depth | **321.5 t/s** | 277.2 t/s | 277.6-283.6 t/s |\n615:| decode tail after that prefill | 20.8 t/s, 81.9% acc | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s |\n616:| repeated prompt (reference only) | 49.9 t/s | 58.6 t/s, 99.2% acc | |\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /e/work/AI/EngramHalo.cpp/docs/strix-halo && grep -n \"^## \\|^### \" windows.md | head -40; echo =====; grep -nE \"^\\| *(model load|cold first|fresh code|prefill @|decode tail|repeated|pp4096|tg128|pp512|tg128 @|load)\" windows.md | cut -c1-200 | head -40",
+          "description": "Read the llama.cpp result tables in EngramHalo's windows.md for both models"
+        }
+      }
+    },
+    {
+      "step_id": 360,
+      "timestamp": "2026-10-05T12:46:31.814Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 431281,
+        "completion_tokens": 408,
+        "cached_tokens": 431249,
+        "extra": {
+          "cache_creation_input_tokens": 2596,
+          "cache_read_input_tokens": 431249,
+          "output_tokens_details": {
+            "thinking_tokens": 198
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2596,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 408,
+              "cache_read_input_tokens": 431249,
+              "cache_creation_input_tokens": 2596,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2596
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 361,
+      "timestamp": "2026-10-05T12:46:34.343Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01U1WMSdiwBAje2mpMxXUqWV",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01U1WMSdiwBAje2mpMxXUqWV",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cd /e/work/AI/EngramHalo.cpp/docs/strix-halo && sed -n 215,226p windows.md | cut -c1-220; echo =====GDN; sed -n 465,475p windows.md | cut -c1-220; sed -n 496,512p windows.md | cut -c1-200",
+            "description": "Read windows.md's memory configuration and the chunked GDN prefill A/B that gave llama.cpp its best prefill"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01U1WMSdiwBAje2mpMxXUqWV",
+            "content": "## Memory configuration\n\nThe 96 GB carve is what makes IQ4_XS fit: the GPU part is 60.4 GiB and the\nLinux measurement puts a 262K-context load at 71.1 GiB - more than a 64 GB\ncarve, and spilling into WDDM shared memory is not something you want to\nbenchmark through. The cost of 96/32 is that `-lm none` (RAM mode) is off the\ntable: the 26.8 GiB engram table does not fit in 31.6 GB of system RAM, and\nneither does a page cache large enough to hold it. If your workload is\nshort-context interactive and you want RAM mode with IQ3_XXS, use a 64/64\nsplit instead - the two splits lock in different configurations.\n\n## System RAM footprint while serving\n=====GDN\n## Chunked GDN prefill kernel A/B (2026-10-04)\n\n**What the kernel does.** 36 of the 48 layers are Gated DeltaNet (GDN), a\nlinear-attention / recurrent layer: instead of a KV cache it keeps one\n128 x 128 state matrix S per head and updates it per token with the delta\nrule, `S_t = g_t * S_{t-1} + beta_t * (v_t - S_{t-1} k_t) k_t^T`, then reads\n`o_t = S_t q_t`. Token t depends on token t-1. Decode (one token per step)\nis this recurrence by nature, so decode never changes. The default prefill\nkernel (`gated_delta_net.cu`) runs the same recurrence as a literal\n`for (t = 0; t < n_tokens; t++)` loop, one wave per head, one 128 x 128\nmatrix-vector step per token: parallelism equals the head count, a 4096-token\nBENCHMARKS.md, and in the GSQ / BFCL sections below was measured with it\n**off**. Measured here on Flash-Next UD-IQ4_XS, llama-bench with the usual\nflags (`-ngl 999 -fa 1 -ctk q8_0 -ctv q8_0 -lm mmap -b 8192 -ub 2048 -t 4`),\none warm-up pass, then off / on / off / on with `-r 2` and one more on pass\nwith `-r 3`:\n\n| | chunk off (8 samples) | chunk on, steady samples | gain |\n|---|---|---|---|\n| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n\nServer check, same day, `-c 32768`, temperature 0: a 4754-token prompt\nprefills at 321.9 t/s with the kernel on vs 295.7 off, decode 20.4 vs 20.6.\n\n**Outliers - investigated the same day, not the kernel.** In the A/B above 3\nof 13 chunk-on prefill samples dropped to 214-288 t/s while the 8 chunk-off\nShell cwd was reset to E:\\work\\AI\\Strata\n\n[stdout]\n## Memory configuration\n\nThe 96 GB carve is what makes IQ4_XS fit: the GPU part is 60.4 GiB and the\nLinux measurement puts a 262K-context load at 71.1 GiB - more than a 64 GB\ncarve, and spilling into WDDM shared memory is not something you want to\nbenchmark through. The cost of 96/32 is that `-lm none` (RAM mode) is off the\ntable: the 26.8 GiB engram table does not fit in 31.6 GB of system RAM, and\nneither does a page cache large enough to hold it. If your workload is\nshort-context interactive and you want RAM mode with IQ3_XXS, use a 64/64\nsplit instead - the two splits lock in different configurations.\n\n## System RAM footprint while serving\n=====GDN\n## Chunked GDN prefill kernel A/B (2026-10-04)\n\n**What the kernel does.** 36 of the 48 layers are Gated DeltaNet (GDN), a\nlinear-attention / recurrent layer: instead of a KV cache it keeps one\n128 x 128 state matrix S per head and updates it per token with the delta\nrule, `S_t = g_t * S_{t-1} + beta_t * (v_t - S_{t-1} k_t) k_t^T`, then reads\n`o_t = S_t q_t`. Token t depends on token t-1. Decode (one token per step)\nis this recurrence by nature, so decode never changes. The default prefill\nkernel (`gated_delta_net.cu`) runs the same recurrence as a literal\n`for (t = 0; t < n_tokens; t++)` loop, one wave per head, one 128 x 128\nmatrix-vector step per token: parallelism equals the head count, a 4096-token\nBENCHMARKS.md, and in the GSQ / BFCL sections below was measured with it\n**off**. Measured here on Flash-Next UD-IQ4_XS, llama-bench with the usual\nflags (`-ngl 999 -fa 1 -ctk q8_0 -ctv q8_0 -lm mmap -b 8192 -ub 2048 -t 4`),\none warm-up pass, then off / on / off / on with `-r 2` and one more on pass\nwith `-r 3`:\n\n| | chunk off (8 samples) | chunk on, steady samples | gain |\n|---|---|---|---|\n| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n\nServer check, same day, `-c 32768`, temperature 0: a 4754-token prompt\nprefills at 321.9 t/s with the kernel on vs 295.7 off, decode 20.4 vs 20.6.\n\n**Outliers - investigated the same day, not the kernel.** In the A/B above 3\nof 13 chunk-on prefill samples dropped to 214-288 t/s while the 8 chunk-off\n[stderr]\n\nShell cwd was reset to E:\\work\\AI\\Strata\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 431281,
+        "completion_tokens": 408,
+        "cached_tokens": 431249,
+        "extra": {
+          "cache_creation_input_tokens": 2596,
+          "cache_read_input_tokens": 431249,
+          "output_tokens_details": {
+            "thinking_tokens": 198
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2596,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 408,
+              "cache_read_input_tokens": 431249,
+              "cache_creation_input_tokens": 2596,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2596
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "## Memory configuration\n\nThe 96 GB carve is what makes IQ4_XS fit: the GPU part is 60.4 GiB and the\nLinux measurement puts a 262K-context load at 71.1 GiB - more than a 64 GB\ncarve, and spilling into WDDM shared memory is not something you want to\nbenchmark through. The cost of 96/32 is that `-lm none` (RAM mode) is off the\ntable: the 26.8 GiB engram table does not fit in 31.6 GB of system RAM, and\nneither does a page cache large enough to hold it. If your workload is\nshort-context interactive and you want RAM mode with IQ3_XXS, use a 64/64\nsplit instead - the two splits lock in different configurations.\n\n## System RAM footprint while serving\n=====GDN\n## Chunked GDN prefill kernel A/B (2026-10-04)\n\n**What the kernel does.** 36 of the 48 layers are Gated DeltaNet (GDN), a\nlinear-attention / recurrent layer: instead of a KV cache it keeps one\n128 x 128 state matrix S per head and updates it per token with the delta\nrule, `S_t = g_t * S_{t-1} + beta_t * (v_t - S_{t-1} k_t) k_t^T`, then reads\n`o_t = S_t q_t`. Token t depends on token t-1. Decode (one token per step)\nis this recurrence by nature, so decode never changes. The default prefill\nkernel (`gated_delta_net.cu`) runs the same recurrence as a literal\n`for (t = 0; t < n_tokens; t++)` loop, one wave per head, one 128 x 128\nmatrix-vector step per token: parallelism equals the head count, a 4096-token\nBENCHMARKS.md, and in the GSQ / BFCL sections below was measured with it\n**off**. Measured here on Flash-Next UD-IQ4_XS, llama-bench with the usual\nflags (`-ngl 999 -fa 1 -ctk q8_0 -ctv q8_0 -lm mmap -b 8192 -ub 2048 -t 4`),\none warm-up pass, then off / on / off / on with `-r 2` and one more on pass\nwith `-r 3`:\n\n| | chunk off (8 samples) | chunk on, steady samples | gain |\n|---|---|---|---|\n| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n\nServer check, same day, `-c 32768`, temperature 0: a 4754-token prompt\nprefills at 321.9 t/s with the kernel on vs 295.7 off, decode 20.4 vs 20.6.\n\n**Outliers - investigated the same day, not the kernel.** In the A/B above 3\nof 13 chunk-on prefill samples dropped to 214-288 t/s while the 8 chunk-off",
+            "stderr": "\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01U1WMSdiwBAje2mpMxXUqWV",
+            "type": "tool_result",
+            "content": "## Memory configuration\n\nThe 96 GB carve is what makes IQ4_XS fit: the GPU part is 60.4 GiB and the\nLinux measurement puts a 262K-context load at 71.1 GiB - more than a 64 GB\ncarve, and spilling into WDDM shared memory is not something you want to\nbenchmark through. The cost of 96/32 is that `-lm none` (RAM mode) is off the\ntable: the 26.8 GiB engram table does not fit in 31.6 GB of system RAM, and\nneither does a page cache large enough to hold it. If your workload is\nshort-context interactive and you want RAM mode with IQ3_XXS, use a 64/64\nsplit instead - the two splits lock in different configurations.\n\n## System RAM footprint while serving\n=====GDN\n## Chunked GDN prefill kernel A/B (2026-10-04)\n\n**What the kernel does.** 36 of the 48 layers are Gated DeltaNet (GDN), a\nlinear-attention / recurrent layer: instead of a KV cache it keeps one\n128 x 128 state matrix S per head and updates it per token with the delta\nrule, `S_t = g_t * S_{t-1} + beta_t * (v_t - S_{t-1} k_t) k_t^T`, then reads\n`o_t = S_t q_t`. Token t depends on token t-1. Decode (one token per step)\nis this recurrence by nature, so decode never changes. The default prefill\nkernel (`gated_delta_net.cu`) runs the same recurrence as a literal\n`for (t = 0; t < n_tokens; t++)` loop, one wave per head, one 128 x 128\nmatrix-vector step per token: parallelism equals the head count, a 4096-token\nBENCHMARKS.md, and in the GSQ / BFCL sections below was measured with it\n**off**. Measured here on Flash-Next UD-IQ4_XS, llama-bench with the usual\nflags (`-ngl 999 -fa 1 -ctk q8_0 -ctv q8_0 -lm mmap -b 8192 -ub 2048 -t 4`),\none warm-up pass, then off / on / off / on with `-r 2` and one more on pass\nwith `-r 3`:\n\n| | chunk off (8 samples) | chunk on, steady samples | gain |\n|---|---|---|---|\n| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n\nServer check, same day, `-c 32768`, temperature 0: a 4754-token prompt\nprefills at 321.9 t/s with the kernel on vs 295.7 off, decode 20.4 vs 20.6.\n\n**Outliers - investigated the same day, not the kernel.** In the A/B above 3\nof 13 chunk-on prefill samples dropped to 214-288 t/s while the 8 chunk-off\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "## Memory configuration\n\nThe 96 GB carve is what makes IQ4_XS fit: the GPU part is 60.4 GiB and the\nLinux measurement puts a 262K-context load at 71.1 GiB - more than a 64 GB\ncarve, and spilling into WDDM shared memory is not something you want to\nbenchmark through. The cost of 96/32 is that `-lm none` (RAM mode) is off the\ntable: the 26.8 GiB engram table does not fit in 31.6 GB of system RAM, and\nneither does a page cache large enough to hold it. If your workload is\nshort-context interactive and you want RAM mode with IQ3_XXS, use a 64/64\nsplit instead - the two splits lock in different configurations.\n\n## System RAM footprint while serving\n=====GDN\n## Chunked GDN prefill kernel A/B (2026-10-04)\n\n**What the kernel does.** 36 of the 48 layers are Gated DeltaNet (GDN), a\nlinear-attention / recurrent layer: instead of a KV cache it keeps one\n128 x 128 state matrix S per head and updates it per token with the delta\nrule, `S_t = g_t * S_{t-1} + beta_t * (v_t - S_{t-1} k_t) k_t^T`, then reads\n`o_t = S_t q_t`. Token t depends on token t-1. Decode (one token per step)\nis this recurrence by nature, so decode never changes. The default prefill\nkernel (`gated_delta_net.cu`) runs the same recurrence as a literal\n`for (t = 0; t < n_tokens; t++)` loop, one wave per head, one 128 x 128\nmatrix-vector step per token: parallelism equals the head count, a 4096-token\nBENCHMARKS.md, and in the GSQ / BFCL sections below was measured with it\n**off**. Measured here on Flash-Next UD-IQ4_XS, llama-bench with the usual\nflags (`-ngl 999 -fa 1 -ctk q8_0 -ctv q8_0 -lm mmap -b 8192 -ub 2048 -t 4`),\none warm-up pass, then off / on / off / on with `-r 2` and one more on pass\nwith `-r 3`:\n\n| | chunk off (8 samples) | chunk on, steady samples | gain |\n|---|---|---|---|\n| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n\nServer check, same day, `-c 32768`, temperature 0: a 4754-token prompt\nprefills at 321.9 t/s with the kernel on vs 295.7 off, decode 20.4 vs 20.6.\n\n**Outliers - investigated the same day, not the kernel.** In the A/B above 3\nof 13 chunk-on prefill samples dropped to 214-288 t/s while the 8 chunk-off",
+            "stderr": "\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01U1WMSdiwBAje2mpMxXUqWV",
+            "type": "tool_result",
+            "content": "## Memory configuration\n\nThe 96 GB carve is what makes IQ4_XS fit: the GPU part is 60.4 GiB and the\nLinux measurement puts a 262K-context load at 71.1 GiB - more than a 64 GB\ncarve, and spilling into WDDM shared memory is not something you want to\nbenchmark through. The cost of 96/32 is that `-lm none` (RAM mode) is off the\ntable: the 26.8 GiB engram table does not fit in 31.6 GB of system RAM, and\nneither does a page cache large enough to hold it. If your workload is\nshort-context interactive and you want RAM mode with IQ3_XXS, use a 64/64\nsplit instead - the two splits lock in different configurations.\n\n## System RAM footprint while serving\n=====GDN\n## Chunked GDN prefill kernel A/B (2026-10-04)\n\n**What the kernel does.** 36 of the 48 layers are Gated DeltaNet (GDN), a\nlinear-attention / recurrent layer: instead of a KV cache it keeps one\n128 x 128 state matrix S per head and updates it per token with the delta\nrule, `S_t = g_t * S_{t-1} + beta_t * (v_t - S_{t-1} k_t) k_t^T`, then reads\n`o_t = S_t q_t`. Token t depends on token t-1. Decode (one token per step)\nis this recurrence by nature, so decode never changes. The default prefill\nkernel (`gated_delta_net.cu`) runs the same recurrence as a literal\n`for (t = 0; t < n_tokens; t++)` loop, one wave per head, one 128 x 128\nmatrix-vector step per token: parallelism equals the head count, a 4096-token\nBENCHMARKS.md, and in the GSQ / BFCL sections below was measured with it\n**off**. Measured here on Flash-Next UD-IQ4_XS, llama-bench with the usual\nflags (`-ngl 999 -fa 1 -ctk q8_0 -ctv q8_0 -lm mmap -b 8192 -ub 2048 -t 4`),\none warm-up pass, then off / on / off / on with `-r 2` and one more on pass\nwith `-r 3`:\n\n| | chunk off (8 samples) | chunk on, steady samples | gain |\n|---|---|---|---|\n| pp4096 @ d0 | 341-349 | 372-391 | +8% |\n| pp4096 @ d16384 | 257-260 | 273-281 | +6.5% |\n| tg128 @ d0 / @ d16384 | 22.8 / 19.3 | 22.5 / 19.4 | none (decode never uses it) |\n\nServer check, same day, `-c 32768`, temperature 0: a 4754-token prompt\nprefills at 321.9 t/s with the kernel on vs 295.7 off, decode 20.4 vs 20.6.\n\n**Outliers - investigated the same day, not the kernel.** In the A/B above 3\nof 13 chunk-on prefill samples dropped to 214-288 t/s while the 8 chunk-off\nShell cwd was reset to E:\\work\\AI\\Strata",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cd /e/work/AI/EngramHalo.cpp/docs/strix-halo && sed -n 215,226p windows.md | cut -c1-220; echo =====GDN; sed -n 465,475p windows.md | cut -c1-220; sed -n 496,512p windows.md | cut -c1-200",
+          "description": "Read windows.md's memory configuration and the chunked GDN prefill A/B that gave llama.cpp its best prefill"
+        }
+      }
+    },
+    {
+      "step_id": 362,
+      "timestamp": "2026-10-05T12:46:52.709Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 433877,
+        "completion_tokens": 2952,
+        "cached_tokens": 433845,
+        "extra": {
+          "cache_creation_input_tokens": 1536,
+          "cache_read_input_tokens": 433845,
+          "output_tokens_details": {
+            "thinking_tokens": 1239
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1536,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 2952,
+              "cache_read_input_tokens": 433845,
+              "cache_creation_input_tokens": 1536,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1536
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 363,
+      "timestamp": "2026-10-05T12:47:11.435Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Edit toolu_01VVzBFBpTJXEwNiNAAf4yUK",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01VVzBFBpTJXEwNiNAAf4yUK",
+          "function_name": "Edit",
+          "arguments": {
+            "replace_all": false,
+            "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "old_string": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "new_string": "## One table: the best Halo setup per model against the 3060M PC\n\nThe best combination of memory split and engine measured on this Halo for each model (Strata from this page;\nllama.cpp from EngramHalo.cpp's `docs/strix-halo/windows.md`, its 2026-09-02 and 2026-10-01 runs at 96/32 and\nits 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC (Strata, CUDA). MTP on in\nevery decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo\nengine wins a row, its number is in brackets.\n\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, hipBLASLt** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\n|---|---|---|---|---|\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\n| cold first request, decode | **38.6 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\n| fresh code prompt, decode | **35.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\n| prefill @ ~4.75K | 274.0 t/s (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\n| decode tail after that prefill | **34.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\n| repeated prompt (reference) | 39.5 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\n| pp4096 @ d0 | 268.4 t/s (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\n| tg128 @ d0 | **28.5 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\n| pp4096 @ d16384 | ~260 t/s (llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\n| tg128 @ d16384 | **28.8 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| ratio to the 3060M PC, prefill | 0.23-0.29 | 1 | 0.3-0.5 | 1 |\n\nWhat the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which puts its\ndecode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x; its prefill is a sixth to a quarter of the\n3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64\nlimits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie\nbetween the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap\nto the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.\n\n## The RTX 5090 over Thunderbolt (not pursued)"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01VVzBFBpTJXEwNiNAAf4yUK",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully.\n\n[metadata] {\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"oldString\": \"## The RTX 5090 over Thunderbolt (not pursued)\", \"newString\": \"## One table: the best Halo setup per model against the 3060M PC\\n\\nThe best combination of memory split and engine measured on this Halo for each model (Strata from this page;\\nllama.cpp from EngramHalo.cpp's `docs/strix-halo/windows.md`, its 2026-09-02 and 2026-10-01 runs at 96/32 and\\nits 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC (Strata, CUDA). MTP on in\\nevery decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo\\nengine wins a row, its number is in brackets.\\n\\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, hipBLASLt** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\\n|---|---|---|---|---|\\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\\n| cold first request, decode | **38.6 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\\n| fresh code prompt, decode | **35.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\\n| prefill @ ~4.75K | 274.0 t/s (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\\n| decode tail after that prefill | **34.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\\n| repeated prompt (reference) | 39.5 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\\n| pp4096 @ d0 | 268.4 t/s (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\\n| tg128 @ d0 | **28.5 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\\n| pp4096 @ d16384 | ~260 t/s (llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\\n| tg128 @ d16384 | **28.8 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\\n| ratio to the 3060M PC, prefill | 0.23-0.29 | 1 | 0.3-0.5 | 1 |\\n\\nWhat the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which puts its\\ndecode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x; its prefill is a sixth to a quarter of the\\n3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64\\nlimits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie\\nbetween the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap\\nto the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.\\n\\n## The RTX 5090 over Thunderbolt (not pursued)\", \"originalFile\": null, \"structuredPatch\": [{\"oldStart\": 589, \"oldLines\": 6, \"newStart\": 589, \"newLines\": 36, \"lines\": [\" - The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path\", \"   streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.\", \" \", \"+## One table: the best Halo setup per model against the 3060M PC\", \"+\", \"+The best combination of memory split and engine measured on this Halo for each model (Strata from this page;\", \"+llama.cpp from EngramHalo.cpp's `docs/strix-halo/windows.md`, its 2026-09-02 and 2026-10-01 runs at 96/32 and\", \"+its 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC (Strata, CUDA). MTP on in\", \"+every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo\", \"+engine wins a row, its number is in brackets.\", \"+\", \"+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, hipBLASLt** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\", \"+|---|---|---|---|---|\", \"+| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\", \"+| cold first request, decode | **38.6 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\", \"+| fresh code prompt, decode | **35.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\", \"+| prefill @ ~4.75K | 274.0 t/s (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\", \"+| decode tail after that prefill | **34.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\", \"+| repeated prompt (reference) | 39.5 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\", \"+| pp4096 @ d0 | 268.4 t/s (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\", \"+| tg128 @ d0 | **28.5 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\", \"+| pp4096 @ d16384 | ~260 t/s (llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\", \"+| tg128 @ d16384 | **28.8 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\", \"+| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\", \"+| ratio to the 3060M PC, prefill | 0.23-0.29 | 1 | 0.3-0.5 | 1 |\", \"+\", \"+What the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which puts its\", \"+decode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x; its prefill is a sixth to a quarter of the\", \"+3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64\", \"+limits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie\", \"+between the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap\", \"+to the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.\", \"+\", \" ## The RTX 5090 over Thunderbolt (not pursued)\", \" \", \" Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's\"]}], \"userModified\": false, \"replaceAll\": false, \"contentNotInModelContext\": true}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 433877,
+        "completion_tokens": 2952,
+        "cached_tokens": 433845,
+        "extra": {
+          "cache_creation_input_tokens": 1536,
+          "cache_read_input_tokens": 433845,
+          "output_tokens_details": {
+            "thinking_tokens": 1239
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1536,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 2952,
+              "cache_read_input_tokens": 433845,
+              "cache_creation_input_tokens": 1536,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1536
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Edit",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "newString": "## One table: the best Halo setup per model against the 3060M PC\n\nThe best combination of memory split and engine measured on this Halo for each model (Strata from this page;\nllama.cpp from EngramHalo.cpp's `docs/strix-halo/windows.md`, its 2026-09-02 and 2026-10-01 runs at 96/32 and\nits 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC (Strata, CUDA). MTP on in\nevery decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo\nengine wins a row, its number is in brackets.\n\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, hipBLASLt** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\n|---|---|---|---|---|\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\n| cold first request, decode | **38.6 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\n| fresh code prompt, decode | **35.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\n| prefill @ ~4.75K | 274.0 t/s (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\n| decode tail after that prefill | **34.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\n| repeated prompt (reference) | 39.5 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\n| pp4096 @ d0 | 268.4 t/s (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\n| tg128 @ d0 | **28.5 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\n| pp4096 @ d16384 | ~260 t/s (llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\n| tg128 @ d16384 | **28.8 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| ratio to the 3060M PC, prefill | 0.23-0.29 | 1 | 0.3-0.5 | 1 |\n\nWhat the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which puts its\ndecode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x; its prefill is a sixth to a quarter of the\n3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64\nlimits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie\nbetween the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap\nto the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 589,
+                "oldLines": 6,
+                "newStart": 589,
+                "newLines": 36,
+                "lines": [
+                  " - The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path",
+                  "   streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.",
+                  " ",
+                  "+## One table: the best Halo setup per model against the 3060M PC",
+                  "+",
+                  "+The best combination of memory split and engine measured on this Halo for each model (Strata from this page;",
+                  "+llama.cpp from EngramHalo.cpp's `docs/strix-halo/windows.md`, its 2026-09-02 and 2026-10-01 runs at 96/32 and",
+                  "+its 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC (Strata, CUDA). MTP on in",
+                  "+every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo",
+                  "+engine wins a row, its number is in brackets.",
+                  "+",
+                  "+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, hipBLASLt** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |",
+                  "+|---|---|---|---|---|",
+                  "+| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |",
+                  "+| cold first request, decode | **38.6 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |",
+                  "+| fresh code prompt, decode | **35.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |",
+                  "+| prefill @ ~4.75K | 274.0 t/s (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |",
+                  "+| decode tail after that prefill | **34.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |",
+                  "+| repeated prompt (reference) | 39.5 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |",
+                  "+| pp4096 @ d0 | 268.4 t/s (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |",
+                  "+| tg128 @ d0 | **28.5 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |",
+                  "+| pp4096 @ d16384 | ~260 t/s (llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |",
+                  "+| tg128 @ d16384 | **28.8 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |",
+                  "+| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |",
+                  "+| ratio to the 3060M PC, prefill | 0.23-0.29 | 1 | 0.3-0.5 | 1 |",
+                  "+",
+                  "+What the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which puts its",
+                  "+decode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x; its prefill is a sixth to a quarter of the",
+                  "+3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64",
+                  "+limits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie",
+                  "+between the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap",
+                  "+to the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01VVzBFBpTJXEwNiNAAf4yUK",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "## The RTX 5090 over Thunderbolt (not pursued)",
+            "newString": "## One table: the best Halo setup per model against the 3060M PC\n\nThe best combination of memory split and engine measured on this Halo for each model (Strata from this page;\nllama.cpp from EngramHalo.cpp's `docs/strix-halo/windows.md`, its 2026-09-02 and 2026-10-01 runs at 96/32 and\nits 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC (Strata, CUDA). MTP on in\nevery decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo\nengine wins a row, its number is in brackets.\n\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, hipBLASLt** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\n|---|---|---|---|---|\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\n| cold first request, decode | **38.6 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\n| fresh code prompt, decode | **35.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\n| prefill @ ~4.75K | 274.0 t/s (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\n| decode tail after that prefill | **34.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\n| repeated prompt (reference) | 39.5 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\n| pp4096 @ d0 | 268.4 t/s (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\n| tg128 @ d0 | **28.5 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\n| pp4096 @ d16384 | ~260 t/s (llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\n| tg128 @ d16384 | **28.8 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| ratio to the 3060M PC, prefill | 0.23-0.29 | 1 | 0.3-0.5 | 1 |\n\nWhat the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which puts its\ndecode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x; its prefill is a sixth to a quarter of the\n3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64\nlimits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie\nbetween the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap\nto the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 589,
+                "oldLines": 6,
+                "newStart": 589,
+                "newLines": 36,
+                "lines": [
+                  " - The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path",
+                  "   streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.",
+                  " ",
+                  "+## One table: the best Halo setup per model against the 3060M PC",
+                  "+",
+                  "+The best combination of memory split and engine measured on this Halo for each model (Strata from this page;",
+                  "+llama.cpp from EngramHalo.cpp's `docs/strix-halo/windows.md`, its 2026-09-02 and 2026-10-01 runs at 96/32 and",
+                  "+its 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC (Strata, CUDA). MTP on in",
+                  "+every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo",
+                  "+engine wins a row, its number is in brackets.",
+                  "+",
+                  "+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, hipBLASLt** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |",
+                  "+|---|---|---|---|---|",
+                  "+| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |",
+                  "+| cold first request, decode | **38.6 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |",
+                  "+| fresh code prompt, decode | **35.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |",
+                  "+| prefill @ ~4.75K | 274.0 t/s (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |",
+                  "+| decode tail after that prefill | **34.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |",
+                  "+| repeated prompt (reference) | 39.5 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |",
+                  "+| pp4096 @ d0 | 268.4 t/s (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |",
+                  "+| tg128 @ d0 | **28.5 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |",
+                  "+| pp4096 @ d16384 | ~260 t/s (llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |",
+                  "+| tg128 @ d16384 | **28.8 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |",
+                  "+| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |",
+                  "+| ratio to the 3060M PC, prefill | 0.23-0.29 | 1 | 0.3-0.5 | 1 |",
+                  "+",
+                  "+What the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which puts its",
+                  "+decode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x; its prefill is a sixth to a quarter of the",
+                  "+3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64",
+                  "+limits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie",
+                  "+between the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap",
+                  "+to the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.",
+                  "+",
+                  " ## The RTX 5090 over Thunderbolt (not pursued)",
+                  " ",
+                  " Windows lists an RTX 5090 (32 GB) as an external card that was attached before. With it attached, Strata's"
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01VVzBFBpTJXEwNiNAAf4yUK",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "raw_arguments": {
+          "replace_all": false,
+          "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+          "old_string": "## The RTX 5090 over Thunderbolt (not pursued)",
+          "new_string": "## One table: the best Halo setup per model against the 3060M PC\n\nThe best combination of memory split and engine measured on this Halo for each model (Strata from this page;\nllama.cpp from EngramHalo.cpp's `docs/strix-halo/windows.md`, its 2026-09-02 and 2026-10-01 runs at 96/32 and\nits 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC (Strata, CUDA). MTP on in\nevery decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo\nengine wins a row, its number is in brackets.\n\n| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, hipBLASLt** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\n|---|---|---|---|---|\n| model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\n| cold first request, decode | **38.6 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\n| fresh code prompt, decode | **35.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 25.1-27.2) | 38.7 t/s |\n| prefill @ ~4.75K | 274.0 t/s (llama.cpp: 321.5) | 961.3 t/s | **322 t/s** (278-284 before the kernel; Strata: 210-214) | 662.8 t/s |\n| decode tail after that prefill | **34.7 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.1-22.6) | 33.1 t/s |\n| repeated prompt (reference) | 39.5 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | 58.6 t/s (Strata: 30-31) | 42.6 t/s |\n| pp4096 @ d0 | 268.4 t/s (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 208-210) | 819.4 t/s |\n| tg128 @ d0 | **28.5 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 20.6-21.3 MTP) | 32.2 t/s |\n| pp4096 @ d16384 | ~260 t/s (llama.cpp: 269.9) | ~1,126 t/s | **273-281 t/s** (244-260 before; Strata: 228-229 over 20K) | ~949 t/s |\n| tg128 @ d16384 | **28.8 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (Strata: 19.8-20.2 MTP) | 31.7 t/s |\n| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| ratio to the 3060M PC, prefill | 0.23-0.29 | 1 | 0.3-0.5 | 1 |\n\nWhat the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which puts its\ndecode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x; its prefill is a sixth to a quarter of the\n3060's. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64\nlimits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie\nbetween the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap\nto the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.\n\n## The RTX 5090 over Thunderbolt (not pursued)"
+        }
+      }
+    },
+    {
+      "step_id": 364,
+      "timestamp": "2026-10-05T12:47:33.329Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "表已写入文档新一节 \"One table: the best Halo setup per model against the 3060M PC\"。\n\n每个模型在 Halo 上的最佳组合：**Coder = Strata，64/64，专家全在 GPU，hipBLASLt**；**UD-IQ4_XS = llama.cpp，96/32，加 windows.md 2026-10-04 的 chunked GDN 预填充 kernel**。括号里是另一个引擎在该行的数字。解码行均为 MTP 开（llama.cpp 的 tg128 行是无 MTP 的 llama-bench）。\n\n| | Coder：Halo 最佳（Strata 64/64） | Coder：3060M | IQ4_XS：Halo 最佳（llama.cpp 96/32） | IQ4_XS：3060M |\n|---|---|---|---|---|\n| 启动到就绪 | **15 s** | 11.5 s | 83-94 s（Strata 32/96：25-35 s） | 42 s |\n| 冷启动首请求解码 | **38.6**（llama.cpp 26.1） | 43.3 | 28.1-30.4（Strata 31.4-32.5） | 37.6 |\n| 新代码提示解码 | **35.1**（llama.cpp 21.9） | 42.1 | 25.1-30.7（Strata 25.1-27.2） | 38.7 |\n| 预填充 @4.75K | 274（llama.cpp 321.5） | 961 | **322**（Strata 210-214） | 663 |\n| 4.75K 后解码 | **34.7**（llama.cpp 20.8） | 39.3 | 21.3-25.1（Strata 22.1-22.6） | 33.1 |\n| 重复提示（仅参考） | 39.5（llama.cpp 49.9，n-gram 草稿） | 45.1 | 58.6（Strata 30-31） | 42.6 |\n| pp4096 | 268（llama.cpp 318） | 927 | **372-391**（Strata 208-210） | 819 |\n| tg128 | **28.5**（llama.cpp 20.9 无 MTP） | 36.2 | 21.8-22.8 无 MTP（Strata 20.6-21.3） | 32.2 |\n| pp4096 @ 16K 深度 | ~260（llama.cpp 270） | ~1,126 | **273-281**（Strata 228-229） | ~949 |\n| tg128 @ 16K 深度 | **28.8**（llama.cpp 18.0 无 MTP） | 37.4 | 16.3-19.4 无 MTP（Strata 19.8-20.2） | 31.7 |\n| 解码相对 3060M | 0.8-0.9 | 1 | 0.7-0.8 | 1 |\n| 预填充相对 3060M | 0.23-0.29 | 1 | 0.3-0.5 | 1 |\n\n**结论**\n\n- Coder：Halo 上 Strata 把整个模型放进 GPU 后，解码达到 3060 机器的 0.8-0.9 倍（llama.cpp 只有 0.5-0.6 倍）；预填充仍只有 3060 的四分之一到六分之一，llama.cpp 在预填充行领先 Strata 约 17%。\n- UD-IQ4_XS：目前引擎下 Halo 没有一种划分能把专家全放进 GPU（BIOS 只有 32/64/96 三档）。两个引擎解码打平，都在 3060 的 0.7-0.8 倍；llama.cpp 的预填充是 Strata 的 1.3-1.8 倍。\n- 两个模型预填充落后 3060 的原因相同：RDNA 3.5 上的 GEMM 和引擎自有 kernel，不是内存。",
+      "metrics": {
+        "prompt_tokens": 435413,
+        "completion_tokens": 1278,
+        "cached_tokens": 435381,
+        "extra": {
+          "cache_creation_input_tokens": 3020,
+          "cache_read_input_tokens": 435381,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3020,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 1278,
+              "cache_read_input_tokens": 435381,
+              "cache_creation_input_tokens": 3020,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3020
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 89250151,
-    "total_completion_tokens": 659608,
-    "total_cached_tokens": 89241825,
-    "total_steps": 355,
+    "total_prompt_tokens": 92278142,
+    "total_completion_tokens": 669992,
+    "total_cached_tokens": 92269652,
+    "total_steps": 364,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1337608,
-      "total_cache_read_input_tokens": 89241825
+      "total_cache_creation_input_tokens": 1349132,
+      "total_cache_read_input_tokens": 92269652
     }
   }
 }
