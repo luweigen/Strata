@@ -506,26 +506,30 @@ borrows), `--pcie-frac 0.55` (the value of 3060M.md's tables) and then `--pcie-f
 
 | | **32/96, cache 3,465, pcie 0.55** | 32/96, cache 3,465, pcie 0.2 | 64/64, all 12,288 on the GPU | RTX 3060 Laptop (cache 2,666, pcie 0.55) |
 |---|---|---|---|---|
-| model load to listening | 15 s | | 15 s | 11.5 s |
-| cold first request, decode | **29.0 t/s**, 91.8% acc | | 38.6 | 43.3 |
-| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | | 35.1 | 42.1 |
-| prefill @ ~4.75K | 253.4 t/s | | 274.0 | 961.3 |
-| decode tail after it | **24.2 t/s**, 74.3% acc | | 34.7 | 39.3 |
-| repeated prompt (reference) | 30.5 t/s | | 39.5 | 45.1 |
-| pp4096 @ d0 | 256.7 t/s | | 268.4 | 926.9 |
-| tg128 @ d0 | **23.3 t/s**, 68.1% acc | | 28.5 | 36.2 |
-| 16,384-token prefix | 265.3 t/s | | 277.1 | ~1,065 |
-| pp4096 @ d16384 | 260.8 over 20,421 | | 273.7 | ~1,126 (derived) |
-| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | | 28.8 | 37.4 |
-| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | | 100% | 64.6% |
+| model load to listening | 15 s | 10 s | 15 s | 11.5 s |
+| cold first request, decode | **29.0 t/s**, 91.8% acc | **28.0 t/s**, 86.5% acc | 38.6 | 43.3 |
+| fresh code prompt, decode | **28.5 t/s**, 84.2% acc | **26.9 t/s**, 80.8% acc | 35.1 | 42.1 |
+| prefill @ ~4.75K | 253.4 t/s | 258.5 t/s | 274.0 | 961.3 |
+| decode tail after it | **24.2 t/s**, 74.3% acc | **25.3 t/s**, 75.5% acc | 34.7 | 39.3 |
+| repeated prompt (reference) | 30.5 t/s | 29.9 t/s | 39.5 | 45.1 |
+| pp4096 @ d0 | 256.7 t/s | 251.2 t/s | 268.4 | 926.9 |
+| tg128 @ d0 | **23.3 t/s**, 68.1% acc | **23.3 t/s**, 66.7% acc | 28.5 | 36.2 |
+| 16,384-token prefix | 265.3 t/s | 262.4 t/s | 277.1 | ~1,065 |
+| pp4096 @ d16384 | 260.8 over 20,421 | 258.5 over 20,421 | 273.7 | ~1,126 (derived) |
+| tg128 @ d16384 | **21.1 t/s**, 58.6% acc | **22.1 t/s**, 64.9% acc | 28.8 | 37.4 |
+| decode expert-cache hit rate | 81.5-84.4% (400-token answers) | 81.2% | 100% | 64.6% |
 
 At `--pcie-frac 0.55`: decode drops to 0.70-0.82x of the all-on-GPU run (29.0 / 28.5 / 24.2 vs 38.6 / 35.1 /
-34.7) with 82-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than
+34.7) with 81-84% of the lookups still hitting the GPU (a bigger cache than the 3060's, so a higher hit rate than
 its 64.6%); prefill is unchanged within noise (253-271 vs 268-277 t/s: the prompt path streams every expert
 either way, and `wait copy` grew from 33 to 318 ms of a 15.7 s prompt). Against the 3060 itself: 0.62-0.69x on
-decode with the same placement. The misses cost more here than there, on a CPU of the same core count: the 16
-Zen 5 cores read their experts from the memory the GPU is using at the same time, and the copies (`--pcie-frac`)
-come out of the same 236 GB/s.
+decode with the same placement. **`--pcie-frac 0.2` changes nothing here** (28.0 / 26.9 / 25.3 and 23.3 / 22.1
+t/s: every row within 1-2 t/s of 0.55, both ways), where on the 3060 PC it gained 20%. That gain came from the
+PCIe link (26.8 GB/s) and the CPU's RAM (55 GB/s) being separate, finite resources that 0.2 balanced; here the
+copies and the CPU's reads come out of the same 236 GB/s the GPU is using, and copying a missed expert costs
+about what computing it on the CPU costs. The misses themselves cost more here than there, on a CPU of the same
+core count, for the same reason: the 16 Zen 5 cores and the GPU share one memory. The placement that pays on
+this APU is all experts on the GPU, which needs the 64 GiB (or larger) carve-out.
 
 ## The RTX 5090 over Thunderbolt (not pursued)
 
