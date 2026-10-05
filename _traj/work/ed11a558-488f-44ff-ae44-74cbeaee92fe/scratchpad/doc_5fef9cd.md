@@ -593,10 +593,6 @@ and **2,683 slots (6.0 GiB)**: the asked-for count plus the prompt path's borrow
   `STRATA_DECODE_TIMING=1` is the next measurement; not run yet.
 - The prefill is 15-20% slower than the Coder's at the same split (210-236 vs 253-271 t/s): the prompt path
   streams 55.4 GB per chunk instead of 23.4, and `--compat-bf16`'s dense projections are BF16 GEMMs.
-- **Later the same night**, with the calibrated hipBLASLt table and the gfx11 WMMA attention (and the same pin
-  cap and 10,000-slot cache): prefill 324 / 312 / 350 / 342 / 353 t/s on the 4.75K / pp4096 / 16K / 20K rows,
-  decode 29.7 / 26.7 / 22.4 and tg128 19.9 / 21.7 t/s, 98-99% hits (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`).
-  Prefill +50%, decode unchanged: the decode question above stands.
 
 ## One table: the best Halo setup per model against the 3060M PC
 
@@ -713,7 +709,7 @@ output** (f16 T=8192 N=12288 K=2560: 201.0 -> 38.4 ms, 2.6 -> 13.4 TFLOP/s; T=40
 96x96x32 macro-tile `SAV` kernels), shipped as `tools/hip/gfx1151-hipblaslt-100401.txt` (setup uses it when the
 installed hipBLASLt reports 1.4.1; the configs here carry `STRATA_HIPBLASLT_TUNING`). The engine with the table:
 
-| Coder IQ1_M, arena mode (the first two columns at 64/64, the table column at 32/96: the split the BIOS was left on after the UD-IQ4_XS runs; the cache held all 12,288 experts and hit 100% in every run either way) | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |
+| Coder IQ1_M, 64/64, arena | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |
 |---|---|---|---|
 | pp4096 (`pp4k.py`, 2 requests) | 199-207 t/s | 264-279 t/s | **404-452 t/s** |
 | 4,165-token prompt, GPU timeline | 19,955 ms | 14,725 ms | **9,188 ms** |
@@ -762,97 +758,6 @@ expert GEMMs 2.6 s + their dequant 0.5 s (34%), the remaining dense work 2.4 s, 
   model: BF16 GEMM fallback kernels, 17 t/s decode, grouped MoE GEMMs dominating its prefill);
   [pytorch/pytorch#171687](https://github.com/pytorch/pytorch/issues/171687) (gfx1151 decode 90% in
   `hipMemcpyWithStream`: a lead for the UD-IQ4_XS decode question above).
-
-## TODO 1 done: PR #313's gfx11 matrix-core prompt attention on gfx1151 (2026-10-05, night)
-
-[TODO.md](TODO.md) item 1. Upstream PR #313 (branch `wmma-optin`, on engine 0.1.31) was merged onto this 0.1.34 tree
-on the branch `wmma-gfx1151` (two conflicts: `qsa_prompt_attn.cu`, where the gfx12 S6 kernel added since then and
-the PR's gfx11 kernel both named their kernel `prompt_attn_wmma_kernel` and launcher `launch_wmma` - the PR's are
-now `prompt_attn_wmma11_kernel` / `launch_wmma11`, dispatched on `STRATA_PA_WMMA=1` and a `gfx11` `gcnArchName`
-before HEAD's HIP `return false`; and `docs/AMD_HIP.md`, both sides kept). The PR's device guards take
-`__gfx1150__` / `__gfx1151__` as well. `src/kernels/qsa_prompt_attn_parity.cpp` (ctest `hip_prompt_attn_wmma`),
-which skipped off gfx12, now drives the gfx11 kernel on gfx11 with both KV formats. Built with
-`cmake --build build-hip-win`, the engine copied into `engine\` (the previous one kept as
-`engine\strata-0.1.34-pre313.exe`).
-
-**Parity on the 8060S.** `hip_prefill_wmma_gemm_parity`: 3,520 cases passed, 26 declined shapes skipped, max abs
-2.4e-7. `hip_prompt_attn_wmma 32768 2048 3` (`STRATA_PA_WMMA=1`): 4 of 4 pass - int8 KV at 32K: the new kernel 3.9e-6
-of FP64 against the FP32 kernel's 2.5e-6, 116.1 -> 34.3 ms per chunk (3.39x); FP16 KV 4.4e-6, 2.88x; 1,500-cell and
-2,100-cell contexts 3.3x. `ctest` on the new build: 56 tests, 49 pass, the same 5 known failures as before
-(`hip_handoff`, `ple_parity`, `expert_parity`, `pool_test` want fixtures or Linux; `hip_prefill_mmq_parity` is the
-gfx1151 MMQ defect), `hip_prefill_hipblaslt_gemm` skips without `STRATA_HIPBLASLT_TUNING` in its environment.
-
-**The engine, 4K prompts** (`pp4k.py`, 2 requests each, on top of the hipBLASLt table and the routing switch):
-
-| switches | pp4096 | GPU timeline (4,165 tokens) | qsa attn | hc read / GDN / QSA proj (the dense GEMMs) |
-|---|---|---|---|---|
-| table only (the morning's best) | 404-452 t/s | 9,188 ms | 2,034 ms | 673 / 938 / 468 |
-| **+ `STRATA_PA_WMMA=1`** | **494-526 t/s** | **7,733 ms** | **611 ms** | 669 / 922 / 503 |
-| + `STRATA_PA_WMMA=1` + `STRATA_WMMA_GEMM=1` | 384-385 t/s | 10,638 ms | 605 | 1,755 / 1,900 / 929 |
-| + `STRATA_WMMA_GEMM=1` alone | 339-341 t/s | 12,042 ms | 1,970 | 1,840 / 1,915 / 886 |
-
-The attention kernel is the gain the parity test promised: 3.3x on its phase, 1.2x on the prompt. The PR's WMMA
-GEMM is slower than hipBLASLt's calibrated solutions on this card (it runs ahead of BLAS, so it took the dense
-shapes away from the table and roughly tripled them) and does not reach the expert GEMMs (unchanged at 1,756 +
-784 ms: it declines their shapes). So `strata-coder-iq1_m.json` carries `STRATA_PA_WMMA=1` and not
-`STRATA_WMMA_GEMM`. The full benchmark with it (`benchmarks/2026-10-05-halo-coder-iq1_m-arena-lt-table-pa-wmma.json`):
-
-| Coder IQ1_M, arena mode at 32/96 (see the note below) | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |
-|---|---|---|---|---|
-| cold / fresh / after-4.75K decode | 39.9 / 36.1 / 30.9 t/s | **40.8 / 37.1 / 32.6 t/s** | 26.1 / 21.9 / 20.8 | 43.3 / 42.1 / 39.3 |
-| prefill @ 4.75K | 451.0 | **528.1 t/s** | 321.5 | 961.3 |
-| pp4096 @ d0 | 440.9 | **516.8 t/s** | 318.1 | 926.9 |
-| 16,384-token prefix / 20,421 over all | 440.2 / 433.5 | **542.7 / 534.5 t/s** | 269.9 (pp4096 @ d16384) | ~1,126 |
-| tg128 @ d0 / @ d16384 | 28.2 / 29.2 | 27.9 / 28.2 | 20.9 / 18.0 (plain) | 36.2 / 37.4 |
-| the prime request | 35.9 t/s | 36.5 t/s, 162 of 214 drafts, the same `is_prime` | | 41.0 |
-
-**The split these ran on:** the BIOS was still at 32/96 from the UD-IQ4_XS runs, not 64/64 as the morning's arena
-runs. For the Coder it makes no difference the logs can see: `expert cache auto: 36.08 GiB free -> 12288 slots`
-(64/64: 46.43 GiB free, the same 12,288), 12.1 GiB of VRAM left after loading (64/64: 22.7), the pinned 23.4 GiB
-arena in 95.6 GiB of RAM, and `decode expert cache hit rate: 100.0%` on every request of every run. The table
-runs and the WMMA runs are therefore comparable with the 64/64 rows above them; what 32/96 would cost is only
-room: a longer context or a second model would not have the 22.7 GiB. Prefill on the Halo is now 1.6-2.0x
-llama.cpp's on the same PC and 0.48-0.56x the RTX 3060 PC's; decode 0.83-0.94x
-the 3060's. The day's prompt speed: 146 -> 209 -> 274 -> 451 -> 528 t/s (page cache, BIOS split, hipBLASLt
-routing, the calibrated table, the WMMA attention). Of the 7.7 s a 4K prompt now takes, the expert GEMMs and
-their dequant are 3.0 s (39%): TODO item 2.
-
-### The one table, redone with the night's engine
-
-The same table as [One table](#one-table-the-best-halo-setup-per-model-against-the-3060m-pc) above, with the night's engine (the hipBLASLt table and the gfx11 WMMA attention) in both Strata columns; that table is left as it was. The best combination of memory split and engine measured on this Halo for each model (Strata from this page;
-llama.cpp from EngramHalo.cpp's `docs/strix-halo/windows.md`, its 2026-09-02 and 2026-10-01 runs at 96/32 and
-its 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC (Strata, CUDA). MTP on in
-every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo
-engine wins a row, its number is in brackets.
-
-| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo, llama.cpp 96/32 with the chunked GDN kernel, against Strata 32/96 (the night's engine, 10,000-slot cache) in brackets; the better one in bold** | UD-IQ4_XS: 3060M PC |
-|---|---|---|---|---|
-| model load to listening | **15 s** | 11.5 s | 83-94 s (**Strata: 30 s**) | 42 s |
-| cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata: 29.7) - even | 37.6 t/s |
-| fresh code prompt, decode | **37.1 t/s** (llama.cpp: 21.9) | 42.1 t/s | 25.1-30.7 t/s (Strata: 26.7) - even | 38.7 t/s |
-| prefill @ ~4.75K | **528.1 t/s** (llama.cpp: 321.5) | 961.3 t/s | 322 t/s (278-284 before the kernel; **Strata: 324.1**) - even | 662.8 t/s |
-| decode tail after that prefill | **32.6 t/s** (llama.cpp: 20.8) | 39.3 t/s | 21.3-25.1 t/s (Strata: 22.4) - even | 33.1 t/s |
-| repeated prompt (reference) | 41.3 t/s (llama.cpp: 49.9, n-gram drafts) | 45.1 t/s | **58.6 t/s** (Strata: 30.7) | 42.6 t/s |
-| pp4096 @ d0 | **516.8 t/s** (llama.cpp: 318.1) | 926.9 t/s | **372-391 t/s** (314-349 before; Strata: 311.9) | 819.4 t/s |
-| tg128 @ d0 | **27.9 t/s** (llama.cpp: 20.9 plain) | 36.2 t/s | 21.8-22.8 plain (Strata: 19.9 MTP) - even | 32.2 t/s |
-| pp4096 @ d16384 | **~530 t/s** (534.5 over 20,421; llama.cpp: 269.9) | ~1,126 t/s | 273-281 t/s (244-260 before; **Strata: 342-353** over 16-20K) | ~949 t/s |
-| tg128 @ d16384 | **28.2 t/s** (llama.cpp: 18.0 plain) | 37.4 t/s | 16.3-19.4 plain (**Strata: 21.7** MTP) | 31.7 t/s |
-| ratio to the 3060M PC, decode | 0.8-0.9 | 1 | 0.7-0.8 | 1 |
-| ratio to the 3060M PC, prefill | 0.47-0.56 | 1 | 0.4-0.5 (Strata: 0.36-0.49) | 1 |
-
-(The Coder column is the night's configuration: the calibrated hipBLASLt table and PR #313's gfx11 WMMA attention,
-see [A better GEMM](#a-better-gemm-what-was-searched-what-was-measured-what-it-gave-2026-10-05-evening) and
-[TODO 1 done](#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night); the day began
-at 146 t/s.) What the table says: for the Coder the Halo's best is Strata with the whole model on the GPU, which
-puts its decode within 0.8-0.9x of the 3060 PC while llama.cpp's is 0.5-0.6x, and its prefill 1.6-2.0x llama.cpp's
-on this PC and about half the 3060's. For UD-IQ4_XS the night's engine (`benchmarks/2026-10-05-strata-unsloth-ud-iq4_xs-table-pa-wmma.json`,
-the table, the WMMA attention, 10,000 slots asked for, 98-99% hits) lifted Strata's prefill from 210-236 to
-312-353 t/s: even with llama.cpp at 4.75K (324 vs 322), behind it at pp4096 (312 vs 372-391), ahead at 16-20K
-(342-353 vs 273-281), with decode even (20-30 t/s both) and the load 30 s against 83-94. No longer one engine's
-model: llama.cpp for short prompts, Strata for long ones and for the start-up. For UD-IQ4_XS no Halo setup gets the experts on the GPU with the engine as it is (the 32/96 and 64/64
-limits of [the memory section](#ud-iq4_xs-on-the-3296-split) and the BIOS's three choices), decode is a tie
-between the two engines at 0.7-0.8x of the 3060, and llama.cpp's prefill is 1.3-1.8x Strata's. The prefill gap
-to the 3060 is the same engine problem in both models: RDNA 3.5 GEMMs and kernels, not memory.
 
 ## The RTX 5090 over Thunderbolt (not pursued)
 
