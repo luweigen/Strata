@@ -602,7 +602,7 @@ its 2026-10-04 chunked-GDN prefill kernel), beside 3060M.md's RTX 3060 Laptop PC
 every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo
 engine wins a row, its number is in brackets.
 
-| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |
+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |
 |---|---|---|---|---|
 | model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |
 | cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |
@@ -710,7 +710,7 @@ output** (f16 T=8192 N=12288 K=2560: 201.0 -> 38.4 ms, 2.6 -> 13.4 TFLOP/s; T=40
 96x96x32 macro-tile `SAV` kernels), shipped as `tools/hip/gfx1151-hipblaslt-100401.txt` (setup uses it when the
 installed hipBLASLt reports 1.4.1; the configs here carry `STRATA_HIPBLASLT_TUNING`). The engine with the table:
 
-| Coder IQ1_M, 64/64, arena | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |
+| Coder IQ1_M, arena mode (the first two columns at 64/64, the table column at 32/96: the split the BIOS was left on after the UD-IQ4_XS runs; the cache held all 12,288 experts and hit 100% in every run either way) | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |
 |---|---|---|---|
 | pp4096 (`pp4k.py`, 2 requests) | 199-207 t/s | 264-279 t/s | **404-452 t/s** |
 | 4,165-token prompt, GPU timeline | 19,955 ms | 14,725 ms | **9,188 ms** |
@@ -794,7 +794,7 @@ shapes away from the table and roughly tripled them) and does not reach the expe
 784 ms: it declines their shapes). So `strata-coder-iq1_m.json` carries `STRATA_PA_WMMA=1` and not
 `STRATA_WMMA_GEMM`. The full benchmark with it (`benchmarks/2026-10-05-halo-coder-iq1_m-arena-lt-table-pa-wmma.json`):
 
-| Coder IQ1_M, 64/64 | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |
+| Coder IQ1_M, arena mode at 32/96 (see the note below) | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |
 |---|---|---|---|---|
 | cold / fresh / after-4.75K decode | 39.9 / 36.1 / 30.9 t/s | **40.8 / 37.1 / 32.6 t/s** | 26.1 / 21.9 / 20.8 | 43.3 / 42.1 / 39.3 |
 | prefill @ 4.75K | 451.0 | **528.1 t/s** | 321.5 | 961.3 |
@@ -803,7 +803,13 @@ shapes away from the table and roughly tripled them) and does not reach the expe
 | tg128 @ d0 / @ d16384 | 28.2 / 29.2 | 27.9 / 28.2 | 20.9 / 18.0 (plain) | 36.2 / 37.4 |
 | the prime request | 35.9 t/s | 36.5 t/s, 162 of 214 drafts, the same `is_prime` | | 41.0 |
 
-Prefill on the Halo is now 1.6-2.0x llama.cpp's on the same PC and 0.48-0.56x the RTX 3060 PC's; decode 0.83-0.94x
+**The split these ran on:** the BIOS was still at 32/96 from the UD-IQ4_XS runs, not 64/64 as the morning's arena
+runs. For the Coder it makes no difference the logs can see: `expert cache auto: 36.08 GiB free -> 12288 slots`
+(64/64: 46.43 GiB free, the same 12,288), 12.1 GiB of VRAM left after loading (64/64: 22.7), the pinned 23.4 GiB
+arena in 95.6 GiB of RAM, and `decode expert cache hit rate: 100.0%` on every request of every run. The table
+runs and the WMMA runs are therefore comparable with the 64/64 rows above them; what 32/96 would cost is only
+room: a longer context or a second model would not have the 22.7 GiB. Prefill on the Halo is now 1.6-2.0x
+llama.cpp's on the same PC and 0.48-0.56x the RTX 3060 PC's; decode 0.83-0.94x
 the 3060's. The day's prompt speed: 146 -> 209 -> 274 -> 451 -> 528 t/s (page cache, BIOS split, hipBLASLt
 routing, the calibrated table, the WMMA attention). Of the 7.7 s a 4K prompt now takes, the expert GEMMs and
 their dequant are 3.0 s (39%): TODO item 2.

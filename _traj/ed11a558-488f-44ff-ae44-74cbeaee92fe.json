@@ -48274,19 +48274,605 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 547,
+      "timestamp": "2026-10-05T14:34:24.779Z",
+      "source": "user",
+      "message": "现在VRAM是32:96 Split",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 548,
+      "timestamp": "2026-10-05T14:34:53.253Z",
+      "source": "user",
+      "message": "现在VRAM是32:96 Split,不是64:64,有问题吗",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 549,
+      "timestamp": "2026-10-05T14:35:20.331Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 640306,
+        "completion_tokens": 1297,
+        "cached_tokens": 640304,
+        "extra": {
+          "cache_creation_input_tokens": 52,
+          "cache_read_input_tokens": 640304,
+          "output_tokens_details": {
+            "thinking_tokens": 886
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 52,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1297,
+              "cache_read_input_tokens": 640304,
+              "cache_creation_input_tokens": 52,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 52
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 550,
+      "timestamp": "2026-10-05T14:35:21.331Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "要紧的是这些数字是在哪个划分下测的。查引擎日志里专家缓存的槽数和命中率就知道 32/96 是否影响了结果。",
+      "metrics": {
+        "prompt_tokens": 640306,
+        "completion_tokens": 1297,
+        "cached_tokens": 640304,
+        "extra": {
+          "cache_creation_input_tokens": 52,
+          "cache_read_input_tokens": 640304,
+          "output_tokens_details": {
+            "thinking_tokens": 886
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 52,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1297,
+              "cache_read_input_tokens": 640304,
+              "cache_creation_input_tokens": 52,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 52
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 551,
+      "timestamp": "2026-10-05T14:35:24.502Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_012ZACgeEhN1gZrQ4eztEZCx",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_012ZACgeEhN1gZrQ4eztEZCx",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "for f in docs/benchmarks/strata-coder-iq1_m.log docs/benchmarks/2026-10-05-run-strata-coder-iq1_m-arena.log docs/benchmarks/2026-10-05-run-strata-coder-iq1_m.log; do echo \"== $f\"; grep -E \"expert cache auto|expert cache [0-9]+ slots|VRAM free with everything|GPU 0:|arena: \" $f | cut -c1-150 | sort | uniq -c | sort -rn | head -8; grep -E \"hit rate\" $f | sed 's/.*hit rate: \\([0-9.]*%\\).*/\\1/' | sort | uniq -c | sort -rn | head -3; done",
+            "description": "Check the expert cache size, VRAM figures and hit rates in the logs of the table and WMMA runs"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_012ZACgeEhN1gZrQ4eztEZCx",
+            "content": "== docs/benchmarks/strata-coder-iq1_m.log\n      4 strata serve: 12061 MiB of VRAM free with everything loaded\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     16 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m-arena.log\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n      3 strata generate: expert cache auto: 46.43 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      2 strata serve: 22713 MiB of VRAM free with everything loaded\n      1 strata serve: 22688 MiB of VRAM free with everything loaded\n      1 strata serve: 12086 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n     25 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m.log\n      3 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      3 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      2 strata serve: 78112 MiB of VRAM free with everything loaded\n      2 strata generate: expert cache auto: 101.40 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata serve: 12061 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     21 100.0%\n\n[stdout]\n== docs/benchmarks/strata-coder-iq1_m.log\n      4 strata serve: 12061 MiB of VRAM free with everything loaded\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     16 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m-arena.log\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n      3 strata generate: expert cache auto: 46.43 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      2 strata serve: 22713 MiB of VRAM free with everything loaded\n      1 strata serve: 22688 MiB of VRAM free with everything loaded\n      1 strata serve: 12086 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n     25 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m.log\n      3 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      3 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      2 strata serve: 78112 MiB of VRAM free with everything loaded\n      2 strata generate: expert cache auto: 101.40 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata serve: 12061 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     21 100.0%\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 640306,
+        "completion_tokens": 1297,
+        "cached_tokens": 640304,
+        "extra": {
+          "cache_creation_input_tokens": 52,
+          "cache_read_input_tokens": 640304,
+          "output_tokens_details": {
+            "thinking_tokens": 886
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 52,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1297,
+              "cache_read_input_tokens": 640304,
+              "cache_creation_input_tokens": 52,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 52
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "== docs/benchmarks/strata-coder-iq1_m.log\n      4 strata serve: 12061 MiB of VRAM free with everything loaded\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     16 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m-arena.log\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n      3 strata generate: expert cache auto: 46.43 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      2 strata serve: 22713 MiB of VRAM free with everything loaded\n      1 strata serve: 22688 MiB of VRAM free with everything loaded\n      1 strata serve: 12086 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n     25 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m.log\n      3 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      3 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      2 strata serve: 78112 MiB of VRAM free with everything loaded\n      2 strata generate: expert cache auto: 101.40 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata serve: 12061 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     21 100.0%",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_012ZACgeEhN1gZrQ4eztEZCx",
+            "type": "tool_result",
+            "content": "== docs/benchmarks/strata-coder-iq1_m.log\n      4 strata serve: 12061 MiB of VRAM free with everything loaded\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     16 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m-arena.log\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n      3 strata generate: expert cache auto: 46.43 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      2 strata serve: 22713 MiB of VRAM free with everything loaded\n      1 strata serve: 22688 MiB of VRAM free with everything loaded\n      1 strata serve: 12086 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n     25 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m.log\n      3 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      3 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      2 strata serve: 78112 MiB of VRAM free with everything loaded\n      2 strata generate: expert cache auto: 101.40 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata serve: 12061 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     21 100.0%",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "== docs/benchmarks/strata-coder-iq1_m.log\n      4 strata serve: 12061 MiB of VRAM free with everything loaded\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     16 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m-arena.log\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n      3 strata generate: expert cache auto: 46.43 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      2 strata serve: 22713 MiB of VRAM free with everything loaded\n      1 strata serve: 22688 MiB of VRAM free with everything loaded\n      1 strata serve: 12086 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n     25 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m.log\n      3 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      3 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      2 strata serve: 78112 MiB of VRAM free with everything loaded\n      2 strata generate: expert cache auto: 101.40 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata serve: 12061 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     21 100.0%",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_012ZACgeEhN1gZrQ4eztEZCx",
+            "type": "tool_result",
+            "content": "== docs/benchmarks/strata-coder-iq1_m.log\n      4 strata serve: 12061 MiB of VRAM free with everything loaded\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     16 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m-arena.log\n      4 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      4 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      4 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n      3 strata generate: expert cache auto: 46.43 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      2 strata serve: 22713 MiB of VRAM free with everything loaded\n      1 strata serve: 22688 MiB of VRAM free with everything loaded\n      1 strata serve: 12086 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n     25 100.0%\n== docs/benchmarks/2026-10-05-run-strata-coder-iq1_m.log\n      3 strata generate: GPU 0: AMD Radeon(TM) 8060S Graphics (gfx1151)\n      3 strata generate: expert cache 12288 slots, 23.42 GiB of VRAM; policy is\n      2 strata serve: 78112 MiB of VRAM free with everything loaded\n      2 strata generate: expert cache auto: 101.40 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata serve: 12061 MiB of VRAM free with everything loaded\n      1 strata generate: expert cache auto: 36.08 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 12288 slots\n      1 strata generate: expert arena: cudaHostRegister PORTABLE ok; large pages refused for 25149046784 B (GetLargePageMinimum=2097152, VirtualAlloc error 13\n     21 100.0%",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "for f in docs/benchmarks/strata-coder-iq1_m.log docs/benchmarks/2026-10-05-run-strata-coder-iq1_m-arena.log docs/benchmarks/2026-10-05-run-strata-coder-iq1_m.log; do echo \"== $f\"; grep -E \"expert cache auto|expert cache [0-9]+ slots|VRAM free with everything|GPU 0:|arena: \" $f | cut -c1-150 | sort | uniq -c | sort -rn | head -8; grep -E \"hit rate\" $f | sed 's/.*hit rate: \\([0-9.]*%\\).*/\\1/' | sort | uniq -c | sort -rn | head -3; done",
+          "description": "Check the expert cache size, VRAM figures and hit rates in the logs of the table and WMMA runs"
+        }
+      }
+    },
+    {
+      "step_id": 552,
+      "timestamp": "2026-10-05T14:35:38.653Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 640388,
+        "completion_tokens": 2086,
+        "cached_tokens": 640356,
+        "extra": {
+          "cache_creation_input_tokens": 2382,
+          "cache_read_input_tokens": 640356,
+          "output_tokens_details": {
+            "thinking_tokens": 712
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2382,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 2086,
+              "cache_read_input_tokens": 640356,
+              "cache_creation_input_tokens": 2382,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2382
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 553,
+      "timestamp": "2026-10-05T14:35:52.537Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Bash toolu_01StWW2C7oWEytBBF2tY8hyd",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01StWW2C7oWEytBBF2tY8hyd",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "/c/conda_envs/strata/python.exe - <<'EOF'\nimport pathlib\np = pathlib.Path(\"docs/AIMAX+395-ROCm.md\"); s = p.read_text(encoding=\"utf-8\")\nedits = [\n (\"| Coder IQ1_M, 64/64, arena | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |\",\n  \"| Coder IQ1_M, arena mode (the first two columns at 64/64, the table column at 32/96: the split the BIOS was left on after the UD-IQ4_XS runs; the cache held all 12,288 experts and hit 100% in every run either way) | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |\"),\n (\"| Coder IQ1_M, 64/64 | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |\",\n  \"| Coder IQ1_M, arena mode at 32/96 (see the note below) | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |\"),\n (\"Prefill on the Halo is now 1.6-2.0x llama.cpp's on the same PC\",\n  \"**The split these ran on:** the BIOS was still at 32/96 from the UD-IQ4_XS runs, not 64/64 as the morning's arena\\n\"\n  \"runs. For the Coder it makes no difference the logs can see: `expert cache auto: 36.08 GiB free -> 12288 slots`\\n\"\n  \"(64/64: 46.43 GiB free, the same 12,288), 12.1 GiB of VRAM left after loading (64/64: 22.7), the pinned 23.4 GiB\\n\"\n  \"arena in 95.6 GiB of RAM, and `decode expert cache hit rate: 100.0%` on every request of every run. The table\\n\"\n  \"runs and the WMMA runs are therefore comparable with the 64/64 rows above them; what 32/96 would cost is only\\n\"\n  \"room: a longer context or a second model would not have the 22.7 GiB. Prefill on the Halo is now 1.6-2.0x\\n\"\n  \"llama.cpp's on the same PC\"),\n (\"| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, the gfx1151 hipBLASLt table, the gfx11 WMMA attention** |\",\n  \"| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** |\"),\n]\nfor old, new in edits:\n    assert s.count(old) == 1, old[:60]\n    s = s.replace(old, new)\np.write_text(s, encoding=\"utf-8\", newline=\"\\n\"); print(\"labels corrected\")\nEOF\nsed -i 's|^now 64/64 (choices are 32/64/96 only)|now 32/96 (choices are 32/64/96 only; the Coder fits its whole expert set in the 32 GiB side, 12,288 slots, 100% hits)|' \"/c/Users/Wei Lu/.claude/projects/E--work-AI-Strata/memory/strix-halo-port.md\"; grep -c \"32/96\" \"/c/Users/Wei Lu/.claude/projects/E--work-AI-Strata/memory/strix-halo-port.md\"",
+            "description": "Correct the split labels in the document for the runs made after the BIOS went to 32/96, and the memory"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01StWW2C7oWEytBBF2tY8hyd",
+            "content": "labels corrected\r\n2\n\n[stdout]\nlabels corrected\r\n2\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"hunks\": [{\"oldStart\": 602, \"oldLines\": 7, \"newStart\": 602, \"newLines\": 7, \"lines\": [\" every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo\", \" engine wins a row, its number is in brackets.\", \" \", \"-| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\", \"+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |\", \" |---|---|---|---|---|\", \" | model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |\", \" | cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |\"]}, {\"oldStart\": 710, \"oldLines\": 7, \"newStart\": 710, \"newLines\": 7, \"lines\": [\" 96x96x32 macro-tile `SAV` kernels), shipped as `tools/hip/gfx1151-hipblaslt-100401.txt` (setup uses it when the\", \" installed hipBLASLt reports 1.4.1; the configs here carry `STRATA_HIPBLASLT_TUNING`). The engine with the table:\", \" \", \"-| Coder IQ1_M, 64/64, arena | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |\", \"+| Coder IQ1_M, arena mode (the first two columns at 64/64, the table column at 32/96: the split the BIOS was left on after the UD-IQ4_XS runs; the cache held all 12,288 experts and hit 100% in every run either way) | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |\", \" |---|---|---|---|\", \" | pp4096 (`pp4k.py`, 2 requests) | 199-207 t/s | 264-279 t/s | **404-452 t/s** |\", \" | 4,165-token prompt, GPU timeline | 19,955 ms | 14,725 ms | **9,188 ms** |\"]}, {\"oldStart\": 794, \"oldLines\": 7, \"newStart\": 794, \"newLines\": 7, \"lines\": [\" 784 ms: it declines their shapes). So `strata-coder-iq1_m.json` carries `STRATA_PA_WMMA=1` and not\", \" `STRATA_WMMA_GEMM`. The full benchmark with it (`benchmarks/2026-10-05-halo-coder-iq1_m-arena-lt-table-pa-wmma.json`):\", \" \", \"-| Coder IQ1_M, 64/64 | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |\", \"+| Coder IQ1_M, arena mode at 32/96 (see the note below) | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |\", \" |---|---|---|---|---|\", \" | cold / fresh / after-4.75K decode | 39.9 / 36.1 / 30.9 t/s | **40.8 / 37.1 / 32.6 t/s** | 26.1 / 21.9 / 20.8 | 43.3 / 42.1 / 39.3 |\", \" | prefill @ 4.75K | 451.0 | **528.1 t/s** | 321.5 | 961.3 |\"]}, {\"oldStart\": 803, \"oldLines\": 7, \"newStart\": 803, \"newLines\": 13, \"lines\": [\" | tg128 @ d0 / @ d16384 | 28.2 / 29.2 | 27.9 / 28.2 | 20.9 / 18.0 (plain) | 36.2 / 37.4 |\", \" | the prime request | 35.9 t/s | 36.5 t/s, 162 of 214 drafts, the same `is_prime` | | 41.0 |\", \" \", \"-Prefill on the Halo is now 1.6-2.0x llama.cpp's on the same PC and 0.48-0.56x the RTX 3060 PC's; decode 0.83-0.94x\", \"+**The split these ran on:** the BIOS was still at 32/96 from the UD-IQ4_XS runs, not 64/64 as the morning's arena\", \"+runs. For the Coder it makes no difference the logs can see: `expert cache auto: 36.08 GiB free -> 12288 slots`\", \"+(64/64: 46.43 GiB free, the same 12,288), 12.1 GiB of VRAM left after loading (64/64: 22.7), the pinned 23.4 GiB\", \"+arena in 95.6 GiB of RAM, and `decode expert cache hit rate: 100.0%` on every request of every run. The table\", \"+runs and the WMMA runs are therefore comparable with the 64/64 rows above them; what 32/96 would cost is only\", \"+room: a longer context or a second model would not have the 22.7 GiB. Prefill on the Halo is now 1.6-2.0x\", \"+llama.cpp's on the same PC and 0.48-0.56x the RTX 3060 PC's; decode 0.83-0.94x\", \" the 3060's. The day's prompt speed: 146 -> 209 -> 274 -> 451 -> 528 t/s (page cache, BIOS split, hipBLASLt\", \" routing, the calibrated table, the WMMA attention). Of the 7.7 s a 4K prompt now takes, the expert GEMMs and\", \" their dequant are 3.0 s (39%): TODO item 2.\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 640388,
+        "completion_tokens": 2086,
+        "cached_tokens": 640356,
+        "extra": {
+          "cache_creation_input_tokens": 2382,
+          "cache_read_input_tokens": 640356,
+          "output_tokens_details": {
+            "thinking_tokens": 712
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2382,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 2086,
+              "cache_read_input_tokens": 640356,
+              "cache_creation_input_tokens": 2382,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2382
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "labels corrected\r\n2",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+                  "hunks": [
+                    {
+                      "oldStart": 602,
+                      "oldLines": 7,
+                      "newStart": 602,
+                      "newLines": 7,
+                      "lines": [
+                        " every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo",
+                        " engine wins a row, its number is in brackets.",
+                        " ",
+                        "-| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |",
+                        "+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |",
+                        " |---|---|---|---|---|",
+                        " | model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |",
+                        " | cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |"
+                      ]
+                    },
+                    {
+                      "oldStart": 710,
+                      "oldLines": 7,
+                      "newStart": 710,
+                      "newLines": 7,
+                      "lines": [
+                        " 96x96x32 macro-tile `SAV` kernels), shipped as `tools/hip/gfx1151-hipblaslt-100401.txt` (setup uses it when the",
+                        " installed hipBLASLt reports 1.4.1; the configs here carry `STRATA_HIPBLASLT_TUNING`). The engine with the table:",
+                        " ",
+                        "-| Coder IQ1_M, 64/64, arena | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |",
+                        "+| Coder IQ1_M, arena mode (the first two columns at 64/64, the table column at 32/96: the split the BIOS was left on after the UD-IQ4_XS runs; the cache held all 12,288 experts and hit 100% in every run either way) | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |",
+                        " |---|---|---|---|",
+                        " | pp4096 (`pp4k.py`, 2 requests) | 199-207 t/s | 264-279 t/s | **404-452 t/s** |",
+                        " | 4,165-token prompt, GPU timeline | 19,955 ms | 14,725 ms | **9,188 ms** |"
+                      ]
+                    },
+                    {
+                      "oldStart": 794,
+                      "oldLines": 7,
+                      "newStart": 794,
+                      "newLines": 7,
+                      "lines": [
+                        " 784 ms: it declines their shapes). So `strata-coder-iq1_m.json` carries `STRATA_PA_WMMA=1` and not",
+                        " `STRATA_WMMA_GEMM`. The full benchmark with it (`benchmarks/2026-10-05-halo-coder-iq1_m-arena-lt-table-pa-wmma.json`):",
+                        " ",
+                        "-| Coder IQ1_M, 64/64 | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |",
+                        "+| Coder IQ1_M, arena mode at 32/96 (see the note below) | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |",
+                        " |---|---|---|---|---|",
+                        " | cold / fresh / after-4.75K decode | 39.9 / 36.1 / 30.9 t/s | **40.8 / 37.1 / 32.6 t/s** | 26.1 / 21.9 / 20.8 | 43.3 / 42.1 / 39.3 |",
+                        " | prefill @ 4.75K | 451.0 | **528.1 t/s** | 321.5 | 961.3 |"
+                      ]
+                    },
+                    {
+                      "oldStart": 803,
+                      "oldLines": 7,
+                      "newStart": 803,
+                      "newLines": 13,
+                      "lines": [
+                        " | tg128 @ d0 / @ d16384 | 28.2 / 29.2 | 27.9 / 28.2 | 20.9 / 18.0 (plain) | 36.2 / 37.4 |",
+                        " | the prime request | 35.9 t/s | 36.5 t/s, 162 of 214 drafts, the same `is_prime` | | 41.0 |",
+                        " ",
+                        "-Prefill on the Halo is now 1.6-2.0x llama.cpp's on the same PC and 0.48-0.56x the RTX 3060 PC's; decode 0.83-0.94x",
+                        "+**The split these ran on:** the BIOS was still at 32/96 from the UD-IQ4_XS runs, not 64/64 as the morning's arena",
+                        "+runs. For the Coder it makes no difference the logs can see: `expert cache auto: 36.08 GiB free -> 12288 slots`",
+                        "+(64/64: 46.43 GiB free, the same 12,288), 12.1 GiB of VRAM left after loading (64/64: 22.7), the pinned 23.4 GiB",
+                        "+arena in 95.6 GiB of RAM, and `decode expert cache hit rate: 100.0%` on every request of every run. The table",
+                        "+runs and the WMMA runs are therefore comparable with the 64/64 rows above them; what 32/96 would cost is only",
+                        "+room: a longer context or a second model would not have the 22.7 GiB. Prefill on the Halo is now 1.6-2.0x",
+                        "+llama.cpp's on the same PC and 0.48-0.56x the RTX 3060 PC's; decode 0.83-0.94x",
+                        " the 3060's. The day's prompt speed: 146 -> 209 -> 274 -> 451 -> 528 t/s (page cache, BIOS split, hipBLASLt",
+                        " routing, the calibrated table, the WMMA attention). Of the 7.7 s a 4K prompt now takes, the expert GEMMs and",
+                        " their dequant are 3.0 s (39%): TODO item 2."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01StWW2C7oWEytBBF2tY8hyd",
+            "type": "tool_result",
+            "content": "labels corrected\r\n2",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "labels corrected\r\n2",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+                  "hunks": [
+                    {
+                      "oldStart": 602,
+                      "oldLines": 7,
+                      "newStart": 602,
+                      "newLines": 7,
+                      "lines": [
+                        " every decode row (llama.cpp with the EasiiX MTP sidecar; its tg128 rows are plain decode). Where the other Halo",
+                        " engine wins a row, its number is in brackets.",
+                        " ",
+                        "-| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |",
+                        "+| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** | Coder: 3060M PC | **UD-IQ4_XS: Halo best = llama.cpp, 96/32, chunked GDN kernel** | UD-IQ4_XS: 3060M PC |",
+                        " |---|---|---|---|---|",
+                        " | model load to listening | **15 s** | 11.5 s | 83-94 s (Strata 32/96: 25-35 s) | 42 s |",
+                        " | cold first request, decode | **40.8 t/s** (llama.cpp: 26.1) | 43.3 t/s | 28.1-30.4 t/s (Strata 32/96: 31.4-32.5) | 37.6 t/s |"
+                      ]
+                    },
+                    {
+                      "oldStart": 710,
+                      "oldLines": 7,
+                      "newStart": 710,
+                      "newLines": 7,
+                      "lines": [
+                        " 96x96x32 macro-tile `SAV` kernels), shipped as `tools/hip/gfx1151-hipblaslt-100401.txt` (setup uses it when the",
+                        " installed hipBLASLt reports 1.4.1; the configs here carry `STRATA_HIPBLASLT_TUNING`). The engine with the table:",
+                        " ",
+                        "-| Coder IQ1_M, 64/64, arena | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |",
+                        "+| Coder IQ1_M, arena mode (the first two columns at 64/64, the table column at 32/96: the split the BIOS was left on after the UD-IQ4_XS runs; the cache held all 12,288 experts and hit 100% in every run either way) | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |",
+                        " |---|---|---|---|",
+                        " | pp4096 (`pp4k.py`, 2 requests) | 199-207 t/s | 264-279 t/s | **404-452 t/s** |",
+                        " | 4,165-token prompt, GPU timeline | 19,955 ms | 14,725 ms | **9,188 ms** |"
+                      ]
+                    },
+                    {
+                      "oldStart": 794,
+                      "oldLines": 7,
+                      "newStart": 794,
+                      "newLines": 7,
+                      "lines": [
+                        " 784 ms: it declines their shapes). So `strata-coder-iq1_m.json` carries `STRATA_PA_WMMA=1` and not",
+                        " `STRATA_WMMA_GEMM`. The full benchmark with it (`benchmarks/2026-10-05-halo-coder-iq1_m-arena-lt-table-pa-wmma.json`):",
+                        " ",
+                        "-| Coder IQ1_M, 64/64 | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |",
+                        "+| Coder IQ1_M, arena mode at 32/96 (see the note below) | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |",
+                        " |---|---|---|---|---|",
+                        " | cold / fresh / after-4.75K decode | 39.9 / 36.1 / 30.9 t/s | **40.8 / 37.1 / 32.6 t/s** | 26.1 / 21.9 / 20.8 | 43.3 / 42.1 / 39.3 |",
+                        " | prefill @ 4.75K | 451.0 | **528.1 t/s** | 321.5 | 961.3 |"
+                      ]
+                    },
+                    {
+                      "oldStart": 803,
+                      "oldLines": 7,
+                      "newStart": 803,
+                      "newLines": 13,
+                      "lines": [
+                        " | tg128 @ d0 / @ d16384 | 28.2 / 29.2 | 27.9 / 28.2 | 20.9 / 18.0 (plain) | 36.2 / 37.4 |",
+                        " | the prime request | 35.9 t/s | 36.5 t/s, 162 of 214 drafts, the same `is_prime` | | 41.0 |",
+                        " ",
+                        "-Prefill on the Halo is now 1.6-2.0x llama.cpp's on the same PC and 0.48-0.56x the RTX 3060 PC's; decode 0.83-0.94x",
+                        "+**The split these ran on:** the BIOS was still at 32/96 from the UD-IQ4_XS runs, not 64/64 as the morning's arena",
+                        "+runs. For the Coder it makes no difference the logs can see: `expert cache auto: 36.08 GiB free -> 12288 slots`",
+                        "+(64/64: 46.43 GiB free, the same 12,288), 12.1 GiB of VRAM left after loading (64/64: 22.7), the pinned 23.4 GiB",
+                        "+arena in 95.6 GiB of RAM, and `decode expert cache hit rate: 100.0%` on every request of every run. The table",
+                        "+runs and the WMMA runs are therefore comparable with the 64/64 rows above them; what 32/96 would cost is only",
+                        "+room: a longer context or a second model would not have the 22.7 GiB. Prefill on the Halo is now 1.6-2.0x",
+                        "+llama.cpp's on the same PC and 0.48-0.56x the RTX 3060 PC's; decode 0.83-0.94x",
+                        " the 3060's. The day's prompt speed: 146 -> 209 -> 274 -> 451 -> 528 t/s (page cache, BIOS split, hipBLASLt",
+                        " routing, the calibrated table, the WMMA attention). Of the 7.7 s a 4K prompt now takes, the expert GEMMs and",
+                        " their dequant are 3.0 s (39%): TODO item 2."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01StWW2C7oWEytBBF2tY8hyd",
+            "type": "tool_result",
+            "content": "labels corrected\r\n2",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "/c/conda_envs/strata/python.exe - <<'EOF'\nimport pathlib\np = pathlib.Path(\"docs/AIMAX+395-ROCm.md\"); s = p.read_text(encoding=\"utf-8\")\nedits = [\n (\"| Coder IQ1_M, 64/64, arena | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |\",\n  \"| Coder IQ1_M, arena mode (the first two columns at 64/64, the table column at 32/96: the split the BIOS was left on after the UD-IQ4_XS runs; the cache held all 12,288 experts and hit 100% in every run either way) | plain | `ROCBLAS_USE_HIPBLASLT=1` | **the table** (+ the switch for the shapes it lacks) |\"),\n (\"| Coder IQ1_M, 64/64 | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |\",\n  \"| Coder IQ1_M, arena mode at 32/96 (see the note below) | table | **table + gfx11 WMMA attention** | llama.cpp on this PC | RTX 3060 Laptop PC |\"),\n (\"Prefill on the Halo is now 1.6-2.0x llama.cpp's on the same PC\",\n  \"**The split these ran on:** the BIOS was still at 32/96 from the UD-IQ4_XS runs, not 64/64 as the morning's arena\\n\"\n  \"runs. For the Coder it makes no difference the logs can see: `expert cache auto: 36.08 GiB free -> 12288 slots`\\n\"\n  \"(64/64: 46.43 GiB free, the same 12,288), 12.1 GiB of VRAM left after loading (64/64: 22.7), the pinned 23.4 GiB\\n\"\n  \"arena in 95.6 GiB of RAM, and `decode expert cache hit rate: 100.0%` on every request of every run. The table\\n\"\n  \"runs and the WMMA runs are therefore comparable with the 64/64 rows above them; what 32/96 would cost is only\\n\"\n  \"room: a longer context or a second model would not have the 22.7 GiB. Prefill on the Halo is now 1.6-2.0x\\n\"\n  \"llama.cpp's on the same PC\"),\n (\"| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, 64/64, every expert on the GPU, the gfx1151 hipBLASLt table, the gfx11 WMMA attention** |\",\n  \"| Coder IQ1_M / UD-IQ4_XS | **Coder: Halo best = Strata, every expert on the GPU (64/64 or 32/96: the same 12,288-slot cache), the gfx1151 hipBLASLt table, the gfx11 WMMA attention** |\"),\n]\nfor old, new in edits:\n    assert s.count(old) == 1, old[:60]\n    s = s.replace(old, new)\np.write_text(s, encoding=\"utf-8\", newline=\"\\n\"); print(\"labels corrected\")\nEOF\nsed -i 's|^now 64/64 (choices are 32/64/96 only)|now 32/96 (choices are 32/64/96 only; the Coder fits its whole expert set in the 32 GiB side, 12,288 slots, 100% hits)|' \"/c/Users/Wei Lu/.claude/projects/E--work-AI-Strata/memory/strix-halo-port.md\"; grep -c \"32/96\" \"/c/Users/Wei Lu/.claude/projects/E--work-AI-Strata/memory/strix-halo-port.md\"",
+          "description": "Correct the split labels in the document for the runs made after the BIOS went to 32/96, and the memory"
+        }
+      }
+    },
+    {
+      "step_id": 554,
+      "timestamp": "2026-10-05T14:36:03.062Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "你说得对，我标错了：从\"调优表\"那一轮起（404-452 t/s 及之后所有 WMMA 测试），BIOS 一直是 32/96，不是 64/64。结果本身没有问题，日志能证明：\n\n| | 64/64（上午的 arena 跑） | 32/96（调优表、WMMA 各轮） |\n|---|---|---|\n| `expert cache auto` 报的空闲 | 46.43 GiB | 36.08 GiB |\n| 专家缓存 | 12,288 槽，23.42 GiB（全部专家） | 12,288 槽，23.42 GiB（全部专家） |\n| 装载后剩余显存 | 22.7 GiB | 12.1 GiB |\n| 专家区 | 23.4 GiB 钉在 63.6 GiB 内存里 | 23.4 GiB 钉在 95.6 GiB 内存里 |\n| 解码缓存命中率 | 100%（每个请求） | 100%（每个请求） |\n\nCoder 的 23.4 GiB 专家加约 5 GB 稠密层/KV 在 32 GiB 一侧装得下，钉住的内存也只算两倍 46.8 进 89.4 的预算，所以两种划分下引擎做的事完全一样，测速可比。32/96 唯一的代价是余量：装载后只剩 12 GiB 显存，更长的上下文或第二个模型会不够。\n\n文档已改：三处\"64/64\"标签改为实际划分并加了上面的说明，总表里 Coder 一列写成\"64/64 或 32/96，同样的 12,288 槽缓存\"；记忆文件里当前划分改为 32/96。",
+      "metrics": {
+        "prompt_tokens": 642770,
+        "completion_tokens": 570,
+        "cached_tokens": 642738,
+        "extra": {
+          "cache_creation_input_tokens": 2122,
+          "cache_read_input_tokens": 642738,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2122,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 570,
+              "cache_read_input_tokens": 642738,
+              "cache_creation_input_tokens": 2122,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2122
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 183480518,
-    "total_completion_tokens": 1049668,
-    "total_cached_tokens": 183467210,
-    "total_steps": 546,
+    "total_prompt_tokens": 187324982,
+    "total_completion_tokens": 1058301,
+    "total_cached_tokens": 187311572,
+    "total_steps": 554,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1922487,
-      "total_cache_read_input_tokens": 183467210
+      "total_cache_creation_input_tokens": 1929529,
+      "total_cache_read_input_tokens": 187311572
     }
   }
 }

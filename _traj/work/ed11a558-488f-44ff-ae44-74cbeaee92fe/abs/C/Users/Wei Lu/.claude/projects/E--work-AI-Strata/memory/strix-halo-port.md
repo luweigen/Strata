@@ -7,7 +7,7 @@ metadata:
 
 Branch `AIMAX395-ROCm` (the user's trajectory hook auto-commits every turn). Engine zip in `dist\`, unpacked in
 `engine\`; build tree `build-hip-win` (ROCm from the read-only `rocm100-py312` env, `STRATA_ROCM_ROOT`). BIOS split
-now 64/64 (choices are 32/64/96 only). Recommended config `strata-coder-iq1_m.json`: arena mode, env
+now 32/96 (choices are 32/64/96 only; the Coder fits its whole expert set in the 32 GiB side, 12,288 slots, 100% hits). Recommended config `strata-coder-iq1_m.json`: arena mode, env
 `ROCBLAS_USE_HIPBLASLT=1` + `STRATA_HIPBLASLT_TUNING=tools\hip\gfx1151-hipblaslt-100401.txt` (made with
 `build-hip-win\tune_hipblaslt.exe` in 60 s, 5.2-5.4x on the dense shapes). Started by `docs/benchmarks/2026-10-05-run-coder-iq1_m.ps1` from the
 `strata` conda env. UD-IQ4_XS configs need `STRATA_ARENA_PIN_GIB=24` at 32/96 (pinned memory counts double in HIP's
