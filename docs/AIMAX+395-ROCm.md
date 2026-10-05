@@ -299,7 +299,7 @@ sampler, the KV cache modes, the GDN and GR kernels - passes on the 8060S.
 `C:\Users\Wei Lu\Documents\Strata-data\packs\coder-iq1_m`; the MTP draft layer (`tools/mtp_fetch.py`, 4.9 GB
 from the original checkpoint, then `mtp_pack.py --experts q2_0` and `mtp_rt.py`) into `...\Strata-data\mtp\rt`;
 the config `strata-coder-iq1_m.json` (32K context, 8-bit KV, `--expert-cache auto`, `--prefill auto`, MTP with
-`--spec 4`, and `--mmap-experts` with no `experts.bin`: the GGUF read in place) and `run-coder-iq1_m.ps1`.
+`--spec 4`, and `--mmap-experts` with no `experts.bin`: the GGUF read in place) and `docs/benchmarks/2026-10-05-run-coder-iq1_m.ps1`.
 The first start answered on `/v1/models` after 45 s. The engine's log:
 
 - `expert cache auto: 101.40 GiB free ... -> 12288 slots`; `expert cache 12288 slots, 23.42 GiB of VRAM`;
@@ -426,7 +426,7 @@ the transfer:
 
 So on this card the switch is worth a third of the prompt speed and costs nothing; `strata-coder-iq1_m.json` now
 carries it (`"env": {"ROCBLAS_USE_HIPBLASLT": "1"}`, the arena mode, no `--mmap-experts`) and is what
-`run-coder-iq1_m.ps1` starts; `strata-coder-iq1_m-arena.json` is the measured variant without the switch. What
+`docs/benchmarks/2026-10-05-run-coder-iq1_m.ps1` starts; `strata-coder-iq1_m-arena.json` is the measured variant without the switch. What
 remains of the 14.7 s is the engine's own kernels on RDNA 3.5: the FP32 prompt attention (1.9 s; the RDNA4 WMMA
 kernel is 7x faster on gfx12 and gfx11.5 has WMMA with gfx11's layout), the GDN recurrence (0.8 s), the
 hyper-connection read (1.8 s), and the expert GEMMs (2.5 s, not through rocBLAS). Those are kernel work for
