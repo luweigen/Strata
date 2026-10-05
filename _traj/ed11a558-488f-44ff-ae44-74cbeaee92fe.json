@@ -23810,19 +23810,292 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 274,
+      "timestamp": "2026-10-05T10:45:03.638Z",
+      "source": "user",
+      "message": "UD-IQ4_XS需要80GB VRAM和48GB RAM？",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 275,
+      "timestamp": "2026-10-05T10:45:48.002Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 373483,
+        "completion_tokens": 3662,
+        "cached_tokens": 373481,
+        "extra": {
+          "cache_creation_input_tokens": 1327,
+          "cache_read_input_tokens": 373481,
+          "output_tokens_details": {
+            "thinking_tokens": 2913
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1327,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 3662,
+              "cache_read_input_tokens": 373481,
+              "cache_creation_input_tokens": 1327,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1327
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 276,
+      "timestamp": "2026-10-05T10:45:56.311Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "Executed Edit toolu_01YUNtPVQtfD4fpKCyR1MqLq",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01YUNtPVQtfD4fpKCyR1MqLq",
+          "function_name": "Edit",
+          "arguments": {
+            "replace_all": false,
+            "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "old_string": "  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\n  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\n  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+            "new_string": "  GiB of experts fit the 64 GiB GPU side with the KV cache (55.4 + ~5), but its pinned arena does not fit the\n  63.6 GiB host: with the Coder the host side used 12.9 GiB idle (OS, RDP, the conda tools) plus the engine's 1.1\n  GiB beside its arena, so UD-IQ4_XS would need 55.4 + 14 = ~69 GiB of RAM for the default mode. No split of 128\n  GB gives both ~61 GiB of GPU memory and ~69 GiB of RAM. The choices with the engine as it is: **GPU 48 / RAM 80**\n  (the arena pinned and the prompt path at full speed, but the GPU holds ~43 of the 55.4 GiB of experts and the\n  CPU computes the rest, as on the 3060 PC: slower decode, measurable), or 64/64 with the mmap mode (every expert\n  on the GPU, decode as fast as the Coder's, but the prompt path re-reads 55.4 GB per chunk through a page cache\n  that is ~5 GB too small: the 96/32 problem again). GPU 80 / RAM 48 is the worst of the three: the RAM holds\n  neither the arena nor the page cache. The real fix is the prompt path using the GPU-resident experts; then\n  80/48 or even 96/32 becomes the right split. The BFCL runs of 3060M.md (hours each) were not repeated."
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01YUNtPVQtfD4fpKCyR1MqLq",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully.\n\n[metadata] {\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"oldString\": \"  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\\n  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\\n  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.\", \"newString\": \"  GiB of experts fit the 64 GiB GPU side with the KV cache (55.4 + ~5), but its pinned arena does not fit the\\n  63.6 GiB host: with the Coder the host side used 12.9 GiB idle (OS, RDP, the conda tools) plus the engine's 1.1\\n  GiB beside its arena, so UD-IQ4_XS would need 55.4 + 14 = ~69 GiB of RAM for the default mode. No split of 128\\n  GB gives both ~61 GiB of GPU memory and ~69 GiB of RAM. The choices with the engine as it is: **GPU 48 / RAM 80**\\n  (the arena pinned and the prompt path at full speed, but the GPU holds ~43 of the 55.4 GiB of experts and the\\n  CPU computes the rest, as on the 3060 PC: slower decode, measurable), or 64/64 with the mmap mode (every expert\\n  on the GPU, decode as fast as the Coder's, but the prompt path re-reads 55.4 GB per chunk through a page cache\\n  that is ~5 GB too small: the 96/32 problem again). GPU 80 / RAM 48 is the worst of the three: the RAM holds\\n  neither the arena nor the page cache. The real fix is the prompt path using the GPU-resident experts; then\\n  80/48 or even 96/32 becomes the right split. The BFCL runs of 3060M.md (hours each) were not repeated.\", \"originalFile\": null, \"structuredPatch\": [{\"oldStart\": 482, \"oldLines\": 9, \"newStart\": 482, \"newLines\": 16, \"lines\": [\" - **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,\", \"   after the earlier starts) and 2.86 GiB/s there.\", \" - **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4\", \"-  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\", \"-  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\", \"-  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.\", \"+  GiB of experts fit the 64 GiB GPU side with the KV cache (55.4 + ~5), but its pinned arena does not fit the\", \"+  63.6 GiB host: with the Coder the host side used 12.9 GiB idle (OS, RDP, the conda tools) plus the engine's 1.1\", \"+  GiB beside its arena, so UD-IQ4_XS would need 55.4 + 14 = ~69 GiB of RAM for the default mode. No split of 128\", \"+  GB gives both ~61 GiB of GPU memory and ~69 GiB of RAM. The choices with the engine as it is: **GPU 48 / RAM 80**\", \"+  (the arena pinned and the prompt path at full speed, but the GPU holds ~43 of the 55.4 GiB of experts and the\", \"+  CPU computes the rest, as on the 3060 PC: slower decode, measurable), or 64/64 with the mmap mode (every expert\", \"+  on the GPU, decode as fast as the Coder's, but the prompt path re-reads 55.4 GB per chunk through a page cache\", \"+  that is ~5 GB too small: the 96/32 problem again). GPU 80 / RAM 48 is the worst of the three: the RAM holds\", \"+  neither the arena nor the page cache. The real fix is the prompt path using the GPU-resident experts; then\", \"+  80/48 or even 96/32 becomes the right split. The BFCL runs of 3060M.md (hours each) were not repeated.\", \" - The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata\", \"   on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.\", \" \"]}], \"userModified\": false, \"replaceAll\": false, \"contentNotInModelContext\": true}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 373483,
+        "completion_tokens": 3662,
+        "cached_tokens": 373481,
+        "extra": {
+          "cache_creation_input_tokens": 1327,
+          "cache_read_input_tokens": 373481,
+          "output_tokens_details": {
+            "thinking_tokens": 2913
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1327,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 3662,
+              "cache_read_input_tokens": 373481,
+              "cache_creation_input_tokens": 1327,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1327
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Edit",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\n  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\n  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+            "newString": "  GiB of experts fit the 64 GiB GPU side with the KV cache (55.4 + ~5), but its pinned arena does not fit the\n  63.6 GiB host: with the Coder the host side used 12.9 GiB idle (OS, RDP, the conda tools) plus the engine's 1.1\n  GiB beside its arena, so UD-IQ4_XS would need 55.4 + 14 = ~69 GiB of RAM for the default mode. No split of 128\n  GB gives both ~61 GiB of GPU memory and ~69 GiB of RAM. The choices with the engine as it is: **GPU 48 / RAM 80**\n  (the arena pinned and the prompt path at full speed, but the GPU holds ~43 of the 55.4 GiB of experts and the\n  CPU computes the rest, as on the 3060 PC: slower decode, measurable), or 64/64 with the mmap mode (every expert\n  on the GPU, decode as fast as the Coder's, but the prompt path re-reads 55.4 GB per chunk through a page cache\n  that is ~5 GB too small: the 96/32 problem again). GPU 80 / RAM 48 is the worst of the three: the RAM holds\n  neither the arena nor the page cache. The real fix is the prompt path using the GPU-resident experts; then\n  80/48 or even 96/32 becomes the right split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 482,
+                "oldLines": 9,
+                "newStart": 482,
+                "newLines": 16,
+                "lines": [
+                  " - **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,",
+                  "   after the earlier starts) and 2.86 GiB/s there.",
+                  " - **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4",
+                  "-  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB",
+                  "-  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that",
+                  "-  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+                  "+  GiB of experts fit the 64 GiB GPU side with the KV cache (55.4 + ~5), but its pinned arena does not fit the",
+                  "+  63.6 GiB host: with the Coder the host side used 12.9 GiB idle (OS, RDP, the conda tools) plus the engine's 1.1",
+                  "+  GiB beside its arena, so UD-IQ4_XS would need 55.4 + 14 = ~69 GiB of RAM for the default mode. No split of 128",
+                  "+  GB gives both ~61 GiB of GPU memory and ~69 GiB of RAM. The choices with the engine as it is: **GPU 48 / RAM 80**",
+                  "+  (the arena pinned and the prompt path at full speed, but the GPU holds ~43 of the 55.4 GiB of experts and the",
+                  "+  CPU computes the rest, as on the 3060 PC: slower decode, measurable), or 64/64 with the mmap mode (every expert",
+                  "+  on the GPU, decode as fast as the Coder's, but the prompt path re-reads 55.4 GB per chunk through a page cache",
+                  "+  that is ~5 GB too small: the 96/32 problem again). GPU 80 / RAM 48 is the worst of the three: the RAM holds",
+                  "+  neither the arena nor the page cache. The real fix is the prompt path using the GPU-resident experts; then",
+                  "+  80/48 or even 96/32 becomes the right split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+                  " - The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata",
+                  "   on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.",
+                  " "
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01YUNtPVQtfD4fpKCyR1MqLq",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "oldString": "  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\n  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\n  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+            "newString": "  GiB of experts fit the 64 GiB GPU side with the KV cache (55.4 + ~5), but its pinned arena does not fit the\n  63.6 GiB host: with the Coder the host side used 12.9 GiB idle (OS, RDP, the conda tools) plus the engine's 1.1\n  GiB beside its arena, so UD-IQ4_XS would need 55.4 + 14 = ~69 GiB of RAM for the default mode. No split of 128\n  GB gives both ~61 GiB of GPU memory and ~69 GiB of RAM. The choices with the engine as it is: **GPU 48 / RAM 80**\n  (the arena pinned and the prompt path at full speed, but the GPU holds ~43 of the 55.4 GiB of experts and the\n  CPU computes the rest, as on the 3060 PC: slower decode, measurable), or 64/64 with the mmap mode (every expert\n  on the GPU, decode as fast as the Coder's, but the prompt path re-reads 55.4 GB per chunk through a page cache\n  that is ~5 GB too small: the 96/32 problem again). GPU 80 / RAM 48 is the worst of the three: the RAM holds\n  neither the arena nor the page cache. The real fix is the prompt path using the GPU-resident experts; then\n  80/48 or even 96/32 becomes the right split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+            "originalFile": null,
+            "structuredPatch": [
+              {
+                "oldStart": 482,
+                "oldLines": 9,
+                "newStart": 482,
+                "newLines": 16,
+                "lines": [
+                  " - **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,",
+                  "   after the earlier starts) and 2.86 GiB/s there.",
+                  " - **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4",
+                  "-  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB",
+                  "-  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that",
+                  "-  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+                  "+  GiB of experts fit the 64 GiB GPU side with the KV cache (55.4 + ~5), but its pinned arena does not fit the",
+                  "+  63.6 GiB host: with the Coder the host side used 12.9 GiB idle (OS, RDP, the conda tools) plus the engine's 1.1",
+                  "+  GiB beside its arena, so UD-IQ4_XS would need 55.4 + 14 = ~69 GiB of RAM for the default mode. No split of 128",
+                  "+  GB gives both ~61 GiB of GPU memory and ~69 GiB of RAM. The choices with the engine as it is: **GPU 48 / RAM 80**",
+                  "+  (the arena pinned and the prompt path at full speed, but the GPU holds ~43 of the 55.4 GiB of experts and the",
+                  "+  CPU computes the rest, as on the 3060 PC: slower decode, measurable), or 64/64 with the mmap mode (every expert",
+                  "+  on the GPU, decode as fast as the Coder's, but the prompt path re-reads 55.4 GB per chunk through a page cache",
+                  "+  that is ~5 GB too small: the 96/32 problem again). GPU 80 / RAM 48 is the worst of the three: the RAM holds",
+                  "+  neither the arena nor the page cache. The real fix is the prompt path using the GPU-resident experts; then",
+                  "+  80/48 or even 96/32 becomes the right split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+                  " - The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata",
+                  "   on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.",
+                  " "
+                ]
+              }
+            ],
+            "userModified": false,
+            "replaceAll": false,
+            "contentNotInModelContext": true
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01YUNtPVQtfD4fpKCyR1MqLq",
+            "type": "tool_result",
+            "content": "The file E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md has been updated successfully."
+          }
+        },
+        "raw_arguments": {
+          "replace_all": false,
+          "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+          "old_string": "  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB\n  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that\n  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.",
+          "new_string": "  GiB of experts fit the 64 GiB GPU side with the KV cache (55.4 + ~5), but its pinned arena does not fit the\n  63.6 GiB host: with the Coder the host side used 12.9 GiB idle (OS, RDP, the conda tools) plus the engine's 1.1\n  GiB beside its arena, so UD-IQ4_XS would need 55.4 + 14 = ~69 GiB of RAM for the default mode. No split of 128\n  GB gives both ~61 GiB of GPU memory and ~69 GiB of RAM. The choices with the engine as it is: **GPU 48 / RAM 80**\n  (the arena pinned and the prompt path at full speed, but the GPU holds ~43 of the 55.4 GiB of experts and the\n  CPU computes the rest, as on the 3060 PC: slower decode, measurable), or 64/64 with the mmap mode (every expert\n  on the GPU, decode as fast as the Coder's, but the prompt path re-reads 55.4 GB per chunk through a page cache\n  that is ~5 GB too small: the 96/32 problem again). GPU 80 / RAM 48 is the worst of the three: the RAM holds\n  neither the arena nor the page cache. The real fix is the prompt path using the GPU-resident experts; then\n  80/48 or even 96/32 becomes the right split. The BFCL runs of 3060M.md (hours each) were not repeated."
+        }
+      }
+    },
+    {
+      "step_id": 277,
+      "timestamp": "2026-10-05T10:46:17.124Z",
+      "source": "agent",
+      "model_name": "claude-fable-5-1",
+      "message": "不是，恰好相反。我原文写的 \"48/80\" 指 **GPU 48 GiB / RAM 80 GiB**，写得不清楚，已在文档里改成明确的说法。\n\n**UD-IQ4_XS 的需求算下来是这样**（专家 55.4 GiB，来自 3060M.md 的实测）：\n\n| 需要 | 多少 | 依据 |\n|---|---|---|\n| GPU 侧，全部专家驻留 | 55.4 + 约 5（稠密层、KV）≈ **61 GiB** | Coder 的日志：专家缓存之外约 5 GB |\n| 主机侧，默认 pinned 模式 | 55.4 + 约 14 ≈ **69 GiB** | 64/64 跑 Coder 时实测：系统空闲占 12.9 GiB，引擎在专家区之外再占 1.1 GiB |\n\n两者加起来 130 GiB，128 GB 的机器任何划分都不能同时满足。所以现在的引擎下只有三种取舍：\n\n- **GPU 48 / RAM 80**：专家区能钉在内存里，提示路径全速；但 GPU 只装得下约 43 GiB（78%）的专家，其余由 CPU 算，像 3060 那台一样，解码会慢。可以实测。\n- **64/64 + mmap 模式**：专家全在 GPU，解码和 Coder 一样快；但提示路径每个 8K 块要从文件重读 55.4 GB，页缓存差约 5 GB 装不下，又回到 96/32 时的 NVMe 瓶颈。\n- **GPU 80 / RAM 48**：最差。48 GiB 内存既放不下专家区，也放不下页缓存。\n\n根本解法是引擎改动：提示路径直接用 GPU 上驻留的专家，不再从主机侧重新流式读取。改了之后 80/48 甚至 96/32 才是正确划分，而且 Coder 和 UD-IQ4_XS 都受益。\n\n如果你想现在就跑 UD-IQ4_XS，我建议改 BIOS 为 GPU 48 / RAM 80 来测一组；不想再动 BIOS 的话，就先做引擎的提示路径改动。",
+      "metrics": {
+        "prompt_tokens": 374840,
+        "completion_tokens": 764,
+        "cached_tokens": 374808,
+        "extra": {
+          "cache_creation_input_tokens": 3730,
+          "cache_read_input_tokens": 374808,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3730,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 32,
+              "output_tokens": 764,
+              "cache_read_input_tokens": 374808,
+              "cache_creation_input_tokens": 3730,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3730
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 62448460,
-    "total_completion_tokens": 556176,
-    "total_cached_tokens": 62441630,
-    "total_steps": 273,
+    "total_prompt_tokens": 63570266,
+    "total_completion_tokens": 564264,
+    "total_cached_tokens": 63563400,
+    "total_steps": 277,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1225359,
-      "total_cache_read_input_tokens": 62441630
+      "total_cache_creation_input_tokens": 1231743,
+      "total_cache_read_input_tokens": 63563400
     }
   }
 }

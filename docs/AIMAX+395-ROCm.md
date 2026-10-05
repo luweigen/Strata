@@ -482,9 +482,16 @@ The numbers (MTP on in every decode row; prefill 1 token out; n = 1 per row on b
 - **Load:** 15 s against 11.5 s; the 23.4 GiB of experts came off the NVMe at 5.9 GiB/s here (the page cache,
   after the earlier starts) and 2.86 GiB/s there.
 - **Not compared:** UD-IQ4_XS (3060M.md: 33-39 t/s decode, 663-819 t/s prefill) was not run here yet; its 55.4
-  GiB of experts fit the 64 GiB GPU side with the KV cache, but not beside a 23.4 GiB arena in the 63.6 GiB
-  host (the default mode would need 55.4 + 10 GB of RAM): it is a case for the mmap mode with the page cache that
-  64/64 now leaves, or for a 48/80 split. The BFCL runs of 3060M.md (hours each) were not repeated.
+  GiB of experts fit the 64 GiB GPU side with the KV cache (55.4 + ~5), but its pinned arena does not fit the
+  63.6 GiB host: with the Coder the host side used 12.9 GiB idle (OS, RDP, the conda tools) plus the engine's 1.1
+  GiB beside its arena, so UD-IQ4_XS would need 55.4 + 14 = ~69 GiB of RAM for the default mode. No split of 128
+  GB gives both ~61 GiB of GPU memory and ~69 GiB of RAM. The choices with the engine as it is: **GPU 48 / RAM 80**
+  (the arena pinned and the prompt path at full speed, but the GPU holds ~43 of the 55.4 GiB of experts and the
+  CPU computes the rest, as on the 3060 PC: slower decode, measurable), or 64/64 with the mmap mode (every expert
+  on the GPU, decode as fast as the Coder's, but the prompt path re-reads 55.4 GB per chunk through a page cache
+  that is ~5 GB too small: the 96/32 problem again). GPU 80 / RAM 48 is the worst of the three: the RAM holds
+  neither the arena nor the page cache. The real fix is the prompt path using the GPU-resident experts; then
+  80/48 or even 96/32 becomes the right split. The BFCL runs of 3060M.md (hours each) were not repeated.
 - The 3060M.md comparison with llama.cpp on this Halo was 2x decode / 3x prefill in the 3060's favour; with Strata
   on the Halo itself the decode gap to the 3060 is 1.1-1.2x and the prefill gap 3.4-4.3x.
 
