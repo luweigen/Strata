@@ -5,7 +5,7 @@ from pathlib import Path
 
 URL = "http://127.0.0.1:8080"
 E = Path(os.environ.get("STRATA_ENGRAM_SRC", "/mnt/evox2/large/work/AI/EngramHalo.cpp/src"))   # the EngramHalo.cpp checkout
-LOADER = (E / "llama-model-loader.cpp").read_text()
+LOADER = (E / "llama-model-loader.cpp").read_text(encoding="utf-8")
 
 
 def post(path, body):
@@ -64,7 +64,7 @@ rows.append(chat(chunk + "\n\nSummarize what this code does, function by functio
 rows.append(chat(p1, 400, "server: repeated first prompt (reference only)"))
 
 # --- llama-bench shape: pp4096 / tg128 at depth 0 and 16384, on real code (other EngramHalo sources)
-src = "".join(p.read_text() for p in sorted(E.glob("llama-*.cpp")) if p.name != "llama-model-loader.cpp")
+src = "".join(p.read_text(encoding="utf-8") for p in sorted(E.glob("llama-*.cpp")) if p.name != "llama-model-loader.cpp")
 pp = cut(src, 4096)
 rows.append(chat(pp, 1, "pp4096 @ d0"))
 tg_prompt = "Write a complete C++ implementation of a thread-safe LRU cache with comments."
