@@ -1,0 +1,45 @@
+# run 1
+engine: N=3072 T=8192 K=2048, T/N, BF16->F32, 32F          5.071 ms    20.3 TFLOP/s
+same, FP16->F32                                            4.494 ms    22.9 TFLOP/s
+same, FP16->FP16 out                                       4.357 ms    23.7 TFLOP/s
+same, FP16->FP16, compute 16F                              2.822 ms    36.5 TFLOP/s
+same, BF16->BF16 out                                       3.546 ms    29.1 TFLOP/s
+N/N layout, FP16->F32                                      3.722 ms    27.7 TFLOP/s
+N/N layout, FP16->FP16                                     3.692 ms    27.9 TFLOP/s
+square 4096^3, T/N, FP16->F32                              5.142 ms    26.7 TFLOP/s
+square 4096^3, N/N, FP16->FP16                             5.005 ms    27.5 TFLOP/s
+square 4096^3, T/N, BF16->BF16                             4.879 ms    28.2 TFLOP/s
+expert gate/up: N=1280 T=160 K=2560, T/N, FP16->F32        0.047 ms    22.2 TFLOP/s
+expert down: N=2560 T=160 K=640, T/N, FP16->F32            0.049 ms    10.6 TFLOP/s
+expert gate/up, FP16->FP16                                 0.048 ms    22.0 TFLOP/s
+decode-like: N=3072 T=8 K=2048, T/N, FP16->F32             0.051 ms     2.0 TFLOP/s
+# run 2
+engine: N=3072 T=8192 K=2048, T/N, BF16->F32, 32F          3.675 ms    28.0 TFLOP/s
+same, FP16->F32                                            3.674 ms    28.1 TFLOP/s
+same, FP16->FP16 out                                       3.559 ms    29.0 TFLOP/s
+same, FP16->FP16, compute 16F                              2.671 ms    38.6 TFLOP/s
+same, BF16->BF16 out                                       3.554 ms    29.0 TFLOP/s
+N/N layout, FP16->F32                                      3.704 ms    27.8 TFLOP/s
+N/N layout, FP16->FP16                                     3.648 ms    28.3 TFLOP/s
+square 4096^3, T/N, FP16->F32                              5.150 ms    26.7 TFLOP/s
+square 4096^3, N/N, FP16->FP16                             5.000 ms    27.5 TFLOP/s
+square 4096^3, T/N, BF16->BF16                             4.875 ms    28.2 TFLOP/s
+expert gate/up: N=1280 T=160 K=2560, T/N, FP16->F32        0.047 ms    22.2 TFLOP/s
+expert down: N=2560 T=160 K=640, T/N, FP16->F32            0.049 ms    10.6 TFLOP/s
+expert gate/up, FP16->FP16                                 0.048 ms    21.8 TFLOP/s
+decode-like: N=3072 T=8 K=2048, T/N, FP16->F32             0.051 ms     2.0 TFLOP/s
+# run 3
+engine: N=3072 T=8192 K=2048, T/N, BF16->F32, 32F          3.674 ms    28.1 TFLOP/s
+same, FP16->F32                                            3.675 ms    28.0 TFLOP/s
+same, FP16->FP16 out                                       3.537 ms    29.1 TFLOP/s
+same, FP16->FP16, compute 16F                              2.756 ms    37.4 TFLOP/s
+same, BF16->BF16 out                                       3.576 ms    28.8 TFLOP/s
+N/N layout, FP16->F32                                      3.718 ms    27.7 TFLOP/s
+N/N layout, FP16->FP16                                     3.642 ms    28.3 TFLOP/s
+square 4096^3, T/N, FP16->F32                              5.159 ms    26.6 TFLOP/s
+square 4096^3, N/N, FP16->FP16                             5.014 ms    27.4 TFLOP/s
+square 4096^3, T/N, BF16->BF16                             4.876 ms    28.2 TFLOP/s
+expert gate/up: N=1280 T=160 K=2560, T/N, FP16->F32        0.047 ms    22.2 TFLOP/s
+expert down: N=2560 T=160 K=640, T/N, FP16->F32            0.049 ms    10.6 TFLOP/s
+expert gate/up, FP16->FP16                                 0.047 ms    22.2 TFLOP/s
+decode-like: N=3072 T=8 K=2048, T/N, FP16->F32             0.050 ms     2.0 TFLOP/s
