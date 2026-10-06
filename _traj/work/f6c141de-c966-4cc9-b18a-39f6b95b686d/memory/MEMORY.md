@@ -1,0 +1,4 @@
+- [Conda env policy](conda-env-policy.md) — never touch existing conda envs; new Strata env = conda create -n strata python=3.14
+- [Where things go](where-things-go.md) — conda envs + models on C:, Strata build + results in the repo on E:
+- [Strix Halo port state](strix-halo-port.md) — branch wmma-gfx1151, TODO 1-5 + 2a + 2b done (2b: MMQ built with LLVM max-ilp scheduler on gfx1151); next: TODO 6, decode 7-8
+- [Windows shell gotchas](windows-shell-gotchas.md) — python on PATH is the Store stub; Git Bash PATH needs /e/... not E:/...; parallel Bash calls share cwd; HIP probe build line; traps surface at the next hipMemcpy
