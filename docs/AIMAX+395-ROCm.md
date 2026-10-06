@@ -1404,20 +1404,28 @@ This run does not show the A/B's gain. The Coder's single 4.75K request read 564
 the other prompt rows moved by -1 to +0.7%. UD-IQ4_XS: pp4096 +3%, its other prompt rows -1 to -3%, and its tg128 @
 d16384 19.2 t/s at 55.3% MTP acceptance (72.6% in TODO 2a's run; its decode is not repeatable from run to run, see
 TODO 2a). These moves are the size of the spread between runs of one engine. So the Coder's rows were run again,
-TODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,
-`benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1,2}.*`):
+TODO 2a's engine and this one alternating, six pairs, each pair back to back
+(`2026-10-06-halo-onetable-todo2b-coder-pairs.log`, `benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1..6}.*`;
+the statistics by `2026-10-06-halo-onetable-todo2b-pairs-stats.py`, output `...-pairs-stats.log`):
 
-| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |
-|---|---|---|
-| prefill @ ~4.75K | 577.5-577.6 | **582.6-583.1** |
-| pp4096 @ d0 | 568.0-571.1 | 564.3-576.0 |
-| depth 16384 prefix / pp4096 @ d16384 (20,421 tokens) | 594.2 / 586.1-588.0 | **602.0-602.9 / 594.3-596.4** |
-| decode rows (cold, fresh, 4.75K tail, tg128 @ d0, tg128 @ d16384) | 36.6-38.8, 37.8, 33.6, 27.6-28.0, 27.9-28.4 | 38.6-38.8, 37.6-37.7, 33.3-33.8, 27.9-28.0, 27.7 |
+| Coder IQ1_M, t/s, 6 pairs | TODO 2a's engine, mean +- SD | **TODO 2b's engine** | new - old, mean [95% interval, paired t] | pairs where new > old |
+|---|---|---|---|---|
+| prefill @ ~4.75K | 584.6 +- 6.3 | **591.0 +- 7.3** | **+6.4 [+1.8, +11.0], +1.1%** | 6 of 6 |
+| pp4096 @ d0 | 575.3 +- 6.6 | 579.3 +- 9.0 | +4.0 [-4.7, +12.7], +0.7% | 4 of 6 |
+| depth 16384 prefix | 598.1 +- 3.4 | **607.1 +- 4.6** | **+9.0 [+6.2, +11.7], +1.5%** | 6 of 6 |
+| pp4096 @ d16384 (20,421 tokens) | 592.6 +- 4.8 | **600.2 +- 4.6** | **+7.6 [+4.5, +10.7], +1.3%** | 6 of 6 |
+| decode: cold, fresh, 4.75K tail, tg128 @ d0 | 38.4, 38.0, 33.7, 28.0 | 38.5, 37.6, 33.6, 27.9 | intervals all include 0 (-1.0 to +0.3%) | 2, 1, 2, 1 of 6 |
+| decode: tg128 @ d16384 | 28.2 +- 0.3 | 27.9 +- 0.3 | -0.4 [-0.7, +0.0], -1.2% | 0 of 6 |
 
-Back to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and
-decode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table
-run was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler takes 5-10%
-off the products, and the products are about 30% of a 4K chunk's GPU time.
+The engine drifted more over the session than the effect: TODO 2a's engine read 577.5 at 4.75K in the first pair and
+593.2 in the fifth (SD 6.3 across its six runs). That is why one run against an earlier day's run says nothing about a
+1% change, and why the pairs are needed. Within a pair the new engine was faster on the three long-prompt rows every
+time, and those intervals exclude 0: +1.1% at 4.75K, +1.3-1.5% at 16-20K. pp4096 @ d0 is +0.7% with an interval that
+includes 0, and its own SD (7-9 t/s) is twice the effect. Decode does not run this code, and its rows show no gain.
+tg128 @ d16384's -1.2% touches 0 at the edge of its interval; with nine rows tested, one borderline row is what
+chance gives. It is not a cause found. All of this agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the
+one-table run was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler
+takes 5-10% off the products, and the products are about 30% of a 4K chunk's GPU time.
 
 ## The RTX 5090 over Thunderbolt (not pursued)
 

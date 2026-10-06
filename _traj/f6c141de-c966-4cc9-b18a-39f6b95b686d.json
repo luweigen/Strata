@@ -16772,19 +16772,1379 @@
         "cwd": "E:\\work\\AI\\Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 213,
+      "timestamp": "2026-10-06T07:30:15.147Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>b441evzsw</task-id>\n<tool-use-id>toolu_016FsCpEjovmYr8tiBKYo1Ps</tool-use-id>\n<output-file>C:\\Users\\WEILU~1\\AppData\\Local\\Temp\\claude\\E--work-AI-Strata\\f6c141de-c966-4cc9-b18a-39f6b95b686d\\tasks\\b441evzsw.output</output-file>\n<status>completed</status>\n<summary>Background command \"Run 4 more alternating old/new Coder pairs\" completed (exit code 1: No matches found)</summary>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 214,
+      "timestamp": "2026-10-06T07:30:20.228Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01Twn56d4aunjdiG8SHUZhfS",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01Twn56d4aunjdiG8SHUZhfS",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "grep -c Traceback docs/benchmarks/2026-10-06-halo-onetable-todo2b-coder-pairs.log; ls tmp-coder* 2>/dev/null; C:/conda_envs/strata/python.exe docs/benchmarks/2026-10-06-halo-onetable-todo2b-pairs-stats.py | tee docs/benchmarks/2026-10-06-halo-onetable-todo2b-pairs-stats.log; C:/conda_envs/strata/python.exe -c \"\nimport json\nr=[];c=None\nfor l in open('docs/benchmarks/2026-10-06-halo-onetable-todo2b-coder-pairs.log',encoding='utf-8'):\n    d=json.loads(l)\n    if 'config' in d: c=['old' if 'todo2a' in d['config'] else 'new']; r.append(c); continue\n    if d['test'] in ('server: ~4.75K-token prompt, prefill + decode tail','pp4096 @ d0','depth 16384 prefix (cached for the next rows)','pp4096 @ d16384'): c.append(d['prompt_per_second'])\nfor x in r: print(*x)\n\"",
+            "description": "Compute statistics over all 6 pairs"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01Twn56d4aunjdiG8SHUZhfS",
+            "content": "0\n6 pairs (old = TODO 2a's engine, new = TODO 2b's)\r\n\r\nrow (t/s)                        old mean+-SD     new mean+-SD            new-old, 95% CI      %  new>old\r\nprefill @ ~4.75K                584.6 +-  6.3    591.0 +-  7.3    +6.4 [  +1.8,  +11.0]  +1.1%    6/6\r\npp4096 @ d0                     575.3 +-  6.6    579.3 +-  9.0    +4.0 [  -4.7,  +12.7]  +0.7%    4/6\r\n16,384 prefix                   598.1 +-  3.4    607.1 +-  4.6    +9.0 [  +6.2,  +11.7]  +1.5%    6/6\r\npp4096 @ d16384                 592.6 +-  4.8    600.2 +-  4.6    +7.6 [  +4.5,  +10.7]  +1.3%    6/6\r\ndecode: cold first request       38.4 +-  1.0     38.5 +-  0.9    +0.1 [  -1.6,   +1.8]  +0.3%    2/6\r\ndecode: fresh code prompt        38.0 +-  0.2     37.6 +-  0.7    -0.4 [  -1.1,   +0.3]  -1.0%    1/6\r\ndecode: tail after 4.75K         33.7 +-  0.1     33.6 +-  0.3    -0.1 [  -0.3,   +0.2]  -0.2%    2/6\r\ntg128 @ d0                       28.0 +-  0.2     27.9 +-  0.1    -0.1 [  -0.4,   +0.2]  -0.4%    1/6\r\ntg128 @ d16384                   28.2 +-  0.3     27.9 +-  0.3    -0.4 [  -0.7,   +0.0]  -1.2%    0/6\r\nold 577.6 568.0 594.2 588.0\r\nnew 582.6 576.0 602.0 594.3\r\nold 577.5 571.1 594.2 586.1\r\nnew 583.1 564.3 602.9 596.4\r\nold 589.3 573.8 598.1 592.5\r\nnew 590.5 577.1 604.2 598.5\r\nold 583.8 572.0 598.7 595.8\r\nnew 591.5 589.0 610.5 606.1\r\nold 593.2 582.2 600.8 594.5\r\nnew 598.0 586.8 613.3 604.2\r\nold 586.1 584.7 602.5 598.8\r\nnew 600.3 582.5 609.5 601.8\n\n[stdout]\n0\n6 pairs (old = TODO 2a's engine, new = TODO 2b's)\r\n\r\nrow (t/s)                        old mean+-SD     new mean+-SD            new-old, 95% CI      %  new>old\r\nprefill @ ~4.75K                584.6 +-  6.3    591.0 +-  7.3    +6.4 [  +1.8,  +11.0]  +1.1%    6/6\r\npp4096 @ d0                     575.3 +-  6.6    579.3 +-  9.0    +4.0 [  -4.7,  +12.7]  +0.7%    4/6\r\n16,384 prefix                   598.1 +-  3.4    607.1 +-  4.6    +9.0 [  +6.2,  +11.7]  +1.5%    6/6\r\npp4096 @ d16384                 592.6 +-  4.8    600.2 +-  4.6    +7.6 [  +4.5,  +10.7]  +1.3%    6/6\r\ndecode: cold first request       38.4 +-  1.0     38.5 +-  0.9    +0.1 [  -1.6,   +1.8]  +0.3%    2/6\r\ndecode: fresh code prompt        38.0 +-  0.2     37.6 +-  0.7    -0.4 [  -1.1,   +0.3]  -1.0%    1/6\r\ndecode: tail after 4.75K         33.7 +-  0.1     33.6 +-  0.3    -0.1 [  -0.3,   +0.2]  -0.2%    2/6\r\ntg128 @ d0                       28.0 +-  0.2     27.9 +-  0.1    -0.1 [  -0.4,   +0.2]  -0.4%    1/6\r\ntg128 @ d16384                   28.2 +-  0.3     27.9 +-  0.3    -0.4 [  -0.7,   +0.0]  -1.2%    0/6\r\nold 577.6 568.0 594.2 588.0\r\nnew 582.6 576.0 602.0 594.3\r\nold 577.5 571.1 594.2 586.1\r\nnew 583.1 564.3 602.9 596.4\r\nold 589.3 573.8 598.1 592.5\r\nnew 590.5 577.1 604.2 598.5\r\nold 583.8 572.0 598.7 595.8\r\nnew 591.5 589.0 610.5 606.1\r\nold 593.2 582.2 600.8 594.5\r\nnew 598.0 586.8 613.3 604.2\r\nold 586.1 584.7 602.5 598.8\r\nnew 600.3 582.5 609.5 601.8\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 269956,
+        "completion_tokens": 489,
+        "cached_tokens": 269952,
+        "extra": {
+          "cache_creation_input_tokens": 387,
+          "cache_read_input_tokens": 269952,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 387,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 489,
+              "cache_read_input_tokens": 269952,
+              "cache_creation_input_tokens": 387,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 387
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "0\n6 pairs (old = TODO 2a's engine, new = TODO 2b's)\r\n\r\nrow (t/s)                        old mean+-SD     new mean+-SD            new-old, 95% CI      %  new>old\r\nprefill @ ~4.75K                584.6 +-  6.3    591.0 +-  7.3    +6.4 [  +1.8,  +11.0]  +1.1%    6/6\r\npp4096 @ d0                     575.3 +-  6.6    579.3 +-  9.0    +4.0 [  -4.7,  +12.7]  +0.7%    4/6\r\n16,384 prefix                   598.1 +-  3.4    607.1 +-  4.6    +9.0 [  +6.2,  +11.7]  +1.5%    6/6\r\npp4096 @ d16384                 592.6 +-  4.8    600.2 +-  4.6    +7.6 [  +4.5,  +10.7]  +1.3%    6/6\r\ndecode: cold first request       38.4 +-  1.0     38.5 +-  0.9    +0.1 [  -1.6,   +1.8]  +0.3%    2/6\r\ndecode: fresh code prompt        38.0 +-  0.2     37.6 +-  0.7    -0.4 [  -1.1,   +0.3]  -1.0%    1/6\r\ndecode: tail after 4.75K         33.7 +-  0.1     33.6 +-  0.3    -0.1 [  -0.3,   +0.2]  -0.2%    2/6\r\ntg128 @ d0                       28.0 +-  0.2     27.9 +-  0.1    -0.1 [  -0.4,   +0.2]  -0.4%    1/6\r\ntg128 @ d16384                   28.2 +-  0.3     27.9 +-  0.3    -0.4 [  -0.7,   +0.0]  -1.2%    0/6\r\nold 577.6 568.0 594.2 588.0\r\nnew 582.6 576.0 602.0 594.3\r\nold 577.5 571.1 594.2 586.1\r\nnew 583.1 564.3 602.9 596.4\r\nold 589.3 573.8 598.1 592.5\r\nnew 590.5 577.1 604.2 598.5\r\nold 583.8 572.0 598.7 595.8\r\nnew 591.5 589.0 610.5 606.1\r\nold 593.2 582.2 600.8 594.5\r\nnew 598.0 586.8 613.3 604.2\r\nold 586.1 584.7 602.5 598.8\r\nnew 600.3 582.5 609.5 601.8",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Twn56d4aunjdiG8SHUZhfS",
+            "type": "tool_result",
+            "content": "0\n6 pairs (old = TODO 2a's engine, new = TODO 2b's)\r\n\r\nrow (t/s)                        old mean+-SD     new mean+-SD            new-old, 95% CI      %  new>old\r\nprefill @ ~4.75K                584.6 +-  6.3    591.0 +-  7.3    +6.4 [  +1.8,  +11.0]  +1.1%    6/6\r\npp4096 @ d0                     575.3 +-  6.6    579.3 +-  9.0    +4.0 [  -4.7,  +12.7]  +0.7%    4/6\r\n16,384 prefix                   598.1 +-  3.4    607.1 +-  4.6    +9.0 [  +6.2,  +11.7]  +1.5%    6/6\r\npp4096 @ d16384                 592.6 +-  4.8    600.2 +-  4.6    +7.6 [  +4.5,  +10.7]  +1.3%    6/6\r\ndecode: cold first request       38.4 +-  1.0     38.5 +-  0.9    +0.1 [  -1.6,   +1.8]  +0.3%    2/6\r\ndecode: fresh code prompt        38.0 +-  0.2     37.6 +-  0.7    -0.4 [  -1.1,   +0.3]  -1.0%    1/6\r\ndecode: tail after 4.75K         33.7 +-  0.1     33.6 +-  0.3    -0.1 [  -0.3,   +0.2]  -0.2%    2/6\r\ntg128 @ d0                       28.0 +-  0.2     27.9 +-  0.1    -0.1 [  -0.4,   +0.2]  -0.4%    1/6\r\ntg128 @ d16384                   28.2 +-  0.3     27.9 +-  0.3    -0.4 [  -0.7,   +0.0]  -1.2%    0/6\r\nold 577.6 568.0 594.2 588.0\r\nnew 582.6 576.0 602.0 594.3\r\nold 577.5 571.1 594.2 586.1\r\nnew 583.1 564.3 602.9 596.4\r\nold 589.3 573.8 598.1 592.5\r\nnew 590.5 577.1 604.2 598.5\r\nold 583.8 572.0 598.7 595.8\r\nnew 591.5 589.0 610.5 606.1\r\nold 593.2 582.2 600.8 594.5\r\nnew 598.0 586.8 613.3 604.2\r\nold 586.1 584.7 602.5 598.8\r\nnew 600.3 582.5 609.5 601.8",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "0\n6 pairs (old = TODO 2a's engine, new = TODO 2b's)\r\n\r\nrow (t/s)                        old mean+-SD     new mean+-SD            new-old, 95% CI      %  new>old\r\nprefill @ ~4.75K                584.6 +-  6.3    591.0 +-  7.3    +6.4 [  +1.8,  +11.0]  +1.1%    6/6\r\npp4096 @ d0                     575.3 +-  6.6    579.3 +-  9.0    +4.0 [  -4.7,  +12.7]  +0.7%    4/6\r\n16,384 prefix                   598.1 +-  3.4    607.1 +-  4.6    +9.0 [  +6.2,  +11.7]  +1.5%    6/6\r\npp4096 @ d16384                 592.6 +-  4.8    600.2 +-  4.6    +7.6 [  +4.5,  +10.7]  +1.3%    6/6\r\ndecode: cold first request       38.4 +-  1.0     38.5 +-  0.9    +0.1 [  -1.6,   +1.8]  +0.3%    2/6\r\ndecode: fresh code prompt        38.0 +-  0.2     37.6 +-  0.7    -0.4 [  -1.1,   +0.3]  -1.0%    1/6\r\ndecode: tail after 4.75K         33.7 +-  0.1     33.6 +-  0.3    -0.1 [  -0.3,   +0.2]  -0.2%    2/6\r\ntg128 @ d0                       28.0 +-  0.2     27.9 +-  0.1    -0.1 [  -0.4,   +0.2]  -0.4%    1/6\r\ntg128 @ d16384                   28.2 +-  0.3     27.9 +-  0.3    -0.4 [  -0.7,   +0.0]  -1.2%    0/6\r\nold 577.6 568.0 594.2 588.0\r\nnew 582.6 576.0 602.0 594.3\r\nold 577.5 571.1 594.2 586.1\r\nnew 583.1 564.3 602.9 596.4\r\nold 589.3 573.8 598.1 592.5\r\nnew 590.5 577.1 604.2 598.5\r\nold 583.8 572.0 598.7 595.8\r\nnew 591.5 589.0 610.5 606.1\r\nold 593.2 582.2 600.8 594.5\r\nnew 598.0 586.8 613.3 604.2\r\nold 586.1 584.7 602.5 598.8\r\nnew 600.3 582.5 609.5 601.8",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Twn56d4aunjdiG8SHUZhfS",
+            "type": "tool_result",
+            "content": "0\n6 pairs (old = TODO 2a's engine, new = TODO 2b's)\r\n\r\nrow (t/s)                        old mean+-SD     new mean+-SD            new-old, 95% CI      %  new>old\r\nprefill @ ~4.75K                584.6 +-  6.3    591.0 +-  7.3    +6.4 [  +1.8,  +11.0]  +1.1%    6/6\r\npp4096 @ d0                     575.3 +-  6.6    579.3 +-  9.0    +4.0 [  -4.7,  +12.7]  +0.7%    4/6\r\n16,384 prefix                   598.1 +-  3.4    607.1 +-  4.6    +9.0 [  +6.2,  +11.7]  +1.5%    6/6\r\npp4096 @ d16384                 592.6 +-  4.8    600.2 +-  4.6    +7.6 [  +4.5,  +10.7]  +1.3%    6/6\r\ndecode: cold first request       38.4 +-  1.0     38.5 +-  0.9    +0.1 [  -1.6,   +1.8]  +0.3%    2/6\r\ndecode: fresh code prompt        38.0 +-  0.2     37.6 +-  0.7    -0.4 [  -1.1,   +0.3]  -1.0%    1/6\r\ndecode: tail after 4.75K         33.7 +-  0.1     33.6 +-  0.3    -0.1 [  -0.3,   +0.2]  -0.2%    2/6\r\ntg128 @ d0                       28.0 +-  0.2     27.9 +-  0.1    -0.1 [  -0.4,   +0.2]  -0.4%    1/6\r\ntg128 @ d16384                   28.2 +-  0.3     27.9 +-  0.3    -0.4 [  -0.7,   +0.0]  -1.2%    0/6\r\nold 577.6 568.0 594.2 588.0\r\nnew 582.6 576.0 602.0 594.3\r\nold 577.5 571.1 594.2 586.1\r\nnew 583.1 564.3 602.9 596.4\r\nold 589.3 573.8 598.1 592.5\r\nnew 590.5 577.1 604.2 598.5\r\nold 583.8 572.0 598.7 595.8\r\nnew 591.5 589.0 610.5 606.1\r\nold 593.2 582.2 600.8 594.5\r\nnew 598.0 586.8 613.3 604.2\r\nold 586.1 584.7 602.5 598.8\r\nnew 600.3 582.5 609.5 601.8",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "grep -c Traceback docs/benchmarks/2026-10-06-halo-onetable-todo2b-coder-pairs.log; ls tmp-coder* 2>/dev/null; C:/conda_envs/strata/python.exe docs/benchmarks/2026-10-06-halo-onetable-todo2b-pairs-stats.py | tee docs/benchmarks/2026-10-06-halo-onetable-todo2b-pairs-stats.log; C:/conda_envs/strata/python.exe -c \"\nimport json\nr=[];c=None\nfor l in open('docs/benchmarks/2026-10-06-halo-onetable-todo2b-coder-pairs.log',encoding='utf-8'):\n    d=json.loads(l)\n    if 'config' in d: c=['old' if 'todo2a' in d['config'] else 'new']; r.append(c); continue\n    if d['test'] in ('server: ~4.75K-token prompt, prefill + decode tail','pp4096 @ d0','depth 16384 prefix (cached for the next rows)','pp4096 @ d16384'): c.append(d['prompt_per_second'])\nfor x in r: print(*x)\n\"",
+          "description": "Compute statistics over all 6 pairs"
+        }
+      }
+    },
+    {
+      "step_id": 215,
+      "timestamp": "2026-10-06T07:30:25.074Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 270341,
+        "completion_tokens": 431,
+        "cached_tokens": 270339,
+        "extra": {
+          "cache_creation_input_tokens": 1361,
+          "cache_read_input_tokens": 270339,
+          "output_tokens_details": {
+            "thinking_tokens": 234
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1361,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 431,
+              "cache_read_input_tokens": 270339,
+              "cache_creation_input_tokens": 1361,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1361
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 216,
+      "timestamp": "2026-10-06T07:30:25.079Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "All 6 pairs finished with no errors. Updating the port log and the TODO entry with the result:",
+      "metrics": {
+        "prompt_tokens": 270341,
+        "completion_tokens": 431,
+        "cached_tokens": 270339,
+        "extra": {
+          "cache_creation_input_tokens": 1361,
+          "cache_read_input_tokens": 270339,
+          "output_tokens_details": {
+            "thinking_tokens": 234
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1361,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 431,
+              "cache_read_input_tokens": 270339,
+              "cache_creation_input_tokens": 1361,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1361
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 217,
+      "timestamp": "2026-10-06T07:30:26.121Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_017e2JmE1NyX4XWVRjLG3o8N",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_017e2JmE1NyX4XWVRjLG3o8N",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "grep -n \"two pairs\\|Back to back, the Coder\\|^| Coder IQ1_M, the one table's rows\\|564.7 of the one-table\" docs/AIMAX+395-ROCm.md docs/TODO.md",
+            "description": "Locate pair text to update"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_017e2JmE1NyX4XWVRjLG3o8N",
+            "content": "docs/AIMAX+395-ROCm.md:1407:TODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\ndocs/AIMAX+395-ROCm.md:1410:| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\ndocs/AIMAX+395-ROCm.md:1417:Back to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\ndocs/AIMAX+395-ROCm.md:1418:decode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\ndocs/TODO.md:57:   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:\n\n[stdout]\ndocs/AIMAX+395-ROCm.md:1407:TODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\ndocs/AIMAX+395-ROCm.md:1410:| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\ndocs/AIMAX+395-ROCm.md:1417:Back to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\ndocs/AIMAX+395-ROCm.md:1418:decode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\ndocs/TODO.md:57:   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 270341,
+        "completion_tokens": 431,
+        "cached_tokens": 270339,
+        "extra": {
+          "cache_creation_input_tokens": 1361,
+          "cache_read_input_tokens": 270339,
+          "output_tokens_details": {
+            "thinking_tokens": 234
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1361,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 431,
+              "cache_read_input_tokens": 270339,
+              "cache_creation_input_tokens": 1361,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1361
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "docs/AIMAX+395-ROCm.md:1407:TODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\ndocs/AIMAX+395-ROCm.md:1410:| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\ndocs/AIMAX+395-ROCm.md:1417:Back to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\ndocs/AIMAX+395-ROCm.md:1418:decode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\ndocs/TODO.md:57:   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_017e2JmE1NyX4XWVRjLG3o8N",
+            "type": "tool_result",
+            "content": "docs/AIMAX+395-ROCm.md:1407:TODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\ndocs/AIMAX+395-ROCm.md:1410:| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\ndocs/AIMAX+395-ROCm.md:1417:Back to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\ndocs/AIMAX+395-ROCm.md:1418:decode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\ndocs/TODO.md:57:   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "docs/AIMAX+395-ROCm.md:1407:TODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\ndocs/AIMAX+395-ROCm.md:1410:| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\ndocs/AIMAX+395-ROCm.md:1417:Back to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\ndocs/AIMAX+395-ROCm.md:1418:decode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\ndocs/TODO.md:57:   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_017e2JmE1NyX4XWVRjLG3o8N",
+            "type": "tool_result",
+            "content": "docs/AIMAX+395-ROCm.md:1407:TODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\ndocs/AIMAX+395-ROCm.md:1410:| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\ndocs/AIMAX+395-ROCm.md:1417:Back to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\ndocs/AIMAX+395-ROCm.md:1418:decode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\ndocs/TODO.md:57:   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "grep -n \"two pairs\\|Back to back, the Coder\\|^| Coder IQ1_M, the one table's rows\\|564.7 of the one-table\" docs/AIMAX+395-ROCm.md docs/TODO.md",
+          "description": "Locate pair text to update"
+        }
+      }
+    },
+    {
+      "step_id": 218,
+      "timestamp": "2026-10-06T07:30:28.370Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Read toolu_01TpxWSEjXMjtgr9it8eDYYB",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01TpxWSEjXMjtgr9it8eDYYB",
+          "function_name": "Read",
+          "arguments": {
+            "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+            "offset": 1405,
+            "limit": 18
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01TpxWSEjXMjtgr9it8eDYYB",
+            "content": "1405\td16384 19.2 t/s at 55.3% MTP acceptance (72.6% in TODO 2a's run; its decode is not repeatable from run to run, see\n1406\tTODO 2a). These moves are the size of the spread between runs of one engine. So the Coder's rows were run again,\n1407\tTODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\n1408\t`benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1,2}.*`):\n1409\t\n1410\t| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\n1411\t|---|---|---|\n1412\t| prefill @ ~4.75K | 577.5-577.6 | **582.6-583.1** |\n1413\t| pp4096 @ d0 | 568.0-571.1 | 564.3-576.0 |\n1414\t| depth 16384 prefix / pp4096 @ d16384 (20,421 tokens) | 594.2 / 586.1-588.0 | **602.0-602.9 / 594.3-596.4** |\n1415\t| decode rows (cold, fresh, 4.75K tail, tg128 @ d0, tg128 @ d16384) | 36.6-38.8, 37.8, 33.6, 27.6-28.0, 27.9-28.4 | 38.6-38.8, 37.6-37.7, 33.3-33.8, 27.9-28.0, 27.7 |\n1416\t\n1417\tBack to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\n1418\tdecode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\n1419\trun was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler takes 5-10%\n1420\toff the products, and the products are about 30% of a 4K chunk's GPU time.\n1421\t\n1422\t## The RTX 5090 over Thunderbolt (not pursued)\n\n[metadata] {\"type\": \"text\", \"file\": {\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"content\": \"d16384 19.2 t/s at 55.3% MTP acceptance (72.6% in TODO 2a's run; its decode is not repeatable from run to run, see\\nTODO 2a). These moves are the size of the spread between runs of one engine. So the Coder's rows were run again,\\nTODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\\n`benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1,2}.*`):\\n\\n| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\\n|---|---|---|\\n| prefill @ ~4.75K | 577.5-577.6 | **582.6-583.1** |\\n| pp4096 @ d0 | 568.0-571.1 | 564.3-576.0 |\\n| depth 16384 prefix / pp4096 @ d16384 (20,421 tokens) | 594.2 / 586.1-588.0 | **602.0-602.9 / 594.3-596.4** |\\n| decode rows (cold, fresh, 4.75K tail, tg128 @ d0, tg128 @ d16384) | 36.6-38.8, 37.8, 33.6, 27.6-28.0, 27.9-28.4 | 38.6-38.8, 37.6-37.7, 33.3-33.8, 27.9-28.0, 27.7 |\\n\\nBack to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\\ndecode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\\nrun was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler takes 5-10%\\noff the products, and the products are about 30% of a 4K chunk's GPU time.\\n\\n## The RTX 5090 over Thunderbolt (not pursued)\", \"numLines\": 18, \"startLine\": 1405, \"totalLines\": 1430}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 271702,
+        "completion_tokens": 121,
+        "cached_tokens": 271700,
+        "extra": {
+          "cache_creation_input_tokens": 826,
+          "cache_read_input_tokens": 271700,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 826,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 121,
+              "cache_read_input_tokens": 271700,
+              "cache_creation_input_tokens": 826,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 826
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Read",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "type": "text",
+            "file": {
+              "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+              "content": "d16384 19.2 t/s at 55.3% MTP acceptance (72.6% in TODO 2a's run; its decode is not repeatable from run to run, see\nTODO 2a). These moves are the size of the spread between runs of one engine. So the Coder's rows were run again,\nTODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\n`benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1,2}.*`):\n\n| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\n|---|---|---|\n| prefill @ ~4.75K | 577.5-577.6 | **582.6-583.1** |\n| pp4096 @ d0 | 568.0-571.1 | 564.3-576.0 |\n| depth 16384 prefix / pp4096 @ d16384 (20,421 tokens) | 594.2 / 586.1-588.0 | **602.0-602.9 / 594.3-596.4** |\n| decode rows (cold, fresh, 4.75K tail, tg128 @ d0, tg128 @ d16384) | 36.6-38.8, 37.8, 33.6, 27.6-28.0, 27.9-28.4 | 38.6-38.8, 37.6-37.7, 33.3-33.8, 27.9-28.0, 27.7 |\n\nBack to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\ndecode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\nrun was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler takes 5-10%\noff the products, and the products are about 30% of a 4K chunk's GPU time.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+              "numLines": 18,
+              "startLine": 1405,
+              "totalLines": 1430
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01TpxWSEjXMjtgr9it8eDYYB",
+            "type": "tool_result",
+            "content": "1405\td16384 19.2 t/s at 55.3% MTP acceptance (72.6% in TODO 2a's run; its decode is not repeatable from run to run, see\n1406\tTODO 2a). These moves are the size of the spread between runs of one engine. So the Coder's rows were run again,\n1407\tTODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\n1408\t`benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1,2}.*`):\n1409\t\n1410\t| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\n1411\t|---|---|---|\n1412\t| prefill @ ~4.75K | 577.5-577.6 | **582.6-583.1** |\n1413\t| pp4096 @ d0 | 568.0-571.1 | 564.3-576.0 |\n1414\t| depth 16384 prefix / pp4096 @ d16384 (20,421 tokens) | 594.2 / 586.1-588.0 | **602.0-602.9 / 594.3-596.4** |\n1415\t| decode rows (cold, fresh, 4.75K tail, tg128 @ d0, tg128 @ d16384) | 36.6-38.8, 37.8, 33.6, 27.6-28.0, 27.9-28.4 | 38.6-38.8, 37.6-37.7, 33.3-33.8, 27.9-28.0, 27.7 |\n1416\t\n1417\tBack to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\n1418\tdecode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\n1419\trun was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler takes 5-10%\n1420\toff the products, and the products are about 30% of a 4K chunk's GPU time.\n1421\t\n1422\t## The RTX 5090 over Thunderbolt (not pursued)"
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "type": "text",
+            "file": {
+              "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+              "content": "d16384 19.2 t/s at 55.3% MTP acceptance (72.6% in TODO 2a's run; its decode is not repeatable from run to run, see\nTODO 2a). These moves are the size of the spread between runs of one engine. So the Coder's rows were run again,\nTODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\n`benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1,2}.*`):\n\n| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\n|---|---|---|\n| prefill @ ~4.75K | 577.5-577.6 | **582.6-583.1** |\n| pp4096 @ d0 | 568.0-571.1 | 564.3-576.0 |\n| depth 16384 prefix / pp4096 @ d16384 (20,421 tokens) | 594.2 / 586.1-588.0 | **602.0-602.9 / 594.3-596.4** |\n| decode rows (cold, fresh, 4.75K tail, tg128 @ d0, tg128 @ d16384) | 36.6-38.8, 37.8, 33.6, 27.6-28.0, 27.9-28.4 | 38.6-38.8, 37.6-37.7, 33.3-33.8, 27.9-28.0, 27.7 |\n\nBack to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\ndecode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\nrun was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler takes 5-10%\noff the products, and the products are about 30% of a 4K chunk's GPU time.\n\n## The RTX 5090 over Thunderbolt (not pursued)",
+              "numLines": 18,
+              "startLine": 1405,
+              "totalLines": 1430
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01TpxWSEjXMjtgr9it8eDYYB",
+            "type": "tool_result",
+            "content": "1405\td16384 19.2 t/s at 55.3% MTP acceptance (72.6% in TODO 2a's run; its decode is not repeatable from run to run, see\n1406\tTODO 2a). These moves are the size of the spread between runs of one engine. So the Coder's rows were run again,\n1407\tTODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\n1408\t`benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1,2}.*`):\n1409\t\n1410\t| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\n1411\t|---|---|---|\n1412\t| prefill @ ~4.75K | 577.5-577.6 | **582.6-583.1** |\n1413\t| pp4096 @ d0 | 568.0-571.1 | 564.3-576.0 |\n1414\t| depth 16384 prefix / pp4096 @ d16384 (20,421 tokens) | 594.2 / 586.1-588.0 | **602.0-602.9 / 594.3-596.4** |\n1415\t| decode rows (cold, fresh, 4.75K tail, tg128 @ d0, tg128 @ d16384) | 36.6-38.8, 37.8, 33.6, 27.6-28.0, 27.9-28.4 | 38.6-38.8, 37.6-37.7, 33.3-33.8, 27.9-28.0, 27.7 |\n1416\t\n1417\tBack to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\n1418\tdecode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\n1419\trun was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler takes 5-10%\n1420\toff the products, and the products are about 30% of a 4K chunk's GPU time.\n1421\t\n1422\t## The RTX 5090 over Thunderbolt (not pursued)"
+          }
+        },
+        "raw_arguments": {
+          "file_path": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+          "offset": 1405,
+          "limit": 18
+        }
+      }
+    },
+    {
+      "step_id": 219,
+      "timestamp": "2026-10-06T07:30:42.002Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01PDtLmQgaL8Q5MQ7dCRmVJt",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01PDtLmQgaL8Q5MQ7dCRmVJt",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "C:/conda_envs/strata/python.exe - <<'EOF'\nfrom pathlib import Path\np = Path(\"docs/AIMAX+395-ROCm.md\"); s = p.read_text(encoding=\"utf-8\")\na = s.index(\"TODO 2a's engine and this one alternating, two pairs\")\nb = s.index(\"## The RTX 5090 over Thunderbolt (not pursued)\")\nnew = \"\"\"TODO 2a's engine and this one alternating, six pairs, each pair back to back\n(`2026-10-06-halo-onetable-todo2b-coder-pairs.log`, `benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1..6}.*`;\nthe statistics by `2026-10-06-halo-onetable-todo2b-pairs-stats.py`, output `...-pairs-stats.log`):\n\n| Coder IQ1_M, t/s, 6 pairs | TODO 2a's engine, mean +- SD | **TODO 2b's engine** | new - old, mean [95% interval, paired t] | pairs where new > old |\n|---|---|---|---|---|\n| prefill @ ~4.75K | 584.6 +- 6.3 | **591.0 +- 7.3** | **+6.4 [+1.8, +11.0], +1.1%** | 6 of 6 |\n| pp4096 @ d0 | 575.3 +- 6.6 | 579.3 +- 9.0 | +4.0 [-4.7, +12.7], +0.7% | 4 of 6 |\n| depth 16384 prefix | 598.1 +- 3.4 | **607.1 +- 4.6** | **+9.0 [+6.2, +11.7], +1.5%** | 6 of 6 |\n| pp4096 @ d16384 (20,421 tokens) | 592.6 +- 4.8 | **600.2 +- 4.6** | **+7.6 [+4.5, +10.7], +1.3%** | 6 of 6 |\n| decode: cold, fresh, 4.75K tail, tg128 @ d0 | 38.4, 38.0, 33.7, 28.0 | 38.5, 37.6, 33.6, 27.9 | intervals all include 0 (-1.0 to +0.3%) | 2, 1, 2, 1 of 6 |\n| decode: tg128 @ d16384 | 28.2 +- 0.3 | 27.9 +- 0.3 | -0.4 [-0.7, +0.0], -1.2% | 0 of 6 |\n\nThe engine drifted more over the session than the effect: TODO 2a's engine read 577.5 at 4.75K in the first pair and\n593.2 in the fifth (SD 6.3 across its six runs). That is why one run against an earlier day's run says nothing about a\n1% change, and why the pairs are needed. Within a pair the new engine was faster on the three long-prompt rows every\ntime, and those intervals exclude 0: +1.1% at 4.75K, +1.3-1.5% at 16-20K. pp4096 @ d0 is +0.7% with an interval that\nincludes 0, and its own SD (7-9 t/s) is twice the effect. Decode does not run this code, and its rows show no gain.\ntg128 @ d16384's -1.2% touches 0 at the edge of its interval; with nine rows tested, one borderline row is what\nchance gives. It is not a cause found. All of this agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the\none-table run was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler\ntakes 5-10% off the products, and the products are about 30% of a 4K chunk's GPU time.\n\n\"\"\"\np.write_text(s[:a] + new + s[b:], encoding=\"utf-8\", newline=\"\\n\")\nt = Path(\"docs/TODO.md\"); u = t.read_text(encoding=\"utf-8\")\nold = \"the Coder's rows run back to back, two pairs per engine:\\n   4.75K 577.5-577.6 -> 582.6-583.1 t/s, 16-20K +1.4%, pp4096 even, decode unchanged.\"\nassert old in u\nu = u.replace(old, \"the Coder's rows in six back-to-back pairs per engine:\\n   4.75K +1.1% (95% interval +0.3 to +1.9%, 6 of 6 pairs), 16-20K +1.3-1.5% (6 of 6), pp4096 +0.7% (interval includes\\n   0), decode unchanged.\")\nt.write_text(u, encoding=\"utf-8\", newline=\"\\n\")\nprint(\"ok\")\nEOF\ngit diff --stat docs/",
+            "description": "Update docs with six-pair statistics"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01PDtLmQgaL8Q5MQ7dCRmVJt",
+            "content": "ok\r\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-06-halo-onetable-todo2b-coder-pairs.log', CRLF will be replaced by LF the next time Git touches it\n docs/AIMAX+395-ROCm.md                             | 34 ++++++----\n docs/TODO.md                                       |  5 +-\n ...026-10-05-halo-coder-iq1_m-old-pair3-server.log | 75 ++++++++++++++++++++\n .../2026-10-05-halo-coder-iq1_m-old-pair3.log      | 24 +++++++\n ...2026-10-06-halo-onetable-todo2b-coder-pairs.log | 79 ++++++++++++++++++++++\n 5 files changed, 202 insertions(+), 15 deletions(-)\n\n[stdout]\nok\r\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-06-halo-onetable-todo2b-coder-pairs.log', CRLF will be replaced by LF the next time Git touches it\n docs/AIMAX+395-ROCm.md                             | 34 ++++++----\n docs/TODO.md                                       |  5 +-\n ...026-10-05-halo-coder-iq1_m-old-pair3-server.log | 75 ++++++++++++++++++++\n .../2026-10-05-halo-coder-iq1_m-old-pair3.log      | 24 +++++++\n ...2026-10-06-halo-onetable-todo2b-coder-pairs.log | 79 ++++++++++++++++++++++\n 5 files changed, 202 insertions(+), 15 deletions(-)\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"hunks\": [{\"oldStart\": 1404, \"oldLines\": 20, \"newStart\": 1404, \"newLines\": 28, \"lines\": [\" the other prompt rows moved by -1 to +0.7%. UD-IQ4_XS: pp4096 +3%, its other prompt rows -1 to -3%, and its tg128 @\", \" d16384 19.2 t/s at 55.3% MTP acceptance (72.6% in TODO 2a's run; its decode is not repeatable from run to run, see\", \" TODO 2a). These moves are the size of the spread between runs of one engine. So the Coder's rows were run again,\", \"-TODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,\", \"-`benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1,2}.*`):\", \"+TODO 2a's engine and this one alternating, six pairs, each pair back to back\", \"+(`2026-10-06-halo-onetable-todo2b-coder-pairs.log`, `benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1..6}.*`;\", \"+the statistics by `2026-10-06-halo-onetable-todo2b-pairs-stats.py`, output `...-pairs-stats.log`):\", \" \", \"-| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |\", \"-|---|---|---|\", \"-| prefill @ ~4.75K | 577.5-577.6 | **582.6-583.1** |\", \"-| pp4096 @ d0 | 568.0-571.1 | 564.3-576.0 |\", \"-| depth 16384 prefix / pp4096 @ d16384 (20,421 tokens) | 594.2 / 586.1-588.0 | **602.0-602.9 / 594.3-596.4** |\", \"-| decode rows (cold, fresh, 4.75K tail, tg128 @ d0, tg128 @ d16384) | 36.6-38.8, 37.8, 33.6, 27.6-28.0, 27.9-28.4 | 38.6-38.8, 37.6-37.7, 33.3-33.8, 27.9-28.0, 27.7 |\", \"-\", \"-Back to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and\", \"-decode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table\", \"-run was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler takes 5-10%\", \"-off the products, and the products are about 30% of a 4K chunk's GPU time.\", \"+| Coder IQ1_M, t/s, 6 pairs | TODO 2a's engine, mean +- SD | **TODO 2b's engine** | new - old, mean [95% interval, paired t] | pairs where new > old |\", \"+|---|---|---|---|---|\", \"+| prefill @ ~4.75K | 584.6 +- 6.3 | **591.0 +- 7.3** | **+6.4 [+1.8, +11.0], +1.1%** | 6 of 6 |\", \"+| pp4096 @ d0 | 575.3 +- 6.6 | 579.3 +- 9.0 | +4.0 [-4.7, +12.7], +0.7% | 4 of 6 |\", \"+| depth 16384 prefix | 598.1 +- 3.4 | **607.1 +- 4.6** | **+9.0 [+6.2, +11.7], +1.5%** | 6 of 6 |\", \"+| pp4096 @ d16384 (20,421 tokens) | 592.6 +- 4.8 | **600.2 +- 4.6** | **+7.6 [+4.5, +10.7], +1.3%** | 6 of 6 |\", \"+| decode: cold, fresh, 4.75K tail, tg128 @ d0 | 38.4, 38.0, 33.7, 28.0 | 38.5, 37.6, 33.6, 27.9 | intervals all include 0 (-1.0 to +0.3%) | 2, 1, 2, 1 of 6 |\", \"+| decode: tg128 @ d16384 | 28.2 +- 0.3 | 27.9 +- 0.3 | -0.4 [-0.7, +0.0], -1.2% | 0 of 6 |\", \"+\", \"+The engine drifted more over the session than the effect: TODO 2a's engine read 577.5 at 4.75K in the first pair and\", \"+593.2 in the fifth (SD 6.3 across its six runs). That is why one run against an earlier day's run says nothing about a\", \"+1% change, and why the pairs are needed. Within a pair the new engine was faster on the three long-prompt rows every\", \"+time, and those intervals exclude 0: +1.1% at 4.75K, +1.3-1.5% at 16-20K. pp4096 @ d0 is +0.7% with an interval that\", \"+includes 0, and its own SD (7-9 t/s) is twice the effect. Decode does not run this code, and its rows show no gain.\", \"+tg128 @ d16384's -1.2% touches 0 at the edge of its interval; with nine rows tested, one borderline row is what\", \"+chance gives. It is not a cause found. All of this agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the\", \"+one-table run was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler\", \"+takes 5-10% off the products, and the products are about 30% of a 4K chunk's GPU time.\", \" \", \" ## The RTX 5090 over Thunderbolt (not pursued)\", \" \"]}]}, {\"filePath\": \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\TODO.md\", \"hunks\": [{\"oldStart\": 1, \"oldLines\": 146, \"newStart\": 1, \"newLines\": 147, \"lines\": [\"-# TODO: the Strix Halo (gfx1151) port, after 2026-10-05\\r\", \"-\\r\", \"-What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names\\r\", \"-the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to\\r\", \"-`docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).\\r\", \"-\\r\", \"-## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\\r\", \"-\\r\", \"-1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\\r\", \"-   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\\r\", \"-   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\\r\", \"-   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\\r\", \"-   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\\r\", \"-   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\\r\", \"-   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\\r\", \"-   K8V4 pools.\\r\", \"-2. ~~**The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne`\\r\", \"-   rows per layer with FP32 output run at 3.5-3.7 TFLOP/s ... Decide between a 16-bit output, a WMMA kernel, or the\\r\", \"-   MMQ path~~ **Done 2026-10-05 night, with a corrected premise**\\r\", \"-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2-done-the-expert-products-are-mmq-not-fp16-gemms-and-their-j-tile-2026-10-05-night)):\\r\", \"-   the Coder's expert products run through llama.cpp's MMQ (int8) by default, not the FP16 GEMMs - those only run\\r\", \"-   with `STRATA_PREFILL_MMQ=0`. Measured on this card: the three FP16 routes (hipBLASLt solutions from the tuner,\\r\", \"-   16-bit output, PR #313's WMMA) and the MMQ products at one layer's shape. Shipped: `Product::opt_rows` - the MMQ\\r\", \"-   J tile chosen for a group's median row count instead of its largest (`STRATA_PREFILL_MMQ_OPT=max` restores the\\r\", \"-   old choice): gate/up 1,800-1,832 -> 1,581-1,604 ms, down 802-816 -> 764-769 ms, pp4096 509-525 -> 524-541 t/s,\\r\", \"-   a 1.3K prompt 398 -> 424 t/s, the same text out; the full benchmark: Coder prefill 528 -> 548 t/s at 4.75K,\\r\", \"-   517 -> 537 at pp4096, ~530 -> ~560 at 16-20K, decode unchanged, UD-IQ4_XS unchanged (its chunks stream); the gfx1151 hipBLASLt table extended with the expert shapes at\\r\", \"-   small T (the FP16 path's gate/up 4,231 -> 1,593-1,671 ms, now on par with MMQ); experts sorted by row count\\r\", \"-   before grouping where the chunk does not stream (below `STRATA_PREFILL_STREAM_MIN` = 1,024 tokens: 1,001-token\\r\", \"-   prompts 360-388 -> 388-428 t/s; in arena mode every expert is staged from the arena in id order, so 4K chunks\\r\", \"-   keep id order). Left open, in the next two items.\\r\", \"-2a. ~~**Group the experts by row count while they stream.** The MMQ products pay for the J tile the group's experts\\r\", \"-   pad to: a tile for the largest pads 46% of a 4K chunk's rows and 161% of a 1.3K chunk's ... per-size-class group\\r\", \"-   buffers (one group buffer per class, rows laid out class-major at routing time)~~ **Done 2026-10-06**\\r\", \"-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2a-done-streamed-experts-grouped-by-row-count-class-2026-10-06)):\\r\", \"-   a streamed MMQ layer's rows are laid out class-major by row count, each expert is gathered as it arrives (the\\r\", \"-   ring still in id order) into its class's own group buffer, and a group is multiplied when its last member lands.\\r\", \"-   Shipped with one class per RDNA 3.5 J tile (`STRATA_PREFILL_MMQ_CLASSES`, default `16,32,48,64,80,96,112,128`;\\r\", \"-   `=0` the old walk), measured against 3 coarser sets. Coder, against one class: padding 46% -> 19% of a 4K chunk's\\r\", \"-   rows, gate/up 1,603-1,632 -> 1,447-1,467 ms, down 765-780 -> 705-706 ms, pp4096 558-563 -> 571-574 t/s; 1.66K\\r\", \"-   prompts 460-462 -> 492-495 t/s, 1.2K 409 -> 444; the same text out. UD-IQ4_XS: its products lose 0.9 s per 4K\\r\", \"-   chunk (padding 103% -> 23%), but its 4K chunks are bound by the arena staging and do not move (331-336 -> 332-333\\r\", \"-   t/s); 1.66K 258-260 -> 280-281 t/s. The prompt path's GDN state hash is unchanged on both models. Costs 174-182\\r\", \"-   more lent cache slots (0.32-0.42 GiB) during a prompt. Not measured on a CUDA card (other J tiles).\\r\", \"-2b. ~~**The MMQ kernels themselves: 6-12 TOPS at the expert shapes** (the harness, sorted groups: 8.7-12.4), against\\r\", \"-   the card's int8 dot peak. The vendored ggml already has the RDNA 3.5 tile tables (`mmq-config-rdna3-5.cuh`: 256\\r\", \"-   threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles ... are\\r\", \"-   untested here.~~ **Done 2026-10-06, with a corrected premise**\\r\", \"-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2b-done-the-mmq-kernels-spilled-registers-llvms-max-ilp-scheduler-takes-5-10-off-them-2026-10-06)):\\r\", \"-   MMQ on gfx1151 runs WMMA (`v_wmma_i32_16x16x16_iu8`), not `sudot4`. Its kernels spilled registers: IQ3_XXS /\\r\", \"-   IQ2_S (the Coder's gate/up) at J = 128 hit 256 VGPRs and 132-208 bytes of scratch per lane, most types at J = 32\\r\", \"-   108-180 bytes. Of 8 compiler settings and the #21284 tiles (`docs/benchmarks/2026-10-06-halo-mmq-tiles*`), LLVM's\\r\", \"-   max-ilp scheduler was the best or level with the best on every type: -5 to -10% per layer in the harness. Shipped as\\r\", \"-   `STRATA_MMQ_GFX1151_SCHED` (CMake, default `max-ilp`, gfx1151's device compile only, empty = off). In the engine\\r\", \"-   (Coder): gate/up 1,463-1,479 -> 1,396-1,430 ms per 4K chunk, pp4096 560-561 -> 566-567 t/s, 1.66K 466-468 ->\\r\", \"-   476-477, 1.2K 414 -> 424; the same GDN state hash and text. The one table: one run moved within its spread\\r\", \"-   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:\\r\", \"-   4.75K 577.5-577.6 -> 582.6-583.1 t/s, 16-20K +1.4%, pp4096 even, decode unchanged. The kernels still run at 9-13\\r\", \"-   TOPS per layer; the #21284 tiles add 2-3% on the down products only and would need a patched upstream table:\\r\", \"-   not taken.\\r\", \"-3. ~~**`hip_prefill_mmq_parity` fails on gfx1151** (\\\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\\\").\\r\", \"-   Find out whether it is ggml's gfx1151 handling (llama.cpp#21284: MMQ tile `mmq_x=48, mmq_y=64, nwarps=4`\\r\", \"-   against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). This\\r\", \"-   matters more than it looked: the Coder's and UD-IQ4_XS's experts run through MMQ by default on this card (item 2),\\r\", \"-   including layers whose down matrix is Q2_0 (`native_experts.txt`: layer 1 and others), and the day's benchmark\\r\", \"-   outputs came from that path.~~ **Done 2026-10-05 night: neither**\\r\", \"-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-3-done-the-mmq-parity-failure-was-the-tests-stream-order-not-the-kernels-2026-10-05-night)):\\r\", \"-   the test filled its output sentinel with `hipMemset` on the null stream and ran the products on a non-blocking\\r\", \"-   stream; on Windows HIP the fill landed after the products, so every element read back as the sentinel (a probe\\r\", \"-   over 5 types, both shapes, 1-135 rows: 17 of 17 cases, 100% of the elements, no error reported). The host and\\r\", \"-   device tile tables agree for gfx1151, and the kernel itself - the library's and a fresh instantiation, MoE and\\r\", \"-   plain mode, -O3 and -O1, any stream - writes every element at rel_l2 0.0010 against a CPU double product. The\\r\", \"-   test now fills with `hipMemsetAsync` on its stream and passes (6 products, rel_l2 0.0005-0.0012); the ctest tally\\r\", \"-   on this card is 4 known failures. The engine's prompt path has no synchronous memset, and the engine with the\\r\", \"-   default and with `STRATA_PREFILL_MMQ=0` continues a 1,173-token code prompt with the same code (one whitespace\\r\", \"-   run differs: int8 against FP16 rounding), so the day's benchmark outputs were computed. Probes:\\r\", \"-   `docs/benchmarks/2026-10-05-halo-mmq-{parity,config,kernel}-probe*`, the engine A/B `2026-10-05-halo-mmq-ab.py`. Also seen:\\r\", \"-   a kernel trap on this HIP is reported by the next `hipMemcpy`, not by `hipDeviceSynchronize`.\\r\", \"-4. ~~**The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and\\r\", \"-   8192 and, since item 2, the two expert shapes at T = 16-512; the engine still logs `Lt fallback; no calibration\\r\", \"-   for dtype=bf16 T=4165 N=256 K=2560` for the 256-wide alpha/beta projections. Calibrate those (the tuner takes\\r\", \"-   `--case`; the lookup already takes the nearest T). Also re-run `tune_hipblaslt` whenever the ROCm wheels change\\r\", \"-   (ids are per version).~~ **Done 2026-10-05 night**\\r\", \"-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-4-done-the-last-hole-in-the-hipblaslt-table-was-the-router-not-the-alphabeta-projections-2026-10-05-night)):\\r\", \"-   the shape is the router (`ffn_gate_inp.weight`, 256 experts, one BF16 GEMM per layer, 48 per chunk), not the\\r\", \"-   alpha/beta projections (those are N = 48 and were in the table). Two rows (T = 4096 and 8192, solution 1251: the\\r\", \"-   best at every T from 1024 to 8192, `docs/benchmarks/2026-10-05-halo-router-lt-tuning.log`) close the last hole:\\r\", \"-   the GEMM 1.30 -> 0.27 ms at T = 4096 in the tuner (against the engine's `ROCBLAS_USE_HIPBLASLT=1` fallback), the\\r\", \"-   engine's \\\"router+shared\\\" phase 222-223 -> 161-162 ms per 4K chunk, pp4096 543-546 -> 547-553 t/s, no fallback\\r\", \"-   logged (`2026-10-05-halo-router-lt-ab.py`). On a wheel change the engine refuses the file (its header carries the\\r\", \"-   arch and version) and says so; re-tune then.\\r\", \"-5. ~~**The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card\\r\", \"-   (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.~~\\r\", \"-   **Done 2026-10-05 night, with a corrected premise**\\r\", \"-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-5-done-the-gdn-phases-time-was-the-output-norms-launch-not-the-recurrence-2026-10-05-night)):\\r\", \"-   Strata's recurrence is already column-split and pipelined (192 blocks), 14-15 ms per layer at T = 4,165. The\\r\", \"-   output norm after it took 11-25 ms launching one tiny block per token and head. Shipped: a wave-per-head norm,\\r\", \"-   1.5 ms (within 5 ulp of the old one; `STRATA_GDN_NORM_OLD=1` restores it). The engine's \\\"gdn recurrence\\\" phase\\r\", \"-   went 816-836 -> 592-600 ms per 4K chunk, pp4096 550-551 -> 562-566 t/s. llama.cpp's chunked kernels, ported onto\\r\", \"-   the vendored ggml's WMMA (`src/prefill/gdn_chunk_wmma.cu`), match to FP16 rounding (rel_l2 4.5e-4) but their walk\\r\", \"-   is no faster here (12-16 ms; engine 689-693 ms): opt-in as `STRATA_GDN_CHUNK=1`. An FP32 chunked form was 0.6x\\r\", \"-   (same FMA count, no matrix cores). Test: `hip_prefill_gdn_chunk_parity`. Left open: the serial walk itself,\\r\", \"-   at ~0.5 TFMA/s.\\r\", \"-6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any\\r\", \"-   fusing.\\r\", \"-\\r\", \"-## Decode\\r\", \"-\\r\", \"-7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does\\r\", \"-   depend on residency). Run with `STRATA_DECODE_TIMING=1` at 32/96 and find the shared cost; candidates: the GPU\\r\", \"-   expert kernels for this file's IQ3_S / IQ4_NL / Q8_0 blobs on RDNA 3.5, the per-token PLE rows from the NVMe,\\r\", \"-   or a copy path (pytorch/pytorch#171687 reports gfx1151 decode 90% in `hipMemcpyWithStream`).\\r\", \"-8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes\\r\", \"-   four fifths of the experts on its CPU. The decode phase timing (`STRATA_DECODE_TIMING=1`) has not been read on\\r\", \"-   this card yet.\\r\", \"-\\r\", \"-## Memory and setup on an APU\\r\", \"-\\r\", \"-9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:\\r\", \"-   16 GiB registered -> 32 GiB less free). `--expert-cache auto` sizes from that figure and gave UD-IQ4_XS 0 slots\\r\", \"-   at 32/96; the remedy was `STRATA_ARENA_PIN_GIB=24` by hand. Setup and the engine should do this themselves on an\\r\", \"-   integrated GPU: cap the pin, and size the cache from the dedicated carve-out rather than the WDDM figure.\\r\", \"-10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident\\r\", \"-    (`expert tiers: ... files ... MB read`), far more than the 1,945 lent slots' experts. Find what reads (the\\r\", \"-    routing prefetch of whole layers?) and whether it is needed when the prompt path's experts are resident.\\r\", \"-11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU\\r\", \"-    memory and its pinned arena ~69 GiB of RAM. A prompt path that takes resident experts from the cache instead of\\r\", \"-    the host source would make 96/32 the right split for every model; until then 32/96 with a partial cache.\\r\", \"-12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip\\r\", \"-    (`build_windows.bat` default list has it, the zip must be built and published), the docs' \\\"integrated GPUs are\\r\", \"-    not supported\\\" lines ([AI_SETUP.md](AI_SETUP.md), [INSTALL.md](INSTALL.md), [TROUBLESHOOTING.md](TROUBLESHOOTING.md),\\r\", \"-    [AMD_HIP.md](AMD_HIP.md)), setup choosing `STRATA_HIPBLASLT_TUNING` from `tools/hip/gfx1151-hipblaslt-100401.txt`\\r\", \"-    (it should, by arch and version: verify), and `ROCBLAS_USE_HIPBLASLT=1` in the config's env for AMD cards.\\r\", \"-13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off\\r\", \"-    (ROCm/legacy-rocm-build#6675; not seen here, 2.8-2.9 GHz under load over RDP with a 300 s timeout). The engine\\r\", \"-    or server could hold `SetThreadExecutionState(ES_DISPLAY_REQUIRED)` while a request runs.\\r\", \"-\\r\", \"-## Housekeeping\\r\", \"-\\r\", \"-14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with\\r\", \"-    the pin cap) and keeps 0.55; measured here 0.2 vs 0.55 made no difference. Nothing to fix for speed; the log line\\r\", \"-    should say what it saw.\\r\", \"-15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it\\r\", \"-    report rather than hang.\\r\", \"-16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as\\r\", \"-    UTF-8; `pp4k.py` is the quick single-shape check. Keep new runs' JSON and logs in `docs/benchmarks/`.\\r\", \"+# TODO: the Strix Halo (gfx1151) port, after 2026-10-05\", \"+\", \"+What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names\", \"+the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to\", \"+`docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).\", \"+\", \"+## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\", \"+\", \"+1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\", \"+   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\", \"+   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\", \"+   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\", \"+   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\", \"+   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\", \"+   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\", \"+   K8V4 pools.\", \"+2. ~~**The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne`\", \"+   rows per layer with FP32 output run at 3.5-3.7 TFLOP/s ... Decide between a 16-bit output, a WMMA kernel, or the\", \"+   MMQ path~~ **Done 2026-10-05 night, with a corrected premise**\", \"+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2-done-the-expert-products-are-mmq-not-fp16-gemms-and-their-j-tile-2026-10-05-night)):\", \"+   the Coder's expert products run through llama.cpp's MMQ (int8) by default, not the FP16 GEMMs - those only run\", \"+   with `STRATA_PREFILL_MMQ=0`. Measured on this card: the three FP16 routes (hipBLASLt solutions from the tuner,\", \"+   16-bit output, PR #313's WMMA) and the MMQ products at one layer's shape. Shipped: `Product::opt_rows` - the MMQ\", \"+   J tile chosen for a group's median row count instead of its largest (`STRATA_PREFILL_MMQ_OPT=max` restores the\", \"+   old choice): gate/up 1,800-1,832 -> 1,581-1,604 ms, down 802-816 -> 764-769 ms, pp4096 509-525 -> 524-541 t/s,\", \"+   a 1.3K prompt 398 -> 424 t/s, the same text out; the full benchmark: Coder prefill 528 -> 548 t/s at 4.75K,\", \"+   517 -> 537 at pp4096, ~530 -> ~560 at 16-20K, decode unchanged, UD-IQ4_XS unchanged (its chunks stream); the gfx1151 hipBLASLt table extended with the expert shapes at\", \"+   small T (the FP16 path's gate/up 4,231 -> 1,593-1,671 ms, now on par with MMQ); experts sorted by row count\", \"+   before grouping where the chunk does not stream (below `STRATA_PREFILL_STREAM_MIN` = 1,024 tokens: 1,001-token\", \"+   prompts 360-388 -> 388-428 t/s; in arena mode every expert is staged from the arena in id order, so 4K chunks\", \"+   keep id order). Left open, in the next two items.\", \"+2a. ~~**Group the experts by row count while they stream.** The MMQ products pay for the J tile the group's experts\", \"+   pad to: a tile for the largest pads 46% of a 4K chunk's rows and 161% of a 1.3K chunk's ... per-size-class group\", \"+   buffers (one group buffer per class, rows laid out class-major at routing time)~~ **Done 2026-10-06**\", \"+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2a-done-streamed-experts-grouped-by-row-count-class-2026-10-06)):\", \"+   a streamed MMQ layer's rows are laid out class-major by row count, each expert is gathered as it arrives (the\", \"+   ring still in id order) into its class's own group buffer, and a group is multiplied when its last member lands.\", \"+   Shipped with one class per RDNA 3.5 J tile (`STRATA_PREFILL_MMQ_CLASSES`, default `16,32,48,64,80,96,112,128`;\", \"+   `=0` the old walk), measured against 3 coarser sets. Coder, against one class: padding 46% -> 19% of a 4K chunk's\", \"+   rows, gate/up 1,603-1,632 -> 1,447-1,467 ms, down 765-780 -> 705-706 ms, pp4096 558-563 -> 571-574 t/s; 1.66K\", \"+   prompts 460-462 -> 492-495 t/s, 1.2K 409 -> 444; the same text out. UD-IQ4_XS: its products lose 0.9 s per 4K\", \"+   chunk (padding 103% -> 23%), but its 4K chunks are bound by the arena staging and do not move (331-336 -> 332-333\", \"+   t/s); 1.66K 258-260 -> 280-281 t/s. The prompt path's GDN state hash is unchanged on both models. Costs 174-182\", \"+   more lent cache slots (0.32-0.42 GiB) during a prompt. Not measured on a CUDA card (other J tiles).\", \"+2b. ~~**The MMQ kernels themselves: 6-12 TOPS at the expert shapes** (the harness, sorted groups: 8.7-12.4), against\", \"+   the card's int8 dot peak. The vendored ggml already has the RDNA 3.5 tile tables (`mmq-config-rdna3-5.cuh`: 256\", \"+   threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles ... are\", \"+   untested here.~~ **Done 2026-10-06, with a corrected premise**\", \"+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2b-done-the-mmq-kernels-spilled-registers-llvms-max-ilp-scheduler-takes-5-10-off-them-2026-10-06)):\", \"+   MMQ on gfx1151 runs WMMA (`v_wmma_i32_16x16x16_iu8`), not `sudot4`. Its kernels spilled registers: IQ3_XXS /\", \"+   IQ2_S (the Coder's gate/up) at J = 128 hit 256 VGPRs and 132-208 bytes of scratch per lane, most types at J = 32\", \"+   108-180 bytes. Of 8 compiler settings and the #21284 tiles (`docs/benchmarks/2026-10-06-halo-mmq-tiles*`), LLVM's\", \"+   max-ilp scheduler was the best or level with the best on every type: -5 to -10% per layer in the harness. Shipped as\", \"+   `STRATA_MMQ_GFX1151_SCHED` (CMake, default `max-ilp`, gfx1151's device compile only, empty = off). In the engine\", \"+   (Coder): gate/up 1,463-1,479 -> 1,396-1,430 ms per 4K chunk, pp4096 560-561 -> 566-567 t/s, 1.66K 466-468 ->\", \"+   476-477, 1.2K 414 -> 424; the same GDN state hash and text. The one table: one run moved within its spread\", \"+   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows in six back-to-back pairs per engine:\", \"+   4.75K +1.1% (95% interval +0.3 to +1.9%, 6 of 6 pairs), 16-20K +1.3-1.5% (6 of 6), pp4096 +0.7% (interval includes\", \"+   0), decode unchanged. The kernels still run at 9-13\", \"+   TOPS per layer; the #21284 tiles add 2-3% on the down products only and would need a patched upstream table:\", \"+   not taken.\", \"+3. ~~**`hip_prefill_mmq_parity` fails on gfx1151** (\\\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\\\").\", \"+   Find out whether it is ggml's gfx1151 handling (llama.cpp#21284: MMQ tile `mmq_x=48, mmq_y=64, nwarps=4`\", \"+   against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). This\", \"+   matters more than it looked: the Coder's and UD-IQ4_XS's experts run through MMQ by default on this card (item 2),\", \"+   including layers whose down matrix is Q2_0 (`native_experts.txt`: layer 1 and others), and the day's benchmark\", \"+   outputs came from that path.~~ **Done 2026-10-05 night: neither**\", \"+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-3-done-the-mmq-parity-failure-was-the-tests-stream-order-not-the-kernels-2026-10-05-night)):\", \"+   the test filled its output sentinel with `hipMemset` on the null stream and ran the products on a non-blocking\", \"+   stream; on Windows HIP the fill landed after the products, so every element read back as the sentinel (a probe\", \"+   over 5 types, both shapes, 1-135 rows: 17 of 17 cases, 100% of the elements, no error reported). The host and\", \"+   device tile tables agree for gfx1151, and the kernel itself - the library's and a fresh instantiation, MoE and\", \"+   plain mode, -O3 and -O1, any stream - writes every element at rel_l2 0.0010 against a CPU double product. The\", \"+   test now fills with `hipMemsetAsync` on its stream and passes (6 products, rel_l2 0.0005-0.0012); the ctest tally\", \"+   on this card is 4 known failures. The engine's prompt path has no synchronous memset, and the engine with the\", \"+   default and with `STRATA_PREFILL_MMQ=0` continues a 1,173-token code prompt with the same code (one whitespace\", \"+   run differs: int8 against FP16 rounding), so the day's benchmark outputs were computed. Probes:\", \"+   `docs/benchmarks/2026-10-05-halo-mmq-{parity,config,kernel}-probe*`, the engine A/B `2026-10-05-halo-mmq-ab.py`. Also seen:\", \"+   a kernel trap on this HIP is reported by the next `hipMemcpy`, not by `hipDeviceSynchronize`.\", \"+4. ~~**The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and\", \"+   8192 and, since item 2, the two expert shapes at T = 16-512; the engine still logs `Lt fallback; no calibration\", \"+   for dtype=bf16 T=4165 N=256 K=2560` for the 256-wide alpha/beta projections. Calibrate those (the tuner takes\", \"+   `--case`; the lookup already takes the nearest T). Also re-run `tune_hipblaslt` whenever the ROCm wheels change\", \"+   (ids are per version).~~ **Done 2026-10-05 night**\", \"+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-4-done-the-last-hole-in-the-hipblaslt-table-was-the-router-not-the-alphabeta-projections-2026-10-05-night)):\", \"+   the shape is the router (`ffn_gate_inp.weight`, 256 experts, one BF16 GEMM per layer, 48 per chunk), not the\", \"+   alpha/beta projections (those are N = 48 and were in the table). Two rows (T = 4096 and 8192, solution 1251: the\", \"+   best at every T from 1024 to 8192, `docs/benchmarks/2026-10-05-halo-router-lt-tuning.log`) close the last hole:\", \"+   the GEMM 1.30 -> 0.27 ms at T = 4096 in the tuner (against the engine's `ROCBLAS_USE_HIPBLASLT=1` fallback), the\", \"+   engine's \\\"router+shared\\\" phase 222-223 -> 161-162 ms per 4K chunk, pp4096 543-546 -> 547-553 t/s, no fallback\", \"+   logged (`2026-10-05-halo-router-lt-ab.py`). On a wheel change the engine refuses the file (its header carries the\", \"+   arch and version) and says so; re-tune then.\", \"+5. ~~**The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card\", \"+   (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.~~\", \"+   **Done 2026-10-05 night, with a corrected premise**\", \"+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-5-done-the-gdn-phases-time-was-the-output-norms-launch-not-the-recurrence-2026-10-05-night)):\", \"+   Strata's recurrence is already column-split and pipelined (192 blocks), 14-15 ms per layer at T = 4,165. The\", \"+   output norm after it took 11-25 ms launching one tiny block per token and head. Shipped: a wave-per-head norm,\", \"+   1.5 ms (within 5 ulp of the old one; `STRATA_GDN_NORM_OLD=1` restores it). The engine's \\\"gdn recurrence\\\" phase\", \"+   went 816-836 -> 592-600 ms per 4K chunk, pp4096 550-551 -> 562-566 t/s. llama.cpp's chunked kernels, ported onto\", \"+   the vendored ggml's WMMA (`src/prefill/gdn_chunk_wmma.cu`), match to FP16 rounding (rel_l2 4.5e-4) but their walk\", \"+   is no faster here (12-16 ms; engine 689-693 ms): opt-in as `STRATA_GDN_CHUNK=1`. An FP32 chunked form was 0.6x\", \"+   (same FMA count, no matrix cores). Test: `hip_prefill_gdn_chunk_parity`. Left open: the serial walk itself,\", \"+   at ~0.5 TFMA/s.\", \"+6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any\", \"+   fusing.\", \"+\", \"+## Decode\", \"+\", \"+7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does\", \"+   depend on residency). Run with `STRATA_DECODE_TIMING=1` at 32/96 and find the shared cost; candidates: the GPU\", \"+   expert kernels for this file's IQ3_S / IQ4_NL / Q8_0 blobs on RDNA 3.5, the per-token PLE rows from the NVMe,\", \"+   or a copy path (pytorch/pytorch#171687 reports gfx1151 decode 90% in `hipMemcpyWithStream`).\", \"+8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes\", \"+   four fifths of the experts on its CPU. The decode phase timing (`STRATA_DECODE_TIMING=1`) has not been read on\", \"+   this card yet.\", \"+\", \"+## Memory and setup on an APU\", \"+\", \"+9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:\", \"+   16 GiB registered -> 32 GiB less free). `--expert-cache auto` sizes from that figure and gave UD-IQ4_XS 0 slots\", \"+   at 32/96; the remedy was `STRATA_ARENA_PIN_GIB=24` by hand. Setup and the engine should do this themselves on an\", \"+   integrated GPU: cap the pin, and size the cache from the dedicated carve-out rather than the WDDM figure.\", \"+10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident\", \"+    (`expert tiers: ... files ... MB read`), far more than the 1,945 lent slots' experts. Find what reads (the\", \"+    routing prefetch of whole layers?) and whether it is needed when the prompt path's experts are resident.\", \"+11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU\", \"+    memory and its pinned arena ~69 GiB of RAM. A prompt path that takes resident experts from the cache instead of\", \"+    the host source would make 96/32 the right split for every model; until then 32/96 with a partial cache.\", \"+12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip\", \"+    (`build_windows.bat` default list has it, the zip must be built and published), the docs' \\\"integrated GPUs are\", \"+    not supported\\\" lines ([AI_SETUP.md](AI_SETUP.md), [INSTALL.md](INSTALL.md), [TROUBLESHOOTING.md](TROUBLESHOOTING.md),\", \"+    [AMD_HIP.md](AMD_HIP.md)), setup choosing `STRATA_HIPBLASLT_TUNING` from `tools/hip/gfx1151-hipblaslt-100401.txt`\", \"+    (it should, by arch and version: verify), and `ROCBLAS_USE_HIPBLASLT=1` in the config's env for AMD cards.\", \"+13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off\", \"+    (ROCm/legacy-rocm-build#6675; not seen here, 2.8-2.9 GHz under load over RDP with a 300 s timeout). The engine\", \"+    or server could hold `SetThreadExecutionState(ES_DISPLAY_REQUIRED)` while a request runs.\", \"+\", \"+## Housekeeping\", \"+\", \"+14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with\", \"+    the pin cap) and keeps 0.55; measured here 0.2 vs 0.55 made no difference. Nothing to fix for speed; the log line\", \"+    should say what it saw.\", \"+15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it\", \"+    report rather than hang.\", \"+16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as\", \"+    UTF-8; `pp4k.py` is the quick single-shape check. Keep new runs' JSON and logs in `docs/benchmarks/`.\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\AIMAX+395-ROCm.md\", \"E:\\\\work\\\\AI\\\\Strata\\\\docs\\\\TODO.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 272528,
+        "completion_tokens": 1679,
+        "cached_tokens": 272526,
+        "extra": {
+          "cache_creation_input_tokens": 920,
+          "cache_read_input_tokens": 272526,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 920,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1679,
+              "cache_read_input_tokens": 272526,
+              "cache_creation_input_tokens": 920,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 920
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "ok\r\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-06-halo-onetable-todo2b-coder-pairs.log', CRLF will be replaced by LF the next time Git touches it\n docs/AIMAX+395-ROCm.md                             | 34 ++++++----\n docs/TODO.md                                       |  5 +-\n ...026-10-05-halo-coder-iq1_m-old-pair3-server.log | 75 ++++++++++++++++++++\n .../2026-10-05-halo-coder-iq1_m-old-pair3.log      | 24 +++++++\n ...2026-10-06-halo-onetable-todo2b-coder-pairs.log | 79 ++++++++++++++++++++++\n 5 files changed, 202 insertions(+), 15 deletions(-)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+                  "hunks": [
+                    {
+                      "oldStart": 1404,
+                      "oldLines": 20,
+                      "newStart": 1404,
+                      "newLines": 28,
+                      "lines": [
+                        " the other prompt rows moved by -1 to +0.7%. UD-IQ4_XS: pp4096 +3%, its other prompt rows -1 to -3%, and its tg128 @",
+                        " d16384 19.2 t/s at 55.3% MTP acceptance (72.6% in TODO 2a's run; its decode is not repeatable from run to run, see",
+                        " TODO 2a). These moves are the size of the spread between runs of one engine. So the Coder's rows were run again,",
+                        "-TODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,",
+                        "-`benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1,2}.*`):",
+                        "+TODO 2a's engine and this one alternating, six pairs, each pair back to back",
+                        "+(`2026-10-06-halo-onetable-todo2b-coder-pairs.log`, `benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1..6}.*`;",
+                        "+the statistics by `2026-10-06-halo-onetable-todo2b-pairs-stats.py`, output `...-pairs-stats.log`):",
+                        " ",
+                        "-| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |",
+                        "-|---|---|---|",
+                        "-| prefill @ ~4.75K | 577.5-577.6 | **582.6-583.1** |",
+                        "-| pp4096 @ d0 | 568.0-571.1 | 564.3-576.0 |",
+                        "-| depth 16384 prefix / pp4096 @ d16384 (20,421 tokens) | 594.2 / 586.1-588.0 | **602.0-602.9 / 594.3-596.4** |",
+                        "-| decode rows (cold, fresh, 4.75K tail, tg128 @ d0, tg128 @ d16384) | 36.6-38.8, 37.8, 33.6, 27.6-28.0, 27.9-28.4 | 38.6-38.8, 37.6-37.7, 33.3-33.8, 27.9-28.0, 27.7 |",
+                        "-",
+                        "-Back to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and",
+                        "-decode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table",
+                        "-run was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler takes 5-10%",
+                        "-off the products, and the products are about 30% of a 4K chunk's GPU time.",
+                        "+| Coder IQ1_M, t/s, 6 pairs | TODO 2a's engine, mean +- SD | **TODO 2b's engine** | new - old, mean [95% interval, paired t] | pairs where new > old |",
+                        "+|---|---|---|---|---|",
+                        "+| prefill @ ~4.75K | 584.6 +- 6.3 | **591.0 +- 7.3** | **+6.4 [+1.8, +11.0], +1.1%** | 6 of 6 |",
+                        "+| pp4096 @ d0 | 575.3 +- 6.6 | 579.3 +- 9.0 | +4.0 [-4.7, +12.7], +0.7% | 4 of 6 |",
+                        "+| depth 16384 prefix | 598.1 +- 3.4 | **607.1 +- 4.6** | **+9.0 [+6.2, +11.7], +1.5%** | 6 of 6 |",
+                        "+| pp4096 @ d16384 (20,421 tokens) | 592.6 +- 4.8 | **600.2 +- 4.6** | **+7.6 [+4.5, +10.7], +1.3%** | 6 of 6 |",
+                        "+| decode: cold, fresh, 4.75K tail, tg128 @ d0 | 38.4, 38.0, 33.7, 28.0 | 38.5, 37.6, 33.6, 27.9 | intervals all include 0 (-1.0 to +0.3%) | 2, 1, 2, 1 of 6 |",
+                        "+| decode: tg128 @ d16384 | 28.2 +- 0.3 | 27.9 +- 0.3 | -0.4 [-0.7, +0.0], -1.2% | 0 of 6 |",
+                        "+",
+                        "+The engine drifted more over the session than the effect: TODO 2a's engine read 577.5 at 4.75K in the first pair and",
+                        "+593.2 in the fifth (SD 6.3 across its six runs). That is why one run against an earlier day's run says nothing about a",
+                        "+1% change, and why the pairs are needed. Within a pair the new engine was faster on the three long-prompt rows every",
+                        "+time, and those intervals exclude 0: +1.1% at 4.75K, +1.3-1.5% at 16-20K. pp4096 @ d0 is +0.7% with an interval that",
+                        "+includes 0, and its own SD (7-9 t/s) is twice the effect. Decode does not run this code, and its rows show no gain.",
+                        "+tg128 @ d16384's -1.2% touches 0 at the edge of its interval; with nine rows tested, one borderline row is what",
+                        "+chance gives. It is not a cause found. All of this agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the",
+                        "+one-table run was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler",
+                        "+takes 5-10% off the products, and the products are about 30% of a 4K chunk's GPU time.",
+                        " ",
+                        " ## The RTX 5090 over Thunderbolt (not pursued)",
+                        " "
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\docs\\TODO.md",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 146,
+                      "newStart": 1,
+                      "newLines": 147,
+                      "lines": [
+                        "-# TODO: the Strix Halo (gfx1151) port, after 2026-10-05\r",
+                        "-\r",
+                        "-What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names\r",
+                        "-the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to\r",
+                        "-`docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).\r",
+                        "-\r",
+                        "-## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\r",
+                        "-\r",
+                        "-1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\r",
+                        "-   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\r",
+                        "-   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\r",
+                        "-   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\r",
+                        "-   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\r",
+                        "-   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\r",
+                        "-   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\r",
+                        "-   K8V4 pools.\r",
+                        "-2. ~~**The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne`\r",
+                        "-   rows per layer with FP32 output run at 3.5-3.7 TFLOP/s ... Decide between a 16-bit output, a WMMA kernel, or the\r",
+                        "-   MMQ path~~ **Done 2026-10-05 night, with a corrected premise**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2-done-the-expert-products-are-mmq-not-fp16-gemms-and-their-j-tile-2026-10-05-night)):\r",
+                        "-   the Coder's expert products run through llama.cpp's MMQ (int8) by default, not the FP16 GEMMs - those only run\r",
+                        "-   with `STRATA_PREFILL_MMQ=0`. Measured on this card: the three FP16 routes (hipBLASLt solutions from the tuner,\r",
+                        "-   16-bit output, PR #313's WMMA) and the MMQ products at one layer's shape. Shipped: `Product::opt_rows` - the MMQ\r",
+                        "-   J tile chosen for a group's median row count instead of its largest (`STRATA_PREFILL_MMQ_OPT=max` restores the\r",
+                        "-   old choice): gate/up 1,800-1,832 -> 1,581-1,604 ms, down 802-816 -> 764-769 ms, pp4096 509-525 -> 524-541 t/s,\r",
+                        "-   a 1.3K prompt 398 -> 424 t/s, the same text out; the full benchmark: Coder prefill 528 -> 548 t/s at 4.75K,\r",
+                        "-   517 -> 537 at pp4096, ~530 -> ~560 at 16-20K, decode unchanged, UD-IQ4_XS unchanged (its chunks stream); the gfx1151 hipBLASLt table extended with the expert shapes at\r",
+                        "-   small T (the FP16 path's gate/up 4,231 -> 1,593-1,671 ms, now on par with MMQ); experts sorted by row count\r",
+                        "-   before grouping where the chunk does not stream (below `STRATA_PREFILL_STREAM_MIN` = 1,024 tokens: 1,001-token\r",
+                        "-   prompts 360-388 -> 388-428 t/s; in arena mode every expert is staged from the arena in id order, so 4K chunks\r",
+                        "-   keep id order). Left open, in the next two items.\r",
+                        "-2a. ~~**Group the experts by row count while they stream.** The MMQ products pay for the J tile the group's experts\r",
+                        "-   pad to: a tile for the largest pads 46% of a 4K chunk's rows and 161% of a 1.3K chunk's ... per-size-class group\r",
+                        "-   buffers (one group buffer per class, rows laid out class-major at routing time)~~ **Done 2026-10-06**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2a-done-streamed-experts-grouped-by-row-count-class-2026-10-06)):\r",
+                        "-   a streamed MMQ layer's rows are laid out class-major by row count, each expert is gathered as it arrives (the\r",
+                        "-   ring still in id order) into its class's own group buffer, and a group is multiplied when its last member lands.\r",
+                        "-   Shipped with one class per RDNA 3.5 J tile (`STRATA_PREFILL_MMQ_CLASSES`, default `16,32,48,64,80,96,112,128`;\r",
+                        "-   `=0` the old walk), measured against 3 coarser sets. Coder, against one class: padding 46% -> 19% of a 4K chunk's\r",
+                        "-   rows, gate/up 1,603-1,632 -> 1,447-1,467 ms, down 765-780 -> 705-706 ms, pp4096 558-563 -> 571-574 t/s; 1.66K\r",
+                        "-   prompts 460-462 -> 492-495 t/s, 1.2K 409 -> 444; the same text out. UD-IQ4_XS: its products lose 0.9 s per 4K\r",
+                        "-   chunk (padding 103% -> 23%), but its 4K chunks are bound by the arena staging and do not move (331-336 -> 332-333\r",
+                        "-   t/s); 1.66K 258-260 -> 280-281 t/s. The prompt path's GDN state hash is unchanged on both models. Costs 174-182\r",
+                        "-   more lent cache slots (0.32-0.42 GiB) during a prompt. Not measured on a CUDA card (other J tiles).\r",
+                        "-2b. ~~**The MMQ kernels themselves: 6-12 TOPS at the expert shapes** (the harness, sorted groups: 8.7-12.4), against\r",
+                        "-   the card's int8 dot peak. The vendored ggml already has the RDNA 3.5 tile tables (`mmq-config-rdna3-5.cuh`: 256\r",
+                        "-   threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles ... are\r",
+                        "-   untested here.~~ **Done 2026-10-06, with a corrected premise**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2b-done-the-mmq-kernels-spilled-registers-llvms-max-ilp-scheduler-takes-5-10-off-them-2026-10-06)):\r",
+                        "-   MMQ on gfx1151 runs WMMA (`v_wmma_i32_16x16x16_iu8`), not `sudot4`. Its kernels spilled registers: IQ3_XXS /\r",
+                        "-   IQ2_S (the Coder's gate/up) at J = 128 hit 256 VGPRs and 132-208 bytes of scratch per lane, most types at J = 32\r",
+                        "-   108-180 bytes. Of 8 compiler settings and the #21284 tiles (`docs/benchmarks/2026-10-06-halo-mmq-tiles*`), LLVM's\r",
+                        "-   max-ilp scheduler was the best or level with the best on every type: -5 to -10% per layer in the harness. Shipped as\r",
+                        "-   `STRATA_MMQ_GFX1151_SCHED` (CMake, default `max-ilp`, gfx1151's device compile only, empty = off). In the engine\r",
+                        "-   (Coder): gate/up 1,463-1,479 -> 1,396-1,430 ms per 4K chunk, pp4096 560-561 -> 566-567 t/s, 1.66K 466-468 ->\r",
+                        "-   476-477, 1.2K 414 -> 424; the same GDN state hash and text. The one table: one run moved within its spread\r",
+                        "-   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:\r",
+                        "-   4.75K 577.5-577.6 -> 582.6-583.1 t/s, 16-20K +1.4%, pp4096 even, decode unchanged. The kernels still run at 9-13\r",
+                        "-   TOPS per layer; the #21284 tiles add 2-3% on the down products only and would need a patched upstream table:\r",
+                        "-   not taken.\r",
+                        "-3. ~~**`hip_prefill_mmq_parity` fails on gfx1151** (\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\").\r",
+                        "-   Find out whether it is ggml's gfx1151 handling (llama.cpp#21284: MMQ tile `mmq_x=48, mmq_y=64, nwarps=4`\r",
+                        "-   against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). This\r",
+                        "-   matters more than it looked: the Coder's and UD-IQ4_XS's experts run through MMQ by default on this card (item 2),\r",
+                        "-   including layers whose down matrix is Q2_0 (`native_experts.txt`: layer 1 and others), and the day's benchmark\r",
+                        "-   outputs came from that path.~~ **Done 2026-10-05 night: neither**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-3-done-the-mmq-parity-failure-was-the-tests-stream-order-not-the-kernels-2026-10-05-night)):\r",
+                        "-   the test filled its output sentinel with `hipMemset` on the null stream and ran the products on a non-blocking\r",
+                        "-   stream; on Windows HIP the fill landed after the products, so every element read back as the sentinel (a probe\r",
+                        "-   over 5 types, both shapes, 1-135 rows: 17 of 17 cases, 100% of the elements, no error reported). The host and\r",
+                        "-   device tile tables agree for gfx1151, and the kernel itself - the library's and a fresh instantiation, MoE and\r",
+                        "-   plain mode, -O3 and -O1, any stream - writes every element at rel_l2 0.0010 against a CPU double product. The\r",
+                        "-   test now fills with `hipMemsetAsync` on its stream and passes (6 products, rel_l2 0.0005-0.0012); the ctest tally\r",
+                        "-   on this card is 4 known failures. The engine's prompt path has no synchronous memset, and the engine with the\r",
+                        "-   default and with `STRATA_PREFILL_MMQ=0` continues a 1,173-token code prompt with the same code (one whitespace\r",
+                        "-   run differs: int8 against FP16 rounding), so the day's benchmark outputs were computed. Probes:\r",
+                        "-   `docs/benchmarks/2026-10-05-halo-mmq-{parity,config,kernel}-probe*`, the engine A/B `2026-10-05-halo-mmq-ab.py`. Also seen:\r",
+                        "-   a kernel trap on this HIP is reported by the next `hipMemcpy`, not by `hipDeviceSynchronize`.\r",
+                        "-4. ~~**The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and\r",
+                        "-   8192 and, since item 2, the two expert shapes at T = 16-512; the engine still logs `Lt fallback; no calibration\r",
+                        "-   for dtype=bf16 T=4165 N=256 K=2560` for the 256-wide alpha/beta projections. Calibrate those (the tuner takes\r",
+                        "-   `--case`; the lookup already takes the nearest T). Also re-run `tune_hipblaslt` whenever the ROCm wheels change\r",
+                        "-   (ids are per version).~~ **Done 2026-10-05 night**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-4-done-the-last-hole-in-the-hipblaslt-table-was-the-router-not-the-alphabeta-projections-2026-10-05-night)):\r",
+                        "-   the shape is the router (`ffn_gate_inp.weight`, 256 experts, one BF16 GEMM per layer, 48 per chunk), not the\r",
+                        "-   alpha/beta projections (those are N = 48 and were in the table). Two rows (T = 4096 and 8192, solution 1251: the\r",
+                        "-   best at every T from 1024 to 8192, `docs/benchmarks/2026-10-05-halo-router-lt-tuning.log`) close the last hole:\r",
+                        "-   the GEMM 1.30 -> 0.27 ms at T = 4096 in the tuner (against the engine's `ROCBLAS_USE_HIPBLASLT=1` fallback), the\r",
+                        "-   engine's \"router+shared\" phase 222-223 -> 161-162 ms per 4K chunk, pp4096 543-546 -> 547-553 t/s, no fallback\r",
+                        "-   logged (`2026-10-05-halo-router-lt-ab.py`). On a wheel change the engine refuses the file (its header carries the\r",
+                        "-   arch and version) and says so; re-tune then.\r",
+                        "-5. ~~**The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card\r",
+                        "-   (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.~~\r",
+                        "-   **Done 2026-10-05 night, with a corrected premise**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-5-done-the-gdn-phases-time-was-the-output-norms-launch-not-the-recurrence-2026-10-05-night)):\r",
+                        "-   Strata's recurrence is already column-split and pipelined (192 blocks), 14-15 ms per layer at T = 4,165. The\r",
+                        "-   output norm after it took 11-25 ms launching one tiny block per token and head. Shipped: a wave-per-head norm,\r",
+                        "-   1.5 ms (within 5 ulp of the old one; `STRATA_GDN_NORM_OLD=1` restores it). The engine's \"gdn recurrence\" phase\r",
+                        "-   went 816-836 -> 592-600 ms per 4K chunk, pp4096 550-551 -> 562-566 t/s. llama.cpp's chunked kernels, ported onto\r",
+                        "-   the vendored ggml's WMMA (`src/prefill/gdn_chunk_wmma.cu`), match to FP16 rounding (rel_l2 4.5e-4) but their walk\r",
+                        "-   is no faster here (12-16 ms; engine 689-693 ms): opt-in as `STRATA_GDN_CHUNK=1`. An FP32 chunked form was 0.6x\r",
+                        "-   (same FMA count, no matrix cores). Test: `hip_prefill_gdn_chunk_parity`. Left open: the serial walk itself,\r",
+                        "-   at ~0.5 TFMA/s.\r",
+                        "-6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any\r",
+                        "-   fusing.\r",
+                        "-\r",
+                        "-## Decode\r",
+                        "-\r",
+                        "-7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does\r",
+                        "-   depend on residency). Run with `STRATA_DECODE_TIMING=1` at 32/96 and find the shared cost; candidates: the GPU\r",
+                        "-   expert kernels for this file's IQ3_S / IQ4_NL / Q8_0 blobs on RDNA 3.5, the per-token PLE rows from the NVMe,\r",
+                        "-   or a copy path (pytorch/pytorch#171687 reports gfx1151 decode 90% in `hipMemcpyWithStream`).\r",
+                        "-8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes\r",
+                        "-   four fifths of the experts on its CPU. The decode phase timing (`STRATA_DECODE_TIMING=1`) has not been read on\r",
+                        "-   this card yet.\r",
+                        "-\r",
+                        "-## Memory and setup on an APU\r",
+                        "-\r",
+                        "-9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:\r",
+                        "-   16 GiB registered -> 32 GiB less free). `--expert-cache auto` sizes from that figure and gave UD-IQ4_XS 0 slots\r",
+                        "-   at 32/96; the remedy was `STRATA_ARENA_PIN_GIB=24` by hand. Setup and the engine should do this themselves on an\r",
+                        "-   integrated GPU: cap the pin, and size the cache from the dedicated carve-out rather than the WDDM figure.\r",
+                        "-10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident\r",
+                        "-    (`expert tiers: ... files ... MB read`), far more than the 1,945 lent slots' experts. Find what reads (the\r",
+                        "-    routing prefetch of whole layers?) and whether it is needed when the prompt path's experts are resident.\r",
+                        "-11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU\r",
+                        "-    memory and its pinned arena ~69 GiB of RAM. A prompt path that takes resident experts from the cache instead of\r",
+                        "-    the host source would make 96/32 the right split for every model; until then 32/96 with a partial cache.\r",
+                        "-12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip\r",
+                        "-    (`build_windows.bat` default list has it, the zip must be built and published), the docs' \"integrated GPUs are\r",
+                        "-    not supported\" lines ([AI_SETUP.md](AI_SETUP.md), [INSTALL.md](INSTALL.md), [TROUBLESHOOTING.md](TROUBLESHOOTING.md),\r",
+                        "-    [AMD_HIP.md](AMD_HIP.md)), setup choosing `STRATA_HIPBLASLT_TUNING` from `tools/hip/gfx1151-hipblaslt-100401.txt`\r",
+                        "-    (it should, by arch and version: verify), and `ROCBLAS_USE_HIPBLASLT=1` in the config's env for AMD cards.\r",
+                        "-13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off\r",
+                        "-    (ROCm/legacy-rocm-build#6675; not seen here, 2.8-2.9 GHz under load over RDP with a 300 s timeout). The engine\r",
+                        "-    or server could hold `SetThreadExecutionState(ES_DISPLAY_REQUIRED)` while a request runs.\r",
+                        "-\r",
+                        "-## Housekeeping\r",
+                        "-\r",
+                        "-14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with\r",
+                        "-    the pin cap) and keeps 0.55; measured here 0.2 vs 0.55 made no difference. Nothing to fix for speed; the log line\r",
+                        "-    should say what it saw.\r",
+                        "-15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it\r",
+                        "-    report rather than hang.\r",
+                        "-16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as\r",
+                        "-    UTF-8; `pp4k.py` is the quick single-shape check. Keep new runs' JSON and logs in `docs/benchmarks/`.\r",
+                        "+# TODO: the Strix Halo (gfx1151) port, after 2026-10-05",
+                        "+",
+                        "+What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names",
+                        "+the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to",
+                        "+`docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).",
+                        "+",
+                        "+## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)",
+                        "+",
+                        "+1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch",
+                        "+   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):",
+                        "+   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now",
+                        "+   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543",
+                        "+   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated",
+                        "+   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the",
+                        "+   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for",
+                        "+   K8V4 pools.",
+                        "+2. ~~**The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne`",
+                        "+   rows per layer with FP32 output run at 3.5-3.7 TFLOP/s ... Decide between a 16-bit output, a WMMA kernel, or the",
+                        "+   MMQ path~~ **Done 2026-10-05 night, with a corrected premise**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2-done-the-expert-products-are-mmq-not-fp16-gemms-and-their-j-tile-2026-10-05-night)):",
+                        "+   the Coder's expert products run through llama.cpp's MMQ (int8) by default, not the FP16 GEMMs - those only run",
+                        "+   with `STRATA_PREFILL_MMQ=0`. Measured on this card: the three FP16 routes (hipBLASLt solutions from the tuner,",
+                        "+   16-bit output, PR #313's WMMA) and the MMQ products at one layer's shape. Shipped: `Product::opt_rows` - the MMQ",
+                        "+   J tile chosen for a group's median row count instead of its largest (`STRATA_PREFILL_MMQ_OPT=max` restores the",
+                        "+   old choice): gate/up 1,800-1,832 -> 1,581-1,604 ms, down 802-816 -> 764-769 ms, pp4096 509-525 -> 524-541 t/s,",
+                        "+   a 1.3K prompt 398 -> 424 t/s, the same text out; the full benchmark: Coder prefill 528 -> 548 t/s at 4.75K,",
+                        "+   517 -> 537 at pp4096, ~530 -> ~560 at 16-20K, decode unchanged, UD-IQ4_XS unchanged (its chunks stream); the gfx1151 hipBLASLt table extended with the expert shapes at",
+                        "+   small T (the FP16 path's gate/up 4,231 -> 1,593-1,671 ms, now on par with MMQ); experts sorted by row count",
+                        "+   before grouping where the chunk does not stream (below `STRATA_PREFILL_STREAM_MIN` = 1,024 tokens: 1,001-token",
+                        "+   prompts 360-388 -> 388-428 t/s; in arena mode every expert is staged from the arena in id order, so 4K chunks",
+                        "+   keep id order). Left open, in the next two items.",
+                        "+2a. ~~**Group the experts by row count while they stream.** The MMQ products pay for the J tile the group's experts",
+                        "+   pad to: a tile for the largest pads 46% of a 4K chunk's rows and 161% of a 1.3K chunk's ... per-size-class group",
+                        "+   buffers (one group buffer per class, rows laid out class-major at routing time)~~ **Done 2026-10-06**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2a-done-streamed-experts-grouped-by-row-count-class-2026-10-06)):",
+                        "+   a streamed MMQ layer's rows are laid out class-major by row count, each expert is gathered as it arrives (the",
+                        "+   ring still in id order) into its class's own group buffer, and a group is multiplied when its last member lands.",
+                        "+   Shipped with one class per RDNA 3.5 J tile (`STRATA_PREFILL_MMQ_CLASSES`, default `16,32,48,64,80,96,112,128`;",
+                        "+   `=0` the old walk), measured against 3 coarser sets. Coder, against one class: padding 46% -> 19% of a 4K chunk's",
+                        "+   rows, gate/up 1,603-1,632 -> 1,447-1,467 ms, down 765-780 -> 705-706 ms, pp4096 558-563 -> 571-574 t/s; 1.66K",
+                        "+   prompts 460-462 -> 492-495 t/s, 1.2K 409 -> 444; the same text out. UD-IQ4_XS: its products lose 0.9 s per 4K",
+                        "+   chunk (padding 103% -> 23%), but its 4K chunks are bound by the arena staging and do not move (331-336 -> 332-333",
+                        "+   t/s); 1.66K 258-260 -> 280-281 t/s. The prompt path's GDN state hash is unchanged on both models. Costs 174-182",
+                        "+   more lent cache slots (0.32-0.42 GiB) during a prompt. Not measured on a CUDA card (other J tiles).",
+                        "+2b. ~~**The MMQ kernels themselves: 6-12 TOPS at the expert shapes** (the harness, sorted groups: 8.7-12.4), against",
+                        "+   the card's int8 dot peak. The vendored ggml already has the RDNA 3.5 tile tables (`mmq-config-rdna3-5.cuh`: 256",
+                        "+   threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles ... are",
+                        "+   untested here.~~ **Done 2026-10-06, with a corrected premise**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2b-done-the-mmq-kernels-spilled-registers-llvms-max-ilp-scheduler-takes-5-10-off-them-2026-10-06)):",
+                        "+   MMQ on gfx1151 runs WMMA (`v_wmma_i32_16x16x16_iu8`), not `sudot4`. Its kernels spilled registers: IQ3_XXS /",
+                        "+   IQ2_S (the Coder's gate/up) at J = 128 hit 256 VGPRs and 132-208 bytes of scratch per lane, most types at J = 32",
+                        "+   108-180 bytes. Of 8 compiler settings and the #21284 tiles (`docs/benchmarks/2026-10-06-halo-mmq-tiles*`), LLVM's",
+                        "+   max-ilp scheduler was the best or level with the best on every type: -5 to -10% per layer in the harness. Shipped as",
+                        "+   `STRATA_MMQ_GFX1151_SCHED` (CMake, default `max-ilp`, gfx1151's device compile only, empty = off). In the engine",
+                        "+   (Coder): gate/up 1,463-1,479 -> 1,396-1,430 ms per 4K chunk, pp4096 560-561 -> 566-567 t/s, 1.66K 466-468 ->",
+                        "+   476-477, 1.2K 414 -> 424; the same GDN state hash and text. The one table: one run moved within its spread",
+                        "+   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows in six back-to-back pairs per engine:",
+                        "+   4.75K +1.1% (95% interval +0.3 to +1.9%, 6 of 6 pairs), 16-20K +1.3-1.5% (6 of 6), pp4096 +0.7% (interval includes",
+                        "+   0), decode unchanged. The kernels still run at 9-13",
+                        "+   TOPS per layer; the #21284 tiles add 2-3% on the down products only and would need a patched upstream table:",
+                        "+   not taken.",
+                        "+3. ~~**`hip_prefill_mmq_parity` fails on gfx1151** (\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\").",
+                        "+   Find out whether it is ggml's gfx1151 handling (llama.cpp#21284: MMQ tile `mmq_x=48, mmq_y=64, nwarps=4`",
+                        "+   against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). This",
+                        "+   matters more than it looked: the Coder's and UD-IQ4_XS's experts run through MMQ by default on this card (item 2),",
+                        "+   including layers whose down matrix is Q2_0 (`native_experts.txt`: layer 1 and others), and the day's benchmark",
+                        "+   outputs came from that path.~~ **Done 2026-10-05 night: neither**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-3-done-the-mmq-parity-failure-was-the-tests-stream-order-not-the-kernels-2026-10-05-night)):",
+                        "+   the test filled its output sentinel with `hipMemset` on the null stream and ran the products on a non-blocking",
+                        "+   stream; on Windows HIP the fill landed after the products, so every element read back as the sentinel (a probe",
+                        "+   over 5 types, both shapes, 1-135 rows: 17 of 17 cases, 100% of the elements, no error reported). The host and",
+                        "+   device tile tables agree for gfx1151, and the kernel itself - the library's and a fresh instantiation, MoE and",
+                        "+   plain mode, -O3 and -O1, any stream - writes every element at rel_l2 0.0010 against a CPU double product. The",
+                        "+   test now fills with `hipMemsetAsync` on its stream and passes (6 products, rel_l2 0.0005-0.0012); the ctest tally",
+                        "+   on this card is 4 known failures. The engine's prompt path has no synchronous memset, and the engine with the",
+                        "+   default and with `STRATA_PREFILL_MMQ=0` continues a 1,173-token code prompt with the same code (one whitespace",
+                        "+   run differs: int8 against FP16 rounding), so the day's benchmark outputs were computed. Probes:",
+                        "+   `docs/benchmarks/2026-10-05-halo-mmq-{parity,config,kernel}-probe*`, the engine A/B `2026-10-05-halo-mmq-ab.py`. Also seen:",
+                        "+   a kernel trap on this HIP is reported by the next `hipMemcpy`, not by `hipDeviceSynchronize`.",
+                        "+4. ~~**The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and",
+                        "+   8192 and, since item 2, the two expert shapes at T = 16-512; the engine still logs `Lt fallback; no calibration",
+                        "+   for dtype=bf16 T=4165 N=256 K=2560` for the 256-wide alpha/beta projections. Calibrate those (the tuner takes",
+                        "+   `--case`; the lookup already takes the nearest T). Also re-run `tune_hipblaslt` whenever the ROCm wheels change",
+                        "+   (ids are per version).~~ **Done 2026-10-05 night**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-4-done-the-last-hole-in-the-hipblaslt-table-was-the-router-not-the-alphabeta-projections-2026-10-05-night)):",
+                        "+   the shape is the router (`ffn_gate_inp.weight`, 256 experts, one BF16 GEMM per layer, 48 per chunk), not the",
+                        "+   alpha/beta projections (those are N = 48 and were in the table). Two rows (T = 4096 and 8192, solution 1251: the",
+                        "+   best at every T from 1024 to 8192, `docs/benchmarks/2026-10-05-halo-router-lt-tuning.log`) close the last hole:",
+                        "+   the GEMM 1.30 -> 0.27 ms at T = 4096 in the tuner (against the engine's `ROCBLAS_USE_HIPBLASLT=1` fallback), the",
+                        "+   engine's \"router+shared\" phase 222-223 -> 161-162 ms per 4K chunk, pp4096 543-546 -> 547-553 t/s, no fallback",
+                        "+   logged (`2026-10-05-halo-router-lt-ab.py`). On a wheel change the engine refuses the file (its header carries the",
+                        "+   arch and version) and says so; re-tune then.",
+                        "+5. ~~**The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card",
+                        "+   (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.~~",
+                        "+   **Done 2026-10-05 night, with a corrected premise**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-5-done-the-gdn-phases-time-was-the-output-norms-launch-not-the-recurrence-2026-10-05-night)):",
+                        "+   Strata's recurrence is already column-split and pipelined (192 blocks), 14-15 ms per layer at T = 4,165. The",
+                        "+   output norm after it took 11-25 ms launching one tiny block per token and head. Shipped: a wave-per-head norm,",
+                        "+   1.5 ms (within 5 ulp of the old one; `STRATA_GDN_NORM_OLD=1` restores it). The engine's \"gdn recurrence\" phase",
+                        "+   went 816-836 -> 592-600 ms per 4K chunk, pp4096 550-551 -> 562-566 t/s. llama.cpp's chunked kernels, ported onto",
+                        "+   the vendored ggml's WMMA (`src/prefill/gdn_chunk_wmma.cu`), match to FP16 rounding (rel_l2 4.5e-4) but their walk",
+                        "+   is no faster here (12-16 ms; engine 689-693 ms): opt-in as `STRATA_GDN_CHUNK=1`. An FP32 chunked form was 0.6x",
+                        "+   (same FMA count, no matrix cores). Test: `hip_prefill_gdn_chunk_parity`. Left open: the serial walk itself,",
+                        "+   at ~0.5 TFMA/s.",
+                        "+6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any",
+                        "+   fusing.",
+                        "+",
+                        "+## Decode",
+                        "+",
+                        "+7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does",
+                        "+   depend on residency). Run with `STRATA_DECODE_TIMING=1` at 32/96 and find the shared cost; candidates: the GPU",
+                        "+   expert kernels for this file's IQ3_S / IQ4_NL / Q8_0 blobs on RDNA 3.5, the per-token PLE rows from the NVMe,",
+                        "+   or a copy path (pytorch/pytorch#171687 reports gfx1151 decode 90% in `hipMemcpyWithStream`).",
+                        "+8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes",
+                        "+   four fifths of the experts on its CPU. The decode phase timing (`STRATA_DECODE_TIMING=1`) has not been read on",
+                        "+   this card yet.",
+                        "+",
+                        "+## Memory and setup on an APU",
+                        "+",
+                        "+9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:",
+                        "+   16 GiB registered -> 32 GiB less free). `--expert-cache auto` sizes from that figure and gave UD-IQ4_XS 0 slots",
+                        "+   at 32/96; the remedy was `STRATA_ARENA_PIN_GIB=24` by hand. Setup and the engine should do this themselves on an",
+                        "+   integrated GPU: cap the pin, and size the cache from the dedicated carve-out rather than the WDDM figure.",
+                        "+10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident",
+                        "+    (`expert tiers: ... files ... MB read`), far more than the 1,945 lent slots' experts. Find what reads (the",
+                        "+    routing prefetch of whole layers?) and whether it is needed when the prompt path's experts are resident.",
+                        "+11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU",
+                        "+    memory and its pinned arena ~69 GiB of RAM. A prompt path that takes resident experts from the cache instead of",
+                        "+    the host source would make 96/32 the right split for every model; until then 32/96 with a partial cache.",
+                        "+12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip",
+                        "+    (`build_windows.bat` default list has it, the zip must be built and published), the docs' \"integrated GPUs are",
+                        "+    not supported\" lines ([AI_SETUP.md](AI_SETUP.md), [INSTALL.md](INSTALL.md), [TROUBLESHOOTING.md](TROUBLESHOOTING.md),",
+                        "+    [AMD_HIP.md](AMD_HIP.md)), setup choosing `STRATA_HIPBLASLT_TUNING` from `tools/hip/gfx1151-hipblaslt-100401.txt`",
+                        "+    (it should, by arch and version: verify), and `ROCBLAS_USE_HIPBLASLT=1` in the config's env for AMD cards.",
+                        "+13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off",
+                        "+    (ROCm/legacy-rocm-build#6675; not seen here, 2.8-2.9 GHz under load over RDP with a 300 s timeout). The engine",
+                        "+    or server could hold `SetThreadExecutionState(ES_DISPLAY_REQUIRED)` while a request runs.",
+                        "+",
+                        "+## Housekeeping",
+                        "+",
+                        "+14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with",
+                        "+    the pin cap) and keeps 0.55; measured here 0.2 vs 0.55 made no difference. Nothing to fix for speed; the log line",
+                        "+    should say what it saw.",
+                        "+15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it",
+                        "+    report rather than hang.",
+                        "+16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as",
+                        "+    UTF-8; `pp4k.py` is the quick single-shape check. Keep new runs' JSON and logs in `docs/benchmarks/`."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+                "E:\\work\\AI\\Strata\\docs\\TODO.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01PDtLmQgaL8Q5MQ7dCRmVJt",
+            "type": "tool_result",
+            "content": "ok\r\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-06-halo-onetable-todo2b-coder-pairs.log', CRLF will be replaced by LF the next time Git touches it\n docs/AIMAX+395-ROCm.md                             | 34 ++++++----\n docs/TODO.md                                       |  5 +-\n ...026-10-05-halo-coder-iq1_m-old-pair3-server.log | 75 ++++++++++++++++++++\n .../2026-10-05-halo-coder-iq1_m-old-pair3.log      | 24 +++++++\n ...2026-10-06-halo-onetable-todo2b-coder-pairs.log | 79 ++++++++++++++++++++++\n 5 files changed, 202 insertions(+), 15 deletions(-)",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "ok\r\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-06-halo-onetable-todo2b-coder-pairs.log', CRLF will be replaced by LF the next time Git touches it\n docs/AIMAX+395-ROCm.md                             | 34 ++++++----\n docs/TODO.md                                       |  5 +-\n ...026-10-05-halo-coder-iq1_m-old-pair3-server.log | 75 ++++++++++++++++++++\n .../2026-10-05-halo-coder-iq1_m-old-pair3.log      | 24 +++++++\n ...2026-10-06-halo-onetable-todo2b-coder-pairs.log | 79 ++++++++++++++++++++++\n 5 files changed, 202 insertions(+), 15 deletions(-)",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+                  "hunks": [
+                    {
+                      "oldStart": 1404,
+                      "oldLines": 20,
+                      "newStart": 1404,
+                      "newLines": 28,
+                      "lines": [
+                        " the other prompt rows moved by -1 to +0.7%. UD-IQ4_XS: pp4096 +3%, its other prompt rows -1 to -3%, and its tg128 @",
+                        " d16384 19.2 t/s at 55.3% MTP acceptance (72.6% in TODO 2a's run; its decode is not repeatable from run to run, see",
+                        " TODO 2a). These moves are the size of the spread between runs of one engine. So the Coder's rows were run again,",
+                        "-TODO 2a's engine and this one alternating, two pairs (`2026-10-06-halo-onetable-todo2b-coder-pairs.log`,",
+                        "-`benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1,2}.*`):",
+                        "+TODO 2a's engine and this one alternating, six pairs, each pair back to back",
+                        "+(`2026-10-06-halo-onetable-todo2b-coder-pairs.log`, `benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1..6}.*`;",
+                        "+the statistics by `2026-10-06-halo-onetable-todo2b-pairs-stats.py`, output `...-pairs-stats.log`):",
+                        " ",
+                        "-| Coder IQ1_M, the one table's rows, t/s | TODO 2a's engine (2 runs) | **TODO 2b's engine (2 runs)** |",
+                        "-|---|---|---|",
+                        "-| prefill @ ~4.75K | 577.5-577.6 | **582.6-583.1** |",
+                        "-| pp4096 @ d0 | 568.0-571.1 | 564.3-576.0 |",
+                        "-| depth 16384 prefix / pp4096 @ d16384 (20,421 tokens) | 594.2 / 586.1-588.0 | **602.0-602.9 / 594.3-596.4** |",
+                        "-| decode rows (cold, fresh, 4.75K tail, tg128 @ d0, tg128 @ d16384) | 36.6-38.8, 37.8, 33.6, 27.6-28.0, 27.9-28.4 | 38.6-38.8, 37.6-37.7, 33.3-33.8, 27.9-28.0, 27.7 |",
+                        "-",
+                        "-Back to back, the Coder's prompt gains +1% at 4.75K and +1.4% at 16-20K. pp4096 is even within its spread, and",
+                        "-decode does not use this path. That agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the one-table",
+                        "-run was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler takes 5-10%",
+                        "-off the products, and the products are about 30% of a 4K chunk's GPU time.",
+                        "+| Coder IQ1_M, t/s, 6 pairs | TODO 2a's engine, mean +- SD | **TODO 2b's engine** | new - old, mean [95% interval, paired t] | pairs where new > old |",
+                        "+|---|---|---|---|---|",
+                        "+| prefill @ ~4.75K | 584.6 +- 6.3 | **591.0 +- 7.3** | **+6.4 [+1.8, +11.0], +1.1%** | 6 of 6 |",
+                        "+| pp4096 @ d0 | 575.3 +- 6.6 | 579.3 +- 9.0 | +4.0 [-4.7, +12.7], +0.7% | 4 of 6 |",
+                        "+| depth 16384 prefix | 598.1 +- 3.4 | **607.1 +- 4.6** | **+9.0 [+6.2, +11.7], +1.5%** | 6 of 6 |",
+                        "+| pp4096 @ d16384 (20,421 tokens) | 592.6 +- 4.8 | **600.2 +- 4.6** | **+7.6 [+4.5, +10.7], +1.3%** | 6 of 6 |",
+                        "+| decode: cold, fresh, 4.75K tail, tg128 @ d0 | 38.4, 38.0, 33.7, 28.0 | 38.5, 37.6, 33.6, 27.9 | intervals all include 0 (-1.0 to +0.3%) | 2, 1, 2, 1 of 6 |",
+                        "+| decode: tg128 @ d16384 | 28.2 +- 0.3 | 27.9 +- 0.3 | -0.4 [-0.7, +0.0], -1.2% | 0 of 6 |",
+                        "+",
+                        "+The engine drifted more over the session than the effect: TODO 2a's engine read 577.5 at 4.75K in the first pair and",
+                        "+593.2 in the fifth (SD 6.3 across its six runs). That is why one run against an earlier day's run says nothing about a",
+                        "+1% change, and why the pairs are needed. Within a pair the new engine was faster on the three long-prompt rows every",
+                        "+time, and those intervals exclude 0: +1.1% at 4.75K, +1.3-1.5% at 16-20K. pp4096 @ d0 is +0.7% with an interval that",
+                        "+includes 0, and its own SD (7-9 t/s) is twice the effect. Decode does not run this code, and its rows show no gain.",
+                        "+tg128 @ d16384's -1.2% touches 0 at the edge of its interval; with nine rows tested, one borderline row is what",
+                        "+chance gives. It is not a cause found. All of this agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the",
+                        "+one-table run was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler",
+                        "+takes 5-10% off the products, and the products are about 30% of a 4K chunk's GPU time.",
+                        " ",
+                        " ## The RTX 5090 over Thunderbolt (not pursued)",
+                        " "
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "filePath": "E:\\work\\AI\\Strata\\docs\\TODO.md",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 146,
+                      "newStart": 1,
+                      "newLines": 147,
+                      "lines": [
+                        "-# TODO: the Strix Halo (gfx1151) port, after 2026-10-05\r",
+                        "-\r",
+                        "-What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names\r",
+                        "-the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to\r",
+                        "-`docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).\r",
+                        "-\r",
+                        "-## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)\r",
+                        "-\r",
+                        "-1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch\r",
+                        "-   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):\r",
+                        "-   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now\r",
+                        "-   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543\r",
+                        "-   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated\r",
+                        "-   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the\r",
+                        "-   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for\r",
+                        "-   K8V4 pools.\r",
+                        "-2. ~~**The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne`\r",
+                        "-   rows per layer with FP32 output run at 3.5-3.7 TFLOP/s ... Decide between a 16-bit output, a WMMA kernel, or the\r",
+                        "-   MMQ path~~ **Done 2026-10-05 night, with a corrected premise**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2-done-the-expert-products-are-mmq-not-fp16-gemms-and-their-j-tile-2026-10-05-night)):\r",
+                        "-   the Coder's expert products run through llama.cpp's MMQ (int8) by default, not the FP16 GEMMs - those only run\r",
+                        "-   with `STRATA_PREFILL_MMQ=0`. Measured on this card: the three FP16 routes (hipBLASLt solutions from the tuner,\r",
+                        "-   16-bit output, PR #313's WMMA) and the MMQ products at one layer's shape. Shipped: `Product::opt_rows` - the MMQ\r",
+                        "-   J tile chosen for a group's median row count instead of its largest (`STRATA_PREFILL_MMQ_OPT=max` restores the\r",
+                        "-   old choice): gate/up 1,800-1,832 -> 1,581-1,604 ms, down 802-816 -> 764-769 ms, pp4096 509-525 -> 524-541 t/s,\r",
+                        "-   a 1.3K prompt 398 -> 424 t/s, the same text out; the full benchmark: Coder prefill 528 -> 548 t/s at 4.75K,\r",
+                        "-   517 -> 537 at pp4096, ~530 -> ~560 at 16-20K, decode unchanged, UD-IQ4_XS unchanged (its chunks stream); the gfx1151 hipBLASLt table extended with the expert shapes at\r",
+                        "-   small T (the FP16 path's gate/up 4,231 -> 1,593-1,671 ms, now on par with MMQ); experts sorted by row count\r",
+                        "-   before grouping where the chunk does not stream (below `STRATA_PREFILL_STREAM_MIN` = 1,024 tokens: 1,001-token\r",
+                        "-   prompts 360-388 -> 388-428 t/s; in arena mode every expert is staged from the arena in id order, so 4K chunks\r",
+                        "-   keep id order). Left open, in the next two items.\r",
+                        "-2a. ~~**Group the experts by row count while they stream.** The MMQ products pay for the J tile the group's experts\r",
+                        "-   pad to: a tile for the largest pads 46% of a 4K chunk's rows and 161% of a 1.3K chunk's ... per-size-class group\r",
+                        "-   buffers (one group buffer per class, rows laid out class-major at routing time)~~ **Done 2026-10-06**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2a-done-streamed-experts-grouped-by-row-count-class-2026-10-06)):\r",
+                        "-   a streamed MMQ layer's rows are laid out class-major by row count, each expert is gathered as it arrives (the\r",
+                        "-   ring still in id order) into its class's own group buffer, and a group is multiplied when its last member lands.\r",
+                        "-   Shipped with one class per RDNA 3.5 J tile (`STRATA_PREFILL_MMQ_CLASSES`, default `16,32,48,64,80,96,112,128`;\r",
+                        "-   `=0` the old walk), measured against 3 coarser sets. Coder, against one class: padding 46% -> 19% of a 4K chunk's\r",
+                        "-   rows, gate/up 1,603-1,632 -> 1,447-1,467 ms, down 765-780 -> 705-706 ms, pp4096 558-563 -> 571-574 t/s; 1.66K\r",
+                        "-   prompts 460-462 -> 492-495 t/s, 1.2K 409 -> 444; the same text out. UD-IQ4_XS: its products lose 0.9 s per 4K\r",
+                        "-   chunk (padding 103% -> 23%), but its 4K chunks are bound by the arena staging and do not move (331-336 -> 332-333\r",
+                        "-   t/s); 1.66K 258-260 -> 280-281 t/s. The prompt path's GDN state hash is unchanged on both models. Costs 174-182\r",
+                        "-   more lent cache slots (0.32-0.42 GiB) during a prompt. Not measured on a CUDA card (other J tiles).\r",
+                        "-2b. ~~**The MMQ kernels themselves: 6-12 TOPS at the expert shapes** (the harness, sorted groups: 8.7-12.4), against\r",
+                        "-   the card's int8 dot peak. The vendored ggml already has the RDNA 3.5 tile tables (`mmq-config-rdna3-5.cuh`: 256\r",
+                        "-   threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles ... are\r",
+                        "-   untested here.~~ **Done 2026-10-06, with a corrected premise**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2b-done-the-mmq-kernels-spilled-registers-llvms-max-ilp-scheduler-takes-5-10-off-them-2026-10-06)):\r",
+                        "-   MMQ on gfx1151 runs WMMA (`v_wmma_i32_16x16x16_iu8`), not `sudot4`. Its kernels spilled registers: IQ3_XXS /\r",
+                        "-   IQ2_S (the Coder's gate/up) at J = 128 hit 256 VGPRs and 132-208 bytes of scratch per lane, most types at J = 32\r",
+                        "-   108-180 bytes. Of 8 compiler settings and the #21284 tiles (`docs/benchmarks/2026-10-06-halo-mmq-tiles*`), LLVM's\r",
+                        "-   max-ilp scheduler was the best or level with the best on every type: -5 to -10% per layer in the harness. Shipped as\r",
+                        "-   `STRATA_MMQ_GFX1151_SCHED` (CMake, default `max-ilp`, gfx1151's device compile only, empty = off). In the engine\r",
+                        "-   (Coder): gate/up 1,463-1,479 -> 1,396-1,430 ms per 4K chunk, pp4096 560-561 -> 566-567 t/s, 1.66K 466-468 ->\r",
+                        "-   476-477, 1.2K 414 -> 424; the same GDN state hash and text. The one table: one run moved within its spread\r",
+                        "-   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:\r",
+                        "-   4.75K 577.5-577.6 -> 582.6-583.1 t/s, 16-20K +1.4%, pp4096 even, decode unchanged. The kernels still run at 9-13\r",
+                        "-   TOPS per layer; the #21284 tiles add 2-3% on the down products only and would need a patched upstream table:\r",
+                        "-   not taken.\r",
+                        "-3. ~~**`hip_prefill_mmq_parity` fails on gfx1151** (\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\").\r",
+                        "-   Find out whether it is ggml's gfx1151 handling (llama.cpp#21284: MMQ tile `mmq_x=48, mmq_y=64, nwarps=4`\r",
+                        "-   against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). This\r",
+                        "-   matters more than it looked: the Coder's and UD-IQ4_XS's experts run through MMQ by default on this card (item 2),\r",
+                        "-   including layers whose down matrix is Q2_0 (`native_experts.txt`: layer 1 and others), and the day's benchmark\r",
+                        "-   outputs came from that path.~~ **Done 2026-10-05 night: neither**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-3-done-the-mmq-parity-failure-was-the-tests-stream-order-not-the-kernels-2026-10-05-night)):\r",
+                        "-   the test filled its output sentinel with `hipMemset` on the null stream and ran the products on a non-blocking\r",
+                        "-   stream; on Windows HIP the fill landed after the products, so every element read back as the sentinel (a probe\r",
+                        "-   over 5 types, both shapes, 1-135 rows: 17 of 17 cases, 100% of the elements, no error reported). The host and\r",
+                        "-   device tile tables agree for gfx1151, and the kernel itself - the library's and a fresh instantiation, MoE and\r",
+                        "-   plain mode, -O3 and -O1, any stream - writes every element at rel_l2 0.0010 against a CPU double product. The\r",
+                        "-   test now fills with `hipMemsetAsync` on its stream and passes (6 products, rel_l2 0.0005-0.0012); the ctest tally\r",
+                        "-   on this card is 4 known failures. The engine's prompt path has no synchronous memset, and the engine with the\r",
+                        "-   default and with `STRATA_PREFILL_MMQ=0` continues a 1,173-token code prompt with the same code (one whitespace\r",
+                        "-   run differs: int8 against FP16 rounding), so the day's benchmark outputs were computed. Probes:\r",
+                        "-   `docs/benchmarks/2026-10-05-halo-mmq-{parity,config,kernel}-probe*`, the engine A/B `2026-10-05-halo-mmq-ab.py`. Also seen:\r",
+                        "-   a kernel trap on this HIP is reported by the next `hipMemcpy`, not by `hipDeviceSynchronize`.\r",
+                        "-4. ~~**The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and\r",
+                        "-   8192 and, since item 2, the two expert shapes at T = 16-512; the engine still logs `Lt fallback; no calibration\r",
+                        "-   for dtype=bf16 T=4165 N=256 K=2560` for the 256-wide alpha/beta projections. Calibrate those (the tuner takes\r",
+                        "-   `--case`; the lookup already takes the nearest T). Also re-run `tune_hipblaslt` whenever the ROCm wheels change\r",
+                        "-   (ids are per version).~~ **Done 2026-10-05 night**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-4-done-the-last-hole-in-the-hipblaslt-table-was-the-router-not-the-alphabeta-projections-2026-10-05-night)):\r",
+                        "-   the shape is the router (`ffn_gate_inp.weight`, 256 experts, one BF16 GEMM per layer, 48 per chunk), not the\r",
+                        "-   alpha/beta projections (those are N = 48 and were in the table). Two rows (T = 4096 and 8192, solution 1251: the\r",
+                        "-   best at every T from 1024 to 8192, `docs/benchmarks/2026-10-05-halo-router-lt-tuning.log`) close the last hole:\r",
+                        "-   the GEMM 1.30 -> 0.27 ms at T = 4096 in the tuner (against the engine's `ROCBLAS_USE_HIPBLASLT=1` fallback), the\r",
+                        "-   engine's \"router+shared\" phase 222-223 -> 161-162 ms per 4K chunk, pp4096 543-546 -> 547-553 t/s, no fallback\r",
+                        "-   logged (`2026-10-05-halo-router-lt-ab.py`). On a wheel change the engine refuses the file (its header carries the\r",
+                        "-   arch and version) and says so; re-tune then.\r",
+                        "-5. ~~**The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card\r",
+                        "-   (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.~~\r",
+                        "-   **Done 2026-10-05 night, with a corrected premise**\r",
+                        "-   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-5-done-the-gdn-phases-time-was-the-output-norms-launch-not-the-recurrence-2026-10-05-night)):\r",
+                        "-   Strata's recurrence is already column-split and pipelined (192 blocks), 14-15 ms per layer at T = 4,165. The\r",
+                        "-   output norm after it took 11-25 ms launching one tiny block per token and head. Shipped: a wave-per-head norm,\r",
+                        "-   1.5 ms (within 5 ulp of the old one; `STRATA_GDN_NORM_OLD=1` restores it). The engine's \"gdn recurrence\" phase\r",
+                        "-   went 816-836 -> 592-600 ms per 4K chunk, pp4096 550-551 -> 562-566 t/s. llama.cpp's chunked kernels, ported onto\r",
+                        "-   the vendored ggml's WMMA (`src/prefill/gdn_chunk_wmma.cu`), match to FP16 rounding (rel_l2 4.5e-4) but their walk\r",
+                        "-   is no faster here (12-16 ms; engine 689-693 ms): opt-in as `STRATA_GDN_CHUNK=1`. An FP32 chunked form was 0.6x\r",
+                        "-   (same FMA count, no matrix cores). Test: `hip_prefill_gdn_chunk_parity`. Left open: the serial walk itself,\r",
+                        "-   at ~0.5 TFMA/s.\r",
+                        "-6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any\r",
+                        "-   fusing.\r",
+                        "-\r",
+                        "-## Decode\r",
+                        "-\r",
+                        "-7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does\r",
+                        "-   depend on residency). Run with `STRATA_DECODE_TIMING=1` at 32/96 and find the shared cost; candidates: the GPU\r",
+                        "-   expert kernels for this file's IQ3_S / IQ4_NL / Q8_0 blobs on RDNA 3.5, the per-token PLE rows from the NVMe,\r",
+                        "-   or a copy path (pytorch/pytorch#171687 reports gfx1151 decode 90% in `hipMemcpyWithStream`).\r",
+                        "-8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes\r",
+                        "-   four fifths of the experts on its CPU. The decode phase timing (`STRATA_DECODE_TIMING=1`) has not been read on\r",
+                        "-   this card yet.\r",
+                        "-\r",
+                        "-## Memory and setup on an APU\r",
+                        "-\r",
+                        "-9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:\r",
+                        "-   16 GiB registered -> 32 GiB less free). `--expert-cache auto` sizes from that figure and gave UD-IQ4_XS 0 slots\r",
+                        "-   at 32/96; the remedy was `STRATA_ARENA_PIN_GIB=24` by hand. Setup and the engine should do this themselves on an\r",
+                        "-   integrated GPU: cap the pin, and size the cache from the dedicated carve-out rather than the WDDM figure.\r",
+                        "-10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident\r",
+                        "-    (`expert tiers: ... files ... MB read`), far more than the 1,945 lent slots' experts. Find what reads (the\r",
+                        "-    routing prefetch of whole layers?) and whether it is needed when the prompt path's experts are resident.\r",
+                        "-11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU\r",
+                        "-    memory and its pinned arena ~69 GiB of RAM. A prompt path that takes resident experts from the cache instead of\r",
+                        "-    the host source would make 96/32 the right split for every model; until then 32/96 with a partial cache.\r",
+                        "-12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip\r",
+                        "-    (`build_windows.bat` default list has it, the zip must be built and published), the docs' \"integrated GPUs are\r",
+                        "-    not supported\" lines ([AI_SETUP.md](AI_SETUP.md), [INSTALL.md](INSTALL.md), [TROUBLESHOOTING.md](TROUBLESHOOTING.md),\r",
+                        "-    [AMD_HIP.md](AMD_HIP.md)), setup choosing `STRATA_HIPBLASLT_TUNING` from `tools/hip/gfx1151-hipblaslt-100401.txt`\r",
+                        "-    (it should, by arch and version: verify), and `ROCBLAS_USE_HIPBLASLT=1` in the config's env for AMD cards.\r",
+                        "-13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off\r",
+                        "-    (ROCm/legacy-rocm-build#6675; not seen here, 2.8-2.9 GHz under load over RDP with a 300 s timeout). The engine\r",
+                        "-    or server could hold `SetThreadExecutionState(ES_DISPLAY_REQUIRED)` while a request runs.\r",
+                        "-\r",
+                        "-## Housekeeping\r",
+                        "-\r",
+                        "-14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with\r",
+                        "-    the pin cap) and keeps 0.55; measured here 0.2 vs 0.55 made no difference. Nothing to fix for speed; the log line\r",
+                        "-    should say what it saw.\r",
+                        "-15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it\r",
+                        "-    report rather than hang.\r",
+                        "-16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as\r",
+                        "-    UTF-8; `pp4k.py` is the quick single-shape check. Keep new runs' JSON and logs in `docs/benchmarks/`.\r",
+                        "+# TODO: the Strix Halo (gfx1151) port, after 2026-10-05",
+                        "+",
+                        "+What [AIMAX+395-ROCm.md](AIMAX+395-ROCm.md) left open, in the order of the time or risk at stake. Every item names",
+                        "+the measurement that decides it. Test outputs (engine logs, server output, benchmark JSON) go to",
+                        "+`docs/benchmarks/`, not the project root; the probe sources of that day are there too (`2026-10-05-halo-*`).",
+                        "+",
+                        "+## Prompt speed (the Coder's 4K prompt: 9.2 s of GPU time, 434-451 t/s)",
+                        "+",
+                        "+1. ~~**The FP32 prompt attention, 2.0 s (22%).** Port Strata's PR #313~~ **Done 2026-10-05** (branch",
+                        "+   `wmma-gfx1151`, [the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-1-done-pr-313s-gfx11-matrix-core-prompt-attention-on-gfx1151-2026-10-05-night)):",
+                        "+   the PR merged onto 0.1.34 with its guards extended to gfx1150/gfx1151, the existing attention parity test now",
+                        "+   drives the gfx11 kernel (4 of 4 pass, 3.3x per chunk), `STRATA_PA_WMMA=1` in the config: pp4096 452 -> 517-543",
+                        "+   t/s, the attention phase 2,034 -> 611 ms. The PR's WMMA GEMM (`STRATA_WMMA_GEMM=1`) is slower than the calibrated",
+                        "+   hipBLASLt table here and declines the expert shapes: left off. Still open from it: the PR is not upstream (the",
+                        "+   maintainer asked for a rebase on 0.1.39 and per-arch guards), and the gfx11 attention kernel has no path for",
+                        "+   K8V4 pools.",
+                        "+2. ~~**The expert GEMMs, 2.6 s + 0.5 s dequant (39% of the 7.7 s a 4K prompt now takes).** 512 FP16 GEMMs of `ne`",
+                        "+   rows per layer with FP32 output run at 3.5-3.7 TFLOP/s ... Decide between a 16-bit output, a WMMA kernel, or the",
+                        "+   MMQ path~~ **Done 2026-10-05 night, with a corrected premise**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2-done-the-expert-products-are-mmq-not-fp16-gemms-and-their-j-tile-2026-10-05-night)):",
+                        "+   the Coder's expert products run through llama.cpp's MMQ (int8) by default, not the FP16 GEMMs - those only run",
+                        "+   with `STRATA_PREFILL_MMQ=0`. Measured on this card: the three FP16 routes (hipBLASLt solutions from the tuner,",
+                        "+   16-bit output, PR #313's WMMA) and the MMQ products at one layer's shape. Shipped: `Product::opt_rows` - the MMQ",
+                        "+   J tile chosen for a group's median row count instead of its largest (`STRATA_PREFILL_MMQ_OPT=max` restores the",
+                        "+   old choice): gate/up 1,800-1,832 -> 1,581-1,604 ms, down 802-816 -> 764-769 ms, pp4096 509-525 -> 524-541 t/s,",
+                        "+   a 1.3K prompt 398 -> 424 t/s, the same text out; the full benchmark: Coder prefill 528 -> 548 t/s at 4.75K,",
+                        "+   517 -> 537 at pp4096, ~530 -> ~560 at 16-20K, decode unchanged, UD-IQ4_XS unchanged (its chunks stream); the gfx1151 hipBLASLt table extended with the expert shapes at",
+                        "+   small T (the FP16 path's gate/up 4,231 -> 1,593-1,671 ms, now on par with MMQ); experts sorted by row count",
+                        "+   before grouping where the chunk does not stream (below `STRATA_PREFILL_STREAM_MIN` = 1,024 tokens: 1,001-token",
+                        "+   prompts 360-388 -> 388-428 t/s; in arena mode every expert is staged from the arena in id order, so 4K chunks",
+                        "+   keep id order). Left open, in the next two items.",
+                        "+2a. ~~**Group the experts by row count while they stream.** The MMQ products pay for the J tile the group's experts",
+                        "+   pad to: a tile for the largest pads 46% of a 4K chunk's rows and 161% of a 1.3K chunk's ... per-size-class group",
+                        "+   buffers (one group buffer per class, rows laid out class-major at routing time)~~ **Done 2026-10-06**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2a-done-streamed-experts-grouped-by-row-count-class-2026-10-06)):",
+                        "+   a streamed MMQ layer's rows are laid out class-major by row count, each expert is gathered as it arrives (the",
+                        "+   ring still in id order) into its class's own group buffer, and a group is multiplied when its last member lands.",
+                        "+   Shipped with one class per RDNA 3.5 J tile (`STRATA_PREFILL_MMQ_CLASSES`, default `16,32,48,64,80,96,112,128`;",
+                        "+   `=0` the old walk), measured against 3 coarser sets. Coder, against one class: padding 46% -> 19% of a 4K chunk's",
+                        "+   rows, gate/up 1,603-1,632 -> 1,447-1,467 ms, down 765-780 -> 705-706 ms, pp4096 558-563 -> 571-574 t/s; 1.66K",
+                        "+   prompts 460-462 -> 492-495 t/s, 1.2K 409 -> 444; the same text out. UD-IQ4_XS: its products lose 0.9 s per 4K",
+                        "+   chunk (padding 103% -> 23%), but its 4K chunks are bound by the arena staging and do not move (331-336 -> 332-333",
+                        "+   t/s); 1.66K 258-260 -> 280-281 t/s. The prompt path's GDN state hash is unchanged on both models. Costs 174-182",
+                        "+   more lent cache slots (0.32-0.42 GiB) during a prompt. Not measured on a CUDA card (other J tiles).",
+                        "+2b. ~~**The MMQ kernels themselves: 6-12 TOPS at the expert shapes** (the harness, sorted groups: 8.7-12.4), against",
+                        "+   the card's int8 dot peak. The vendored ggml already has the RDNA 3.5 tile tables (`mmq-config-rdna3-5.cuh`: 256",
+                        "+   threads, I = 128 from J = 48 up) and uses `__builtin_amdgcn_sudot4`; llama.cpp#21284's smaller tiles ... are",
+                        "+   untested here.~~ **Done 2026-10-06, with a corrected premise**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-2b-done-the-mmq-kernels-spilled-registers-llvms-max-ilp-scheduler-takes-5-10-off-them-2026-10-06)):",
+                        "+   MMQ on gfx1151 runs WMMA (`v_wmma_i32_16x16x16_iu8`), not `sudot4`. Its kernels spilled registers: IQ3_XXS /",
+                        "+   IQ2_S (the Coder's gate/up) at J = 128 hit 256 VGPRs and 132-208 bytes of scratch per lane, most types at J = 32",
+                        "+   108-180 bytes. Of 8 compiler settings and the #21284 tiles (`docs/benchmarks/2026-10-06-halo-mmq-tiles*`), LLVM's",
+                        "+   max-ilp scheduler was the best or level with the best on every type: -5 to -10% per layer in the harness. Shipped as",
+                        "+   `STRATA_MMQ_GFX1151_SCHED` (CMake, default `max-ilp`, gfx1151's device compile only, empty = off). In the engine",
+                        "+   (Coder): gate/up 1,463-1,479 -> 1,396-1,430 ms per 4K chunk, pp4096 560-561 -> 566-567 t/s, 1.66K 466-468 ->",
+                        "+   476-477, 1.2K 414 -> 424; the same GDN state hash and text. The one table: one run moved within its spread",
+                        "+   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows in six back-to-back pairs per engine:",
+                        "+   4.75K +1.1% (95% interval +0.3 to +1.9%, 6 of 6 pairs), 16-20K +1.3-1.5% (6 of 6), pp4096 +0.7% (interval includes",
+                        "+   0), decode unchanged. The kernels still run at 9-13",
+                        "+   TOPS per layer; the #21284 tiles add 2-3% on the down products only and would need a patched upstream table:",
+                        "+   not taken.",
+                        "+3. ~~**`hip_prefill_mmq_parity` fails on gfx1151** (\"synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output\").",
+                        "+   Find out whether it is ggml's gfx1151 handling (llama.cpp#21284: MMQ tile `mmq_x=48, mmq_y=64, nwarps=4`",
+                        "+   against VGPR spills; `__builtin_amdgcn_sudot4`) or Strata's host glue (`src/prefill/ggml_cuda_host.cu`). This",
+                        "+   matters more than it looked: the Coder's and UD-IQ4_XS's experts run through MMQ by default on this card (item 2),",
+                        "+   including layers whose down matrix is Q2_0 (`native_experts.txt`: layer 1 and others), and the day's benchmark",
+                        "+   outputs came from that path.~~ **Done 2026-10-05 night: neither**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-3-done-the-mmq-parity-failure-was-the-tests-stream-order-not-the-kernels-2026-10-05-night)):",
+                        "+   the test filled its output sentinel with `hipMemset` on the null stream and ran the products on a non-blocking",
+                        "+   stream; on Windows HIP the fill landed after the products, so every element read back as the sentinel (a probe",
+                        "+   over 5 types, both shapes, 1-135 rows: 17 of 17 cases, 100% of the elements, no error reported). The host and",
+                        "+   device tile tables agree for gfx1151, and the kernel itself - the library's and a fresh instantiation, MoE and",
+                        "+   plain mode, -O3 and -O1, any stream - writes every element at rel_l2 0.0010 against a CPU double product. The",
+                        "+   test now fills with `hipMemsetAsync` on its stream and passes (6 products, rel_l2 0.0005-0.0012); the ctest tally",
+                        "+   on this card is 4 known failures. The engine's prompt path has no synchronous memset, and the engine with the",
+                        "+   default and with `STRATA_PREFILL_MMQ=0` continues a 1,173-token code prompt with the same code (one whitespace",
+                        "+   run differs: int8 against FP16 rounding), so the day's benchmark outputs were computed. Probes:",
+                        "+   `docs/benchmarks/2026-10-05-halo-mmq-{parity,config,kernel}-probe*`, the engine A/B `2026-10-05-halo-mmq-ab.py`. Also seen:",
+                        "+   a kernel trap on this HIP is reported by the next `hipMemcpy`, not by `hipDeviceSynchronize`.",
+                        "+4. ~~**The hipBLASLt table's holes.** `tools/hip/gfx1151-hipblaslt-100401.txt` covers the dense shapes at T = 4096 and",
+                        "+   8192 and, since item 2, the two expert shapes at T = 16-512; the engine still logs `Lt fallback; no calibration",
+                        "+   for dtype=bf16 T=4165 N=256 K=2560` for the 256-wide alpha/beta projections. Calibrate those (the tuner takes",
+                        "+   `--case`; the lookup already takes the nearest T). Also re-run `tune_hipblaslt` whenever the ROCm wheels change",
+                        "+   (ids are per version).~~ **Done 2026-10-05 night**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-4-done-the-last-hole-in-the-hipblaslt-table-was-the-router-not-the-alphabeta-projections-2026-10-05-night)):",
+                        "+   the shape is the router (`ffn_gate_inp.weight`, 256 experts, one BF16 GEMM per layer, 48 per chunk), not the",
+                        "+   alpha/beta projections (those are N = 48 and were in the table). Two rows (T = 4096 and 8192, solution 1251: the",
+                        "+   best at every T from 1024 to 8192, `docs/benchmarks/2026-10-05-halo-router-lt-tuning.log`) close the last hole:",
+                        "+   the GEMM 1.30 -> 0.27 ms at T = 4096 in the tuner (against the engine's `ROCBLAS_USE_HIPBLASLT=1` fallback), the",
+                        "+   engine's \"router+shared\" phase 222-223 -> 161-162 ms per 4K chunk, pp4096 543-546 -> 547-553 t/s, no fallback",
+                        "+   logged (`2026-10-05-halo-router-lt-ab.py`). On a wheel change the engine refuses the file (its header carries the",
+                        "+   arch and version) and says so; re-tune then.",
+                        "+5. ~~**The GDN recurrence, 0.8 s.** llama.cpp's chunked GDN prefill kernel gained 8% of a whole prompt on this card",
+                        "+   (EngramHalo `docs/strix-halo/windows.md`, 2026-10-04); Strata's `gdn_recurrence` is the same serial form.~~",
+                        "+   **Done 2026-10-05 night, with a corrected premise**",
+                        "+   ([the section in AIMAX+395-ROCm.md](AIMAX+395-ROCm.md#todo-5-done-the-gdn-phases-time-was-the-output-norms-launch-not-the-recurrence-2026-10-05-night)):",
+                        "+   Strata's recurrence is already column-split and pipelined (192 blocks), 14-15 ms per layer at T = 4,165. The",
+                        "+   output norm after it took 11-25 ms launching one tiny block per token and head. Shipped: a wave-per-head norm,",
+                        "+   1.5 ms (within 5 ulp of the old one; `STRATA_GDN_NORM_OLD=1` restores it). The engine's \"gdn recurrence\" phase",
+                        "+   went 816-836 -> 592-600 ms per 4K chunk, pp4096 550-551 -> 562-566 t/s. llama.cpp's chunked kernels, ported onto",
+                        "+   the vendored ggml's WMMA (`src/prefill/gdn_chunk_wmma.cu`), match to FP16 rounding (rel_l2 4.5e-4) but their walk",
+                        "+   is no faster here (12-16 ms; engine 689-693 ms): opt-in as `STRATA_GDN_CHUNK=1`. An FP32 chunked form was 0.6x",
+                        "+   (same FMA count, no matrix cores). Test: `hip_prefill_gdn_chunk_parity`. Left open: the serial walk itself,",
+                        "+   at ~0.5 TFMA/s.",
+                        "+6. **Gaps, 1.5 s.** Launch overhead of many small kernels and GEMMs; worth a trace (`STRATA_TRACE`) before any",
+                        "+   fusing.",
+                        "+",
+                        "+## Decode",
+                        "+",
+                        "+7. **UD-IQ4_XS decodes at 22-32 t/s whether 97% or 60% of its experts are on the GPU** (the Coder's decode does",
+                        "+   depend on residency). Run with `STRATA_DECODE_TIMING=1` at 32/96 and find the shared cost; candidates: the GPU",
+                        "+   expert kernels for this file's IQ3_S / IQ4_NL / Q8_0 blobs on RDNA 3.5, the per-token PLE rows from the NVMe,",
+                        "+   or a copy path (pytorch/pytorch#171687 reports gfx1151 decode 90% in `hipMemcpyWithStream`).",
+                        "+8. **The Coder's decode at 36-40 t/s with every expert on the GPU** is 0.8-0.9x a 12 GB RTX 3060 that computes",
+                        "+   four fifths of the experts on its CPU. The decode phase timing (`STRATA_DECODE_TIMING=1`) has not been read on",
+                        "+   this card yet.",
+                        "+",
+                        "+## Memory and setup on an APU",
+                        "+",
+                        "+9. **Pinned host memory counts twice in HIP's free figure** (`docs/benchmarks/2026-10-05-halo-hip-pinfree.hip`:",
+                        "+   16 GiB registered -> 32 GiB less free). `--expert-cache auto` sizes from that figure and gave UD-IQ4_XS 0 slots",
+                        "+   at 32/96; the remedy was `STRATA_ARENA_PIN_GIB=24` by hand. Setup and the engine should do this themselves on an",
+                        "+   integrated GPU: cap the pin, and size the cache from the dedicated carve-out rather than the WDDM figure.",
+                        "+10. **The in-place mmap mode read 47.6 GB of GGUF per 16K prompt** at 96/32 with all 12,288 experts resident",
+                        "+    (`expert tiers: ... files ... MB read`), far more than the 1,945 lent slots' experts. Find what reads (the",
+                        "+    routing prefetch of whole layers?) and whether it is needed when the prompt path's experts are resident.",
+                        "+11. **UD-IQ4_XS has no good split on this BIOS** (32 / 64 / 96 only): its 55.4 GiB of experts need ~61 GiB of GPU",
+                        "+    memory and its pinned arena ~69 GiB of RAM. A prompt path that takes resident experts from the cache instead of",
+                        "+    the host source would make 96/32 the right split for every model; until then 32/96 with a partial cache.",
+                        "+12. **Setup for gfx1151 users.** The arch is in the lists; still missing: gfx1151 in the release zip",
+                        "+    (`build_windows.bat` default list has it, the zip must be built and published), the docs' \"integrated GPUs are",
+                        "+    not supported\" lines ([AI_SETUP.md](AI_SETUP.md), [INSTALL.md](INSTALL.md), [TROUBLESHOOTING.md](TROUBLESHOOTING.md),",
+                        "+    [AMD_HIP.md](AMD_HIP.md)), setup choosing `STRATA_HIPBLASLT_TUNING` from `tools/hip/gfx1151-hipblaslt-100401.txt`",
+                        "+    (it should, by arch and version: verify), and `ROCBLAS_USE_HIPBLASLT=1` in the config's env for AMD cards.",
+                        "+13. **Display timeout.** Windows Strix Halo drops the GPU to ~600 MHz for compute when the console display is off",
+                        "+    (ROCm/legacy-rocm-build#6675; not seen here, 2.8-2.9 GHz under load over RDP with a 300 s timeout). The engine",
+                        "+    or server could hold `SetThreadExecutionState(ES_DISPLAY_REQUIRED)` while a request runs.",
+                        "+",
+                        "+## Housekeeping",
+                        "+",
+                        "+14. The `--pcie-frac` rule reads a meaningless probe on an APU (8-16 TB/s with a fully mapped arena, 68.8 GB/s with",
+                        "+    the pin cap) and keeps 0.55; measured here 0.2 vs 0.55 made no difference. Nothing to fix for speed; the log line",
+                        "+    should say what it saw.",
+                        "+15. `tests/hip/handoff` times out on Windows (the mapped-pointer alias, known, #325): skip it on `_WIN32` or make it",
+                        "+    report rather than hang.",
+                        "+16. The 3060M-style benchmark script now reads the EngramHalo checkout from `STRATA_ENGRAM_SRC` and its sources as",
+                        "+    UTF-8; `pp4k.py` is the quick single-shape check. Keep new runs' JSON and logs in `docs/benchmarks/`."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "E:\\work\\AI\\Strata\\docs\\AIMAX+395-ROCm.md",
+                "E:\\work\\AI\\Strata\\docs\\TODO.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01PDtLmQgaL8Q5MQ7dCRmVJt",
+            "type": "tool_result",
+            "content": "ok\r\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3-server.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-05-halo-coder-iq1_m-old-pair3.log', CRLF will be replaced by LF the next time Git touches it\nwarning: in the working copy of 'docs/benchmarks/2026-10-06-halo-onetable-todo2b-coder-pairs.log', CRLF will be replaced by LF the next time Git touches it\n docs/AIMAX+395-ROCm.md                             | 34 ++++++----\n docs/TODO.md                                       |  5 +-\n ...026-10-05-halo-coder-iq1_m-old-pair3-server.log | 75 ++++++++++++++++++++\n .../2026-10-05-halo-coder-iq1_m-old-pair3.log      | 24 +++++++\n ...2026-10-06-halo-onetable-todo2b-coder-pairs.log | 79 ++++++++++++++++++++++\n 5 files changed, 202 insertions(+), 15 deletions(-)",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "C:/conda_envs/strata/python.exe - <<'EOF'\nfrom pathlib import Path\np = Path(\"docs/AIMAX+395-ROCm.md\"); s = p.read_text(encoding=\"utf-8\")\na = s.index(\"TODO 2a's engine and this one alternating, two pairs\")\nb = s.index(\"## The RTX 5090 over Thunderbolt (not pursued)\")\nnew = \"\"\"TODO 2a's engine and this one alternating, six pairs, each pair back to back\n(`2026-10-06-halo-onetable-todo2b-coder-pairs.log`, `benchmarks/2026-10-05-halo-coder-iq1_m-{old,new}-pair{1..6}.*`;\nthe statistics by `2026-10-06-halo-onetable-todo2b-pairs-stats.py`, output `...-pairs-stats.log`):\n\n| Coder IQ1_M, t/s, 6 pairs | TODO 2a's engine, mean +- SD | **TODO 2b's engine** | new - old, mean [95% interval, paired t] | pairs where new > old |\n|---|---|---|---|---|\n| prefill @ ~4.75K | 584.6 +- 6.3 | **591.0 +- 7.3** | **+6.4 [+1.8, +11.0], +1.1%** | 6 of 6 |\n| pp4096 @ d0 | 575.3 +- 6.6 | 579.3 +- 9.0 | +4.0 [-4.7, +12.7], +0.7% | 4 of 6 |\n| depth 16384 prefix | 598.1 +- 3.4 | **607.1 +- 4.6** | **+9.0 [+6.2, +11.7], +1.5%** | 6 of 6 |\n| pp4096 @ d16384 (20,421 tokens) | 592.6 +- 4.8 | **600.2 +- 4.6** | **+7.6 [+4.5, +10.7], +1.3%** | 6 of 6 |\n| decode: cold, fresh, 4.75K tail, tg128 @ d0 | 38.4, 38.0, 33.7, 28.0 | 38.5, 37.6, 33.6, 27.9 | intervals all include 0 (-1.0 to +0.3%) | 2, 1, 2, 1 of 6 |\n| decode: tg128 @ d16384 | 28.2 +- 0.3 | 27.9 +- 0.3 | -0.4 [-0.7, +0.0], -1.2% | 0 of 6 |\n\nThe engine drifted more over the session than the effect: TODO 2a's engine read 577.5 at 4.75K in the first pair and\n593.2 in the fifth (SD 6.3 across its six runs). That is why one run against an earlier day's run says nothing about a\n1% change, and why the pairs are needed. Within a pair the new engine was faster on the three long-prompt rows every\ntime, and those intervals exclude 0: +1.1% at 4.75K, +1.3-1.5% at 16-20K. pp4096 @ d0 is +0.7% with an interval that\nincludes 0, and its own SD (7-9 t/s) is twice the effect. Decode does not run this code, and its rows show no gain.\ntg128 @ d16384's -1.2% touches 0 at the edge of its interval; with nine rows tested, one borderline row is what\nchance gives. It is not a cause found. All of this agrees with the A/B above (+1% at 4K, +2% at 1.2-1.7K). The 564.7 of the\none-table run was low for that run, not for the engine. The gain is small next to TODO 2a's (+2-3%). The scheduler\ntakes 5-10% off the products, and the products are about 30% of a 4K chunk's GPU time.\n\n\"\"\"\np.write_text(s[:a] + new + s[b:], encoding=\"utf-8\", newline=\"\\n\")\nt = Path(\"docs/TODO.md\"); u = t.read_text(encoding=\"utf-8\")\nold = \"the Coder's rows run back to back, two pairs per engine:\\n   4.75K 577.5-577.6 -> 582.6-583.1 t/s, 16-20K +1.4%, pp4096 even, decode unchanged.\"\nassert old in u\nu = u.replace(old, \"the Coder's rows in six back-to-back pairs per engine:\\n   4.75K +1.1% (95% interval +0.3 to +1.9%, 6 of 6 pairs), 16-20K +1.3-1.5% (6 of 6), pp4096 +0.7% (interval includes\\n   0), decode unchanged.\")\nt.write_text(u, encoding=\"utf-8\", newline=\"\\n\")\nprint(\"ok\")\nEOF\ngit diff --stat docs/",
+          "description": "Update docs with six-pair statistics"
+        }
+      }
+    },
+    {
+      "step_id": 220,
+      "timestamp": "2026-10-06T07:30:53.758Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 273448,
+        "completion_tokens": 1050,
+        "cached_tokens": 273446,
+        "extra": {
+          "cache_creation_input_tokens": 2235,
+          "cache_read_input_tokens": 273446,
+          "output_tokens_details": {
+            "thinking_tokens": 122
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2235,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1050,
+              "cache_read_input_tokens": 273446,
+              "cache_creation_input_tokens": 2235,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2235
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 221,
+      "timestamp": "2026-10-06T07:30:53.767Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "加跑 4 对后，一共 6 对（旧、新引擎交替，每对背靠背）。结论：**prefill 的提升在统计上成立，约 +1.1-1.5%；pp4096 @ d0 和 decode 看不出差别。**\n\n| Coder，t/s | 2a 引擎（均值 ± 标准差） | 2b 引擎 | 新 − 旧，95% 置信区间（配对 t 检验） | 新更快的对数 |\n|---|---|---|---|---|\n| 4.75K prefill | 584.6 ± 6.3 | 591.0 ± 7.3 | **+1.1%**，区间 +0.3 ~ +1.9% | 6/6 |\n| 16K 前缀 | 598.1 ± 3.4 | 607.1 ± 4.6 | **+1.5%**，区间 +1.0 ~ +2.0% | 6/6 |\n| pp4096 @ d16384 | 592.6 ± 4.8 | 600.2 ± 4.6 | **+1.3%**，区间 +0.8 ~ +1.8% | 6/6 |\n| pp4096 @ d0 | 575.3 ± 6.6 | 579.3 ± 9.0 | +0.7%，区间含 0 | 4/6 |\n| decode 各行 | — | — | −1.2 ~ +0.3%，区间都含 0 或贴着 0 | 0-2/6 |\n\n- **长 prompt 三行可以确认有提升：** 6 对里每次都是新引擎快，置信区间都不含 0。\n- **pp4096 @ d0 分不出来：** 这一行自身的波动（标准差 7-9 t/s）是效果的两倍，6 对还不够。\n- **decode 没变：** 改动的是 prompt 路径的内核，decode 不经过它。tg128 @ d16384 的 −1.2% 区间刚碰到 0。9 行里出现 1 行这样的边缘结果，在偶然范围内，我没找到原因。\n- **为什么非要成对比：** 同一个旧引擎在这一个时段里，从第 1 对的 577.5 漂到第 5 对的 593.2，漂移是效果的好几倍。所以拿单次 one-table 跟 2a 那天的记录比，判断不了 1% 级别的变化，只有交替配对才看得出来。\n\n数据和结论已经写进 `docs/AIMAX+395-ROCm.md` 的 TODO 2b 一节，替换了原来的 2 对表格，TODO 条目也同步改了。统计脚本是 `docs/benchmarks/2026-10-06-halo-onetable-todo2b-pairs-stats.py`，输出在同名的 `.log`。",
+      "metrics": {
+        "prompt_tokens": 273448,
+        "completion_tokens": 1050,
+        "cached_tokens": 273446,
+        "extra": {
+          "cache_creation_input_tokens": 2235,
+          "cache_read_input_tokens": 273446,
+          "output_tokens_details": {
+            "thinking_tokens": 122
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2235,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1050,
+              "cache_read_input_tokens": 273446,
+              "cache_creation_input_tokens": 2235,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2235
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "E:\\work\\AI\\Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 38822156,
-    "total_completion_tokens": 194873,
-    "total_cached_tokens": 38821740,
-    "total_steps": 212,
+    "total_prompt_tokens": 40994261,
+    "total_completion_tokens": 200555,
+    "total_cached_tokens": 40993827,
+    "total_steps": 221,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 1056495,
-      "total_cache_read_input_tokens": 38821740
+      "total_cache_creation_input_tokens": 1067181,
+      "total_cache_read_input_tokens": 40993827
     }
   }
 }

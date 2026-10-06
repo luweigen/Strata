@@ -54,8 +54,9 @@ the measurement that decides it. Test outputs (engine logs, server output, bench
    `STRATA_MMQ_GFX1151_SCHED` (CMake, default `max-ilp`, gfx1151's device compile only, empty = off). In the engine
    (Coder): gate/up 1,463-1,479 -> 1,396-1,430 ms per 4K chunk, pp4096 560-561 -> 566-567 t/s, 1.66K 466-468 ->
    476-477, 1.2K 414 -> 424; the same GDN state hash and text. The one table: one run moved within its spread
-   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows run back to back, two pairs per engine:
-   4.75K 577.5-577.6 -> 582.6-583.1 t/s, 16-20K +1.4%, pp4096 even, decode unchanged. The kernels still run at 9-13
+   (Coder 4.75K 587.5 -> 564.7, pp4096 576.1 -> 577.4); the Coder's rows in six back-to-back pairs per engine:
+   4.75K +1.1% (95% interval +0.3 to +1.9%, 6 of 6 pairs), 16-20K +1.3-1.5% (6 of 6), pp4096 +0.7% (interval includes
+   0), decode unchanged. The kernels still run at 9-13
    TOPS per layer; the #21284 tiles add 2-3% on the down products only and would need a patched upstream table:
    not taken.
 3. ~~**`hip_prefill_mmq_parity` fails on gfx1151** ("synthetic-Q2_0-GU-pass0: non-finite or unwritten MMQ output").
