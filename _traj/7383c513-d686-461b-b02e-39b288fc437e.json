@@ -11013,19 +11013,1680 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 164,
+      "timestamp": "2026-10-17T14:25:47.559Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>bwsrvt0ig</task-id>\n<summary>Monitor event: \"decode split: each result line, or a server failure\"</summary>\n<event>{\"model\": \"ud\", \"arm\": \"profile\", \"args\": \"--pcie-frac 0.25\", \"test\": \"decode#3\", \"tok_s\": 55.5, \"tokens\": 230, \"drafts\": \"171/184\"}</event>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 165,
+      "timestamp": "2026-10-17T14:25:51.397Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_017t1XMD6w37r1EbikWbLUcH",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_017t1XMD6w37r1EbikWbLUcH",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "S=/tmp/claude-1000/-home-luwei-work-AI-Strata/7383c513-d686-461b-b02e-39b288fc437e/scratchpad/split; sleep 5; pgrep -x strata; cat $S/run.err; grep -h \"decode timing\" $S/ud-timing-engine.log | tail -2; grep -h \"decode timing\\|GPU stages\" $S/ud-profile-engine.log | tail -4",
+            "description": "Read UD timing and GPU stage lines"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_017t1XMD6w37r1EbikWbLUcH",
+            "content": "strata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.09 ms/window = verify 64.86 (GPU-reach wait 27.65 + per-layer host 33.97 [plan 0.14 actq 0.50 jobs 0.48 CPU 32.83] + stage 0.03) + commit/emit 0.04 + draft 5.17; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 69.56 ms/window = verify 64.35 (GPU-reach wait 27.04 + per-layer host 34.15 [plan 0.14 actq 0.48 jobs 0.47 CPU 33.06] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.60 ms/window = verify 65.39 (GPU-reach wait 28.26 + per-layer host 33.85 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.72] + stage 0.03) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.54 conv 0.13 ab 0.62 z 2.14 rec 0.75 out-proj 2.11 hc-read1+router 4.23 shared+quant 1.43 waitA 0.34 VRAM hits 6.83 waitB 13.11 PCIe grp 2.69 waitCPU 4.76 copy+combine 0.83 (gap) 0.02 head 3.11   hc0 norm 0.86   hc0 down 1.36   hc0 up 1.70 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.17 q+q-idx 1.66 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.73 hc-read1+router 1.41 shared+quant 0.48 waitA 0.11 VRAM hits 2.70 waitB 3.49 PCIe grp 0.79 waitCPU 0.85 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.45   hc0 up 0.57 | total 65.66 ms/window over 61 windows\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 70.23 ms/window = verify 65.03 (GPU-reach wait 27.73 + per-layer host 34.08 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.97] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.51 conv 0.13 ab 0.62 z 2.12 rec 0.75 out-proj 2.10 hc-read1+router 4.18 shared+quant 1.42 waitA 0.33 VRAM hits 6.73 waitB 12.98 PCIe grp 2.66 waitCPU 5.05 copy+combine 0.82 (gap) 0.02 head 3.07   hc0 norm 0.85   hc0 down 1.34   hc0 up 1.68 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.16 q+q-idx 1.65 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.72 hc-read1+router 1.40 shared+quant 0.47 waitA 0.11 VRAM hits 2.64 waitB 3.43 PCIe grp 0.78 waitCPU 0.97 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.44   hc0 up 0.57 | total 65.35 ms/window over 60 windows\n\n[stdout]\nstrata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.09 ms/window = verify 64.86 (GPU-reach wait 27.65 + per-layer host 33.97 [plan 0.14 actq 0.50 jobs 0.48 CPU 32.83] + stage 0.03) + commit/emit 0.04 + draft 5.17; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 69.56 ms/window = verify 64.35 (GPU-reach wait 27.04 + per-layer host 34.15 [plan 0.14 actq 0.48 jobs 0.47 CPU 33.06] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.60 ms/window = verify 65.39 (GPU-reach wait 28.26 + per-layer host 33.85 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.72] + stage 0.03) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.54 conv 0.13 ab 0.62 z 2.14 rec 0.75 out-proj 2.11 hc-read1+router 4.23 shared+quant 1.43 waitA 0.34 VRAM hits 6.83 waitB 13.11 PCIe grp 2.69 waitCPU 4.76 copy+combine 0.83 (gap) 0.02 head 3.11   hc0 norm 0.86   hc0 down 1.36   hc0 up 1.70 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.17 q+q-idx 1.66 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.73 hc-read1+router 1.41 shared+quant 0.48 waitA 0.11 VRAM hits 2.70 waitB 3.49 PCIe grp 0.79 waitCPU 0.85 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.45   hc0 up 0.57 | total 65.66 ms/window over 61 windows\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 70.23 ms/window = verify 65.03 (GPU-reach wait 27.73 + per-layer host 34.08 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.97] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.51 conv 0.13 ab 0.62 z 2.12 rec 0.75 out-proj 2.10 hc-read1+router 4.18 shared+quant 1.42 waitA 0.33 VRAM hits 6.73 waitB 12.98 PCIe grp 2.66 waitCPU 5.05 copy+combine 0.82 (gap) 0.02 head 3.07   hc0 norm 0.85   hc0 down 1.34   hc0 up 1.68 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.16 q+q-idx 1.65 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.72 hc-read1+router 1.40 shared+quant 0.47 waitA 0.11 VRAM hits 2.64 waitB 3.43 PCIe grp 0.78 waitCPU 0.97 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.44   hc0 up 0.57 | total 65.35 ms/window over 60 windows\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 162291,
+        "completion_tokens": 228,
+        "cached_tokens": 162287,
+        "extra": {
+          "cache_creation_input_tokens": 337,
+          "cache_read_input_tokens": 162287,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 337,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 228,
+              "cache_read_input_tokens": 162287,
+              "cache_creation_input_tokens": 337,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 337
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "strata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.09 ms/window = verify 64.86 (GPU-reach wait 27.65 + per-layer host 33.97 [plan 0.14 actq 0.50 jobs 0.48 CPU 32.83] + stage 0.03) + commit/emit 0.04 + draft 5.17; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 69.56 ms/window = verify 64.35 (GPU-reach wait 27.04 + per-layer host 34.15 [plan 0.14 actq 0.48 jobs 0.47 CPU 33.06] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.60 ms/window = verify 65.39 (GPU-reach wait 28.26 + per-layer host 33.85 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.72] + stage 0.03) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.54 conv 0.13 ab 0.62 z 2.14 rec 0.75 out-proj 2.11 hc-read1+router 4.23 shared+quant 1.43 waitA 0.34 VRAM hits 6.83 waitB 13.11 PCIe grp 2.69 waitCPU 4.76 copy+combine 0.83 (gap) 0.02 head 3.11   hc0 norm 0.86   hc0 down 1.36   hc0 up 1.70 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.17 q+q-idx 1.66 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.73 hc-read1+router 1.41 shared+quant 0.48 waitA 0.11 VRAM hits 2.70 waitB 3.49 PCIe grp 0.79 waitCPU 0.85 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.45   hc0 up 0.57 | total 65.66 ms/window over 61 windows\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 70.23 ms/window = verify 65.03 (GPU-reach wait 27.73 + per-layer host 34.08 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.97] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.51 conv 0.13 ab 0.62 z 2.12 rec 0.75 out-proj 2.10 hc-read1+router 4.18 shared+quant 1.42 waitA 0.33 VRAM hits 6.73 waitB 12.98 PCIe grp 2.66 waitCPU 5.05 copy+combine 0.82 (gap) 0.02 head 3.07   hc0 norm 0.85   hc0 down 1.34   hc0 up 1.68 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.16 q+q-idx 1.65 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.72 hc-read1+router 1.40 shared+quant 0.47 waitA 0.11 VRAM hits 2.64 waitB 3.43 PCIe grp 0.78 waitCPU 0.97 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.44   hc0 up 0.57 | total 65.35 ms/window over 60 windows",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_017t1XMD6w37r1EbikWbLUcH",
+            "type": "tool_result",
+            "content": "strata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.09 ms/window = verify 64.86 (GPU-reach wait 27.65 + per-layer host 33.97 [plan 0.14 actq 0.50 jobs 0.48 CPU 32.83] + stage 0.03) + commit/emit 0.04 + draft 5.17; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 69.56 ms/window = verify 64.35 (GPU-reach wait 27.04 + per-layer host 34.15 [plan 0.14 actq 0.48 jobs 0.47 CPU 33.06] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.60 ms/window = verify 65.39 (GPU-reach wait 28.26 + per-layer host 33.85 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.72] + stage 0.03) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.54 conv 0.13 ab 0.62 z 2.14 rec 0.75 out-proj 2.11 hc-read1+router 4.23 shared+quant 1.43 waitA 0.34 VRAM hits 6.83 waitB 13.11 PCIe grp 2.69 waitCPU 4.76 copy+combine 0.83 (gap) 0.02 head 3.11   hc0 norm 0.86   hc0 down 1.36   hc0 up 1.70 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.17 q+q-idx 1.66 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.73 hc-read1+router 1.41 shared+quant 0.48 waitA 0.11 VRAM hits 2.70 waitB 3.49 PCIe grp 0.79 waitCPU 0.85 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.45   hc0 up 0.57 | total 65.66 ms/window over 61 windows\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 70.23 ms/window = verify 65.03 (GPU-reach wait 27.73 + per-layer host 34.08 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.97] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.51 conv 0.13 ab 0.62 z 2.12 rec 0.75 out-proj 2.10 hc-read1+router 4.18 shared+quant 1.42 waitA 0.33 VRAM hits 6.73 waitB 12.98 PCIe grp 2.66 waitCPU 5.05 copy+combine 0.82 (gap) 0.02 head 3.07   hc0 norm 0.85   hc0 down 1.34   hc0 up 1.68 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.16 q+q-idx 1.65 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.72 hc-read1+router 1.40 shared+quant 0.47 waitA 0.11 VRAM hits 2.64 waitB 3.43 PCIe grp 0.78 waitCPU 0.97 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.44   hc0 up 0.57 | total 65.35 ms/window over 60 windows",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "strata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.09 ms/window = verify 64.86 (GPU-reach wait 27.65 + per-layer host 33.97 [plan 0.14 actq 0.50 jobs 0.48 CPU 32.83] + stage 0.03) + commit/emit 0.04 + draft 5.17; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 69.56 ms/window = verify 64.35 (GPU-reach wait 27.04 + per-layer host 34.15 [plan 0.14 actq 0.48 jobs 0.47 CPU 33.06] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.60 ms/window = verify 65.39 (GPU-reach wait 28.26 + per-layer host 33.85 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.72] + stage 0.03) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.54 conv 0.13 ab 0.62 z 2.14 rec 0.75 out-proj 2.11 hc-read1+router 4.23 shared+quant 1.43 waitA 0.34 VRAM hits 6.83 waitB 13.11 PCIe grp 2.69 waitCPU 4.76 copy+combine 0.83 (gap) 0.02 head 3.11   hc0 norm 0.86   hc0 down 1.36   hc0 up 1.70 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.17 q+q-idx 1.66 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.73 hc-read1+router 1.41 shared+quant 0.48 waitA 0.11 VRAM hits 2.70 waitB 3.49 PCIe grp 0.79 waitCPU 0.85 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.45   hc0 up 0.57 | total 65.66 ms/window over 61 windows\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 70.23 ms/window = verify 65.03 (GPU-reach wait 27.73 + per-layer host 34.08 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.97] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.51 conv 0.13 ab 0.62 z 2.12 rec 0.75 out-proj 2.10 hc-read1+router 4.18 shared+quant 1.42 waitA 0.33 VRAM hits 6.73 waitB 12.98 PCIe grp 2.66 waitCPU 5.05 copy+combine 0.82 (gap) 0.02 head 3.07   hc0 norm 0.85   hc0 down 1.34   hc0 up 1.68 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.16 q+q-idx 1.65 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.72 hc-read1+router 1.40 shared+quant 0.47 waitA 0.11 VRAM hits 2.64 waitB 3.43 PCIe grp 0.78 waitCPU 0.97 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.44   hc0 up 0.57 | total 65.35 ms/window over 60 windows",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_017t1XMD6w37r1EbikWbLUcH",
+            "type": "tool_result",
+            "content": "strata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.09 ms/window = verify 64.86 (GPU-reach wait 27.65 + per-layer host 33.97 [plan 0.14 actq 0.50 jobs 0.48 CPU 32.83] + stage 0.03) + commit/emit 0.04 + draft 5.17; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 69.56 ms/window = verify 64.35 (GPU-reach wait 27.04 + per-layer host 34.15 [plan 0.14 actq 0.48 jobs 0.47 CPU 33.06] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode timing: 60 windows, avg T 4.18, 3.83 tokens/window, 70.60 ms/window = verify 65.39 (GPU-reach wait 28.26 + per-layer host 33.85 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.72] + stage 0.03) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.27 (15.62 entries), VRAM hits 22.51, PCIe 3.60\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.54 conv 0.13 ab 0.62 z 2.14 rec 0.75 out-proj 2.11 hc-read1+router 4.23 shared+quant 1.43 waitA 0.34 VRAM hits 6.83 waitB 13.11 PCIe grp 2.69 waitCPU 4.76 copy+combine 0.83 (gap) 0.02 head 3.11   hc0 norm 0.86   hc0 down 1.36   hc0 up 1.70 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.17 q+q-idx 1.66 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.73 hc-read1+router 1.41 shared+quant 0.48 waitA 0.11 VRAM hits 2.70 waitB 3.49 PCIe grp 0.79 waitCPU 0.85 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.45   hc0 up 0.57 | total 65.66 ms/window over 61 windows\nstrata decode timing: 59 windows, avg T 4.12, 3.90 tokens/window, 70.23 ms/window = verify 65.03 (GPU-reach wait 27.73 + per-layer host 34.08 [plan 0.14 actq 0.50 jobs 0.47 CPU 32.97] + stage 0.01) + commit/emit 0.04 + draft 5.16; per layer-window: CPU experts 12.15 (15.48 entries), VRAM hits 22.05, PCIe 3.54\nstrata decode GPU stages (ms/window): GDN layers: q8+qkv/q-idx gemv 3.51 conv 0.13 ab 0.62 z 2.12 rec 0.75 out-proj 2.10 hc-read1+router 4.18 shared+quant 1.42 waitA 0.33 VRAM hits 6.73 waitB 12.98 PCIe grp 2.66 waitCPU 5.05 copy+combine 0.82 (gap) 0.02 head 3.07   hc0 norm 0.85   hc0 down 1.34   hc0 up 1.68 | QSA layers: q8+kv-idx 0.09 k/v+norm-rope 0.21 kv+idx append 0.16 q+q-idx 1.65 scores+topk 0.10 kv-resolve 0.01 attention 0.92 gate 0.03 out-proj 0.72 hc-read1+router 1.40 shared+quant 0.47 waitA 0.11 VRAM hits 2.64 waitB 3.43 PCIe grp 0.78 waitCPU 0.97 copy+combine 0.26 (gap) 0.01   hc0 norm 0.06   hc0 down 0.44   hc0 up 0.57 | total 65.35 ms/window over 60 windows",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "S=/tmp/claude-1000/-home-luwei-work-AI-Strata/7383c513-d686-461b-b02e-39b288fc437e/scratchpad/split; sleep 5; pgrep -x strata; cat $S/run.err; grep -h \"decode timing\" $S/ud-timing-engine.log | tail -2; grep -h \"decode timing\\|GPU stages\" $S/ud-profile-engine.log | tail -4",
+          "description": "Read UD timing and GPU stage lines"
+        }
+      }
+    },
+    {
+      "step_id": 166,
+      "timestamp": "2026-10-17T14:26:02.677Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 162626,
+        "completion_tokens": 1741,
+        "cached_tokens": 162624,
+        "extra": {
+          "cache_creation_input_tokens": 2185,
+          "cache_read_input_tokens": 162624,
+          "output_tokens_details": {
+            "thinking_tokens": 384
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2185,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1741,
+              "cache_read_input_tokens": 162624,
+              "cache_creation_input_tokens": 2185,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2185
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 167,
+      "timestamp": "2026-10-17T14:26:02.682Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "All 4 runs finished cleanly. Rolling the GPU stages up into categories and averaging the two steady decodes (#2, #3) for each model:",
+      "metrics": {
+        "prompt_tokens": 162626,
+        "completion_tokens": 1741,
+        "cached_tokens": 162624,
+        "extra": {
+          "cache_creation_input_tokens": 2185,
+          "cache_read_input_tokens": 162624,
+          "output_tokens_details": {
+            "thinking_tokens": 384
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2185,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1741,
+              "cache_read_input_tokens": 162624,
+              "cache_creation_input_tokens": 2185,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2185
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 168,
+      "timestamp": "2026-10-17T14:26:12.552Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01MpEB9X3hLNn4gERNsDhd4K",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01MpEB9X3hLNn4gERNsDhd4K",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "S=/tmp/claude-1000/-home-luwei-work-AI-Strata/7383c513-d686-461b-b02e-39b288fc437e/scratchpad/split; python3 - $S <<'EOF'\nimport re,sys\nS=sys.argv[1]\nCAT={\"proj\":[\"q8+qkv/q-idx gemv\",\"z\",\"out-proj\",\"q8+kv-idx\",\"q+q-idx\"],\n     \"mix\":[\"conv\",\"ab\",\"rec\",\"k/v+norm-rope\",\"kv+idx append\",\"scores+topk\",\"kv-resolve\",\"attention\",\"gate\"],\n     \"hc\":[\"hc0 norm\",\"hc0 down\",\"hc0 up\",\"hc-read1+router\"],\"shared\":[\"shared+quant\"],\"vram\":[\"VRAM hits\"],\n     \"pcie\":[\"PCIe grp\"],\"wait\":[\"waitA\",\"waitB\",\"waitCPU\"],\"comb\":[\"copy+combine\",\"(gap)\"],\"head\":[\"head\"]}\nnames=sorted({n for v in CAT.values() for n in v},key=len,reverse=True)\nfor m in [\"coder\",\"ud\"]:\n    L=open(f\"{S}/{m}-profile-engine.log\").read().splitlines()\n    st=[l for l in L if \"GPU stages\" in l][-2:]; dt=[l for l in L if \"decode timing:\" in l][-2:]\n    tl=[l for l in open(f\"{S}/{m}-timing-engine.log\").read().splitlines() if \"decode timing:\" in l][-2:]\n    acc={k:0 for k in CAT}\n    for l in st:\n        body=l.split(\":\",1)[1].split(\"| total\")[0]\n        for k,v in CAT.items():\n            for n in v:\n                for x in re.findall(r\"(?:^|\\s)\"+re.escape(n)+r\" ([0-9.]+)\",body): acc[k]+=float(x)/2\n    def f(l,key): return float(re.search(key+r\" ([0-9.]+)\",l).group(1))\n    for name,lines in [(\"timing\",tl),(\"profile\",dt)]:\n        w=sum(f(l,\"=\")if False else float(re.search(r\"([0-9.]+) ms/window\",l).group(1)) for l in lines)/2\n        tpw=sum(float(re.search(r\"([0-9.]+) tokens/window\",l).group(1)) for l in lines)/2\n        ver=sum(f(l,\"verify\") for l in lines)/2; dr=sum(f(l,\"draft\") for l in lines)/2\n        wt=sum(f(l,\"GPU-reach wait\") for l in lines)/2; cpu=sum(f(l,\"CPU\") for l in lines)/2\n        ce=sum(float(re.search(r\"CPU experts ([0-9.]+)\",l).group(1)) for l in lines)/2\n        hits=sum(float(re.search(r\"VRAM hits ([0-9.]+)\",l).group(1)) for l in lines)/2\n        pc=sum(float(re.search(r\"PCIe ([0-9.]+)\\s*$\",l).group(1)) for l in lines)/2\n        print(f\"{m} {name}: window {w:.2f} ms, {tpw:.2f} tok/window -> {w/tpw:.2f} ms/token; verify {ver:.2f} (host GPU-wait {wt:.2f}, CPU {cpu:.2f}); draft {dr:.2f}; per layer: CPU experts {ce:.2f}, VRAM {hits:.2f}, PCIe {pc:.2f}\")\n    tot=sum(acc.values()); print(m,\"GPU\", {k:round(v,2) for k,v in acc.items()}, \"total\",round(tot,2))\nEOF",
+            "description": "Aggregate GPU stage categories per model"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01MpEB9X3hLNn4gERNsDhd4K",
+            "content": "coder timing: window 58.55 ms, 3.70 tok/window -> 15.82 ms/token; verify 53.31 (host GPU-wait 32.77, CPU 16.35); draft 5.19; per layer: CPU experts 7.81, VRAM 28.58, PCIe 1.21\ncoder profile: window 59.27 ms, 3.72 tok/window -> 15.93 ms/token; verify 54.05 (host GPU-wait 33.36, CPU 16.42); draft 5.18; per layer: CPU experts 7.79, VRAM 28.64, PCIe 1.22\ncoder GPU {'proj': 10.65, 'mix': 2.89, 'hc': 14.02, 'shared': 1.97, 'vram': 11.2, 'pcie': 1.96, 'wait': 7.64, 'comb': 0.94, 'head': 3.04} total 54.32\nud timing: window 69.83 ms, 3.87 tok/window -> 18.07 ms/token; verify 64.60 (host GPU-wait 27.34, CPU 32.95); draft 5.17; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud profile: window 70.41 ms, 3.87 tok/window -> 18.22 ms/token; verify 65.21 (host GPU-wait 28.00, CPU 32.84); draft 5.16; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud GPU {'proj': 10.23, 'mix': 2.93, 'hc': 10.58, 'shared': 1.9, 'vram': 9.45, 'pcie': 3.46, 'wait': 22.76, 'comb': 1.11, 'head': 3.09} total 65.52\n\n[stdout]\ncoder timing: window 58.55 ms, 3.70 tok/window -> 15.82 ms/token; verify 53.31 (host GPU-wait 32.77, CPU 16.35); draft 5.19; per layer: CPU experts 7.81, VRAM 28.58, PCIe 1.21\ncoder profile: window 59.27 ms, 3.72 tok/window -> 15.93 ms/token; verify 54.05 (host GPU-wait 33.36, CPU 16.42); draft 5.18; per layer: CPU experts 7.79, VRAM 28.64, PCIe 1.22\ncoder GPU {'proj': 10.65, 'mix': 2.89, 'hc': 14.02, 'shared': 1.97, 'vram': 11.2, 'pcie': 1.96, 'wait': 7.64, 'comb': 0.94, 'head': 3.04} total 54.32\nud timing: window 69.83 ms, 3.87 tok/window -> 18.07 ms/token; verify 64.60 (host GPU-wait 27.34, CPU 32.95); draft 5.17; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud profile: window 70.41 ms, 3.87 tok/window -> 18.22 ms/token; verify 65.21 (host GPU-wait 28.00, CPU 32.84); draft 5.16; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud GPU {'proj': 10.23, 'mix': 2.93, 'hc': 10.58, 'shared': 1.9, 'vram': 9.45, 'pcie': 3.46, 'wait': 22.76, 'comb': 1.11, 'head': 3.09} total 65.52\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 162626,
+        "completion_tokens": 1741,
+        "cached_tokens": 162624,
+        "extra": {
+          "cache_creation_input_tokens": 2185,
+          "cache_read_input_tokens": 162624,
+          "output_tokens_details": {
+            "thinking_tokens": 384
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2185,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1741,
+              "cache_read_input_tokens": 162624,
+              "cache_creation_input_tokens": 2185,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2185
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "coder timing: window 58.55 ms, 3.70 tok/window -> 15.82 ms/token; verify 53.31 (host GPU-wait 32.77, CPU 16.35); draft 5.19; per layer: CPU experts 7.81, VRAM 28.58, PCIe 1.21\ncoder profile: window 59.27 ms, 3.72 tok/window -> 15.93 ms/token; verify 54.05 (host GPU-wait 33.36, CPU 16.42); draft 5.18; per layer: CPU experts 7.79, VRAM 28.64, PCIe 1.22\ncoder GPU {'proj': 10.65, 'mix': 2.89, 'hc': 14.02, 'shared': 1.97, 'vram': 11.2, 'pcie': 1.96, 'wait': 7.64, 'comb': 0.94, 'head': 3.04} total 54.32\nud timing: window 69.83 ms, 3.87 tok/window -> 18.07 ms/token; verify 64.60 (host GPU-wait 27.34, CPU 32.95); draft 5.17; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud profile: window 70.41 ms, 3.87 tok/window -> 18.22 ms/token; verify 65.21 (host GPU-wait 28.00, CPU 32.84); draft 5.16; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud GPU {'proj': 10.23, 'mix': 2.93, 'hc': 10.58, 'shared': 1.9, 'vram': 9.45, 'pcie': 3.46, 'wait': 22.76, 'comb': 1.11, 'head': 3.09} total 65.52",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01MpEB9X3hLNn4gERNsDhd4K",
+            "type": "tool_result",
+            "content": "coder timing: window 58.55 ms, 3.70 tok/window -> 15.82 ms/token; verify 53.31 (host GPU-wait 32.77, CPU 16.35); draft 5.19; per layer: CPU experts 7.81, VRAM 28.58, PCIe 1.21\ncoder profile: window 59.27 ms, 3.72 tok/window -> 15.93 ms/token; verify 54.05 (host GPU-wait 33.36, CPU 16.42); draft 5.18; per layer: CPU experts 7.79, VRAM 28.64, PCIe 1.22\ncoder GPU {'proj': 10.65, 'mix': 2.89, 'hc': 14.02, 'shared': 1.97, 'vram': 11.2, 'pcie': 1.96, 'wait': 7.64, 'comb': 0.94, 'head': 3.04} total 54.32\nud timing: window 69.83 ms, 3.87 tok/window -> 18.07 ms/token; verify 64.60 (host GPU-wait 27.34, CPU 32.95); draft 5.17; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud profile: window 70.41 ms, 3.87 tok/window -> 18.22 ms/token; verify 65.21 (host GPU-wait 28.00, CPU 32.84); draft 5.16; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud GPU {'proj': 10.23, 'mix': 2.93, 'hc': 10.58, 'shared': 1.9, 'vram': 9.45, 'pcie': 3.46, 'wait': 22.76, 'comb': 1.11, 'head': 3.09} total 65.52",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "coder timing: window 58.55 ms, 3.70 tok/window -> 15.82 ms/token; verify 53.31 (host GPU-wait 32.77, CPU 16.35); draft 5.19; per layer: CPU experts 7.81, VRAM 28.58, PCIe 1.21\ncoder profile: window 59.27 ms, 3.72 tok/window -> 15.93 ms/token; verify 54.05 (host GPU-wait 33.36, CPU 16.42); draft 5.18; per layer: CPU experts 7.79, VRAM 28.64, PCIe 1.22\ncoder GPU {'proj': 10.65, 'mix': 2.89, 'hc': 14.02, 'shared': 1.97, 'vram': 11.2, 'pcie': 1.96, 'wait': 7.64, 'comb': 0.94, 'head': 3.04} total 54.32\nud timing: window 69.83 ms, 3.87 tok/window -> 18.07 ms/token; verify 64.60 (host GPU-wait 27.34, CPU 32.95); draft 5.17; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud profile: window 70.41 ms, 3.87 tok/window -> 18.22 ms/token; verify 65.21 (host GPU-wait 28.00, CPU 32.84); draft 5.16; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud GPU {'proj': 10.23, 'mix': 2.93, 'hc': 10.58, 'shared': 1.9, 'vram': 9.45, 'pcie': 3.46, 'wait': 22.76, 'comb': 1.11, 'head': 3.09} total 65.52",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01MpEB9X3hLNn4gERNsDhd4K",
+            "type": "tool_result",
+            "content": "coder timing: window 58.55 ms, 3.70 tok/window -> 15.82 ms/token; verify 53.31 (host GPU-wait 32.77, CPU 16.35); draft 5.19; per layer: CPU experts 7.81, VRAM 28.58, PCIe 1.21\ncoder profile: window 59.27 ms, 3.72 tok/window -> 15.93 ms/token; verify 54.05 (host GPU-wait 33.36, CPU 16.42); draft 5.18; per layer: CPU experts 7.79, VRAM 28.64, PCIe 1.22\ncoder GPU {'proj': 10.65, 'mix': 2.89, 'hc': 14.02, 'shared': 1.97, 'vram': 11.2, 'pcie': 1.96, 'wait': 7.64, 'comb': 0.94, 'head': 3.04} total 54.32\nud timing: window 69.83 ms, 3.87 tok/window -> 18.07 ms/token; verify 64.60 (host GPU-wait 27.34, CPU 32.95); draft 5.17; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud profile: window 70.41 ms, 3.87 tok/window -> 18.22 ms/token; verify 65.21 (host GPU-wait 28.00, CPU 32.84); draft 5.16; per layer: CPU experts 12.21, VRAM 22.28, PCIe 3.57\nud GPU {'proj': 10.23, 'mix': 2.93, 'hc': 10.58, 'shared': 1.9, 'vram': 9.45, 'pcie': 3.46, 'wait': 22.76, 'comb': 1.11, 'head': 3.09} total 65.52",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "S=/tmp/claude-1000/-home-luwei-work-AI-Strata/7383c513-d686-461b-b02e-39b288fc437e/scratchpad/split; python3 - $S <<'EOF'\nimport re,sys\nS=sys.argv[1]\nCAT={\"proj\":[\"q8+qkv/q-idx gemv\",\"z\",\"out-proj\",\"q8+kv-idx\",\"q+q-idx\"],\n     \"mix\":[\"conv\",\"ab\",\"rec\",\"k/v+norm-rope\",\"kv+idx append\",\"scores+topk\",\"kv-resolve\",\"attention\",\"gate\"],\n     \"hc\":[\"hc0 norm\",\"hc0 down\",\"hc0 up\",\"hc-read1+router\"],\"shared\":[\"shared+quant\"],\"vram\":[\"VRAM hits\"],\n     \"pcie\":[\"PCIe grp\"],\"wait\":[\"waitA\",\"waitB\",\"waitCPU\"],\"comb\":[\"copy+combine\",\"(gap)\"],\"head\":[\"head\"]}\nnames=sorted({n for v in CAT.values() for n in v},key=len,reverse=True)\nfor m in [\"coder\",\"ud\"]:\n    L=open(f\"{S}/{m}-profile-engine.log\").read().splitlines()\n    st=[l for l in L if \"GPU stages\" in l][-2:]; dt=[l for l in L if \"decode timing:\" in l][-2:]\n    tl=[l for l in open(f\"{S}/{m}-timing-engine.log\").read().splitlines() if \"decode timing:\" in l][-2:]\n    acc={k:0 for k in CAT}\n    for l in st:\n        body=l.split(\":\",1)[1].split(\"| total\")[0]\n        for k,v in CAT.items():\n            for n in v:\n                for x in re.findall(r\"(?:^|\\s)\"+re.escape(n)+r\" ([0-9.]+)\",body): acc[k]+=float(x)/2\n    def f(l,key): return float(re.search(key+r\" ([0-9.]+)\",l).group(1))\n    for name,lines in [(\"timing\",tl),(\"profile\",dt)]:\n        w=sum(f(l,\"=\")if False else float(re.search(r\"([0-9.]+) ms/window\",l).group(1)) for l in lines)/2\n        tpw=sum(float(re.search(r\"([0-9.]+) tokens/window\",l).group(1)) for l in lines)/2\n        ver=sum(f(l,\"verify\") for l in lines)/2; dr=sum(f(l,\"draft\") for l in lines)/2\n        wt=sum(f(l,\"GPU-reach wait\") for l in lines)/2; cpu=sum(f(l,\"CPU\") for l in lines)/2\n        ce=sum(float(re.search(r\"CPU experts ([0-9.]+)\",l).group(1)) for l in lines)/2\n        hits=sum(float(re.search(r\"VRAM hits ([0-9.]+)\",l).group(1)) for l in lines)/2\n        pc=sum(float(re.search(r\"PCIe ([0-9.]+)\\s*$\",l).group(1)) for l in lines)/2\n        print(f\"{m} {name}: window {w:.2f} ms, {tpw:.2f} tok/window -> {w/tpw:.2f} ms/token; verify {ver:.2f} (host GPU-wait {wt:.2f}, CPU {cpu:.2f}); draft {dr:.2f}; per layer: CPU experts {ce:.2f}, VRAM {hits:.2f}, PCIe {pc:.2f}\")\n    tot=sum(acc.values()); print(m,\"GPU\", {k:round(v,2) for k,v in acc.items()}, \"total\",round(tot,2))\nEOF",
+          "description": "Aggregate GPU stage categories per model"
+        }
+      }
+    },
+    {
+      "step_id": 169,
+      "timestamp": "2026-10-17T14:26:21.232Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 164811,
+        "completion_tokens": 907,
+        "cached_tokens": 164809,
+        "extra": {
+          "cache_creation_input_tokens": 2379,
+          "cache_read_input_tokens": 164809,
+          "output_tokens_details": {
+            "thinking_tokens": 679
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2379,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 907,
+              "cache_read_input_tokens": 164809,
+              "cache_creation_input_tokens": 2379,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2379
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 170,
+      "timestamp": "2026-10-17T14:26:23.313Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01WMbiE1nMNkhxsc18XxA49t",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01WMbiE1nMNkhxsc18XxA49t",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "S=/tmp/claude-1000/-home-luwei-work-AI-Strata/7383c513-d686-461b-b02e-39b288fc437e/scratchpad/split; for m in coder ud; do echo \"== $m\"; grep -iE \"arena|expert cache|blob|resident|MiB|GiB\" $S/$m-timing-engine.log | grep -v \"decode timing\" | head -12 | cut -c1-260; done",
+            "description": "Get dense arena and expert blob sizes from logs"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01WMbiE1nMNkhxsc18XxA49t",
+            "content": "== coder\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/coder-iq1_m (302 canonical tensors skipped: served natively)\nstrata generate: 300 native projection matrices, 2018.88 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.77 s (1026 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 23.42 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 6.01 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 2060 slots\nstrata generate: expert cache 2666 slots, 5.11 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 2666 resident experts, decided on the device\nstrata serve: the prompt path borrows 2312 CUDA0 cache slots (4.42 GiB)\nstrata verify: window up to 6 tokens, 74.1 MiB of device buffers\n== ud\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.20 s (3966 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 5.09 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 1292 slots\nstrata generate: expert cache 1864 slots, 4.19 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 1864 resident experts, decided on the device\nstrata serve: the prompt path borrows 1367 CUDA0 cache slots (3.08 GiB)\nstrata verify: window up to 6 tokens, 86.6 MiB of device buffers\n\n[stdout]\n== coder\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/coder-iq1_m (302 canonical tensors skipped: served natively)\nstrata generate: 300 native projection matrices, 2018.88 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.77 s (1026 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 23.42 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 6.01 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 2060 slots\nstrata generate: expert cache 2666 slots, 5.11 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 2666 resident experts, decided on the device\nstrata serve: the prompt path borrows 2312 CUDA0 cache slots (4.42 GiB)\nstrata verify: window up to 6 tokens, 74.1 MiB of device buffers\n== ud\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.20 s (3966 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 5.09 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 1292 slots\nstrata generate: expert cache 1864 slots, 4.19 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 1864 resident experts, decided on the device\nstrata serve: the prompt path borrows 1367 CUDA0 cache slots (3.08 GiB)\nstrata verify: window up to 6 tokens, 86.6 MiB of device buffers\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 164811,
+        "completion_tokens": 907,
+        "cached_tokens": 164809,
+        "extra": {
+          "cache_creation_input_tokens": 2379,
+          "cache_read_input_tokens": 164809,
+          "output_tokens_details": {
+            "thinking_tokens": 679
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2379,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 907,
+              "cache_read_input_tokens": 164809,
+              "cache_creation_input_tokens": 2379,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2379
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "== coder\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/coder-iq1_m (302 canonical tensors skipped: served natively)\nstrata generate: 300 native projection matrices, 2018.88 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.77 s (1026 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 23.42 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 6.01 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 2060 slots\nstrata generate: expert cache 2666 slots, 5.11 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 2666 resident experts, decided on the device\nstrata serve: the prompt path borrows 2312 CUDA0 cache slots (4.42 GiB)\nstrata verify: window up to 6 tokens, 74.1 MiB of device buffers\n== ud\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.20 s (3966 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 5.09 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 1292 slots\nstrata generate: expert cache 1864 slots, 4.19 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 1864 resident experts, decided on the device\nstrata serve: the prompt path borrows 1367 CUDA0 cache slots (3.08 GiB)\nstrata verify: window up to 6 tokens, 86.6 MiB of device buffers",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01WMbiE1nMNkhxsc18XxA49t",
+            "type": "tool_result",
+            "content": "== coder\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/coder-iq1_m (302 canonical tensors skipped: served natively)\nstrata generate: 300 native projection matrices, 2018.88 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.77 s (1026 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 23.42 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 6.01 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 2060 slots\nstrata generate: expert cache 2666 slots, 5.11 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 2666 resident experts, decided on the device\nstrata serve: the prompt path borrows 2312 CUDA0 cache slots (4.42 GiB)\nstrata verify: window up to 6 tokens, 74.1 MiB of device buffers\n== ud\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.20 s (3966 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 5.09 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 1292 slots\nstrata generate: expert cache 1864 slots, 4.19 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 1864 resident experts, decided on the device\nstrata serve: the prompt path borrows 1367 CUDA0 cache slots (3.08 GiB)\nstrata verify: window up to 6 tokens, 86.6 MiB of device buffers",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "== coder\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/coder-iq1_m (302 canonical tensors skipped: served natively)\nstrata generate: 300 native projection matrices, 2018.88 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.77 s (1026 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 23.42 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 6.01 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 2060 slots\nstrata generate: expert cache 2666 slots, 5.11 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 2666 resident experts, decided on the device\nstrata serve: the prompt path borrows 2312 CUDA0 cache slots (4.42 GiB)\nstrata verify: window up to 6 tokens, 74.1 MiB of device buffers\n== ud\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.20 s (3966 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 5.09 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 1292 slots\nstrata generate: expert cache 1864 slots, 4.19 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 1864 resident experts, decided on the device\nstrata serve: the prompt path borrows 1367 CUDA0 cache slots (3.08 GiB)\nstrata verify: window up to 6 tokens, 86.6 MiB of device buffers",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01WMbiE1nMNkhxsc18XxA49t",
+            "type": "tool_result",
+            "content": "== coder\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/coder-iq1_m experts (largest blob 2.66 MB), token embedding IQ4_XS in mapped host memory (322 MiB)\nstrata generate: 1406 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/coder-iq1_m (302 canonical tensors skipped: served natively)\nstrata generate: 300 native projection matrices, 2018.88 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.77 s (1026 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 23.42 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 6.01 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 2060 slots\nstrata generate: expert cache 2666 slots, 5.11 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 2666 resident experts, decided on the device\nstrata serve: the prompt path borrows 2312 CUDA0 cache slots (4.42 GiB)\nstrata verify: window up to 6 tokens, 74.1 MiB of device buffers\n== ud\nstrata generate: native pack: /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs experts (largest blob 3.48 MB), token embedding Q8_0 in mapped host memory (644 MiB)\nstrata generate: 1416 MiB of weights loaded from /home/luwei/work/AI/Strata-data/packs/unsloth-ud-iq4_xs (303 canonical tensors skipped: served natively)\nstrata generate: 301 native projection matrices, 2975.00 MiB of weights\nstrata mtp: draft layer loaded, 839 MiB of VRAM (experts 675, dense 111), files read in 0.20 s (3966 MiB/s)\nstrata generate: expert arena: cudaHostRegister PORTABLE ok; MAP_HUGETLB unavailable (no hugetlb pool configured?); using 4 KB pages\nstrata generate: loaded 55.43 GiB at 1.71 GiB/s\nstrata generate: expert cache auto: 5.09 GiB free, 700 MiB reserved (+218 MiB for the draft head) -> 1292 slots\nstrata generate: expert cache 1864 slots, 4.19 GiB of VRAM; policy is\nstrata generate: R4 hit path ON - resident experts are computed on the GPU\nstrata generate: token graph hit path: 1864 resident experts, decided on the device\nstrata serve: the prompt path borrows 1367 CUDA0 cache slots (3.08 GiB)\nstrata verify: window up to 6 tokens, 86.6 MiB of device buffers",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "S=/tmp/claude-1000/-home-luwei-work-AI-Strata/7383c513-d686-461b-b02e-39b288fc437e/scratchpad/split; for m in coder ud; do echo \"== $m\"; grep -iE \"arena|expert cache|blob|resident|MiB|GiB\" $S/$m-timing-engine.log | grep -v \"decode timing\" | head -12 | cut -c1-260; done",
+          "description": "Get dense arena and expert blob sizes from logs"
+        }
+      }
+    },
+    {
+      "step_id": 171,
+      "timestamp": "2026-10-17T14:26:45.767Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 167190,
+        "completion_tokens": 2063,
+        "cached_tokens": 167188,
+        "extra": {
+          "cache_creation_input_tokens": 2008,
+          "cache_read_input_tokens": 167188,
+          "output_tokens_details": {
+            "thinking_tokens": 1909
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2008,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2063,
+              "cache_read_input_tokens": 167188,
+              "cache_creation_input_tokens": 2008,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2008
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 172,
+      "timestamp": "2026-10-17T14:26:45.769Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "Coder is GPU-bound (GPU busy 46.7ms/58.6ms, only 7.6ms CPU wait), while UD-IQ4_XS is CPU-bound (GPU waits 22.8ms for 33ms of CPU expert work). I'll document this in docs/3060M.md, starting by reading the section that calls out this measurement.",
+      "metrics": {
+        "prompt_tokens": 167190,
+        "completion_tokens": 2063,
+        "cached_tokens": 167188,
+        "extra": {
+          "cache_creation_input_tokens": 2008,
+          "cache_read_input_tokens": 167188,
+          "output_tokens_details": {
+            "thinking_tokens": 1909
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2008,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2063,
+              "cache_read_input_tokens": 167188,
+              "cache_creation_input_tokens": 2008,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2008
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 173,
+      "timestamp": "2026-10-17T14:26:45.778Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01AYgEe5JQQgDvbekQWz5NeC",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01AYgEe5JQQgDvbekQWz5NeC",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "grep -n \"^## \\|^### \" docs/3060M.md | tail -20; sed -n 840,870p docs/3060M.md; wc -l docs/3060M.md",
+            "description": "Find section layout near the end of 3060M.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01AYgEe5JQQgDvbekQWz5NeC",
+            "content": "200:## 1. Copy the model files\n222:## 2. Python packages\n233:## 3. The CUDA toolkit, from conda\n243:## 4. The engine\n265:## 5. The pack\n280:## 6. The MTP draft layer\n292:## 7. The config and the start script\n333:## Where everything is\n347:## First start and a test request\n370:## Against llama.cpp on Strix Halo (the same tasks)\n434:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n477:### UD-IQ4_XS against llama.cpp on Strix Halo\n520:## `/v1/completions` (added for BFCL's path B)\n539:## BFCL multi-turn against llama.cpp on the Strix Halo\n568:### Pilots: 40 items, thinking off\n602:### The UD-IQ4_XS gap on path B\n639:### GSQ Coder, path A, thinking on: 400 items\n733:## Where the CPU time goes during BFCL\n759:## `--pcie-frac`: decode and prefill\n824:### Why the engine picks 0.55 here, and a draft of a better default\nsay so (for example \"costs decode speed on PCs where the default share is right; run `--calibrate`\"). DETAILS.md is\nnot changed here.\n\n**A draft** (`src/program/generate.cpp`, 2026-10-04, compiled; not yet run in the engine - the GPU was busy):\n\n- `probe_host_read_gbps(threads)`: the host RAM read bandwidth with the pool's thread count (one per physical core),\n  a 1 GiB buffer, best of 3 passes; about 0.3 s at start, only when the share is not given.\n- `default_pcie_frac(native, link, host)`: one function for both places the rule was written. The link-only rule\n  is unchanged. With `STRATA_PCIE_HOST_RULE=1` it also weighs the link against the host:\n  `0.55 x (link / host) / (27 / 44.14)` - the measuring machine's link-to-kernel ratio - and never raises the value.\n- The probe line now also prints the host bandwidth: \"PCIe probe: 26.8 GB/s host->device, host RAM read X GB/s ->\n  pcie_frac ...\", so starts on other PCs collect both numbers.\n\nTested on its own (the two functions compiled into a small program, 2026-10-04, while a BFCL run used the GPU and\nRAM): the probe read **45.0 GB/s** with 15 threads (55 GB/s idle with the STREAM test above); rule off: 0.55 / 0.28 /\n0 for a 26.8 / 13 / 2 GB/s link, as before; rule on: **0.54** at 26.8 GB/s and 45 GB/s, 0.44 with 55 GB/s, 0.55 for\nthe measuring machine's numbers, 0.21 for a 13 GB/s link; the canonical pack keeps 0.2.\n\n**So the ratio is not the explanation.** Weighing the link against RAM bandwidth moves the share from 0.55 to\n0.44-0.54 on this PC; the measured best is 0-0.25. What the draft does not measure is what most likely differs:\nthe pool's own expert throughput (15 workers here, 5 there; the IQ kernels may be limited by compute, not only by\nRAM) and the GPU's side of the copies (the copy kernel runs on the GPU's SMs: 30 on this GPU, 48 on an RTX 5070).\nThat is why the rule stays opt-in. Next measurement, when the GPU is free: decode at `--pcie-frac` 0 and 0.55 with\nthe engine's pool counters (`pool phases ... drain`) and the GPU's per-token times, to see which side waits. The\nalternatives to a formula: let setup run `--calibrate` also with `--yes`, or balance the share at run time from\nthe measured drain and copy times (the share is already settable per request: `strata_tune` key `pcie_frac`).\n865 docs/3060M.md\n\n[stdout]\n200:## 1. Copy the model files\n222:## 2. Python packages\n233:## 3. The CUDA toolkit, from conda\n243:## 4. The engine\n265:## 5. The pack\n280:## 6. The MTP draft layer\n292:## 7. The config and the start script\n333:## Where everything is\n347:## First start and a test request\n370:## Against llama.cpp on Strix Halo (the same tasks)\n434:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n477:### UD-IQ4_XS against llama.cpp on Strix Halo\n520:## `/v1/completions` (added for BFCL's path B)\n539:## BFCL multi-turn against llama.cpp on the Strix Halo\n568:### Pilots: 40 items, thinking off\n602:### The UD-IQ4_XS gap on path B\n639:### GSQ Coder, path A, thinking on: 400 items\n733:## Where the CPU time goes during BFCL\n759:## `--pcie-frac`: decode and prefill\n824:### Why the engine picks 0.55 here, and a draft of a better default\nsay so (for example \"costs decode speed on PCs where the default share is right; run `--calibrate`\"). DETAILS.md is\nnot changed here.\n\n**A draft** (`src/program/generate.cpp`, 2026-10-04, compiled; not yet run in the engine - the GPU was busy):\n\n- `probe_host_read_gbps(threads)`: the host RAM read bandwidth with the pool's thread count (one per physical core),\n  a 1 GiB buffer, best of 3 passes; about 0.3 s at start, only when the share is not given.\n- `default_pcie_frac(native, link, host)`: one function for both places the rule was written. The link-only rule\n  is unchanged. With `STRATA_PCIE_HOST_RULE=1` it also weighs the link against the host:\n  `0.55 x (link / host) / (27 / 44.14)` - the measuring machine's link-to-kernel ratio - and never raises the value.\n- The probe line now also prints the host bandwidth: \"PCIe probe: 26.8 GB/s host->device, host RAM read X GB/s ->\n  pcie_frac ...\", so starts on other PCs collect both numbers.\n\nTested on its own (the two functions compiled into a small program, 2026-10-04, while a BFCL run used the GPU and\nRAM): the probe read **45.0 GB/s** with 15 threads (55 GB/s idle with the STREAM test above); rule off: 0.55 / 0.28 /\n0 for a 26.8 / 13 / 2 GB/s link, as before; rule on: **0.54** at 26.8 GB/s and 45 GB/s, 0.44 with 55 GB/s, 0.55 for\nthe measuring machine's numbers, 0.21 for a 13 GB/s link; the canonical pack keeps 0.2.\n\n**So the ratio is not the explanation.** Weighing the link against RAM bandwidth moves the share from 0.55 to\n0.44-0.54 on this PC; the measured best is 0-0.25. What the draft does not measure is what most likely differs:\nthe pool's own expert throughput (15 workers here, 5 there; the IQ kernels may be limited by compute, not only by\nRAM) and the GPU's side of the copies (the copy kernel runs on the GPU's SMs: 30 on this GPU, 48 on an RTX 5070).\nThat is why the rule stays opt-in. Next measurement, when the GPU is free: decode at `--pcie-frac` 0 and 0.55 with\nthe engine's pool counters (`pool phases ... drain`) and the GPU's per-token times, to see which side waits. The\nalternatives to a formula: let setup run `--calibrate` also with `--yes`, or balance the share at run time from\nthe measured drain and copy times (the share is already settable per request: `strata_tune` key `pcie_frac`).\n865 docs/3060M.md\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 167190,
+        "completion_tokens": 2063,
+        "cached_tokens": 167188,
+        "extra": {
+          "cache_creation_input_tokens": 2008,
+          "cache_read_input_tokens": 167188,
+          "output_tokens_details": {
+            "thinking_tokens": 1909
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2008,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2063,
+              "cache_read_input_tokens": 167188,
+              "cache_creation_input_tokens": 2008,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2008
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "200:## 1. Copy the model files\n222:## 2. Python packages\n233:## 3. The CUDA toolkit, from conda\n243:## 4. The engine\n265:## 5. The pack\n280:## 6. The MTP draft layer\n292:## 7. The config and the start script\n333:## Where everything is\n347:## First start and a test request\n370:## Against llama.cpp on Strix Halo (the same tasks)\n434:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n477:### UD-IQ4_XS against llama.cpp on Strix Halo\n520:## `/v1/completions` (added for BFCL's path B)\n539:## BFCL multi-turn against llama.cpp on the Strix Halo\n568:### Pilots: 40 items, thinking off\n602:### The UD-IQ4_XS gap on path B\n639:### GSQ Coder, path A, thinking on: 400 items\n733:## Where the CPU time goes during BFCL\n759:## `--pcie-frac`: decode and prefill\n824:### Why the engine picks 0.55 here, and a draft of a better default\nsay so (for example \"costs decode speed on PCs where the default share is right; run `--calibrate`\"). DETAILS.md is\nnot changed here.\n\n**A draft** (`src/program/generate.cpp`, 2026-10-04, compiled; not yet run in the engine - the GPU was busy):\n\n- `probe_host_read_gbps(threads)`: the host RAM read bandwidth with the pool's thread count (one per physical core),\n  a 1 GiB buffer, best of 3 passes; about 0.3 s at start, only when the share is not given.\n- `default_pcie_frac(native, link, host)`: one function for both places the rule was written. The link-only rule\n  is unchanged. With `STRATA_PCIE_HOST_RULE=1` it also weighs the link against the host:\n  `0.55 x (link / host) / (27 / 44.14)` - the measuring machine's link-to-kernel ratio - and never raises the value.\n- The probe line now also prints the host bandwidth: \"PCIe probe: 26.8 GB/s host->device, host RAM read X GB/s ->\n  pcie_frac ...\", so starts on other PCs collect both numbers.\n\nTested on its own (the two functions compiled into a small program, 2026-10-04, while a BFCL run used the GPU and\nRAM): the probe read **45.0 GB/s** with 15 threads (55 GB/s idle with the STREAM test above); rule off: 0.55 / 0.28 /\n0 for a 26.8 / 13 / 2 GB/s link, as before; rule on: **0.54** at 26.8 GB/s and 45 GB/s, 0.44 with 55 GB/s, 0.55 for\nthe measuring machine's numbers, 0.21 for a 13 GB/s link; the canonical pack keeps 0.2.\n\n**So the ratio is not the explanation.** Weighing the link against RAM bandwidth moves the share from 0.55 to\n0.44-0.54 on this PC; the measured best is 0-0.25. What the draft does not measure is what most likely differs:\nthe pool's own expert throughput (15 workers here, 5 there; the IQ kernels may be limited by compute, not only by\nRAM) and the GPU's side of the copies (the copy kernel runs on the GPU's SMs: 30 on this GPU, 48 on an RTX 5070).\nThat is why the rule stays opt-in. Next measurement, when the GPU is free: decode at `--pcie-frac` 0 and 0.55 with\nthe engine's pool counters (`pool phases ... drain`) and the GPU's per-token times, to see which side waits. The\nalternatives to a formula: let setup run `--calibrate` also with `--yes`, or balance the share at run time from\nthe measured drain and copy times (the share is already settable per request: `strata_tune` key `pcie_frac`).\n865 docs/3060M.md",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01AYgEe5JQQgDvbekQWz5NeC",
+            "type": "tool_result",
+            "content": "200:## 1. Copy the model files\n222:## 2. Python packages\n233:## 3. The CUDA toolkit, from conda\n243:## 4. The engine\n265:## 5. The pack\n280:## 6. The MTP draft layer\n292:## 7. The config and the start script\n333:## Where everything is\n347:## First start and a test request\n370:## Against llama.cpp on Strix Halo (the same tasks)\n434:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n477:### UD-IQ4_XS against llama.cpp on Strix Halo\n520:## `/v1/completions` (added for BFCL's path B)\n539:## BFCL multi-turn against llama.cpp on the Strix Halo\n568:### Pilots: 40 items, thinking off\n602:### The UD-IQ4_XS gap on path B\n639:### GSQ Coder, path A, thinking on: 400 items\n733:## Where the CPU time goes during BFCL\n759:## `--pcie-frac`: decode and prefill\n824:### Why the engine picks 0.55 here, and a draft of a better default\nsay so (for example \"costs decode speed on PCs where the default share is right; run `--calibrate`\"). DETAILS.md is\nnot changed here.\n\n**A draft** (`src/program/generate.cpp`, 2026-10-04, compiled; not yet run in the engine - the GPU was busy):\n\n- `probe_host_read_gbps(threads)`: the host RAM read bandwidth with the pool's thread count (one per physical core),\n  a 1 GiB buffer, best of 3 passes; about 0.3 s at start, only when the share is not given.\n- `default_pcie_frac(native, link, host)`: one function for both places the rule was written. The link-only rule\n  is unchanged. With `STRATA_PCIE_HOST_RULE=1` it also weighs the link against the host:\n  `0.55 x (link / host) / (27 / 44.14)` - the measuring machine's link-to-kernel ratio - and never raises the value.\n- The probe line now also prints the host bandwidth: \"PCIe probe: 26.8 GB/s host->device, host RAM read X GB/s ->\n  pcie_frac ...\", so starts on other PCs collect both numbers.\n\nTested on its own (the two functions compiled into a small program, 2026-10-04, while a BFCL run used the GPU and\nRAM): the probe read **45.0 GB/s** with 15 threads (55 GB/s idle with the STREAM test above); rule off: 0.55 / 0.28 /\n0 for a 26.8 / 13 / 2 GB/s link, as before; rule on: **0.54** at 26.8 GB/s and 45 GB/s, 0.44 with 55 GB/s, 0.55 for\nthe measuring machine's numbers, 0.21 for a 13 GB/s link; the canonical pack keeps 0.2.\n\n**So the ratio is not the explanation.** Weighing the link against RAM bandwidth moves the share from 0.55 to\n0.44-0.54 on this PC; the measured best is 0-0.25. What the draft does not measure is what most likely differs:\nthe pool's own expert throughput (15 workers here, 5 there; the IQ kernels may be limited by compute, not only by\nRAM) and the GPU's side of the copies (the copy kernel runs on the GPU's SMs: 30 on this GPU, 48 on an RTX 5070).\nThat is why the rule stays opt-in. Next measurement, when the GPU is free: decode at `--pcie-frac` 0 and 0.55 with\nthe engine's pool counters (`pool phases ... drain`) and the GPU's per-token times, to see which side waits. The\nalternatives to a formula: let setup run `--calibrate` also with `--yes`, or balance the share at run time from\nthe measured drain and copy times (the share is already settable per request: `strata_tune` key `pcie_frac`).\n865 docs/3060M.md",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "200:## 1. Copy the model files\n222:## 2. Python packages\n233:## 3. The CUDA toolkit, from conda\n243:## 4. The engine\n265:## 5. The pack\n280:## 6. The MTP draft layer\n292:## 7. The config and the start script\n333:## Where everything is\n347:## First start and a test request\n370:## Against llama.cpp on Strix Halo (the same tasks)\n434:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n477:### UD-IQ4_XS against llama.cpp on Strix Halo\n520:## `/v1/completions` (added for BFCL's path B)\n539:## BFCL multi-turn against llama.cpp on the Strix Halo\n568:### Pilots: 40 items, thinking off\n602:### The UD-IQ4_XS gap on path B\n639:### GSQ Coder, path A, thinking on: 400 items\n733:## Where the CPU time goes during BFCL\n759:## `--pcie-frac`: decode and prefill\n824:### Why the engine picks 0.55 here, and a draft of a better default\nsay so (for example \"costs decode speed on PCs where the default share is right; run `--calibrate`\"). DETAILS.md is\nnot changed here.\n\n**A draft** (`src/program/generate.cpp`, 2026-10-04, compiled; not yet run in the engine - the GPU was busy):\n\n- `probe_host_read_gbps(threads)`: the host RAM read bandwidth with the pool's thread count (one per physical core),\n  a 1 GiB buffer, best of 3 passes; about 0.3 s at start, only when the share is not given.\n- `default_pcie_frac(native, link, host)`: one function for both places the rule was written. The link-only rule\n  is unchanged. With `STRATA_PCIE_HOST_RULE=1` it also weighs the link against the host:\n  `0.55 x (link / host) / (27 / 44.14)` - the measuring machine's link-to-kernel ratio - and never raises the value.\n- The probe line now also prints the host bandwidth: \"PCIe probe: 26.8 GB/s host->device, host RAM read X GB/s ->\n  pcie_frac ...\", so starts on other PCs collect both numbers.\n\nTested on its own (the two functions compiled into a small program, 2026-10-04, while a BFCL run used the GPU and\nRAM): the probe read **45.0 GB/s** with 15 threads (55 GB/s idle with the STREAM test above); rule off: 0.55 / 0.28 /\n0 for a 26.8 / 13 / 2 GB/s link, as before; rule on: **0.54** at 26.8 GB/s and 45 GB/s, 0.44 with 55 GB/s, 0.55 for\nthe measuring machine's numbers, 0.21 for a 13 GB/s link; the canonical pack keeps 0.2.\n\n**So the ratio is not the explanation.** Weighing the link against RAM bandwidth moves the share from 0.55 to\n0.44-0.54 on this PC; the measured best is 0-0.25. What the draft does not measure is what most likely differs:\nthe pool's own expert throughput (15 workers here, 5 there; the IQ kernels may be limited by compute, not only by\nRAM) and the GPU's side of the copies (the copy kernel runs on the GPU's SMs: 30 on this GPU, 48 on an RTX 5070).\nThat is why the rule stays opt-in. Next measurement, when the GPU is free: decode at `--pcie-frac` 0 and 0.55 with\nthe engine's pool counters (`pool phases ... drain`) and the GPU's per-token times, to see which side waits. The\nalternatives to a formula: let setup run `--calibrate` also with `--yes`, or balance the share at run time from\nthe measured drain and copy times (the share is already settable per request: `strata_tune` key `pcie_frac`).\n865 docs/3060M.md",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01AYgEe5JQQgDvbekQWz5NeC",
+            "type": "tool_result",
+            "content": "200:## 1. Copy the model files\n222:## 2. Python packages\n233:## 3. The CUDA toolkit, from conda\n243:## 4. The engine\n265:## 5. The pack\n280:## 6. The MTP draft layer\n292:## 7. The config and the start script\n333:## Where everything is\n347:## First start and a test request\n370:## Against llama.cpp on Strix Halo (the same tasks)\n434:## Unsloth UD-IQ4_XS (not a setup choice): it runs\n477:### UD-IQ4_XS against llama.cpp on Strix Halo\n520:## `/v1/completions` (added for BFCL's path B)\n539:## BFCL multi-turn against llama.cpp on the Strix Halo\n568:### Pilots: 40 items, thinking off\n602:### The UD-IQ4_XS gap on path B\n639:### GSQ Coder, path A, thinking on: 400 items\n733:## Where the CPU time goes during BFCL\n759:## `--pcie-frac`: decode and prefill\n824:### Why the engine picks 0.55 here, and a draft of a better default\nsay so (for example \"costs decode speed on PCs where the default share is right; run `--calibrate`\"). DETAILS.md is\nnot changed here.\n\n**A draft** (`src/program/generate.cpp`, 2026-10-04, compiled; not yet run in the engine - the GPU was busy):\n\n- `probe_host_read_gbps(threads)`: the host RAM read bandwidth with the pool's thread count (one per physical core),\n  a 1 GiB buffer, best of 3 passes; about 0.3 s at start, only when the share is not given.\n- `default_pcie_frac(native, link, host)`: one function for both places the rule was written. The link-only rule\n  is unchanged. With `STRATA_PCIE_HOST_RULE=1` it also weighs the link against the host:\n  `0.55 x (link / host) / (27 / 44.14)` - the measuring machine's link-to-kernel ratio - and never raises the value.\n- The probe line now also prints the host bandwidth: \"PCIe probe: 26.8 GB/s host->device, host RAM read X GB/s ->\n  pcie_frac ...\", so starts on other PCs collect both numbers.\n\nTested on its own (the two functions compiled into a small program, 2026-10-04, while a BFCL run used the GPU and\nRAM): the probe read **45.0 GB/s** with 15 threads (55 GB/s idle with the STREAM test above); rule off: 0.55 / 0.28 /\n0 for a 26.8 / 13 / 2 GB/s link, as before; rule on: **0.54** at 26.8 GB/s and 45 GB/s, 0.44 with 55 GB/s, 0.55 for\nthe measuring machine's numbers, 0.21 for a 13 GB/s link; the canonical pack keeps 0.2.\n\n**So the ratio is not the explanation.** Weighing the link against RAM bandwidth moves the share from 0.55 to\n0.44-0.54 on this PC; the measured best is 0-0.25. What the draft does not measure is what most likely differs:\nthe pool's own expert throughput (15 workers here, 5 there; the IQ kernels may be limited by compute, not only by\nRAM) and the GPU's side of the copies (the copy kernel runs on the GPU's SMs: 30 on this GPU, 48 on an RTX 5070).\nThat is why the rule stays opt-in. Next measurement, when the GPU is free: decode at `--pcie-frac` 0 and 0.55 with\nthe engine's pool counters (`pool phases ... drain`) and the GPU's per-token times, to see which side waits. The\nalternatives to a formula: let setup run `--calibrate` also with `--yes`, or balance the share at run time from\nthe measured drain and copy times (the share is already settable per request: `strata_tune` key `pcie_frac`).\n865 docs/3060M.md",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "grep -n \"^## \\|^### \" docs/3060M.md | tail -20; sed -n 840,870p docs/3060M.md; wc -l docs/3060M.md",
+          "description": "Find section layout near the end of 3060M.md"
+        }
+      }
+    },
+    {
+      "step_id": 174,
+      "timestamp": "2026-10-17T14:27:05.371Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 169198,
+        "completion_tokens": 2547,
+        "cached_tokens": 169196,
+        "extra": {
+          "cache_creation_input_tokens": 3422,
+          "cache_read_input_tokens": 169196,
+          "output_tokens_details": {
+            "thinking_tokens": 1842
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3422,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2547,
+              "cache_read_input_tokens": 169196,
+              "cache_creation_input_tokens": 3422,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3422
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 175,
+      "timestamp": "2026-10-17T14:27:05.375Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "I'll append the results as a new section at the end of `docs/3060M.md`, and save the script and raw log under `docs/benchmarks/`.",
+      "metrics": {
+        "prompt_tokens": 169198,
+        "completion_tokens": 2547,
+        "cached_tokens": 169196,
+        "extra": {
+          "cache_creation_input_tokens": 3422,
+          "cache_read_input_tokens": 169196,
+          "output_tokens_details": {
+            "thinking_tokens": 1842
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3422,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2547,
+              "cache_read_input_tokens": 169196,
+              "cache_creation_input_tokens": 3422,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3422
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 176,
+      "timestamp": "2026-10-17T14:27:10.801Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01DPXAPvDF8a3LwhS7iCMfPX",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01DPXAPvDF8a3LwhS7iCMfPX",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "S=/tmp/claude-1000/-home-luwei-work-AI-Strata/7383c513-d686-461b-b02e-39b288fc437e/scratchpad/split; cp $S/run.py docs/benchmarks/2026-10-17-3060m-decode-split.py; sed -i '1s|.*|\"\"\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),\\na warm-up, decode x3 with the --pcie-frac A/B'\"'\"'s prompt; arm \"timing\" sets STRATA_DECODE_TIMING=1, arm \"profile\" adds\\nSTRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\"\"\"|' docs/benchmarks/2026-10-17-3060m-decode-split.py; head -5 docs/benchmarks/2026-10-17-3060m-decode-split.py; { echo \"# 2026-10-17-3060m-decode-split.py: results (JSON lines), then each engine log's decode-timing and GPU-stage lines (warm-up, decode#1..3)\"; cat $S/results.jsonl; for f in coder-timing coder-profile ud-timing ud-profile; do echo \"# $f\"; grep -h \"pcie\\|PCIe probe\\|expert cache [0-9]\\|decode timing\\|GPU stages\" $S/$f-engine.log | cut -c1-2000; done; } > docs/benchmarks/2026-10-17-3060m-decode-split.log; wc -l docs/benchmarks/2026-10-17-3060m-decode-split.log",
+            "description": "Save measurement script and raw log to docs/benchmarks"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01DPXAPvDF8a3LwhS7iCMfPX",
+            "content": "\"\"\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),\na warm-up, decode x3 with the --pcie-frac A/B's prompt; arm \"timing\" sets STRATA_DECODE_TIMING=1, arm \"profile\" adds\nSTRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\"\"\"\nimport json, os, subprocess, sys, time, urllib.request\nfrom pathlib import Path\n45 docs/benchmarks/2026-10-17-3060m-decode-split.log\n\n[stdout]\n\"\"\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),\na warm-up, decode x3 with the --pcie-frac A/B's prompt; arm \"timing\" sets STRATA_DECODE_TIMING=1, arm \"profile\" adds\nSTRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\"\"\"\nimport json, os, subprocess, sys, time, urllib.request\nfrom pathlib import Path\n45 docs/benchmarks/2026-10-17-3060m-decode-split.log\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-decode-split.py\", \"hunks\": [{\"oldStart\": 1, \"oldLines\": 0, \"newStart\": 1, \"newLines\": 36, \"lines\": [\"+\\\"\\\"\\\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),\", \"+a warm-up, decode x3 with the --pcie-frac A/B's prompt; arm \\\"timing\\\" sets STRATA_DECODE_TIMING=1, arm \\\"profile\\\" adds\", \"+STRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\\\"\\\"\\\"\", \"+import json, os, subprocess, sys, time, urllib.request\", \"+from pathlib import Path\", \"+S = Path(__file__).parent; ROOT = Path(\\\"/home/luwei/work/AI/Strata\\\"); URL = \\\"http://127.0.0.1:8080\\\"\", \"+E = Path(\\\"/mnt/evox2/large/work/AI/EngramHalo.cpp/src\\\")\", \"+L = (E / \\\"llama-model-loader.cpp\\\").read_text()\", \"+i = L.index(\\\"static std::vector<std::string> llama_get_list_splits\\\"); j = L.index(\\\"\\\\n}\\\\n\\\", i) + 3\", \"+DECODE = \\\"Rewrite this C++ function to be clearer and faster. Keep the behavior. Reply with the code.\\\\n\\\\n```cpp\\\\n\\\" + L[i:j] + \\\"```\\\"\", \"+def chat(text, n):\", \"+    r = urllib.request.Request(URL + \\\"/v1/chat/completions\\\", json.dumps({\\\"model\\\": \\\"x\\\", \\\"temperature\\\": 0, \\\"max_tokens\\\": n,\", \"+        \\\"chat_template_kwargs\\\": {\\\"enable_thinking\\\": False}, \\\"messages\\\": [{\\\"role\\\": \\\"user\\\", \\\"content\\\": text}]}).encode(),\", \"+        {\\\"Content-Type\\\": \\\"application/json\\\"})\", \"+    with urllib.request.urlopen(r, timeout=3600) as f: return json.load(f)\", \"+RUNS = [(\\\"coder\\\", \\\"strata-coder-iq1_m.json\\\"), (\\\"ud\\\", \\\"strata-unsloth-ud-iq4_xs.json\\\")]\", \"+ARMS = [(\\\"timing\\\", {\\\"STRATA_DECODE_TIMING\\\": \\\"1\\\"}), (\\\"profile\\\", {\\\"STRATA_DECODE_TIMING\\\": \\\"1\\\", \\\"STRATA_VERIFY_PROFILE\\\": \\\"1\\\"})]\", \"+for label, base in RUNS:\", \"+    for arm, env in ARMS:\", \"+        c = json.load(open(ROOT / base)); c[\\\"log\\\"] = str(S / f\\\"{label}-{arm}-engine.log\\\")\", \"+        cfg = S / f\\\"{label}-{arm}.json\\\"; cfg.write_text(json.dumps(c))\", \"+        slog = S / f\\\"{label}-{arm}-server.log\\\"\", \"+        p = subprocess.Popen([sys.executable, \\\"serve/server.py\\\", \\\"--engine\\\", \\\"strata\\\", \\\"--config\\\", str(cfg), \\\"--port\\\", \\\"8080\\\"],\", \"+                             cwd=ROOT, stdout=open(slog, \\\"w\\\"), stderr=subprocess.STDOUT, env={**os.environ, **env})\", \"+        while \\\"ready: http\\\" not in slog.read_text():\", \"+            if p.poll() is not None: sys.exit(f\\\"server died: {label} {arm}\\\")\", \"+            time.sleep(1)\", \"+        args = subprocess.run([\\\"bash\\\", \\\"-c\\\", \\\"ps -o args= -p $(pgrep -x strata) | grep -oE -- '--pcie-frac [0-9.]+'\\\"],\", \"+                              capture_output=True, text=True).stdout.strip()\", \"+        chat(\\\"Write a thread-safe LRU cache in C++.\\\", 128)\", \"+        for k in range(3):\", \"+            t = chat(DECODE, 512)[\\\"timings\\\"]\", \"+            print(json.dumps({\\\"model\\\": label, \\\"arm\\\": arm, \\\"args\\\": args, \\\"test\\\": f\\\"decode#{k+1}\\\", \\\"tok_s\\\": t[\\\"predicted_per_second\\\"],\", \"+                              \\\"tokens\\\": t[\\\"predicted_n\\\"], \\\"drafts\\\": f'{t.get(\\\"draft_n_accepted\\\")}/{t.get(\\\"draft_n\\\")}'}), flush=True)\", \"+        p.terminate(); p.wait()\", \"+        while subprocess.run([\\\"pgrep\\\", \\\"-x\\\", \\\"strata\\\"], capture_output=True).returncode == 0: time.sleep(1)\"]}], \"created\": true}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-decode-split.py\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 169198,
+        "completion_tokens": 2547,
+        "cached_tokens": 169196,
+        "extra": {
+          "cache_creation_input_tokens": 3422,
+          "cache_read_input_tokens": 169196,
+          "output_tokens_details": {
+            "thinking_tokens": 1842
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3422,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2547,
+              "cache_read_input_tokens": 169196,
+              "cache_creation_input_tokens": 3422,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3422
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "\"\"\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),\na warm-up, decode x3 with the --pcie-frac A/B's prompt; arm \"timing\" sets STRATA_DECODE_TIMING=1, arm \"profile\" adds\nSTRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\"\"\"\nimport json, os, subprocess, sys, time, urllib.request\nfrom pathlib import Path\n45 docs/benchmarks/2026-10-17-3060m-decode-split.log",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-decode-split.py",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 0,
+                      "newStart": 1,
+                      "newLines": 36,
+                      "lines": [
+                        "+\"\"\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),",
+                        "+a warm-up, decode x3 with the --pcie-frac A/B's prompt; arm \"timing\" sets STRATA_DECODE_TIMING=1, arm \"profile\" adds",
+                        "+STRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\"\"\"",
+                        "+import json, os, subprocess, sys, time, urllib.request",
+                        "+from pathlib import Path",
+                        "+S = Path(__file__).parent; ROOT = Path(\"/home/luwei/work/AI/Strata\"); URL = \"http://127.0.0.1:8080\"",
+                        "+E = Path(\"/mnt/evox2/large/work/AI/EngramHalo.cpp/src\")",
+                        "+L = (E / \"llama-model-loader.cpp\").read_text()",
+                        "+i = L.index(\"static std::vector<std::string> llama_get_list_splits\"); j = L.index(\"\\n}\\n\", i) + 3",
+                        "+DECODE = \"Rewrite this C++ function to be clearer and faster. Keep the behavior. Reply with the code.\\n\\n```cpp\\n\" + L[i:j] + \"```\"",
+                        "+def chat(text, n):",
+                        "+    r = urllib.request.Request(URL + \"/v1/chat/completions\", json.dumps({\"model\": \"x\", \"temperature\": 0, \"max_tokens\": n,",
+                        "+        \"chat_template_kwargs\": {\"enable_thinking\": False}, \"messages\": [{\"role\": \"user\", \"content\": text}]}).encode(),",
+                        "+        {\"Content-Type\": \"application/json\"})",
+                        "+    with urllib.request.urlopen(r, timeout=3600) as f: return json.load(f)",
+                        "+RUNS = [(\"coder\", \"strata-coder-iq1_m.json\"), (\"ud\", \"strata-unsloth-ud-iq4_xs.json\")]",
+                        "+ARMS = [(\"timing\", {\"STRATA_DECODE_TIMING\": \"1\"}), (\"profile\", {\"STRATA_DECODE_TIMING\": \"1\", \"STRATA_VERIFY_PROFILE\": \"1\"})]",
+                        "+for label, base in RUNS:",
+                        "+    for arm, env in ARMS:",
+                        "+        c = json.load(open(ROOT / base)); c[\"log\"] = str(S / f\"{label}-{arm}-engine.log\")",
+                        "+        cfg = S / f\"{label}-{arm}.json\"; cfg.write_text(json.dumps(c))",
+                        "+        slog = S / f\"{label}-{arm}-server.log\"",
+                        "+        p = subprocess.Popen([sys.executable, \"serve/server.py\", \"--engine\", \"strata\", \"--config\", str(cfg), \"--port\", \"8080\"],",
+                        "+                             cwd=ROOT, stdout=open(slog, \"w\"), stderr=subprocess.STDOUT, env={**os.environ, **env})",
+                        "+        while \"ready: http\" not in slog.read_text():",
+                        "+            if p.poll() is not None: sys.exit(f\"server died: {label} {arm}\")",
+                        "+            time.sleep(1)",
+                        "+        args = subprocess.run([\"bash\", \"-c\", \"ps -o args= -p $(pgrep -x strata) | grep -oE -- '--pcie-frac [0-9.]+'\"],",
+                        "+                              capture_output=True, text=True).stdout.strip()",
+                        "+        chat(\"Write a thread-safe LRU cache in C++.\", 128)",
+                        "+        for k in range(3):",
+                        "+            t = chat(DECODE, 512)[\"timings\"]",
+                        "+            print(json.dumps({\"model\": label, \"arm\": arm, \"args\": args, \"test\": f\"decode#{k+1}\", \"tok_s\": t[\"predicted_per_second\"],",
+                        "+                              \"tokens\": t[\"predicted_n\"], \"drafts\": f'{t.get(\"draft_n_accepted\")}/{t.get(\"draft_n\")}'}), flush=True)",
+                        "+        p.terminate(); p.wait()",
+                        "+        while subprocess.run([\"pgrep\", \"-x\", \"strata\"], capture_output=True).returncode == 0: time.sleep(1)"
+                      ]
+                    }
+                  ],
+                  "created": true
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-decode-split.py"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01DPXAPvDF8a3LwhS7iCMfPX",
+            "type": "tool_result",
+            "content": "\"\"\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),\na warm-up, decode x3 with the --pcie-frac A/B's prompt; arm \"timing\" sets STRATA_DECODE_TIMING=1, arm \"profile\" adds\nSTRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\"\"\"\nimport json, os, subprocess, sys, time, urllib.request\nfrom pathlib import Path\n45 docs/benchmarks/2026-10-17-3060m-decode-split.log",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "\"\"\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),\na warm-up, decode x3 with the --pcie-frac A/B's prompt; arm \"timing\" sets STRATA_DECODE_TIMING=1, arm \"profile\" adds\nSTRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\"\"\"\nimport json, os, subprocess, sys, time, urllib.request\nfrom pathlib import Path\n45 docs/benchmarks/2026-10-17-3060m-decode-split.log",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-decode-split.py",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 0,
+                      "newStart": 1,
+                      "newLines": 36,
+                      "lines": [
+                        "+\"\"\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),",
+                        "+a warm-up, decode x3 with the --pcie-frac A/B's prompt; arm \"timing\" sets STRATA_DECODE_TIMING=1, arm \"profile\" adds",
+                        "+STRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\"\"\"",
+                        "+import json, os, subprocess, sys, time, urllib.request",
+                        "+from pathlib import Path",
+                        "+S = Path(__file__).parent; ROOT = Path(\"/home/luwei/work/AI/Strata\"); URL = \"http://127.0.0.1:8080\"",
+                        "+E = Path(\"/mnt/evox2/large/work/AI/EngramHalo.cpp/src\")",
+                        "+L = (E / \"llama-model-loader.cpp\").read_text()",
+                        "+i = L.index(\"static std::vector<std::string> llama_get_list_splits\"); j = L.index(\"\\n}\\n\", i) + 3",
+                        "+DECODE = \"Rewrite this C++ function to be clearer and faster. Keep the behavior. Reply with the code.\\n\\n```cpp\\n\" + L[i:j] + \"```\"",
+                        "+def chat(text, n):",
+                        "+    r = urllib.request.Request(URL + \"/v1/chat/completions\", json.dumps({\"model\": \"x\", \"temperature\": 0, \"max_tokens\": n,",
+                        "+        \"chat_template_kwargs\": {\"enable_thinking\": False}, \"messages\": [{\"role\": \"user\", \"content\": text}]}).encode(),",
+                        "+        {\"Content-Type\": \"application/json\"})",
+                        "+    with urllib.request.urlopen(r, timeout=3600) as f: return json.load(f)",
+                        "+RUNS = [(\"coder\", \"strata-coder-iq1_m.json\"), (\"ud\", \"strata-unsloth-ud-iq4_xs.json\")]",
+                        "+ARMS = [(\"timing\", {\"STRATA_DECODE_TIMING\": \"1\"}), (\"profile\", {\"STRATA_DECODE_TIMING\": \"1\", \"STRATA_VERIFY_PROFILE\": \"1\"})]",
+                        "+for label, base in RUNS:",
+                        "+    for arm, env in ARMS:",
+                        "+        c = json.load(open(ROOT / base)); c[\"log\"] = str(S / f\"{label}-{arm}-engine.log\")",
+                        "+        cfg = S / f\"{label}-{arm}.json\"; cfg.write_text(json.dumps(c))",
+                        "+        slog = S / f\"{label}-{arm}-server.log\"",
+                        "+        p = subprocess.Popen([sys.executable, \"serve/server.py\", \"--engine\", \"strata\", \"--config\", str(cfg), \"--port\", \"8080\"],",
+                        "+                             cwd=ROOT, stdout=open(slog, \"w\"), stderr=subprocess.STDOUT, env={**os.environ, **env})",
+                        "+        while \"ready: http\" not in slog.read_text():",
+                        "+            if p.poll() is not None: sys.exit(f\"server died: {label} {arm}\")",
+                        "+            time.sleep(1)",
+                        "+        args = subprocess.run([\"bash\", \"-c\", \"ps -o args= -p $(pgrep -x strata) | grep -oE -- '--pcie-frac [0-9.]+'\"],",
+                        "+                              capture_output=True, text=True).stdout.strip()",
+                        "+        chat(\"Write a thread-safe LRU cache in C++.\", 128)",
+                        "+        for k in range(3):",
+                        "+            t = chat(DECODE, 512)[\"timings\"]",
+                        "+            print(json.dumps({\"model\": label, \"arm\": arm, \"args\": args, \"test\": f\"decode#{k+1}\", \"tok_s\": t[\"predicted_per_second\"],",
+                        "+                              \"tokens\": t[\"predicted_n\"], \"drafts\": f'{t.get(\"draft_n_accepted\")}/{t.get(\"draft_n\")}'}), flush=True)",
+                        "+        p.terminate(); p.wait()",
+                        "+        while subprocess.run([\"pgrep\", \"-x\", \"strata\"], capture_output=True).returncode == 0: time.sleep(1)"
+                      ]
+                    }
+                  ],
+                  "created": true
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-decode-split.py"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01DPXAPvDF8a3LwhS7iCMfPX",
+            "type": "tool_result",
+            "content": "\"\"\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),\na warm-up, decode x3 with the --pcie-frac A/B's prompt; arm \"timing\" sets STRATA_DECODE_TIMING=1, arm \"profile\" adds\nSTRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\"\"\"\nimport json, os, subprocess, sys, time, urllib.request\nfrom pathlib import Path\n45 docs/benchmarks/2026-10-17-3060m-decode-split.log",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "S=/tmp/claude-1000/-home-luwei-work-AI-Strata/7383c513-d686-461b-b02e-39b288fc437e/scratchpad/split; cp $S/run.py docs/benchmarks/2026-10-17-3060m-decode-split.py; sed -i '1s|.*|\"\"\"Per-token decode split on the 3060M (2026-10-17): per model and arm a fresh server (the configs in the repository root),\\na warm-up, decode x3 with the --pcie-frac A/B'\"'\"'s prompt; arm \"timing\" sets STRATA_DECODE_TIMING=1, arm \"profile\" adds\\nSTRATA_VERIFY_PROFILE=1 (GPU stage stamps).  Engine logs land next to this file.\"\"\"|' docs/benchmarks/2026-10-17-3060m-decode-split.py; head -5 docs/benchmarks/2026-10-17-3060m-decode-split.py; { echo \"# 2026-10-17-3060m-decode-split.py: results (JSON lines), then each engine log's decode-timing and GPU-stage lines (warm-up, decode#1..3)\"; cat $S/results.jsonl; for f in coder-timing coder-profile ud-timing ud-profile; do echo \"# $f\"; grep -h \"pcie\\|PCIe probe\\|expert cache [0-9]\\|decode timing\\|GPU stages\" $S/$f-engine.log | cut -c1-2000; done; } > docs/benchmarks/2026-10-17-3060m-decode-split.log; wc -l docs/benchmarks/2026-10-17-3060m-decode-split.log",
+          "description": "Save measurement script and raw log to docs/benchmarks"
+        }
+      }
+    },
+    {
+      "step_id": 177,
+      "timestamp": "2026-10-17T14:27:29.220Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_019GESg3WGpEadbdjXMkrrkA",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_019GESg3WGpEadbdjXMkrrkA",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cat >> docs/3060M.md <<'EOF'\n\n## Where the decode time goes (2026-10-17)\n\nThe measurement the section above asked for. The same prompt and procedure as the `--pcie-frac` A/B (a fresh\nserver per run, a warm-up, the C++ rewrite request three times, temperature 0, about 230 tokens out), the configs in\nthe repository root (`--pcie-frac` 0.2 for the Coder, 0.25 for UD-IQ4_XS), two runs per model: one with\n`STRATA_DECODE_TIMING=1` (the host's view of each verify window), one adding `STRATA_VERIFY_PROFILE=1` (GPU\ntimestamps per stage and layer). Script and raw lines: `benchmarks/2026-10-17-3060m-decode-split.py` and `.log`.\n\nDecode in the timing run: Coder 61.5 / 64.3 / 62.2 tokens/s (the A/B: 62.3), UD-IQ4_XS 55.4 / 54.7 / 56.0 (the\nA/B: 55.4); the profile run 58.8 / 63.3 / 62.4 and 54.8 / 54.3 / 55.5, its windows 0.6-0.7 ms (1%) longer. The\nnumbers below are the mean of decodes 2 and 3 (decode 1 had more prompt-lookup windows: avg T 4.52 against 3.94).\n\n**The host's view** (ms per verify window; a window commits the accepted drafts plus one token):\n\n| | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|\n| window | 58.6 | 69.8 |\n| tokens committed per window (avg window T) | 3.70 (3.94) | 3.87 (4.15) |\n| **ms per token** | **15.8** | **18.1** |\n| verify | 53.3 | 64.6 |\n| - the host waits for the GPU to reach a layer | 32.8 | 27.3 |\n| - CPU experts (the pool's drain, host thread included) | 16.4 | 33.0 |\n| - plan, queue, jobs, staging | 1.0 | 1.1 |\n| MTP draft | 5.2 | 5.2 |\n| commit + emit | 0.04 | 0.04 |\n| experts per layer and window: on the CPU / VRAM hits / over PCIe | 7.8 / 28.6 / 1.2 | 12.2 / 22.3 / 3.6 |\n\n**The GPU's view** (the profile run, ms per window, the 48 layers summed; the stages' sum is the verify time):\n\n| GPU stage | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|\n| projections: q/k/v/z GEMVs, out-proj, the indexer's q | 10.7 | 10.2 |\n| hyper-connection reads (norm, down, up) + router | 14.0 | 10.6 |\n| GDN conv / gates / recurrence + QSA K/V, scores, attention | 2.9 | 2.9 |\n| shared expert + activation quantization | 2.0 | 1.9 |\n| experts in VRAM | 11.2 | 9.5 |\n| experts copied over PCIe (their group kernel) | 2.0 | 3.5 |\n| copy + combine | 0.9 | 1.1 |\n| LM head | 3.0 | 3.1 |\n| **waiting for the CPU** (waitA + waitB + waitCPU) | **7.6** | **22.8** |\n| total | 54.3 | 65.5 |\n\n- **The Coder is GPU-bound.** The GPU computes 46.7 ms of the 58.6 ms window and waits 7.6 ms for the CPU; the\n  CPU experts' 16.4 ms run mostly beside the GPU's VRAM hits. The largest GPU items are the hyper-connection reads\n  with the router (14.0 ms, 24% of the window), the VRAM experts (11.2) and the projections (10.7).\n- **UD-IQ4_XS is CPU-bound.** The GPU waits 22.8 ms per window (33% of it) for 12.2 CPU experts per layer, against\n  7.8 for the Coder: fewer of its experts fit in VRAM (1864 against 2666) and 0.25 of the misses go over PCIe.\n- **The projections are not limited by bytes**: UD-IQ4_XS's native projection matrices are 2975 MiB, the Coder's\n  2019 MiB, and both take 10.2-10.7 ms. An estimate of the GPU's bandwidth floor: if every loaded weight (1406 +\n  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's 5.11 GiB / 2666\n  slots) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.\n- **The CPU experts run near the RAM's bandwidth**, an estimate with the same average expert size: Coder 7.8 x 48\n  x 2.06 MB in 16.4 ms = 47 GB/s, UD-IQ4_XS 12.2 x 48 x 2.41 MB (4.19 GiB / 1864 slots) in 33.0 ms = 43 GB/s,\n  against 55 GB/s read with 15 threads (STREAM test above). Not the codebook-bound 5 GB/s per core of\n  `native_expert.cpp:81`: at most about 20-30% is left for faster CPU kernels.\n- The hyper-connection + router stage is 3.4 ms longer for the Coder (the `hc-read1+router` part: 9.0 against 5.6\n  ms); not explained yet.\n- The MTP draft is 5.2 ms per window (9% of the Coder's, 7% of UD-IQ4_XS's); how much of it is the draft head is\n  not measured.\nEOF\ngit status --short | grep -v _traj",
+            "description": "Append decode split section to 3060M.md"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_019GESg3WGpEadbdjXMkrrkA",
+            "content": "M docs/3060M.md\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py\n\n[stdout]\n M docs/3060M.md\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/3060M.md\", \"hunks\": [{\"oldStart\": 863, \"oldLines\": 3, \"newStart\": 863, \"newLines\": 63, \"lines\": [\" the engine's pool counters (`pool phases ... drain`) and the GPU's per-token times, to see which side waits. The\", \" alternatives to a formula: let setup run `--calibrate` also with `--yes`, or balance the share at run time from\", \" the measured drain and copy times (the share is already settable per request: `strata_tune` key `pcie_frac`).\", \"+\", \"+## Where the decode time goes (2026-10-17)\", \"+\", \"+The measurement the section above asked for. The same prompt and procedure as the `--pcie-frac` A/B (a fresh\", \"+server per run, a warm-up, the C++ rewrite request three times, temperature 0, about 230 tokens out), the configs in\", \"+the repository root (`--pcie-frac` 0.2 for the Coder, 0.25 for UD-IQ4_XS), two runs per model: one with\", \"+`STRATA_DECODE_TIMING=1` (the host's view of each verify window), one adding `STRATA_VERIFY_PROFILE=1` (GPU\", \"+timestamps per stage and layer). Script and raw lines: `benchmarks/2026-10-17-3060m-decode-split.py` and `.log`.\", \"+\", \"+Decode in the timing run: Coder 61.5 / 64.3 / 62.2 tokens/s (the A/B: 62.3), UD-IQ4_XS 55.4 / 54.7 / 56.0 (the\", \"+A/B: 55.4); the profile run 58.8 / 63.3 / 62.4 and 54.8 / 54.3 / 55.5, its windows 0.6-0.7 ms (1%) longer. The\", \"+numbers below are the mean of decodes 2 and 3 (decode 1 had more prompt-lookup windows: avg T 4.52 against 3.94).\", \"+\", \"+**The host's view** (ms per verify window; a window commits the accepted drafts plus one token):\", \"+\", \"+| | Coder IQ1_M | UD-IQ4_XS |\", \"+|---|---|---|\", \"+| window | 58.6 | 69.8 |\", \"+| tokens committed per window (avg window T) | 3.70 (3.94) | 3.87 (4.15) |\", \"+| **ms per token** | **15.8** | **18.1** |\", \"+| verify | 53.3 | 64.6 |\", \"+| - the host waits for the GPU to reach a layer | 32.8 | 27.3 |\", \"+| - CPU experts (the pool's drain, host thread included) | 16.4 | 33.0 |\", \"+| - plan, queue, jobs, staging | 1.0 | 1.1 |\", \"+| MTP draft | 5.2 | 5.2 |\", \"+| commit + emit | 0.04 | 0.04 |\", \"+| experts per layer and window: on the CPU / VRAM hits / over PCIe | 7.8 / 28.6 / 1.2 | 12.2 / 22.3 / 3.6 |\", \"+\", \"+**The GPU's view** (the profile run, ms per window, the 48 layers summed; the stages' sum is the verify time):\", \"+\", \"+| GPU stage | Coder IQ1_M | UD-IQ4_XS |\", \"+|---|---|---|\", \"+| projections: q/k/v/z GEMVs, out-proj, the indexer's q | 10.7 | 10.2 |\", \"+| hyper-connection reads (norm, down, up) + router | 14.0 | 10.6 |\", \"+| GDN conv / gates / recurrence + QSA K/V, scores, attention | 2.9 | 2.9 |\", \"+| shared expert + activation quantization | 2.0 | 1.9 |\", \"+| experts in VRAM | 11.2 | 9.5 |\", \"+| experts copied over PCIe (their group kernel) | 2.0 | 3.5 |\", \"+| copy + combine | 0.9 | 1.1 |\", \"+| LM head | 3.0 | 3.1 |\", \"+| **waiting for the CPU** (waitA + waitB + waitCPU) | **7.6** | **22.8** |\", \"+| total | 54.3 | 65.5 |\", \"+\", \"+- **The Coder is GPU-bound.** The GPU computes 46.7 ms of the 58.6 ms window and waits 7.6 ms for the CPU; the\", \"+  CPU experts' 16.4 ms run mostly beside the GPU's VRAM hits. The largest GPU items are the hyper-connection reads\", \"+  with the router (14.0 ms, 24% of the window), the VRAM experts (11.2) and the projections (10.7).\", \"+- **UD-IQ4_XS is CPU-bound.** The GPU waits 22.8 ms per window (33% of it) for 12.2 CPU experts per layer, against\", \"+  7.8 for the Coder: fewer of its experts fit in VRAM (1864 against 2666) and 0.25 of the misses go over PCIe.\", \"+- **The projections are not limited by bytes**: UD-IQ4_XS's native projection matrices are 2975 MiB, the Coder's\", \"+  2019 MiB, and both take 10.2-10.7 ms. An estimate of the GPU's bandwidth floor: if every loaded weight (1406 +\", \"+  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's 5.11 GiB / 2666\", \"+  slots) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.\", \"+- **The CPU experts run near the RAM's bandwidth**, an estimate with the same average expert size: Coder 7.8 x 48\", \"+  x 2.06 MB in 16.4 ms = 47 GB/s, UD-IQ4_XS 12.2 x 48 x 2.41 MB (4.19 GiB / 1864 slots) in 33.0 ms = 43 GB/s,\", \"+  against 55 GB/s read with 15 threads (STREAM test above). Not the codebook-bound 5 GB/s per core of\", \"+  `native_expert.cpp:81`: at most about 20-30% is left for faster CPU kernels.\", \"+- The hyper-connection + router stage is 3.4 ms longer for the Coder (the `hc-read1+router` part: 9.0 against 5.6\", \"+  ms); not explained yet.\", \"+- The MTP draft is 5.2 ms per window (9% of the Coder's, 7% of UD-IQ4_XS's); how much of it is the draft head is\", \"+  not measured.\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/3060M.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 172620,
+        "completion_tokens": 2115,
+        "cached_tokens": 172618,
+        "extra": {
+          "cache_creation_input_tokens": 2783,
+          "cache_read_input_tokens": 172618,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2783,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2115,
+              "cache_read_input_tokens": 172618,
+              "cache_creation_input_tokens": 2783,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2783
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": " M docs/3060M.md\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 863,
+                      "oldLines": 3,
+                      "newStart": 863,
+                      "newLines": 63,
+                      "lines": [
+                        " the engine's pool counters (`pool phases ... drain`) and the GPU's per-token times, to see which side waits. The",
+                        " alternatives to a formula: let setup run `--calibrate` also with `--yes`, or balance the share at run time from",
+                        " the measured drain and copy times (the share is already settable per request: `strata_tune` key `pcie_frac`).",
+                        "+",
+                        "+## Where the decode time goes (2026-10-17)",
+                        "+",
+                        "+The measurement the section above asked for. The same prompt and procedure as the `--pcie-frac` A/B (a fresh",
+                        "+server per run, a warm-up, the C++ rewrite request three times, temperature 0, about 230 tokens out), the configs in",
+                        "+the repository root (`--pcie-frac` 0.2 for the Coder, 0.25 for UD-IQ4_XS), two runs per model: one with",
+                        "+`STRATA_DECODE_TIMING=1` (the host's view of each verify window), one adding `STRATA_VERIFY_PROFILE=1` (GPU",
+                        "+timestamps per stage and layer). Script and raw lines: `benchmarks/2026-10-17-3060m-decode-split.py` and `.log`.",
+                        "+",
+                        "+Decode in the timing run: Coder 61.5 / 64.3 / 62.2 tokens/s (the A/B: 62.3), UD-IQ4_XS 55.4 / 54.7 / 56.0 (the",
+                        "+A/B: 55.4); the profile run 58.8 / 63.3 / 62.4 and 54.8 / 54.3 / 55.5, its windows 0.6-0.7 ms (1%) longer. The",
+                        "+numbers below are the mean of decodes 2 and 3 (decode 1 had more prompt-lookup windows: avg T 4.52 against 3.94).",
+                        "+",
+                        "+**The host's view** (ms per verify window; a window commits the accepted drafts plus one token):",
+                        "+",
+                        "+| | Coder IQ1_M | UD-IQ4_XS |",
+                        "+|---|---|---|",
+                        "+| window | 58.6 | 69.8 |",
+                        "+| tokens committed per window (avg window T) | 3.70 (3.94) | 3.87 (4.15) |",
+                        "+| **ms per token** | **15.8** | **18.1** |",
+                        "+| verify | 53.3 | 64.6 |",
+                        "+| - the host waits for the GPU to reach a layer | 32.8 | 27.3 |",
+                        "+| - CPU experts (the pool's drain, host thread included) | 16.4 | 33.0 |",
+                        "+| - plan, queue, jobs, staging | 1.0 | 1.1 |",
+                        "+| MTP draft | 5.2 | 5.2 |",
+                        "+| commit + emit | 0.04 | 0.04 |",
+                        "+| experts per layer and window: on the CPU / VRAM hits / over PCIe | 7.8 / 28.6 / 1.2 | 12.2 / 22.3 / 3.6 |",
+                        "+",
+                        "+**The GPU's view** (the profile run, ms per window, the 48 layers summed; the stages' sum is the verify time):",
+                        "+",
+                        "+| GPU stage | Coder IQ1_M | UD-IQ4_XS |",
+                        "+|---|---|---|",
+                        "+| projections: q/k/v/z GEMVs, out-proj, the indexer's q | 10.7 | 10.2 |",
+                        "+| hyper-connection reads (norm, down, up) + router | 14.0 | 10.6 |",
+                        "+| GDN conv / gates / recurrence + QSA K/V, scores, attention | 2.9 | 2.9 |",
+                        "+| shared expert + activation quantization | 2.0 | 1.9 |",
+                        "+| experts in VRAM | 11.2 | 9.5 |",
+                        "+| experts copied over PCIe (their group kernel) | 2.0 | 3.5 |",
+                        "+| copy + combine | 0.9 | 1.1 |",
+                        "+| LM head | 3.0 | 3.1 |",
+                        "+| **waiting for the CPU** (waitA + waitB + waitCPU) | **7.6** | **22.8** |",
+                        "+| total | 54.3 | 65.5 |",
+                        "+",
+                        "+- **The Coder is GPU-bound.** The GPU computes 46.7 ms of the 58.6 ms window and waits 7.6 ms for the CPU; the",
+                        "+  CPU experts' 16.4 ms run mostly beside the GPU's VRAM hits. The largest GPU items are the hyper-connection reads",
+                        "+  with the router (14.0 ms, 24% of the window), the VRAM experts (11.2) and the projections (10.7).",
+                        "+- **UD-IQ4_XS is CPU-bound.** The GPU waits 22.8 ms per window (33% of it) for 12.2 CPU experts per layer, against",
+                        "+  7.8 for the Coder: fewer of its experts fit in VRAM (1864 against 2666) and 0.25 of the misses go over PCIe.",
+                        "+- **The projections are not limited by bytes**: UD-IQ4_XS's native projection matrices are 2975 MiB, the Coder's",
+                        "+  2019 MiB, and both take 10.2-10.7 ms. An estimate of the GPU's bandwidth floor: if every loaded weight (1406 +",
+                        "+  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's 5.11 GiB / 2666",
+                        "+  slots) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.",
+                        "+- **The CPU experts run near the RAM's bandwidth**, an estimate with the same average expert size: Coder 7.8 x 48",
+                        "+  x 2.06 MB in 16.4 ms = 47 GB/s, UD-IQ4_XS 12.2 x 48 x 2.41 MB (4.19 GiB / 1864 slots) in 33.0 ms = 43 GB/s,",
+                        "+  against 55 GB/s read with 15 threads (STREAM test above). Not the codebook-bound 5 GB/s per core of",
+                        "+  `native_expert.cpp:81`: at most about 20-30% is left for faster CPU kernels.",
+                        "+- The hyper-connection + router stage is 3.4 ms longer for the Coder (the `hc-read1+router` part: 9.0 against 5.6",
+                        "+  ms); not explained yet.",
+                        "+- The MTP draft is 5.2 ms per window (9% of the Coder's, 7% of UD-IQ4_XS's); how much of it is the draft head is",
+                        "+  not measured."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_019GESg3WGpEadbdjXMkrrkA",
+            "type": "tool_result",
+            "content": " M docs/3060M.md\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": " M docs/3060M.md\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 863,
+                      "oldLines": 3,
+                      "newStart": 863,
+                      "newLines": 63,
+                      "lines": [
+                        " the engine's pool counters (`pool phases ... drain`) and the GPU's per-token times, to see which side waits. The",
+                        " alternatives to a formula: let setup run `--calibrate` also with `--yes`, or balance the share at run time from",
+                        " the measured drain and copy times (the share is already settable per request: `strata_tune` key `pcie_frac`).",
+                        "+",
+                        "+## Where the decode time goes (2026-10-17)",
+                        "+",
+                        "+The measurement the section above asked for. The same prompt and procedure as the `--pcie-frac` A/B (a fresh",
+                        "+server per run, a warm-up, the C++ rewrite request three times, temperature 0, about 230 tokens out), the configs in",
+                        "+the repository root (`--pcie-frac` 0.2 for the Coder, 0.25 for UD-IQ4_XS), two runs per model: one with",
+                        "+`STRATA_DECODE_TIMING=1` (the host's view of each verify window), one adding `STRATA_VERIFY_PROFILE=1` (GPU",
+                        "+timestamps per stage and layer). Script and raw lines: `benchmarks/2026-10-17-3060m-decode-split.py` and `.log`.",
+                        "+",
+                        "+Decode in the timing run: Coder 61.5 / 64.3 / 62.2 tokens/s (the A/B: 62.3), UD-IQ4_XS 55.4 / 54.7 / 56.0 (the",
+                        "+A/B: 55.4); the profile run 58.8 / 63.3 / 62.4 and 54.8 / 54.3 / 55.5, its windows 0.6-0.7 ms (1%) longer. The",
+                        "+numbers below are the mean of decodes 2 and 3 (decode 1 had more prompt-lookup windows: avg T 4.52 against 3.94).",
+                        "+",
+                        "+**The host's view** (ms per verify window; a window commits the accepted drafts plus one token):",
+                        "+",
+                        "+| | Coder IQ1_M | UD-IQ4_XS |",
+                        "+|---|---|---|",
+                        "+| window | 58.6 | 69.8 |",
+                        "+| tokens committed per window (avg window T) | 3.70 (3.94) | 3.87 (4.15) |",
+                        "+| **ms per token** | **15.8** | **18.1** |",
+                        "+| verify | 53.3 | 64.6 |",
+                        "+| - the host waits for the GPU to reach a layer | 32.8 | 27.3 |",
+                        "+| - CPU experts (the pool's drain, host thread included) | 16.4 | 33.0 |",
+                        "+| - plan, queue, jobs, staging | 1.0 | 1.1 |",
+                        "+| MTP draft | 5.2 | 5.2 |",
+                        "+| commit + emit | 0.04 | 0.04 |",
+                        "+| experts per layer and window: on the CPU / VRAM hits / over PCIe | 7.8 / 28.6 / 1.2 | 12.2 / 22.3 / 3.6 |",
+                        "+",
+                        "+**The GPU's view** (the profile run, ms per window, the 48 layers summed; the stages' sum is the verify time):",
+                        "+",
+                        "+| GPU stage | Coder IQ1_M | UD-IQ4_XS |",
+                        "+|---|---|---|",
+                        "+| projections: q/k/v/z GEMVs, out-proj, the indexer's q | 10.7 | 10.2 |",
+                        "+| hyper-connection reads (norm, down, up) + router | 14.0 | 10.6 |",
+                        "+| GDN conv / gates / recurrence + QSA K/V, scores, attention | 2.9 | 2.9 |",
+                        "+| shared expert + activation quantization | 2.0 | 1.9 |",
+                        "+| experts in VRAM | 11.2 | 9.5 |",
+                        "+| experts copied over PCIe (their group kernel) | 2.0 | 3.5 |",
+                        "+| copy + combine | 0.9 | 1.1 |",
+                        "+| LM head | 3.0 | 3.1 |",
+                        "+| **waiting for the CPU** (waitA + waitB + waitCPU) | **7.6** | **22.8** |",
+                        "+| total | 54.3 | 65.5 |",
+                        "+",
+                        "+- **The Coder is GPU-bound.** The GPU computes 46.7 ms of the 58.6 ms window and waits 7.6 ms for the CPU; the",
+                        "+  CPU experts' 16.4 ms run mostly beside the GPU's VRAM hits. The largest GPU items are the hyper-connection reads",
+                        "+  with the router (14.0 ms, 24% of the window), the VRAM experts (11.2) and the projections (10.7).",
+                        "+- **UD-IQ4_XS is CPU-bound.** The GPU waits 22.8 ms per window (33% of it) for 12.2 CPU experts per layer, against",
+                        "+  7.8 for the Coder: fewer of its experts fit in VRAM (1864 against 2666) and 0.25 of the misses go over PCIe.",
+                        "+- **The projections are not limited by bytes**: UD-IQ4_XS's native projection matrices are 2975 MiB, the Coder's",
+                        "+  2019 MiB, and both take 10.2-10.7 ms. An estimate of the GPU's bandwidth floor: if every loaded weight (1406 +",
+                        "+  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's 5.11 GiB / 2666",
+                        "+  slots) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.",
+                        "+- **The CPU experts run near the RAM's bandwidth**, an estimate with the same average expert size: Coder 7.8 x 48",
+                        "+  x 2.06 MB in 16.4 ms = 47 GB/s, UD-IQ4_XS 12.2 x 48 x 2.41 MB (4.19 GiB / 1864 slots) in 33.0 ms = 43 GB/s,",
+                        "+  against 55 GB/s read with 15 threads (STREAM test above). Not the codebook-bound 5 GB/s per core of",
+                        "+  `native_expert.cpp:81`: at most about 20-30% is left for faster CPU kernels.",
+                        "+- The hyper-connection + router stage is 3.4 ms longer for the Coder (the `hc-read1+router` part: 9.0 against 5.6",
+                        "+  ms); not explained yet.",
+                        "+- The MTP draft is 5.2 ms per window (9% of the Coder's, 7% of UD-IQ4_XS's); how much of it is the draft head is",
+                        "+  not measured."
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_019GESg3WGpEadbdjXMkrrkA",
+            "type": "tool_result",
+            "content": " M docs/3060M.md\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cat >> docs/3060M.md <<'EOF'\n\n## Where the decode time goes (2026-10-17)\n\nThe measurement the section above asked for. The same prompt and procedure as the `--pcie-frac` A/B (a fresh\nserver per run, a warm-up, the C++ rewrite request three times, temperature 0, about 230 tokens out), the configs in\nthe repository root (`--pcie-frac` 0.2 for the Coder, 0.25 for UD-IQ4_XS), two runs per model: one with\n`STRATA_DECODE_TIMING=1` (the host's view of each verify window), one adding `STRATA_VERIFY_PROFILE=1` (GPU\ntimestamps per stage and layer). Script and raw lines: `benchmarks/2026-10-17-3060m-decode-split.py` and `.log`.\n\nDecode in the timing run: Coder 61.5 / 64.3 / 62.2 tokens/s (the A/B: 62.3), UD-IQ4_XS 55.4 / 54.7 / 56.0 (the\nA/B: 55.4); the profile run 58.8 / 63.3 / 62.4 and 54.8 / 54.3 / 55.5, its windows 0.6-0.7 ms (1%) longer. The\nnumbers below are the mean of decodes 2 and 3 (decode 1 had more prompt-lookup windows: avg T 4.52 against 3.94).\n\n**The host's view** (ms per verify window; a window commits the accepted drafts plus one token):\n\n| | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|\n| window | 58.6 | 69.8 |\n| tokens committed per window (avg window T) | 3.70 (3.94) | 3.87 (4.15) |\n| **ms per token** | **15.8** | **18.1** |\n| verify | 53.3 | 64.6 |\n| - the host waits for the GPU to reach a layer | 32.8 | 27.3 |\n| - CPU experts (the pool's drain, host thread included) | 16.4 | 33.0 |\n| - plan, queue, jobs, staging | 1.0 | 1.1 |\n| MTP draft | 5.2 | 5.2 |\n| commit + emit | 0.04 | 0.04 |\n| experts per layer and window: on the CPU / VRAM hits / over PCIe | 7.8 / 28.6 / 1.2 | 12.2 / 22.3 / 3.6 |\n\n**The GPU's view** (the profile run, ms per window, the 48 layers summed; the stages' sum is the verify time):\n\n| GPU stage | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|\n| projections: q/k/v/z GEMVs, out-proj, the indexer's q | 10.7 | 10.2 |\n| hyper-connection reads (norm, down, up) + router | 14.0 | 10.6 |\n| GDN conv / gates / recurrence + QSA K/V, scores, attention | 2.9 | 2.9 |\n| shared expert + activation quantization | 2.0 | 1.9 |\n| experts in VRAM | 11.2 | 9.5 |\n| experts copied over PCIe (their group kernel) | 2.0 | 3.5 |\n| copy + combine | 0.9 | 1.1 |\n| LM head | 3.0 | 3.1 |\n| **waiting for the CPU** (waitA + waitB + waitCPU) | **7.6** | **22.8** |\n| total | 54.3 | 65.5 |\n\n- **The Coder is GPU-bound.** The GPU computes 46.7 ms of the 58.6 ms window and waits 7.6 ms for the CPU; the\n  CPU experts' 16.4 ms run mostly beside the GPU's VRAM hits. The largest GPU items are the hyper-connection reads\n  with the router (14.0 ms, 24% of the window), the VRAM experts (11.2) and the projections (10.7).\n- **UD-IQ4_XS is CPU-bound.** The GPU waits 22.8 ms per window (33% of it) for 12.2 CPU experts per layer, against\n  7.8 for the Coder: fewer of its experts fit in VRAM (1864 against 2666) and 0.25 of the misses go over PCIe.\n- **The projections are not limited by bytes**: UD-IQ4_XS's native projection matrices are 2975 MiB, the Coder's\n  2019 MiB, and both take 10.2-10.7 ms. An estimate of the GPU's bandwidth floor: if every loaded weight (1406 +\n  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's 5.11 GiB / 2666\n  slots) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.\n- **The CPU experts run near the RAM's bandwidth**, an estimate with the same average expert size: Coder 7.8 x 48\n  x 2.06 MB in 16.4 ms = 47 GB/s, UD-IQ4_XS 12.2 x 48 x 2.41 MB (4.19 GiB / 1864 slots) in 33.0 ms = 43 GB/s,\n  against 55 GB/s read with 15 threads (STREAM test above). Not the codebook-bound 5 GB/s per core of\n  `native_expert.cpp:81`: at most about 20-30% is left for faster CPU kernels.\n- The hyper-connection + router stage is 3.4 ms longer for the Coder (the `hc-read1+router` part: 9.0 against 5.6\n  ms); not explained yet.\n- The MTP draft is 5.2 ms per window (9% of the Coder's, 7% of UD-IQ4_XS's); how much of it is the draft head is\n  not measured.\nEOF\ngit status --short | grep -v _traj",
+          "description": "Append decode split section to 3060M.md"
+        }
+      }
+    },
+    {
+      "step_id": 178,
+      "timestamp": "2026-10-17T14:27:45.806Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 175403,
+        "completion_tokens": 1890,
+        "cached_tokens": 175401,
+        "extra": {
+          "cache_creation_input_tokens": 2183,
+          "cache_read_input_tokens": 175401,
+          "output_tokens_details": {
+            "thinking_tokens": 1250
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2183,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1890,
+              "cache_read_input_tokens": 175401,
+              "cache_creation_input_tokens": 2183,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2183
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 179,
+      "timestamp": "2026-10-17T14:27:45.811Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "My listed verify costs only total 50ms, leaving ~3.2ms unaccounted for in the log, and my codebook limit claim (5 GB/s/core × 15 cores) overstates the actual RAM bandwidth—I'll correct both.",
+      "metrics": {
+        "prompt_tokens": 175403,
+        "completion_tokens": 1890,
+        "cached_tokens": 175401,
+        "extra": {
+          "cache_creation_input_tokens": 2183,
+          "cache_read_input_tokens": 175401,
+          "output_tokens_details": {
+            "thinking_tokens": 1250
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2183,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1890,
+              "cache_read_input_tokens": 175401,
+              "cache_creation_input_tokens": 2183,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2183
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 180,
+      "timestamp": "2026-10-17T14:27:48.492Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01FM23uWTBwakTCg6nT3KTBU",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01FM23uWTBwakTCg6nT3KTBU",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "python3 - <<'EOF'\np='docs/3060M.md'; s=open(p).read()\nrep=[(\"| - plan, queue, jobs, staging | 1.0 | 1.1 |\\n\",\"| - plan, queue, jobs, staging | 1.0 | 1.1 |\\n| - the rest (not split by the log: the window's end, after the last layer) | 3.2 | 3.2 |\\n\"),\n(\"against 55 GB/s read with 15 threads (STREAM test above). Not the codebook-bound 5 GB/s per core of\\n  `native_expert.cpp:81`: at most about 20-30% is left for faster CPU kernels.\",\n \"against 55 GB/s read with 15 threads (STREAM test above): 78-85% of it. The codebook lookups' ~5 GB/s per core\\n  (`native_expert.cpp:81`) would be 75 GB/s for 15 workers, so with this many cores the RAM is the limit; faster\\n  CPU kernels have at most 15-30% left.\"),\n(\"every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's 5.11 GiB / 2666\\n  slots)\",\"every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's bytes per slot: 5.11 GiB /\\n  2666)\")]\nfor a,b in rep: assert a in s,a; s=s.replace(a,b)\nopen(p,'w').write(s)\nEOF\ngit add -f docs/benchmarks/2026-10-17-3060m-decode-split.log; git status --short | grep -v _traj",
+            "description": "Fix verify remainder row and CPU bandwidth wording"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01FM23uWTBwakTCg6nT3KTBU",
+            "content": "M docs/3060M.md\nA  docs/benchmarks/2026-10-17-3060m-decode-split.log\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py\n\n[stdout]\n M docs/3060M.md\nA  docs/benchmarks/2026-10-17-3060m-decode-split.log\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/3060M.md\", \"hunks\": [{\"oldStart\": 887, \"oldLines\": 6, \"newStart\": 887, \"newLines\": 7, \"lines\": [\" | - the host waits for the GPU to reach a layer | 32.8 | 27.3 |\", \" | - CPU experts (the pool's drain, host thread included) | 16.4 | 33.0 |\", \" | - plan, queue, jobs, staging | 1.0 | 1.1 |\", \"+| - the rest (not split by the log: the window's end, after the last layer) | 3.2 | 3.2 |\", \" | MTP draft | 5.2 | 5.2 |\", \" | commit + emit | 0.04 | 0.04 |\", \" | experts per layer and window: on the CPU / VRAM hits / over PCIe | 7.8 / 28.6 / 1.2 | 12.2 / 22.3 / 3.6 |\"]}, {\"oldStart\": 913, \"oldLines\": 12, \"newStart\": 914, \"newLines\": 13, \"lines\": [\"   7.8 for the Coder: fewer of its experts fit in VRAM (1864 against 2666) and 0.25 of the misses go over PCIe.\", \" - **The projections are not limited by bytes**: UD-IQ4_XS's native projection matrices are 2975 MiB, the Coder's\", \"   2019 MiB, and both take 10.2-10.7 ms. An estimate of the GPU's bandwidth floor: if every loaded weight (1406 +\", \"-  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's 5.11 GiB / 2666\", \"-  slots) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.\", \"+  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's bytes per slot: 5.11 GiB /\", \"+  2666) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.\", \" - **The CPU experts run near the RAM's bandwidth**, an estimate with the same average expert size: Coder 7.8 x 48\", \"   x 2.06 MB in 16.4 ms = 47 GB/s, UD-IQ4_XS 12.2 x 48 x 2.41 MB (4.19 GiB / 1864 slots) in 33.0 ms = 43 GB/s,\", \"-  against 55 GB/s read with 15 threads (STREAM test above). Not the codebook-bound 5 GB/s per core of\", \"-  `native_expert.cpp:81`: at most about 20-30% is left for faster CPU kernels.\", \"+  against 55 GB/s read with 15 threads (STREAM test above): 78-85% of it. The codebook lookups' ~5 GB/s per core\", \"+  (`native_expert.cpp:81`) would be 75 GB/s for 15 workers, so with this many cores the RAM is the limit; faster\", \"+  CPU kernels have at most 15-30% left.\", \" - The hyper-connection + router stage is 3.4 ms longer for the Coder (the `hc-read1+router` part: 9.0 against 5.6\", \"   ms); not explained yet.\", \" - The MTP draft is 5.2 ms per window (9% of the Coder's, 7% of UD-IQ4_XS's); how much of it is the draft head is\"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/3060M.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 175403,
+        "completion_tokens": 1890,
+        "cached_tokens": 175401,
+        "extra": {
+          "cache_creation_input_tokens": 2183,
+          "cache_read_input_tokens": 175401,
+          "output_tokens_details": {
+            "thinking_tokens": 1250
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 2183,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1890,
+              "cache_read_input_tokens": 175401,
+              "cache_creation_input_tokens": 2183,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 2183
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": " M docs/3060M.md\nA  docs/benchmarks/2026-10-17-3060m-decode-split.log\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 887,
+                      "oldLines": 6,
+                      "newStart": 887,
+                      "newLines": 7,
+                      "lines": [
+                        " | - the host waits for the GPU to reach a layer | 32.8 | 27.3 |",
+                        " | - CPU experts (the pool's drain, host thread included) | 16.4 | 33.0 |",
+                        " | - plan, queue, jobs, staging | 1.0 | 1.1 |",
+                        "+| - the rest (not split by the log: the window's end, after the last layer) | 3.2 | 3.2 |",
+                        " | MTP draft | 5.2 | 5.2 |",
+                        " | commit + emit | 0.04 | 0.04 |",
+                        " | experts per layer and window: on the CPU / VRAM hits / over PCIe | 7.8 / 28.6 / 1.2 | 12.2 / 22.3 / 3.6 |"
+                      ]
+                    },
+                    {
+                      "oldStart": 913,
+                      "oldLines": 12,
+                      "newStart": 914,
+                      "newLines": 13,
+                      "lines": [
+                        "   7.8 for the Coder: fewer of its experts fit in VRAM (1864 against 2666) and 0.25 of the misses go over PCIe.",
+                        " - **The projections are not limited by bytes**: UD-IQ4_XS's native projection matrices are 2975 MiB, the Coder's",
+                        "   2019 MiB, and both take 10.2-10.7 ms. An estimate of the GPU's bandwidth floor: if every loaded weight (1406 +",
+                        "-  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's 5.11 GiB / 2666",
+                        "-  slots) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.",
+                        "+  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's bytes per slot: 5.11 GiB /",
+                        "+  2666) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.",
+                        " - **The CPU experts run near the RAM's bandwidth**, an estimate with the same average expert size: Coder 7.8 x 48",
+                        "   x 2.06 MB in 16.4 ms = 47 GB/s, UD-IQ4_XS 12.2 x 48 x 2.41 MB (4.19 GiB / 1864 slots) in 33.0 ms = 43 GB/s,",
+                        "-  against 55 GB/s read with 15 threads (STREAM test above). Not the codebook-bound 5 GB/s per core of",
+                        "-  `native_expert.cpp:81`: at most about 20-30% is left for faster CPU kernels.",
+                        "+  against 55 GB/s read with 15 threads (STREAM test above): 78-85% of it. The codebook lookups' ~5 GB/s per core",
+                        "+  (`native_expert.cpp:81`) would be 75 GB/s for 15 workers, so with this many cores the RAM is the limit; faster",
+                        "+  CPU kernels have at most 15-30% left.",
+                        " - The hyper-connection + router stage is 3.4 ms longer for the Coder (the `hc-read1+router` part: 9.0 against 5.6",
+                        "   ms); not explained yet.",
+                        " - The MTP draft is 5.2 ms per window (9% of the Coder's, 7% of UD-IQ4_XS's); how much of it is the draft head is"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FM23uWTBwakTCg6nT3KTBU",
+            "type": "tool_result",
+            "content": " M docs/3060M.md\nA  docs/benchmarks/2026-10-17-3060m-decode-split.log\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": " M docs/3060M.md\nA  docs/benchmarks/2026-10-17-3060m-decode-split.log\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M.md",
+                  "hunks": [
+                    {
+                      "oldStart": 887,
+                      "oldLines": 6,
+                      "newStart": 887,
+                      "newLines": 7,
+                      "lines": [
+                        " | - the host waits for the GPU to reach a layer | 32.8 | 27.3 |",
+                        " | - CPU experts (the pool's drain, host thread included) | 16.4 | 33.0 |",
+                        " | - plan, queue, jobs, staging | 1.0 | 1.1 |",
+                        "+| - the rest (not split by the log: the window's end, after the last layer) | 3.2 | 3.2 |",
+                        " | MTP draft | 5.2 | 5.2 |",
+                        " | commit + emit | 0.04 | 0.04 |",
+                        " | experts per layer and window: on the CPU / VRAM hits / over PCIe | 7.8 / 28.6 / 1.2 | 12.2 / 22.3 / 3.6 |"
+                      ]
+                    },
+                    {
+                      "oldStart": 913,
+                      "oldLines": 12,
+                      "newStart": 914,
+                      "newLines": 13,
+                      "lines": [
+                        "   7.8 for the Coder: fewer of its experts fit in VRAM (1864 against 2666) and 0.25 of the misses go over PCIe.",
+                        " - **The projections are not limited by bytes**: UD-IQ4_XS's native projection matrices are 2975 MiB, the Coder's",
+                        "   2019 MiB, and both take 10.2-10.7 ms. An estimate of the GPU's bandwidth floor: if every loaded weight (1406 +",
+                        "-  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's 5.11 GiB / 2666",
+                        "-  slots) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.",
+                        "+  2019 MiB for the Coder) and every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's bytes per slot: 5.11 GiB /",
+                        "+  2666) is read once per window, that is 6.4 GB, 19 ms at 336 GB/s, against 46.7 ms of GPU work: about 40%.",
+                        " - **The CPU experts run near the RAM's bandwidth**, an estimate with the same average expert size: Coder 7.8 x 48",
+                        "   x 2.06 MB in 16.4 ms = 47 GB/s, UD-IQ4_XS 12.2 x 48 x 2.41 MB (4.19 GiB / 1864 slots) in 33.0 ms = 43 GB/s,",
+                        "-  against 55 GB/s read with 15 threads (STREAM test above). Not the codebook-bound 5 GB/s per core of",
+                        "-  `native_expert.cpp:81`: at most about 20-30% is left for faster CPU kernels.",
+                        "+  against 55 GB/s read with 15 threads (STREAM test above): 78-85% of it. The codebook lookups' ~5 GB/s per core",
+                        "+  (`native_expert.cpp:81`) would be 75 GB/s for 15 workers, so with this many cores the RAM is the limit; faster",
+                        "+  CPU kernels have at most 15-30% left.",
+                        " - The hyper-connection + router stage is 3.4 ms longer for the Coder (the `hc-read1+router` part: 9.0 against 5.6",
+                        "   ms); not explained yet.",
+                        " - The MTP draft is 5.2 ms per window (9% of the Coder's, 7% of UD-IQ4_XS's); how much of it is the draft head is"
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FM23uWTBwakTCg6nT3KTBU",
+            "type": "tool_result",
+            "content": " M docs/3060M.md\nA  docs/benchmarks/2026-10-17-3060m-decode-split.log\n?? docs/benchmarks/2026-10-17-3060m-decode-split.py",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "python3 - <<'EOF'\np='docs/3060M.md'; s=open(p).read()\nrep=[(\"| - plan, queue, jobs, staging | 1.0 | 1.1 |\\n\",\"| - plan, queue, jobs, staging | 1.0 | 1.1 |\\n| - the rest (not split by the log: the window's end, after the last layer) | 3.2 | 3.2 |\\n\"),\n(\"against 55 GB/s read with 15 threads (STREAM test above). Not the codebook-bound 5 GB/s per core of\\n  `native_expert.cpp:81`: at most about 20-30% is left for faster CPU kernels.\",\n \"against 55 GB/s read with 15 threads (STREAM test above): 78-85% of it. The codebook lookups' ~5 GB/s per core\\n  (`native_expert.cpp:81`) would be 75 GB/s for 15 workers, so with this many cores the RAM is the limit; faster\\n  CPU kernels have at most 15-30% left.\"),\n(\"every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's 5.11 GiB / 2666\\n  slots)\",\"every VRAM hit (28.6 x 48 experts of about 2.06 MB, the cache's bytes per slot: 5.11 GiB /\\n  2666)\")]\nfor a,b in rep: assert a in s,a; s=s.replace(a,b)\nopen(p,'w').write(s)\nEOF\ngit add -f docs/benchmarks/2026-10-17-3060m-decode-split.log; git status --short | grep -v _traj",
+          "description": "Fix verify remainder row and CPU bandwidth wording"
+        }
+      }
+    },
+    {
+      "step_id": 181,
+      "timestamp": "2026-10-17T14:28:00.271Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 177586,
+        "completion_tokens": 1585,
+        "cached_tokens": 177584,
+        "extra": {
+          "cache_creation_input_tokens": 1987,
+          "cache_read_input_tokens": 177584,
+          "output_tokens_details": {
+            "thinking_tokens": 24
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1987,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1585,
+              "cache_read_input_tokens": 177584,
+              "cache_creation_input_tokens": 1987,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1987
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 182,
+      "timestamp": "2026-10-17T14:28:05.120Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "# 每 token 解码时间拆分（本机 3060M）\n\n**结论：两个模型的瓶颈不一样。** Coder 卡在 GPU 上，UD-IQ4_XS 卡在 CPU 算专家上。\n\n测法和 `--pcie-frac` A/B 相同：同一个 prompt，先预热，再解码 3 次，`--pcie-frac` 分别取 0.2 和 0.25。每个模型跑两遍：一遍只开 `STRATA_DECODE_TIMING`（host 端看每个验证窗口的时间），一遍再加 `STRATA_VERIFY_PROFILE`（GPU 每个阶段的时间）。速度和 A/B 一致：Coder 61.5–64.3 tok/s，UD 54.7–56.0 tok/s。开 GPU profile 只让每个窗口慢约 1%。\n\n## 每个窗口的时间（ms，一个窗口提交约 3.7–3.9 个 token）\n\n| | Coder | UD-IQ4_XS |\n|---|---|---|\n| 每个窗口 / **每 token** | 58.6 / **15.8** | 69.8 / **18.1** |\n| GPU 实际在算 | 46.7 | 42.8 |\n| **GPU 空等 CPU 专家** | 7.6 | **22.8** |\n| CPU 算专家（大部分和 GPU 并行） | 16.4 | 33.0 |\n| MTP 草稿 | 5.2 | 5.2 |\n\nGPU 时间里最大的三项（Coder / UD，ms）：\n- **超连接（hyper-connection）读取 + 路由：14.0 / 10.6**，占 Coder 每个窗口的 24%。Coder 比 UD 多 3.4 ms，原因还没查明。\n- **显存里的专家：11.2 / 9.5。**\n- **投影 GEMV：10.7 / 10.2。** UD 的投影矩阵比 Coder 大 47%，用时却几乎一样，说明这部分受限的不是读字节，而是计算或内核效率。\n\n## 两个估算（结论有用，但不是直接测量）\n\n这两项都按\"显存缓存总字节 ÷ 槽数\"估平均专家大小（Coder 约 2.06 MB，UD 约 2.41 MB）。\n- **GPU 只用到带宽的约 40%。** 假设每个窗口把稠密权重和命中的专家各读一遍，共约 6.4 GB，按 336 GB/s 算下限约 19 ms；实际 GPU 计算 46.7 ms。\n- **CPU 专家已经接近内存带宽。** Coder 约 47 GB/s，UD 约 43 GB/s，内存读实测上限是 55 GB/s。之前怀疑 CPU 内核受码本查表限制，但 15 个核下真正的限制是内存，再优化 CPU 内核最多还有 15–30% 的空间。\n\n## 对移植 rulith 的影响\n\n- **Coder 想提速，要靠 GPU 解码内核的效率。** rulith 的 `decode_small_kernels_040` 这类小内核融合（路由 28 → 17 µs）对准的正是同一类开销，思路可以借鉴，但它是 HIP 代码，得在 Strata 的 CUDA 引擎里重写。超连接读取 + 路由那 14 ms 最值得先查。\n- **UD-IQ4_XS 想提速，要减少 CPU 上要算的专家数。** rulith 在这方面没有可移植的东西。\n- **加长草稿：** 两个模型每多验证一个 token 都要更贵——Coder 加的是 GPU 时间，UD 加的是 CPU 时间。所以草稿长度 A/B 还是值得测。\n- **低秩草稿头：** 草稿只占每个窗口的 7–9%，其中草稿头占多少还没测，收益上限不大。\n\n## 文件\n\n结果写进了 `docs/3060M.md` 末尾新增的 \"Where the decode time goes (2026-10-17)\" 一节。脚本是 `docs/benchmarks/2026-10-17-3060m-decode-split.py`，原始输出是 `docs/benchmarks/2026-10-17-3060m-decode-split.log`，log 已经用 `git add -f` 暂存。都还没提交，当前在 `rulith` 分支上。\n\n下一步建议先测草稿长度 A/B（`--spec 3/4/5`）；也可以先深入 Coder 超连接读取 + 路由那 14 ms。你选哪个？",
+      "metrics": {
+        "prompt_tokens": 177586,
+        "completion_tokens": 1585,
+        "cached_tokens": 177584,
+        "extra": {
+          "cache_creation_input_tokens": 1987,
+          "cache_read_input_tokens": 177584,
+          "output_tokens_details": {
+            "thinking_tokens": 24
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1987,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1585,
+              "cache_read_input_tokens": 177584,
+              "cache_creation_input_tokens": 1987,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1987
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 13372205,
-    "total_completion_tokens": 98887,
-    "total_cached_tokens": 13371899,
-    "total_steps": 163,
+    "total_prompt_tokens": 16415161,
+    "total_completion_tokens": 130937,
+    "total_cached_tokens": 16414817,
+    "total_steps": 182,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 426638,
-      "total_cache_read_input_tokens": 13371899
+      "total_cache_creation_input_tokens": 467884,
+      "total_cache_read_input_tokens": 16414817
     }
   }
 }
