@@ -23237,19 +23237,841 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 332,
+      "timestamp": "2026-10-17T15:59:16.522Z",
+      "source": "user",
+      "message": "估算单独写一个文件",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 333,
+      "timestamp": "2026-10-17T15:59:25.903Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 283167,
+        "completion_tokens": 2074,
+        "cached_tokens": 283165,
+        "extra": {
+          "cache_creation_input_tokens": 36,
+          "cache_read_input_tokens": 283165,
+          "output_tokens_details": {
+            "thinking_tokens": 201
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 36,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2074,
+              "cache_read_input_tokens": 283165,
+              "cache_creation_input_tokens": 36,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 36
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 334,
+      "timestamp": "2026-10-17T15:59:26.807Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "I'll put the estimate in its own file, `docs/3060M-other-gpus.md`, and save the estimation model as a script under `docs/benchmarks/`, so the numbers can be rerun. First, writing the script and running it for every g value (the 2080 Ti range ends at 0.9):",
+      "metrics": {
+        "prompt_tokens": 283167,
+        "completion_tokens": 2074,
+        "cached_tokens": 283165,
+        "extra": {
+          "cache_creation_input_tokens": 36,
+          "cache_read_input_tokens": 283165,
+          "output_tokens_details": {
+            "thinking_tokens": 201
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 36,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2074,
+              "cache_read_input_tokens": 283165,
+              "cache_creation_input_tokens": 36,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 36
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 335,
+      "timestamp": "2026-10-17T15:59:40.161Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01M4rVnj78WKQwwPvsoF9Fyt",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01M4rVnj78WKQwwPvsoF9Fyt",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "cat > docs/benchmarks/2026-10-17-3060m-gpu-estimate.py <<'EOF'\n\"\"\"Decode estimate for other cards in the 3060M PC (2026-10-17): an ESTIMATE, not a measurement.\nInputs are the 3060M's measured verify windows (docs/3060M.md, \"Where the decode time goes\" and \"The Coder's router\"):\nper layer-window D distinct experts, the CPU's time per expert, the GPU's time per VRAM hit, the GPU's other work G0,\nthe draft, tokens per window.  Two assumptions carry it:\n  - the hit share for more slots: a Zipf law over each layer's experts, its exponent fitted to the measured hit share\n    (Coder 2666 slots -> 76.0%, UD-IQ4_XS 1864 -> 58.5%); the adaptive swaps are not modelled;\n  - g, the other card's GPU time relative to the 3060M's for the same work (not measured; a range per card).\nThe GPU's wait for the CPU is the linear fit of the two measured windows: 0.88 x CPU - 0.48 x (GPU expert time), at\nleast 0.5 ms.  PCIe 3.0 cards: --pcie-frac 0 (the misses all on the CPU).  Usage: python <this file>\"\"\"\ndef H(k, s):\n    n = int(k)\n    return sum(i ** -s for i in range(1, n + 1)) + (k - n) * (n + 1) ** -s\ndef hit(k, N, s): return H(min(k, N), s) / H(N, s)\ndef fit(k, N, h):\n    lo, hi = 0.0, 3.0\n    for _ in range(60):\n        m = (lo + hi) / 2\n        lo, hi = (m, hi) if hit(k, N, m) < h else (lo, m)\n    return (lo + hi) / 2\n# measured on the 3060M; blob = the cache's bytes per slot (MB), cache = its GiB, tpw = tokens committed per window\nM = {\"Coder IQ1_M\": dict(N=256, slots=2666, h=28.6 / 37.6, D=37.6, c=15.8 / (7.8 * 48), hg=11.46 / (28.6 * 48),\n                         G0=31.0, draft=5.2, tpw=3.72, blob=2.06, cache=5.11, now=66.4),\n     \"UD-IQ4_XS\": dict(N=512, slots=1864, h=22.3 / 38.1, D=38.1, c=33.0 / (12.2 * 48), hg=9.45 / (22.3 * 48),\n                       G0=29.8, draft=5.2, tpw=3.87, blob=2.41, cache=4.19, now=55.4)}\n# extra GiB for the expert cache against the 3060M's 12 GB; g range; per-window hand-off of a layer split (ms)\nCARDS = [(\"3060M 12 GB (the model on the measured PC)\", 0, (1.0,), 0.0),\n         (\"Tesla P40 24 GB\", 12, (1.2, 1.4, 1.6), 0.0),\n         (\"RTX 2080 Ti 22 GB\", 10, (0.6, 0.75, 0.9), 0.0),\n         (\"2 x RTX 2080 Ti 22 GB (layer split)\", 10 + 15, (0.6, 0.75, 0.9), 0.3)]\ndef window(d, cache_gib, g, hand):\n    slots = min(cache_gib * 1.0737e9 / (d[\"blob\"] * 1e6), d[\"N\"] * 48)\n    h = hit(slots / 48, d[\"N\"], d[\"s\"])\n    cpu = d[\"D\"] * (1 - h) * 48 * d[\"c\"]\n    hits = d[\"D\"] * h * 48 * d[\"hg\"] * g\n    wait = max(0.5, 0.88 * cpu - 0.48 * hits) if cpu > 0.05 else 0.5\n    w = d[\"G0\"] * g + hits + wait + d[\"draft\"] * g + 0.1 + hand\n    return slots, h, cpu, w, 1000 * d[\"tpw\"] / w\nfor name, d in M.items():\n    d[\"s\"] = fit(d[\"slots\"] / 48, d[\"N\"], d[\"h\"])\n    print(f\"== {name}: Zipf exponent {d['s']:.3f}; measured now {d['now']} tokens/s\")\n    for card, extra, gs, hand in CARDS:\n        for g in gs:\n            s, h, cpu, w, t = window(d, d[\"cache\"] + extra, g, hand)\n            print(f\"  {card:40s} g={g:<4}: slots {s:6.0f} ({s / (d['N'] * 48):4.0%}) hit {h:5.1%} CPU {cpu:5.1f} ms\"\n                  f\"  window {w:5.1f} ms -> {t:4.0f} tokens/s\")\nEOF\npython3 docs/benchmarks/2026-10-17-3060m-gpu-estimate.py",
+            "description": "Save and run the GPU estimate script"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01M4rVnj78WKQwwPvsoF9Fyt",
+            "content": "== Coder IQ1_M: Zipf exponent 1.016; measured now 66.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   2663 ( 22%) hit 76.0% CPU  18.2 ms  window  58.3 ms ->   64 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  61.2 ms ->   61 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  71.3 ms ->   52 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  81.4 ms ->   46 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  30.8 ms ->  121 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  38.3 ms ->   97 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  45.8 ms ->   81 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  31.7 ms ->  117 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  39.3 ms ->   95 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  47.0 ms ->   79 tokens/s\n== UD-IQ4_XS: Zipf exponent 0.953; measured now 55.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   1867 (  8%) hit 58.6% CPU  42.7 ms  window  77.6 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  68.6 ms ->   56 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  77.0 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  85.3 ms ->   45 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  45.4 ms ->   85 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  51.6 ms ->   75 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  57.9 ms ->   67 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  35.6 ms ->  109 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  42.0 ms ->   92 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  48.4 ms ->   80 tokens/s\n\n[stdout]\n== Coder IQ1_M: Zipf exponent 1.016; measured now 66.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   2663 ( 22%) hit 76.0% CPU  18.2 ms  window  58.3 ms ->   64 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  61.2 ms ->   61 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  71.3 ms ->   52 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  81.4 ms ->   46 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  30.8 ms ->  121 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  38.3 ms ->   97 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  45.8 ms ->   81 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  31.7 ms ->  117 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  39.3 ms ->   95 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  47.0 ms ->   79 tokens/s\n== UD-IQ4_XS: Zipf exponent 0.953; measured now 55.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   1867 (  8%) hit 58.6% CPU  42.7 ms  window  77.6 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  68.6 ms ->   56 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  77.0 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  85.3 ms ->   45 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  45.4 ms ->   85 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  51.6 ms ->   75 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  57.9 ms ->   67 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  35.6 ms ->  109 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  42.0 ms ->   92 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  48.4 ms ->   80 tokens/s\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-gpu-estimate.py\", \"hunks\": [{\"oldStart\": 1, \"oldLines\": 0, \"newStart\": 1, \"newLines\": 45, \"lines\": [\"+\\\"\\\"\\\"Decode estimate for other cards in the 3060M PC (2026-10-17): an ESTIMATE, not a measurement.\", \"+Inputs are the 3060M's measured verify windows (docs/3060M.md, \\\"Where the decode time goes\\\" and \\\"The Coder's router\\\"):\", \"+per layer-window D distinct experts, the CPU's time per expert, the GPU's time per VRAM hit, the GPU's other work G0,\", \"+the draft, tokens per window.  Two assumptions carry it:\", \"+  - the hit share for more slots: a Zipf law over each layer's experts, its exponent fitted to the measured hit share\", \"+    (Coder 2666 slots -> 76.0%, UD-IQ4_XS 1864 -> 58.5%); the adaptive swaps are not modelled;\", \"+  - g, the other card's GPU time relative to the 3060M's for the same work (not measured; a range per card).\", \"+The GPU's wait for the CPU is the linear fit of the two measured windows: 0.88 x CPU - 0.48 x (GPU expert time), at\", \"+least 0.5 ms.  PCIe 3.0 cards: --pcie-frac 0 (the misses all on the CPU).  Usage: python <this file>\\\"\\\"\\\"\", \"+def H(k, s):\", \"+    n = int(k)\", \"+    return sum(i ** -s for i in range(1, n + 1)) + (k - n) * (n + 1) ** -s\", \"+def hit(k, N, s): return H(min(k, N), s) / H(N, s)\", \"+def fit(k, N, h):\", \"+    lo, hi = 0.0, 3.0\", \"+    for _ in range(60):\", \"+        m = (lo + hi) / 2\", \"+        lo, hi = (m, hi) if hit(k, N, m) < h else (lo, m)\", \"+    return (lo + hi) / 2\", \"+# measured on the 3060M; blob = the cache's bytes per slot (MB), cache = its GiB, tpw = tokens committed per window\", \"+M = {\\\"Coder IQ1_M\\\": dict(N=256, slots=2666, h=28.6 / 37.6, D=37.6, c=15.8 / (7.8 * 48), hg=11.46 / (28.6 * 48),\", \"+                         G0=31.0, draft=5.2, tpw=3.72, blob=2.06, cache=5.11, now=66.4),\", \"+     \\\"UD-IQ4_XS\\\": dict(N=512, slots=1864, h=22.3 / 38.1, D=38.1, c=33.0 / (12.2 * 48), hg=9.45 / (22.3 * 48),\", \"+                       G0=29.8, draft=5.2, tpw=3.87, blob=2.41, cache=4.19, now=55.4)}\", \"+# extra GiB for the expert cache against the 3060M's 12 GB; g range; per-window hand-off of a layer split (ms)\", \"+CARDS = [(\\\"3060M 12 GB (the model on the measured PC)\\\", 0, (1.0,), 0.0),\", \"+         (\\\"Tesla P40 24 GB\\\", 12, (1.2, 1.4, 1.6), 0.0),\", \"+         (\\\"RTX 2080 Ti 22 GB\\\", 10, (0.6, 0.75, 0.9), 0.0),\", \"+         (\\\"2 x RTX 2080 Ti 22 GB (layer split)\\\", 10 + 15, (0.6, 0.75, 0.9), 0.3)]\", \"+def window(d, cache_gib, g, hand):\", \"+    slots = min(cache_gib * 1.0737e9 / (d[\\\"blob\\\"] * 1e6), d[\\\"N\\\"] * 48)\", \"+    h = hit(slots / 48, d[\\\"N\\\"], d[\\\"s\\\"])\", \"+    cpu = d[\\\"D\\\"] * (1 - h) * 48 * d[\\\"c\\\"]\", \"+    hits = d[\\\"D\\\"] * h * 48 * d[\\\"hg\\\"] * g\", \"+    wait = max(0.5, 0.88 * cpu - 0.48 * hits) if cpu > 0.05 else 0.5\", \"+    w = d[\\\"G0\\\"] * g + hits + wait + d[\\\"draft\\\"] * g + 0.1 + hand\", \"+    return slots, h, cpu, w, 1000 * d[\\\"tpw\\\"] / w\", \"+for name, d in M.items():\", \"+    d[\\\"s\\\"] = fit(d[\\\"slots\\\"] / 48, d[\\\"N\\\"], d[\\\"h\\\"])\", \"+    print(f\\\"== {name}: Zipf exponent {d['s']:.3f}; measured now {d['now']} tokens/s\\\")\", \"+    for card, extra, gs, hand in CARDS:\", \"+        for g in gs:\", \"+            s, h, cpu, w, t = window(d, d[\\\"cache\\\"] + extra, g, hand)\", \"+            print(f\\\"  {card:40s} g={g:<4}: slots {s:6.0f} ({s / (d['N'] * 48):4.0%}) hit {h:5.1%} CPU {cpu:5.1f} ms\\\"\", \"+                  f\\\"  window {w:5.1f} ms -> {t:4.0f} tokens/s\\\")\"]}], \"created\": true}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-gpu-estimate.py\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 283167,
+        "completion_tokens": 2074,
+        "cached_tokens": 283165,
+        "extra": {
+          "cache_creation_input_tokens": 36,
+          "cache_read_input_tokens": 283165,
+          "output_tokens_details": {
+            "thinking_tokens": 201
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 36,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2074,
+              "cache_read_input_tokens": 283165,
+              "cache_creation_input_tokens": 36,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 36
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "== Coder IQ1_M: Zipf exponent 1.016; measured now 66.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   2663 ( 22%) hit 76.0% CPU  18.2 ms  window  58.3 ms ->   64 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  61.2 ms ->   61 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  71.3 ms ->   52 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  81.4 ms ->   46 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  30.8 ms ->  121 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  38.3 ms ->   97 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  45.8 ms ->   81 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  31.7 ms ->  117 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  39.3 ms ->   95 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  47.0 ms ->   79 tokens/s\n== UD-IQ4_XS: Zipf exponent 0.953; measured now 55.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   1867 (  8%) hit 58.6% CPU  42.7 ms  window  77.6 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  68.6 ms ->   56 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  77.0 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  85.3 ms ->   45 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  45.4 ms ->   85 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  51.6 ms ->   75 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  57.9 ms ->   67 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  35.6 ms ->  109 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  42.0 ms ->   92 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  48.4 ms ->   80 tokens/s",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-gpu-estimate.py",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 0,
+                      "newStart": 1,
+                      "newLines": 45,
+                      "lines": [
+                        "+\"\"\"Decode estimate for other cards in the 3060M PC (2026-10-17): an ESTIMATE, not a measurement.",
+                        "+Inputs are the 3060M's measured verify windows (docs/3060M.md, \"Where the decode time goes\" and \"The Coder's router\"):",
+                        "+per layer-window D distinct experts, the CPU's time per expert, the GPU's time per VRAM hit, the GPU's other work G0,",
+                        "+the draft, tokens per window.  Two assumptions carry it:",
+                        "+  - the hit share for more slots: a Zipf law over each layer's experts, its exponent fitted to the measured hit share",
+                        "+    (Coder 2666 slots -> 76.0%, UD-IQ4_XS 1864 -> 58.5%); the adaptive swaps are not modelled;",
+                        "+  - g, the other card's GPU time relative to the 3060M's for the same work (not measured; a range per card).",
+                        "+The GPU's wait for the CPU is the linear fit of the two measured windows: 0.88 x CPU - 0.48 x (GPU expert time), at",
+                        "+least 0.5 ms.  PCIe 3.0 cards: --pcie-frac 0 (the misses all on the CPU).  Usage: python <this file>\"\"\"",
+                        "+def H(k, s):",
+                        "+    n = int(k)",
+                        "+    return sum(i ** -s for i in range(1, n + 1)) + (k - n) * (n + 1) ** -s",
+                        "+def hit(k, N, s): return H(min(k, N), s) / H(N, s)",
+                        "+def fit(k, N, h):",
+                        "+    lo, hi = 0.0, 3.0",
+                        "+    for _ in range(60):",
+                        "+        m = (lo + hi) / 2",
+                        "+        lo, hi = (m, hi) if hit(k, N, m) < h else (lo, m)",
+                        "+    return (lo + hi) / 2",
+                        "+# measured on the 3060M; blob = the cache's bytes per slot (MB), cache = its GiB, tpw = tokens committed per window",
+                        "+M = {\"Coder IQ1_M\": dict(N=256, slots=2666, h=28.6 / 37.6, D=37.6, c=15.8 / (7.8 * 48), hg=11.46 / (28.6 * 48),",
+                        "+                         G0=31.0, draft=5.2, tpw=3.72, blob=2.06, cache=5.11, now=66.4),",
+                        "+     \"UD-IQ4_XS\": dict(N=512, slots=1864, h=22.3 / 38.1, D=38.1, c=33.0 / (12.2 * 48), hg=9.45 / (22.3 * 48),",
+                        "+                       G0=29.8, draft=5.2, tpw=3.87, blob=2.41, cache=4.19, now=55.4)}",
+                        "+# extra GiB for the expert cache against the 3060M's 12 GB; g range; per-window hand-off of a layer split (ms)",
+                        "+CARDS = [(\"3060M 12 GB (the model on the measured PC)\", 0, (1.0,), 0.0),",
+                        "+         (\"Tesla P40 24 GB\", 12, (1.2, 1.4, 1.6), 0.0),",
+                        "+         (\"RTX 2080 Ti 22 GB\", 10, (0.6, 0.75, 0.9), 0.0),",
+                        "+         (\"2 x RTX 2080 Ti 22 GB (layer split)\", 10 + 15, (0.6, 0.75, 0.9), 0.3)]",
+                        "+def window(d, cache_gib, g, hand):",
+                        "+    slots = min(cache_gib * 1.0737e9 / (d[\"blob\"] * 1e6), d[\"N\"] * 48)",
+                        "+    h = hit(slots / 48, d[\"N\"], d[\"s\"])",
+                        "+    cpu = d[\"D\"] * (1 - h) * 48 * d[\"c\"]",
+                        "+    hits = d[\"D\"] * h * 48 * d[\"hg\"] * g",
+                        "+    wait = max(0.5, 0.88 * cpu - 0.48 * hits) if cpu > 0.05 else 0.5",
+                        "+    w = d[\"G0\"] * g + hits + wait + d[\"draft\"] * g + 0.1 + hand",
+                        "+    return slots, h, cpu, w, 1000 * d[\"tpw\"] / w",
+                        "+for name, d in M.items():",
+                        "+    d[\"s\"] = fit(d[\"slots\"] / 48, d[\"N\"], d[\"h\"])",
+                        "+    print(f\"== {name}: Zipf exponent {d['s']:.3f}; measured now {d['now']} tokens/s\")",
+                        "+    for card, extra, gs, hand in CARDS:",
+                        "+        for g in gs:",
+                        "+            s, h, cpu, w, t = window(d, d[\"cache\"] + extra, g, hand)",
+                        "+            print(f\"  {card:40s} g={g:<4}: slots {s:6.0f} ({s / (d['N'] * 48):4.0%}) hit {h:5.1%} CPU {cpu:5.1f} ms\"",
+                        "+                  f\"  window {w:5.1f} ms -> {t:4.0f} tokens/s\")"
+                      ]
+                    }
+                  ],
+                  "created": true
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-gpu-estimate.py"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01M4rVnj78WKQwwPvsoF9Fyt",
+            "type": "tool_result",
+            "content": "== Coder IQ1_M: Zipf exponent 1.016; measured now 66.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   2663 ( 22%) hit 76.0% CPU  18.2 ms  window  58.3 ms ->   64 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  61.2 ms ->   61 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  71.3 ms ->   52 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  81.4 ms ->   46 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  30.8 ms ->  121 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  38.3 ms ->   97 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  45.8 ms ->   81 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  31.7 ms ->  117 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  39.3 ms ->   95 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  47.0 ms ->   79 tokens/s\n== UD-IQ4_XS: Zipf exponent 0.953; measured now 55.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   1867 (  8%) hit 58.6% CPU  42.7 ms  window  77.6 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  68.6 ms ->   56 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  77.0 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  85.3 ms ->   45 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  45.4 ms ->   85 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  51.6 ms ->   75 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  57.9 ms ->   67 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  35.6 ms ->  109 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  42.0 ms ->   92 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  48.4 ms ->   80 tokens/s",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "== Coder IQ1_M: Zipf exponent 1.016; measured now 66.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   2663 ( 22%) hit 76.0% CPU  18.2 ms  window  58.3 ms ->   64 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  61.2 ms ->   61 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  71.3 ms ->   52 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  81.4 ms ->   46 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  30.8 ms ->  121 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  38.3 ms ->   97 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  45.8 ms ->   81 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  31.7 ms ->  117 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  39.3 ms ->   95 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  47.0 ms ->   79 tokens/s\n== UD-IQ4_XS: Zipf exponent 0.953; measured now 55.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   1867 (  8%) hit 58.6% CPU  42.7 ms  window  77.6 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  68.6 ms ->   56 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  77.0 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  85.3 ms ->   45 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  45.4 ms ->   85 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  51.6 ms ->   75 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  57.9 ms ->   67 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  35.6 ms ->  109 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  42.0 ms ->   92 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  48.4 ms ->   80 tokens/s",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-gpu-estimate.py",
+                  "hunks": [
+                    {
+                      "oldStart": 1,
+                      "oldLines": 0,
+                      "newStart": 1,
+                      "newLines": 45,
+                      "lines": [
+                        "+\"\"\"Decode estimate for other cards in the 3060M PC (2026-10-17): an ESTIMATE, not a measurement.",
+                        "+Inputs are the 3060M's measured verify windows (docs/3060M.md, \"Where the decode time goes\" and \"The Coder's router\"):",
+                        "+per layer-window D distinct experts, the CPU's time per expert, the GPU's time per VRAM hit, the GPU's other work G0,",
+                        "+the draft, tokens per window.  Two assumptions carry it:",
+                        "+  - the hit share for more slots: a Zipf law over each layer's experts, its exponent fitted to the measured hit share",
+                        "+    (Coder 2666 slots -> 76.0%, UD-IQ4_XS 1864 -> 58.5%); the adaptive swaps are not modelled;",
+                        "+  - g, the other card's GPU time relative to the 3060M's for the same work (not measured; a range per card).",
+                        "+The GPU's wait for the CPU is the linear fit of the two measured windows: 0.88 x CPU - 0.48 x (GPU expert time), at",
+                        "+least 0.5 ms.  PCIe 3.0 cards: --pcie-frac 0 (the misses all on the CPU).  Usage: python <this file>\"\"\"",
+                        "+def H(k, s):",
+                        "+    n = int(k)",
+                        "+    return sum(i ** -s for i in range(1, n + 1)) + (k - n) * (n + 1) ** -s",
+                        "+def hit(k, N, s): return H(min(k, N), s) / H(N, s)",
+                        "+def fit(k, N, h):",
+                        "+    lo, hi = 0.0, 3.0",
+                        "+    for _ in range(60):",
+                        "+        m = (lo + hi) / 2",
+                        "+        lo, hi = (m, hi) if hit(k, N, m) < h else (lo, m)",
+                        "+    return (lo + hi) / 2",
+                        "+# measured on the 3060M; blob = the cache's bytes per slot (MB), cache = its GiB, tpw = tokens committed per window",
+                        "+M = {\"Coder IQ1_M\": dict(N=256, slots=2666, h=28.6 / 37.6, D=37.6, c=15.8 / (7.8 * 48), hg=11.46 / (28.6 * 48),",
+                        "+                         G0=31.0, draft=5.2, tpw=3.72, blob=2.06, cache=5.11, now=66.4),",
+                        "+     \"UD-IQ4_XS\": dict(N=512, slots=1864, h=22.3 / 38.1, D=38.1, c=33.0 / (12.2 * 48), hg=9.45 / (22.3 * 48),",
+                        "+                       G0=29.8, draft=5.2, tpw=3.87, blob=2.41, cache=4.19, now=55.4)}",
+                        "+# extra GiB for the expert cache against the 3060M's 12 GB; g range; per-window hand-off of a layer split (ms)",
+                        "+CARDS = [(\"3060M 12 GB (the model on the measured PC)\", 0, (1.0,), 0.0),",
+                        "+         (\"Tesla P40 24 GB\", 12, (1.2, 1.4, 1.6), 0.0),",
+                        "+         (\"RTX 2080 Ti 22 GB\", 10, (0.6, 0.75, 0.9), 0.0),",
+                        "+         (\"2 x RTX 2080 Ti 22 GB (layer split)\", 10 + 15, (0.6, 0.75, 0.9), 0.3)]",
+                        "+def window(d, cache_gib, g, hand):",
+                        "+    slots = min(cache_gib * 1.0737e9 / (d[\"blob\"] * 1e6), d[\"N\"] * 48)",
+                        "+    h = hit(slots / 48, d[\"N\"], d[\"s\"])",
+                        "+    cpu = d[\"D\"] * (1 - h) * 48 * d[\"c\"]",
+                        "+    hits = d[\"D\"] * h * 48 * d[\"hg\"] * g",
+                        "+    wait = max(0.5, 0.88 * cpu - 0.48 * hits) if cpu > 0.05 else 0.5",
+                        "+    w = d[\"G0\"] * g + hits + wait + d[\"draft\"] * g + 0.1 + hand",
+                        "+    return slots, h, cpu, w, 1000 * d[\"tpw\"] / w",
+                        "+for name, d in M.items():",
+                        "+    d[\"s\"] = fit(d[\"slots\"] / 48, d[\"N\"], d[\"h\"])",
+                        "+    print(f\"== {name}: Zipf exponent {d['s']:.3f}; measured now {d['now']} tokens/s\")",
+                        "+    for card, extra, gs, hand in CARDS:",
+                        "+        for g in gs:",
+                        "+            s, h, cpu, w, t = window(d, d[\"cache\"] + extra, g, hand)",
+                        "+            print(f\"  {card:40s} g={g:<4}: slots {s:6.0f} ({s / (d['N'] * 48):4.0%}) hit {h:5.1%} CPU {cpu:5.1f} ms\"",
+                        "+                  f\"  window {w:5.1f} ms -> {t:4.0f} tokens/s\")"
+                      ]
+                    }
+                  ],
+                  "created": true
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/benchmarks/2026-10-17-3060m-gpu-estimate.py"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01M4rVnj78WKQwwPvsoF9Fyt",
+            "type": "tool_result",
+            "content": "== Coder IQ1_M: Zipf exponent 1.016; measured now 66.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   2663 ( 22%) hit 76.0% CPU  18.2 ms  window  58.3 ms ->   64 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  61.2 ms ->   61 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  71.3 ms ->   52 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   8918 ( 73%) hit 95.0% CPU   3.8 ms  window  81.4 ms ->   46 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  30.8 ms ->  121 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  38.3 ms ->   97 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   7876 ( 64%) hit 93.1% CPU   5.3 ms  window  45.8 ms ->   81 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  31.7 ms ->  117 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  39.3 ms ->   95 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  12288 (100%) hit 100.0% CPU   0.0 ms  window  47.0 ms ->   79 tokens/s\n== UD-IQ4_XS: Zipf exponent 0.953; measured now 55.4 tokens/s\n  3060M 12 GB (the model on the measured PC) g=1.0 : slots   1867 (  8%) hit 58.6% CPU  42.7 ms  window  77.6 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.2 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  68.6 ms ->   56 tokens/s\n  Tesla P40 24 GB                          g=1.4 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  77.0 ms ->   50 tokens/s\n  Tesla P40 24 GB                          g=1.6 : slots   7213 ( 29%) hit 79.6% CPU  21.0 ms  window  85.3 ms ->   45 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.6 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  45.4 ms ->   85 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.75: slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  51.6 ms ->   75 tokens/s\n  RTX 2080 Ti 22 GB                        g=0.9 : slots   6322 ( 26%) hit 77.5% CPU  23.2 ms  window  57.9 ms ->   67 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.6 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  35.6 ms ->  109 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.75: slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  42.0 ms ->   92 tokens/s\n  2 x RTX 2080 Ti 22 GB (layer split)      g=0.9 : slots  13005 ( 53%) hit 89.3% CPU  11.1 ms  window  48.4 ms ->   80 tokens/s",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "cat > docs/benchmarks/2026-10-17-3060m-gpu-estimate.py <<'EOF'\n\"\"\"Decode estimate for other cards in the 3060M PC (2026-10-17): an ESTIMATE, not a measurement.\nInputs are the 3060M's measured verify windows (docs/3060M.md, \"Where the decode time goes\" and \"The Coder's router\"):\nper layer-window D distinct experts, the CPU's time per expert, the GPU's time per VRAM hit, the GPU's other work G0,\nthe draft, tokens per window.  Two assumptions carry it:\n  - the hit share for more slots: a Zipf law over each layer's experts, its exponent fitted to the measured hit share\n    (Coder 2666 slots -> 76.0%, UD-IQ4_XS 1864 -> 58.5%); the adaptive swaps are not modelled;\n  - g, the other card's GPU time relative to the 3060M's for the same work (not measured; a range per card).\nThe GPU's wait for the CPU is the linear fit of the two measured windows: 0.88 x CPU - 0.48 x (GPU expert time), at\nleast 0.5 ms.  PCIe 3.0 cards: --pcie-frac 0 (the misses all on the CPU).  Usage: python <this file>\"\"\"\ndef H(k, s):\n    n = int(k)\n    return sum(i ** -s for i in range(1, n + 1)) + (k - n) * (n + 1) ** -s\ndef hit(k, N, s): return H(min(k, N), s) / H(N, s)\ndef fit(k, N, h):\n    lo, hi = 0.0, 3.0\n    for _ in range(60):\n        m = (lo + hi) / 2\n        lo, hi = (m, hi) if hit(k, N, m) < h else (lo, m)\n    return (lo + hi) / 2\n# measured on the 3060M; blob = the cache's bytes per slot (MB), cache = its GiB, tpw = tokens committed per window\nM = {\"Coder IQ1_M\": dict(N=256, slots=2666, h=28.6 / 37.6, D=37.6, c=15.8 / (7.8 * 48), hg=11.46 / (28.6 * 48),\n                         G0=31.0, draft=5.2, tpw=3.72, blob=2.06, cache=5.11, now=66.4),\n     \"UD-IQ4_XS\": dict(N=512, slots=1864, h=22.3 / 38.1, D=38.1, c=33.0 / (12.2 * 48), hg=9.45 / (22.3 * 48),\n                       G0=29.8, draft=5.2, tpw=3.87, blob=2.41, cache=4.19, now=55.4)}\n# extra GiB for the expert cache against the 3060M's 12 GB; g range; per-window hand-off of a layer split (ms)\nCARDS = [(\"3060M 12 GB (the model on the measured PC)\", 0, (1.0,), 0.0),\n         (\"Tesla P40 24 GB\", 12, (1.2, 1.4, 1.6), 0.0),\n         (\"RTX 2080 Ti 22 GB\", 10, (0.6, 0.75, 0.9), 0.0),\n         (\"2 x RTX 2080 Ti 22 GB (layer split)\", 10 + 15, (0.6, 0.75, 0.9), 0.3)]\ndef window(d, cache_gib, g, hand):\n    slots = min(cache_gib * 1.0737e9 / (d[\"blob\"] * 1e6), d[\"N\"] * 48)\n    h = hit(slots / 48, d[\"N\"], d[\"s\"])\n    cpu = d[\"D\"] * (1 - h) * 48 * d[\"c\"]\n    hits = d[\"D\"] * h * 48 * d[\"hg\"] * g\n    wait = max(0.5, 0.88 * cpu - 0.48 * hits) if cpu > 0.05 else 0.5\n    w = d[\"G0\"] * g + hits + wait + d[\"draft\"] * g + 0.1 + hand\n    return slots, h, cpu, w, 1000 * d[\"tpw\"] / w\nfor name, d in M.items():\n    d[\"s\"] = fit(d[\"slots\"] / 48, d[\"N\"], d[\"h\"])\n    print(f\"== {name}: Zipf exponent {d['s']:.3f}; measured now {d['now']} tokens/s\")\n    for card, extra, gs, hand in CARDS:\n        for g in gs:\n            s, h, cpu, w, t = window(d, d[\"cache\"] + extra, g, hand)\n            print(f\"  {card:40s} g={g:<4}: slots {s:6.0f} ({s / (d['N'] * 48):4.0%}) hit {h:5.1%} CPU {cpu:5.1f} ms\"\n                  f\"  window {w:5.1f} ms -> {t:4.0f} tokens/s\")\nEOF\npython3 docs/benchmarks/2026-10-17-3060m-gpu-estimate.py",
+          "description": "Save and run the GPU estimate script"
+        }
+      }
+    },
+    {
+      "step_id": 336,
+      "timestamp": "2026-10-17T15:59:45.624Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 283203,
+        "completion_tokens": 3283,
+        "cached_tokens": 283201,
+        "extra": {
+          "cache_creation_input_tokens": 3666,
+          "cache_read_input_tokens": 283201,
+          "output_tokens_details": {
+            "thinking_tokens": 113
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3666,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 3283,
+              "cache_read_input_tokens": 283201,
+              "cache_creation_input_tokens": 3666,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3666
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 337,
+      "timestamp": "2026-10-17T16:00:11.881Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Write toolu_01HF6uMmYWtEEWvMohvyXJ1d",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01HF6uMmYWtEEWvMohvyXJ1d",
+          "function_name": "Write",
+          "arguments": {
+            "file_path": "/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md",
+            "content": "# Other cards in the 3060M PC: an estimate\n\nWhat a Tesla P40 (24 GB), one RTX 2080 Ti modified to 22 GB, or two of them would do for the two models in this PC\n(Ryzen 9 8945HX, 96 GB DDR5-5200, see [3060M.md](3060M.md)). **This is an estimate, not a measurement**: none of these\ncards was in the PC. It starts from the 3060M's measured verify windows (2026-10-17, [3060M.md](3060M.md) \"Where the\ndecode time goes\" and \"The Coder's router\") and changes two things: how many experts the bigger card holds, and how\nfast its GPU does the same work. The model is `benchmarks/2026-10-17-3060m-gpu-estimate.py`; every number in the\ntables below is its output.\n\n## The cards\n\n| | RTX 3060 Laptop (now) | Tesla P40 | RTX 2080 Ti, 22 GB mod |\n|---|---|---|---|\n| Architecture, compute capability | Ampere, 8.6 | Pascal, 6.1 | Turing, 7.5 |\n| SMs, FP32 lanes | 30, 3840 | 30, 3840 | 68, 4352 |\n| VRAM, bandwidth (spec) | 12 GB, 336 GB/s | 24 GB, 346 GB/s | 22 GB, 616 GB/s |\n| Tensor cores (int8 / fp16) | yes | **no** (int8 via `dp4a` only; fp16 at 1/64 rate) | yes (no BF16) |\n| PCIe | 4.0 x16, 26.8 GB/s measured | 3.0 x16 (~12 GB/s) | 3.0 x16 (~12 GB/s) |\n| Strata support | release engine | **only the experimental build** (`-DSTRATA_EXPERIMENTAL_SM60=ON`, CUDA 12.x toolkit; written for sm_60 and sm_70, sm_61 untested) | release engine (since 0.1.27; QSA scorer as FP32 FMAs, older prompt-attention kernel) |\n\nTwo cards: Strata splits the layers (pipeline, [MULTI_GPU.md](MULTI_GPU.md)); a token crosses once per verify window\nthrough pinned host RAM, a few hundred KB. **NVLink is not used** (no peer-to-peer access), so a bridge between two\n2080 Ti changes nothing. The doc's measurement (RTX 5080 + 3090): decode about the faster card alone, prompts +18-20%,\nplus what the second cache adds.\n\n## How the estimate is made\n\nFrom the 3060M's windows (decodes 2-3 of the C++ rewrite request, `--spec 4`):\n\n| per verify window | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|\n| distinct experts per layer | 37.6 | 38.1 |\n| measured hit share (slots) | 76.0% (2666) | 58.5% (1864) |\n| CPU time per expert | 42.2 us | 56.4 us |\n| GPU time per VRAM expert | 8.35 us | 8.83 us |\n| other GPU work (dense, attention, hyper-connections, router, head) | 31.0 ms | 29.8 ms |\n| MTP draft | 5.2 ms | 5.2 ms |\n| tokens committed per window | 3.72 | 3.87 |\n\n- **Hit share with more slots**: a Zipf law over each layer's experts, its exponent fitted to the measured share\n  (Coder 1.016, UD-IQ4_XS 0.953). The adaptive swaps are not modelled. Slots = the extra VRAM over the 12 GB card /\n  the cache's bytes per slot (2.06 MB, 2.41 MB); for two 22 GB cards, the second adds about 15 GiB (it holds its own\n  copy of the dense weights, its state and prompt buffers).\n- **The GPU's wait for the CPU**: the linear fit of the two measured windows, 0.88 x CPU time - 0.48 x GPU expert\n  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 decoded within 4%\n  of the best share).\n- **g**, the card's GPU time relative to the 3060M's for the same work, is not measured and is the largest\n  uncertainty. These decode kernels reach about 40% of the 3060M's VRAM bandwidth ([3060M.md](3060M.md)), so\n  bandwidth alone does not scale them. The 2080 Ti has 2.27 times the SMs and 1.83 times the bandwidth, but half\n  the FP32 lanes per SM: g = 0.6-0.9. The P40 has the same SM count, ~1.5 GHz, and an older core: g = 1.2-1.6.\n- **The model on the measured PC** gives Coder 64 and UD-IQ4_XS 50 tokens/s, against 66.4 and 55.4 measured: it\n  reads 4% and 10% low (its misses all go to the CPU, where the measured runs copied a share over PCIe).\n\n## Decode, estimated (tokens/s)\n\n| | experts in VRAM (Coder / UD) | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|---|\n| RTX 3060 Laptop 12 GB (measured) | 22% / 8% | **66** | **55** |\n| Tesla P40 24 GB (g 1.2 / 1.4 / 1.6) | 73% / 29% | 61 / 52 / 46 | 56 / 50 / 45 |\n| RTX 2080 Ti 22 GB (g 0.6 / 0.75 / 0.9) | 64% / 26% | 121 / 97 / 81 | 85 / 75 / 67 |\n| 2 x RTX 2080 Ti 22 GB (g 0.6 / 0.75 / 0.9) | 100% / 53% | 117 / 95 / 79 | 109 / 92 / 80 |\n\n- **P40: no gain.** Twice the VRAM cuts the Coder's CPU experts from ~16 ms to ~4 ms per window, but the Coder is\n  GPU-bound already (the GPU computes 44.5 of its 56.0 ms), and a slower GPU costs more than that. UD-IQ4_XS waits\n  less for the CPU, and the slower GPU takes it back.\n- **One 2080 Ti 22 GB: the most for the money** - more VRAM and a faster GPU: Coder +20-80%, UD-IQ4_XS +20-55%.\n- **Two 2080 Ti**: the Coder fits whole, but one card already hits 93%, and the split adds a hand-off per window\n  while the cards take turns: no gain for the Coder. UD-IQ4_XS goes from 77% to 89% hits: +20-30% over one card.\n\n## Prompts (not modelled)\n\nThe prompt path streams every expert the card does not hold, once per chunk (up to 8,192 tokens), and both cards\nhave PCIe 3.0 (about 12 GB/s against 26.8 measured here):\n\n- **2080 Ti, Coder**: 8 GiB to stream instead of 18, at half the link speed, about the same 0.7 s per chunk; the int8\n  tensor cores are faster than the 3060M's. Likely 1.3-1.8 times today's 896 / 1065 tokens/s (4K / 16K).\n- **2080 Ti, UD-IQ4_XS**: about 41 GiB per chunk, ~3.6 s at 12 GB/s (51 GiB at 26.8 GB/s = ~2 s now): the link\n  likely sets the pace, 1.0-1.4 times today's 795 / 888 tokens/s. Two cards: the measured +18-20% from the pipeline.\n- **P40**: no tensor cores (MMQ through `dp4a`), FP16 at 1/64 rate, and the older prompt-attention kernel: likely\n  slower than the 3060M, perhaps 0.3-0.7 times.\n\n## In this PC\n\n- **One GPU slot**: `lspci` shows one x16 slot for a graphics card; a second card needs an M.2-to-PCIe adapter\n  (x4 works for a layer split, [MULTI_GPU.md](MULTI_GPU.md)), and two 2080 Ti draw about 2 x 250 W.\n- **P40**: passively cooled (it needs a fan on its fins) and powered through an 8-pin EPS (CPU-style) connector; the\n  experimental build needs a CUDA 12.x toolkit next to the CUDA 13 one used now.\n- **More context**: with 22-24 GB the 64K context fits without KV streaming (12 GB: 32K recommended).\n- What would settle it: the measured window split ([3060M.md](3060M.md)) on the real card. g is the number to\n  measure first; the GPU stage profile (`STRATA_VERIFY_PROFILE=1`) gives it directly.\n"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01HF6uMmYWtEEWvMohvyXJ1d",
+            "content": "File created successfully at: /home/luwei/work/AI/Strata/docs/3060M-other-gpus.md (file state is current in your context — no need to Read it back)\n\n[metadata] {\"type\": \"create\", \"filePath\": \"/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md\", \"content\": \"# Other cards in the 3060M PC: an estimate\\n\\nWhat a Tesla P40 (24 GB), one RTX 2080 Ti modified to 22 GB, or two of them would do for the two models in this PC\\n(Ryzen 9 8945HX, 96 GB DDR5-5200, see [3060M.md](3060M.md)). **This is an estimate, not a measurement**: none of these\\ncards was in the PC. It starts from the 3060M's measured verify windows (2026-10-17, [3060M.md](3060M.md) \\\"Where the\\ndecode time goes\\\" and \\\"The Coder's router\\\") and changes two things: how many experts the bigger card holds, and how\\nfast its GPU does the same work. The model is `benchmarks/2026-10-17-3060m-gpu-estimate.py`; every number in the\\ntables below is its output.\\n\\n## The cards\\n\\n| | RTX 3060 Laptop (now) | Tesla P40 | RTX 2080 Ti, 22 GB mod |\\n|---|---|---|---|\\n| Architecture, compute capability | Ampere, 8.6 | Pascal, 6.1 | Turing, 7.5 |\\n| SMs, FP32 lanes | 30, 3840 | 30, 3840 | 68, 4352 |\\n| VRAM, bandwidth (spec) | 12 GB, 336 GB/s | 24 GB, 346 GB/s | 22 GB, 616 GB/s |\\n| Tensor cores (int8 / fp16) | yes | **no** (int8 via `dp4a` only; fp16 at 1/64 rate) | yes (no BF16) |\\n| PCIe | 4.0 x16, 26.8 GB/s measured | 3.0 x16 (~12 GB/s) | 3.0 x16 (~12 GB/s) |\\n| Strata support | release engine | **only the experimental build** (`-DSTRATA_EXPERIMENTAL_SM60=ON`, CUDA 12.x toolkit; written for sm_60 and sm_70, sm_61 untested) | release engine (since 0.1.27; QSA scorer as FP32 FMAs, older prompt-attention kernel) |\\n\\nTwo cards: Strata splits the layers (pipeline, [MULTI_GPU.md](MULTI_GPU.md)); a token crosses once per verify window\\nthrough pinned host RAM, a few hundred KB. **NVLink is not used** (no peer-to-peer access), so a bridge between two\\n2080 Ti changes nothing. The doc's measurement (RTX 5080 + 3090): decode about the faster card alone, prompts +18-20%,\\nplus what the second cache adds.\\n\\n## How the estimate is made\\n\\nFrom the 3060M's windows (decodes 2-3 of the C++ rewrite request, `--spec 4`):\\n\\n| per verify window | Coder IQ1_M | UD-IQ4_XS |\\n|---|---|---|\\n| distinct experts per layer | 37.6 | 38.1 |\\n| measured hit share (slots) | 76.0% (2666) | 58.5% (1864) |\\n| CPU time per expert | 42.2 us | 56.4 us |\\n| GPU time per VRAM expert | 8.35 us | 8.83 us |\\n| other GPU work (dense, attention, hyper-connections, router, head) | 31.0 ms | 29.8 ms |\\n| MTP draft | 5.2 ms | 5.2 ms |\\n| tokens committed per window | 3.72 | 3.87 |\\n\\n- **Hit share with more slots**: a Zipf law over each layer's experts, its exponent fitted to the measured share\\n  (Coder 1.016, UD-IQ4_XS 0.953). The adaptive swaps are not modelled. Slots = the extra VRAM over the 12 GB card /\\n  the cache's bytes per slot (2.06 MB, 2.41 MB); for two 22 GB cards, the second adds about 15 GiB (it holds its own\\n  copy of the dense weights, its state and prompt buffers).\\n- **The GPU's wait for the CPU**: the linear fit of the two measured windows, 0.88 x CPU time - 0.48 x GPU expert\\n  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 decoded within 4%\\n  of the best share).\\n- **g**, the card's GPU time relative to the 3060M's for the same work, is not measured and is the largest\\n  uncertainty. These decode kernels reach about 40% of the 3060M's VRAM bandwidth ([3060M.md](3060M.md)), so\\n  bandwidth alone does not scale them. The 2080 Ti has 2.27 times the SMs and 1.83 times the bandwidth, but half\\n  the FP32 lanes per SM: g = 0.6-0.9. The P40 has the same SM count, ~1.5 GHz, and an older core: g = 1.2-1.6.\\n- **The model on the measured PC** gives Coder 64 and UD-IQ4_XS 50 tokens/s, against 66.4 and 55.4 measured: it\\n  reads 4% and 10% low (its misses all go to the CPU, where the measured runs copied a share over PCIe).\\n\\n## Decode, estimated (tokens/s)\\n\\n| | experts in VRAM (Coder / UD) | Coder IQ1_M | UD-IQ4_XS |\\n|---|---|---|---|\\n| RTX 3060 Laptop 12 GB (measured) | 22% / 8% | **66** | **55** |\\n| Tesla P40 24 GB (g 1.2 / 1.4 / 1.6) | 73% / 29% | 61 / 52 / 46 | 56 / 50 / 45 |\\n| RTX 2080 Ti 22 GB (g 0.6 / 0.75 / 0.9) | 64% / 26% | 121 / 97 / 81 | 85 / 75 / 67 |\\n| 2 x RTX 2080 Ti 22 GB (g 0.6 / 0.75 / 0.9) | 100% / 53% | 117 / 95 / 79 | 109 / 92 / 80 |\\n\\n- **P40: no gain.** Twice the VRAM cuts the Coder's CPU experts from ~16 ms to ~4 ms per window, but the Coder is\\n  GPU-bound already (the GPU computes 44.5 of its 56.0 ms), and a slower GPU costs more than that. UD-IQ4_XS waits\\n  less for the CPU, and the slower GPU takes it back.\\n- **One 2080 Ti 22 GB: the most for the money** - more VRAM and a faster GPU: Coder +20-80%, UD-IQ4_XS +20-55%.\\n- **Two 2080 Ti**: the Coder fits whole, but one card already hits 93%, and the split adds a hand-off per window\\n  while the cards take turns: no gain for the Coder. UD-IQ4_XS goes from 77% to 89% hits: +20-30% over one card.\\n\\n## Prompts (not modelled)\\n\\nThe prompt path streams every expert the card does not hold, once per chunk (up to 8,192 tokens), and both cards\\nhave PCIe 3.0 (about 12 GB/s against 26.8 measured here):\\n\\n- **2080 Ti, Coder**: 8 GiB to stream instead of 18, at half the link speed, about the same 0.7 s per chunk; the int8\\n  tensor cores are faster than the 3060M's. Likely 1.3-1.8 times today's 896 / 1065 tokens/s (4K / 16K).\\n- **2080 Ti, UD-IQ4_XS**: about 41 GiB per chunk, ~3.6 s at 12 GB/s (51 GiB at 26.8 GB/s = ~2 s now): the link\\n  likely sets the pace, 1.0-1.4 times today's 795 / 888 tokens/s. Two cards: the measured +18-20% from the pipeline.\\n- **P40**: no tensor cores (MMQ through `dp4a`), FP16 at 1/64 rate, and the older prompt-attention kernel: likely\\n  slower than the 3060M, perhaps 0.3-0.7 times.\\n\\n## In this PC\\n\\n- **One GPU slot**: `lspci` shows one x16 slot for a graphics card; a second card needs an M.2-to-PCIe adapter\\n  (x4 works for a layer split, [MULTI_GPU.md](MULTI_GPU.md)), and two 2080 Ti draw about 2 x 250 W.\\n- **P40**: passively cooled (it needs a fan on its fins) and powered through an 8-pin EPS (CPU-style) connector; the\\n  experimental build needs a CUDA 12.x toolkit next to the CUDA 13 one used now.\\n- **More context**: with 22-24 GB the 64K context fits without KV streaming (12 GB: 32K recommended).\\n- What would settle it: the measured window split ([3060M.md](3060M.md)) on the real card. g is the number to\\n  measure first; the GPU stage profile (`STRATA_VERIFY_PROFILE=1`) gives it directly.\\n\", \"structuredPatch\": [], \"originalFile\": null, \"userModified\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 283203,
+        "completion_tokens": 3283,
+        "cached_tokens": 283201,
+        "extra": {
+          "cache_creation_input_tokens": 3666,
+          "cache_read_input_tokens": 283201,
+          "output_tokens_details": {
+            "thinking_tokens": 113
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3666,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 3283,
+              "cache_read_input_tokens": 283201,
+              "cache_creation_input_tokens": 3666,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3666
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Write",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "type": "create",
+            "filePath": "/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md",
+            "content": "# Other cards in the 3060M PC: an estimate\n\nWhat a Tesla P40 (24 GB), one RTX 2080 Ti modified to 22 GB, or two of them would do for the two models in this PC\n(Ryzen 9 8945HX, 96 GB DDR5-5200, see [3060M.md](3060M.md)). **This is an estimate, not a measurement**: none of these\ncards was in the PC. It starts from the 3060M's measured verify windows (2026-10-17, [3060M.md](3060M.md) \"Where the\ndecode time goes\" and \"The Coder's router\") and changes two things: how many experts the bigger card holds, and how\nfast its GPU does the same work. The model is `benchmarks/2026-10-17-3060m-gpu-estimate.py`; every number in the\ntables below is its output.\n\n## The cards\n\n| | RTX 3060 Laptop (now) | Tesla P40 | RTX 2080 Ti, 22 GB mod |\n|---|---|---|---|\n| Architecture, compute capability | Ampere, 8.6 | Pascal, 6.1 | Turing, 7.5 |\n| SMs, FP32 lanes | 30, 3840 | 30, 3840 | 68, 4352 |\n| VRAM, bandwidth (spec) | 12 GB, 336 GB/s | 24 GB, 346 GB/s | 22 GB, 616 GB/s |\n| Tensor cores (int8 / fp16) | yes | **no** (int8 via `dp4a` only; fp16 at 1/64 rate) | yes (no BF16) |\n| PCIe | 4.0 x16, 26.8 GB/s measured | 3.0 x16 (~12 GB/s) | 3.0 x16 (~12 GB/s) |\n| Strata support | release engine | **only the experimental build** (`-DSTRATA_EXPERIMENTAL_SM60=ON`, CUDA 12.x toolkit; written for sm_60 and sm_70, sm_61 untested) | release engine (since 0.1.27; QSA scorer as FP32 FMAs, older prompt-attention kernel) |\n\nTwo cards: Strata splits the layers (pipeline, [MULTI_GPU.md](MULTI_GPU.md)); a token crosses once per verify window\nthrough pinned host RAM, a few hundred KB. **NVLink is not used** (no peer-to-peer access), so a bridge between two\n2080 Ti changes nothing. The doc's measurement (RTX 5080 + 3090): decode about the faster card alone, prompts +18-20%,\nplus what the second cache adds.\n\n## How the estimate is made\n\nFrom the 3060M's windows (decodes 2-3 of the C++ rewrite request, `--spec 4`):\n\n| per verify window | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|\n| distinct experts per layer | 37.6 | 38.1 |\n| measured hit share (slots) | 76.0% (2666) | 58.5% (1864) |\n| CPU time per expert | 42.2 us | 56.4 us |\n| GPU time per VRAM expert | 8.35 us | 8.83 us |\n| other GPU work (dense, attention, hyper-connections, router, head) | 31.0 ms | 29.8 ms |\n| MTP draft | 5.2 ms | 5.2 ms |\n| tokens committed per window | 3.72 | 3.87 |\n\n- **Hit share with more slots**: a Zipf law over each layer's experts, its exponent fitted to the measured share\n  (Coder 1.016, UD-IQ4_XS 0.953). The adaptive swaps are not modelled. Slots = the extra VRAM over the 12 GB card /\n  the cache's bytes per slot (2.06 MB, 2.41 MB); for two 22 GB cards, the second adds about 15 GiB (it holds its own\n  copy of the dense weights, its state and prompt buffers).\n- **The GPU's wait for the CPU**: the linear fit of the two measured windows, 0.88 x CPU time - 0.48 x GPU expert\n  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 decoded within 4%\n  of the best share).\n- **g**, the card's GPU time relative to the 3060M's for the same work, is not measured and is the largest\n  uncertainty. These decode kernels reach about 40% of the 3060M's VRAM bandwidth ([3060M.md](3060M.md)), so\n  bandwidth alone does not scale them. The 2080 Ti has 2.27 times the SMs and 1.83 times the bandwidth, but half\n  the FP32 lanes per SM: g = 0.6-0.9. The P40 has the same SM count, ~1.5 GHz, and an older core: g = 1.2-1.6.\n- **The model on the measured PC** gives Coder 64 and UD-IQ4_XS 50 tokens/s, against 66.4 and 55.4 measured: it\n  reads 4% and 10% low (its misses all go to the CPU, where the measured runs copied a share over PCIe).\n\n## Decode, estimated (tokens/s)\n\n| | experts in VRAM (Coder / UD) | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|---|\n| RTX 3060 Laptop 12 GB (measured) | 22% / 8% | **66** | **55** |\n| Tesla P40 24 GB (g 1.2 / 1.4 / 1.6) | 73% / 29% | 61 / 52 / 46 | 56 / 50 / 45 |\n| RTX 2080 Ti 22 GB (g 0.6 / 0.75 / 0.9) | 64% / 26% | 121 / 97 / 81 | 85 / 75 / 67 |\n| 2 x RTX 2080 Ti 22 GB (g 0.6 / 0.75 / 0.9) | 100% / 53% | 117 / 95 / 79 | 109 / 92 / 80 |\n\n- **P40: no gain.** Twice the VRAM cuts the Coder's CPU experts from ~16 ms to ~4 ms per window, but the Coder is\n  GPU-bound already (the GPU computes 44.5 of its 56.0 ms), and a slower GPU costs more than that. UD-IQ4_XS waits\n  less for the CPU, and the slower GPU takes it back.\n- **One 2080 Ti 22 GB: the most for the money** - more VRAM and a faster GPU: Coder +20-80%, UD-IQ4_XS +20-55%.\n- **Two 2080 Ti**: the Coder fits whole, but one card already hits 93%, and the split adds a hand-off per window\n  while the cards take turns: no gain for the Coder. UD-IQ4_XS goes from 77% to 89% hits: +20-30% over one card.\n\n## Prompts (not modelled)\n\nThe prompt path streams every expert the card does not hold, once per chunk (up to 8,192 tokens), and both cards\nhave PCIe 3.0 (about 12 GB/s against 26.8 measured here):\n\n- **2080 Ti, Coder**: 8 GiB to stream instead of 18, at half the link speed, about the same 0.7 s per chunk; the int8\n  tensor cores are faster than the 3060M's. Likely 1.3-1.8 times today's 896 / 1065 tokens/s (4K / 16K).\n- **2080 Ti, UD-IQ4_XS**: about 41 GiB per chunk, ~3.6 s at 12 GB/s (51 GiB at 26.8 GB/s = ~2 s now): the link\n  likely sets the pace, 1.0-1.4 times today's 795 / 888 tokens/s. Two cards: the measured +18-20% from the pipeline.\n- **P40**: no tensor cores (MMQ through `dp4a`), FP16 at 1/64 rate, and the older prompt-attention kernel: likely\n  slower than the 3060M, perhaps 0.3-0.7 times.\n\n## In this PC\n\n- **One GPU slot**: `lspci` shows one x16 slot for a graphics card; a second card needs an M.2-to-PCIe adapter\n  (x4 works for a layer split, [MULTI_GPU.md](MULTI_GPU.md)), and two 2080 Ti draw about 2 x 250 W.\n- **P40**: passively cooled (it needs a fan on its fins) and powered through an 8-pin EPS (CPU-style) connector; the\n  experimental build needs a CUDA 12.x toolkit next to the CUDA 13 one used now.\n- **More context**: with 22-24 GB the 64K context fits without KV streaming (12 GB: 32K recommended).\n- What would settle it: the measured window split ([3060M.md](3060M.md)) on the real card. g is the number to\n  measure first; the GPU stage profile (`STRATA_VERIFY_PROFILE=1`) gives it directly.\n",
+            "structuredPatch": [],
+            "originalFile": null,
+            "userModified": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01HF6uMmYWtEEWvMohvyXJ1d",
+            "type": "tool_result",
+            "content": "File created successfully at: /home/luwei/work/AI/Strata/docs/3060M-other-gpus.md (file state is current in your context — no need to Read it back)"
+          }
+        },
+        "metadata": {
+          "tool_use_result": {
+            "type": "create",
+            "filePath": "/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md",
+            "content": "# Other cards in the 3060M PC: an estimate\n\nWhat a Tesla P40 (24 GB), one RTX 2080 Ti modified to 22 GB, or two of them would do for the two models in this PC\n(Ryzen 9 8945HX, 96 GB DDR5-5200, see [3060M.md](3060M.md)). **This is an estimate, not a measurement**: none of these\ncards was in the PC. It starts from the 3060M's measured verify windows (2026-10-17, [3060M.md](3060M.md) \"Where the\ndecode time goes\" and \"The Coder's router\") and changes two things: how many experts the bigger card holds, and how\nfast its GPU does the same work. The model is `benchmarks/2026-10-17-3060m-gpu-estimate.py`; every number in the\ntables below is its output.\n\n## The cards\n\n| | RTX 3060 Laptop (now) | Tesla P40 | RTX 2080 Ti, 22 GB mod |\n|---|---|---|---|\n| Architecture, compute capability | Ampere, 8.6 | Pascal, 6.1 | Turing, 7.5 |\n| SMs, FP32 lanes | 30, 3840 | 30, 3840 | 68, 4352 |\n| VRAM, bandwidth (spec) | 12 GB, 336 GB/s | 24 GB, 346 GB/s | 22 GB, 616 GB/s |\n| Tensor cores (int8 / fp16) | yes | **no** (int8 via `dp4a` only; fp16 at 1/64 rate) | yes (no BF16) |\n| PCIe | 4.0 x16, 26.8 GB/s measured | 3.0 x16 (~12 GB/s) | 3.0 x16 (~12 GB/s) |\n| Strata support | release engine | **only the experimental build** (`-DSTRATA_EXPERIMENTAL_SM60=ON`, CUDA 12.x toolkit; written for sm_60 and sm_70, sm_61 untested) | release engine (since 0.1.27; QSA scorer as FP32 FMAs, older prompt-attention kernel) |\n\nTwo cards: Strata splits the layers (pipeline, [MULTI_GPU.md](MULTI_GPU.md)); a token crosses once per verify window\nthrough pinned host RAM, a few hundred KB. **NVLink is not used** (no peer-to-peer access), so a bridge between two\n2080 Ti changes nothing. The doc's measurement (RTX 5080 + 3090): decode about the faster card alone, prompts +18-20%,\nplus what the second cache adds.\n\n## How the estimate is made\n\nFrom the 3060M's windows (decodes 2-3 of the C++ rewrite request, `--spec 4`):\n\n| per verify window | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|\n| distinct experts per layer | 37.6 | 38.1 |\n| measured hit share (slots) | 76.0% (2666) | 58.5% (1864) |\n| CPU time per expert | 42.2 us | 56.4 us |\n| GPU time per VRAM expert | 8.35 us | 8.83 us |\n| other GPU work (dense, attention, hyper-connections, router, head) | 31.0 ms | 29.8 ms |\n| MTP draft | 5.2 ms | 5.2 ms |\n| tokens committed per window | 3.72 | 3.87 |\n\n- **Hit share with more slots**: a Zipf law over each layer's experts, its exponent fitted to the measured share\n  (Coder 1.016, UD-IQ4_XS 0.953). The adaptive swaps are not modelled. Slots = the extra VRAM over the 12 GB card /\n  the cache's bytes per slot (2.06 MB, 2.41 MB); for two 22 GB cards, the second adds about 15 GiB (it holds its own\n  copy of the dense weights, its state and prompt buffers).\n- **The GPU's wait for the CPU**: the linear fit of the two measured windows, 0.88 x CPU time - 0.48 x GPU expert\n  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 decoded within 4%\n  of the best share).\n- **g**, the card's GPU time relative to the 3060M's for the same work, is not measured and is the largest\n  uncertainty. These decode kernels reach about 40% of the 3060M's VRAM bandwidth ([3060M.md](3060M.md)), so\n  bandwidth alone does not scale them. The 2080 Ti has 2.27 times the SMs and 1.83 times the bandwidth, but half\n  the FP32 lanes per SM: g = 0.6-0.9. The P40 has the same SM count, ~1.5 GHz, and an older core: g = 1.2-1.6.\n- **The model on the measured PC** gives Coder 64 and UD-IQ4_XS 50 tokens/s, against 66.4 and 55.4 measured: it\n  reads 4% and 10% low (its misses all go to the CPU, where the measured runs copied a share over PCIe).\n\n## Decode, estimated (tokens/s)\n\n| | experts in VRAM (Coder / UD) | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|---|\n| RTX 3060 Laptop 12 GB (measured) | 22% / 8% | **66** | **55** |\n| Tesla P40 24 GB (g 1.2 / 1.4 / 1.6) | 73% / 29% | 61 / 52 / 46 | 56 / 50 / 45 |\n| RTX 2080 Ti 22 GB (g 0.6 / 0.75 / 0.9) | 64% / 26% | 121 / 97 / 81 | 85 / 75 / 67 |\n| 2 x RTX 2080 Ti 22 GB (g 0.6 / 0.75 / 0.9) | 100% / 53% | 117 / 95 / 79 | 109 / 92 / 80 |\n\n- **P40: no gain.** Twice the VRAM cuts the Coder's CPU experts from ~16 ms to ~4 ms per window, but the Coder is\n  GPU-bound already (the GPU computes 44.5 of its 56.0 ms), and a slower GPU costs more than that. UD-IQ4_XS waits\n  less for the CPU, and the slower GPU takes it back.\n- **One 2080 Ti 22 GB: the most for the money** - more VRAM and a faster GPU: Coder +20-80%, UD-IQ4_XS +20-55%.\n- **Two 2080 Ti**: the Coder fits whole, but one card already hits 93%, and the split adds a hand-off per window\n  while the cards take turns: no gain for the Coder. UD-IQ4_XS goes from 77% to 89% hits: +20-30% over one card.\n\n## Prompts (not modelled)\n\nThe prompt path streams every expert the card does not hold, once per chunk (up to 8,192 tokens), and both cards\nhave PCIe 3.0 (about 12 GB/s against 26.8 measured here):\n\n- **2080 Ti, Coder**: 8 GiB to stream instead of 18, at half the link speed, about the same 0.7 s per chunk; the int8\n  tensor cores are faster than the 3060M's. Likely 1.3-1.8 times today's 896 / 1065 tokens/s (4K / 16K).\n- **2080 Ti, UD-IQ4_XS**: about 41 GiB per chunk, ~3.6 s at 12 GB/s (51 GiB at 26.8 GB/s = ~2 s now): the link\n  likely sets the pace, 1.0-1.4 times today's 795 / 888 tokens/s. Two cards: the measured +18-20% from the pipeline.\n- **P40**: no tensor cores (MMQ through `dp4a`), FP16 at 1/64 rate, and the older prompt-attention kernel: likely\n  slower than the 3060M, perhaps 0.3-0.7 times.\n\n## In this PC\n\n- **One GPU slot**: `lspci` shows one x16 slot for a graphics card; a second card needs an M.2-to-PCIe adapter\n  (x4 works for a layer split, [MULTI_GPU.md](MULTI_GPU.md)), and two 2080 Ti draw about 2 x 250 W.\n- **P40**: passively cooled (it needs a fan on its fins) and powered through an 8-pin EPS (CPU-style) connector; the\n  experimental build needs a CUDA 12.x toolkit next to the CUDA 13 one used now.\n- **More context**: with 22-24 GB the 64K context fits without KV streaming (12 GB: 32K recommended).\n- What would settle it: the measured window split ([3060M.md](3060M.md)) on the real card. g is the number to\n  measure first; the GPU stage profile (`STRATA_VERIFY_PROFILE=1`) gives it directly.\n",
+            "structuredPatch": [],
+            "originalFile": null,
+            "userModified": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01HF6uMmYWtEEWvMohvyXJ1d",
+            "type": "tool_result",
+            "content": "File created successfully at: /home/luwei/work/AI/Strata/docs/3060M-other-gpus.md (file state is current in your context — no need to Read it back)"
+          }
+        },
+        "raw_arguments": {
+          "file_path": "/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md",
+          "content": "# Other cards in the 3060M PC: an estimate\n\nWhat a Tesla P40 (24 GB), one RTX 2080 Ti modified to 22 GB, or two of them would do for the two models in this PC\n(Ryzen 9 8945HX, 96 GB DDR5-5200, see [3060M.md](3060M.md)). **This is an estimate, not a measurement**: none of these\ncards was in the PC. It starts from the 3060M's measured verify windows (2026-10-17, [3060M.md](3060M.md) \"Where the\ndecode time goes\" and \"The Coder's router\") and changes two things: how many experts the bigger card holds, and how\nfast its GPU does the same work. The model is `benchmarks/2026-10-17-3060m-gpu-estimate.py`; every number in the\ntables below is its output.\n\n## The cards\n\n| | RTX 3060 Laptop (now) | Tesla P40 | RTX 2080 Ti, 22 GB mod |\n|---|---|---|---|\n| Architecture, compute capability | Ampere, 8.6 | Pascal, 6.1 | Turing, 7.5 |\n| SMs, FP32 lanes | 30, 3840 | 30, 3840 | 68, 4352 |\n| VRAM, bandwidth (spec) | 12 GB, 336 GB/s | 24 GB, 346 GB/s | 22 GB, 616 GB/s |\n| Tensor cores (int8 / fp16) | yes | **no** (int8 via `dp4a` only; fp16 at 1/64 rate) | yes (no BF16) |\n| PCIe | 4.0 x16, 26.8 GB/s measured | 3.0 x16 (~12 GB/s) | 3.0 x16 (~12 GB/s) |\n| Strata support | release engine | **only the experimental build** (`-DSTRATA_EXPERIMENTAL_SM60=ON`, CUDA 12.x toolkit; written for sm_60 and sm_70, sm_61 untested) | release engine (since 0.1.27; QSA scorer as FP32 FMAs, older prompt-attention kernel) |\n\nTwo cards: Strata splits the layers (pipeline, [MULTI_GPU.md](MULTI_GPU.md)); a token crosses once per verify window\nthrough pinned host RAM, a few hundred KB. **NVLink is not used** (no peer-to-peer access), so a bridge between two\n2080 Ti changes nothing. The doc's measurement (RTX 5080 + 3090): decode about the faster card alone, prompts +18-20%,\nplus what the second cache adds.\n\n## How the estimate is made\n\nFrom the 3060M's windows (decodes 2-3 of the C++ rewrite request, `--spec 4`):\n\n| per verify window | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|\n| distinct experts per layer | 37.6 | 38.1 |\n| measured hit share (slots) | 76.0% (2666) | 58.5% (1864) |\n| CPU time per expert | 42.2 us | 56.4 us |\n| GPU time per VRAM expert | 8.35 us | 8.83 us |\n| other GPU work (dense, attention, hyper-connections, router, head) | 31.0 ms | 29.8 ms |\n| MTP draft | 5.2 ms | 5.2 ms |\n| tokens committed per window | 3.72 | 3.87 |\n\n- **Hit share with more slots**: a Zipf law over each layer's experts, its exponent fitted to the measured share\n  (Coder 1.016, UD-IQ4_XS 0.953). The adaptive swaps are not modelled. Slots = the extra VRAM over the 12 GB card /\n  the cache's bytes per slot (2.06 MB, 2.41 MB); for two 22 GB cards, the second adds about 15 GiB (it holds its own\n  copy of the dense weights, its state and prompt buffers).\n- **The GPU's wait for the CPU**: the linear fit of the two measured windows, 0.88 x CPU time - 0.48 x GPU expert\n  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 decoded within 4%\n  of the best share).\n- **g**, the card's GPU time relative to the 3060M's for the same work, is not measured and is the largest\n  uncertainty. These decode kernels reach about 40% of the 3060M's VRAM bandwidth ([3060M.md](3060M.md)), so\n  bandwidth alone does not scale them. The 2080 Ti has 2.27 times the SMs and 1.83 times the bandwidth, but half\n  the FP32 lanes per SM: g = 0.6-0.9. The P40 has the same SM count, ~1.5 GHz, and an older core: g = 1.2-1.6.\n- **The model on the measured PC** gives Coder 64 and UD-IQ4_XS 50 tokens/s, against 66.4 and 55.4 measured: it\n  reads 4% and 10% low (its misses all go to the CPU, where the measured runs copied a share over PCIe).\n\n## Decode, estimated (tokens/s)\n\n| | experts in VRAM (Coder / UD) | Coder IQ1_M | UD-IQ4_XS |\n|---|---|---|---|\n| RTX 3060 Laptop 12 GB (measured) | 22% / 8% | **66** | **55** |\n| Tesla P40 24 GB (g 1.2 / 1.4 / 1.6) | 73% / 29% | 61 / 52 / 46 | 56 / 50 / 45 |\n| RTX 2080 Ti 22 GB (g 0.6 / 0.75 / 0.9) | 64% / 26% | 121 / 97 / 81 | 85 / 75 / 67 |\n| 2 x RTX 2080 Ti 22 GB (g 0.6 / 0.75 / 0.9) | 100% / 53% | 117 / 95 / 79 | 109 / 92 / 80 |\n\n- **P40: no gain.** Twice the VRAM cuts the Coder's CPU experts from ~16 ms to ~4 ms per window, but the Coder is\n  GPU-bound already (the GPU computes 44.5 of its 56.0 ms), and a slower GPU costs more than that. UD-IQ4_XS waits\n  less for the CPU, and the slower GPU takes it back.\n- **One 2080 Ti 22 GB: the most for the money** - more VRAM and a faster GPU: Coder +20-80%, UD-IQ4_XS +20-55%.\n- **Two 2080 Ti**: the Coder fits whole, but one card already hits 93%, and the split adds a hand-off per window\n  while the cards take turns: no gain for the Coder. UD-IQ4_XS goes from 77% to 89% hits: +20-30% over one card.\n\n## Prompts (not modelled)\n\nThe prompt path streams every expert the card does not hold, once per chunk (up to 8,192 tokens), and both cards\nhave PCIe 3.0 (about 12 GB/s against 26.8 measured here):\n\n- **2080 Ti, Coder**: 8 GiB to stream instead of 18, at half the link speed, about the same 0.7 s per chunk; the int8\n  tensor cores are faster than the 3060M's. Likely 1.3-1.8 times today's 896 / 1065 tokens/s (4K / 16K).\n- **2080 Ti, UD-IQ4_XS**: about 41 GiB per chunk, ~3.6 s at 12 GB/s (51 GiB at 26.8 GB/s = ~2 s now): the link\n  likely sets the pace, 1.0-1.4 times today's 795 / 888 tokens/s. Two cards: the measured +18-20% from the pipeline.\n- **P40**: no tensor cores (MMQ through `dp4a`), FP16 at 1/64 rate, and the older prompt-attention kernel: likely\n  slower than the 3060M, perhaps 0.3-0.7 times.\n\n## In this PC\n\n- **One GPU slot**: `lspci` shows one x16 slot for a graphics card; a second card needs an M.2-to-PCIe adapter\n  (x4 works for a layer split, [MULTI_GPU.md](MULTI_GPU.md)), and two 2080 Ti draw about 2 x 250 W.\n- **P40**: passively cooled (it needs a fan on its fins) and powered through an 8-pin EPS (CPU-style) connector; the\n  experimental build needs a CUDA 12.x toolkit next to the CUDA 13 one used now.\n- **More context**: with 22-24 GB the 64K context fits without KV streaming (12 GB: 32K recommended).\n- What would settle it: the measured window split ([3060M.md](3060M.md)) on the real card. g is the number to\n  measure first; the GPU stage profile (`STRATA_VERIFY_PROFILE=1`) gives it directly.\n"
+        }
+      }
+    },
+    {
+      "step_id": 338,
+      "timestamp": "2026-10-17T16:00:21.647Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 286869,
+        "completion_tokens": 1105,
+        "cached_tokens": 286867,
+        "extra": {
+          "cache_creation_input_tokens": 3366,
+          "cache_read_input_tokens": 286867,
+          "output_tokens_details": {
+            "thinking_tokens": 675
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3366,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1105,
+              "cache_read_input_tokens": 286867,
+              "cache_creation_input_tokens": 3366,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3366
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 339,
+      "timestamp": "2026-10-17T16:00:21.652Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "I found two inaccuracies: at `--pcie-frac 0` this machine was actually best or tied-best rather than \"within 4%,\" and my explanation for the 4–10% low readings doesn't hold since runs at share 0 weren't slower. Fixing both now.",
+      "metrics": {
+        "prompt_tokens": 286869,
+        "completion_tokens": 1105,
+        "cached_tokens": 286867,
+        "extra": {
+          "cache_creation_input_tokens": 3366,
+          "cache_read_input_tokens": 286867,
+          "output_tokens_details": {
+            "thinking_tokens": 675
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3366,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1105,
+              "cache_read_input_tokens": 286867,
+              "cache_creation_input_tokens": 3366,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3366
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 340,
+      "timestamp": "2026-10-17T16:00:22.726Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01FWBkRsLFKMexSYJHFSVPXX",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01FWBkRsLFKMexSYJHFSVPXX",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "python3 - <<'EOF'\np='docs/3060M-other-gpus.md'; s=open(p).read()\nfor a,b in [(\"PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 decoded within 4%\\n  of the best share).\",\n             \"PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 was as fast as the best\\n  share: Coder 65.1 against 62.3 tokens/s at 0.2, UD-IQ4_XS 55.4 at both).\"),\n            (\"it\\n  reads 4% and 10% low (its misses all go to the CPU, where the measured runs copied a share over PCIe).\",\n             \"it\\n  reads 4% and 10% low, so the tables below lean low.\")]:\n    assert a in s,a; s=s.replace(a,b)\nopen(p,'w').write(s)\nEOF\ngit status --short | grep -v _traj",
+            "description": "Fix two claims in the estimate file"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01FWBkRsLFKMexSYJHFSVPXX",
+            "content": "?? docs/3060M-other-gpus.md\n?? docs/benchmarks/2026-10-17-3060m-gpu-estimate.py\n\n[stdout]\n?? docs/3060M-other-gpus.md\n?? docs/benchmarks/2026-10-17-3060m-gpu-estimate.py\n[metadata] {\"noOutputExpected\": false, \"bashEditDiff\": {\"files\": [{\"filePath\": \"/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md\", \"hunks\": [{\"oldStart\": 42, \"oldLines\": 14, \"newStart\": 42, \"newLines\": 14, \"lines\": [\"   the cache's bytes per slot (2.06 MB, 2.41 MB); for two 22 GB cards, the second adds about 15 GiB (it holds its own\", \"   copy of the dense weights, its state and prompt buffers).\", \" - **The GPU's wait for the CPU**: the linear fit of the two measured windows, 0.88 x CPU time - 0.48 x GPU expert\", \"-  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 decoded within 4%\", \"-  of the best share).\", \"+  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 was as fast as the best\", \"+  share: Coder 65.1 against 62.3 tokens/s at 0.2, UD-IQ4_XS 55.4 at both).\", \" - **g**, the card's GPU time relative to the 3060M's for the same work, is not measured and is the largest\", \"   uncertainty. These decode kernels reach about 40% of the 3060M's VRAM bandwidth ([3060M.md](3060M.md)), so\", \"   bandwidth alone does not scale them. The 2080 Ti has 2.27 times the SMs and 1.83 times the bandwidth, but half\", \"   the FP32 lanes per SM: g = 0.6-0.9. The P40 has the same SM count, ~1.5 GHz, and an older core: g = 1.2-1.6.\", \" - **The model on the measured PC** gives Coder 64 and UD-IQ4_XS 50 tokens/s, against 66.4 and 55.4 measured: it\", \"-  reads 4% and 10% low (its misses all go to the CPU, where the measured runs copied a share over PCIe).\", \"+  reads 4% and 10% low, so the tables below lean low.\", \" \", \" ## Decode, estimated (tokens/s)\", \" \"]}]}], \"moreFiles\": 0, \"changedFiles\": [\"/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md\"]}}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 286869,
+        "completion_tokens": 1105,
+        "cached_tokens": 286867,
+        "extra": {
+          "cache_creation_input_tokens": 3366,
+          "cache_read_input_tokens": 286867,
+          "output_tokens_details": {
+            "thinking_tokens": 675
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3366,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1105,
+              "cache_read_input_tokens": 286867,
+              "cache_creation_input_tokens": 3366,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3366
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "?? docs/3060M-other-gpus.md\n?? docs/benchmarks/2026-10-17-3060m-gpu-estimate.py",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md",
+                  "hunks": [
+                    {
+                      "oldStart": 42,
+                      "oldLines": 14,
+                      "newStart": 42,
+                      "newLines": 14,
+                      "lines": [
+                        "   the cache's bytes per slot (2.06 MB, 2.41 MB); for two 22 GB cards, the second adds about 15 GiB (it holds its own",
+                        "   copy of the dense weights, its state and prompt buffers).",
+                        " - **The GPU's wait for the CPU**: the linear fit of the two measured windows, 0.88 x CPU time - 0.48 x GPU expert",
+                        "-  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 decoded within 4%",
+                        "-  of the best share).",
+                        "+  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 was as fast as the best",
+                        "+  share: Coder 65.1 against 62.3 tokens/s at 0.2, UD-IQ4_XS 55.4 at both).",
+                        " - **g**, the card's GPU time relative to the 3060M's for the same work, is not measured and is the largest",
+                        "   uncertainty. These decode kernels reach about 40% of the 3060M's VRAM bandwidth ([3060M.md](3060M.md)), so",
+                        "   bandwidth alone does not scale them. The 2080 Ti has 2.27 times the SMs and 1.83 times the bandwidth, but half",
+                        "   the FP32 lanes per SM: g = 0.6-0.9. The P40 has the same SM count, ~1.5 GHz, and an older core: g = 1.2-1.6.",
+                        " - **The model on the measured PC** gives Coder 64 and UD-IQ4_XS 50 tokens/s, against 66.4 and 55.4 measured: it",
+                        "-  reads 4% and 10% low (its misses all go to the CPU, where the measured runs copied a share over PCIe).",
+                        "+  reads 4% and 10% low, so the tables below lean low.",
+                        " ",
+                        " ## Decode, estimated (tokens/s)",
+                        " "
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FWBkRsLFKMexSYJHFSVPXX",
+            "type": "tool_result",
+            "content": "?? docs/3060M-other-gpus.md\n?? docs/benchmarks/2026-10-17-3060m-gpu-estimate.py",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "?? docs/3060M-other-gpus.md\n?? docs/benchmarks/2026-10-17-3060m-gpu-estimate.py",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false,
+            "bashEditDiff": {
+              "files": [
+                {
+                  "filePath": "/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md",
+                  "hunks": [
+                    {
+                      "oldStart": 42,
+                      "oldLines": 14,
+                      "newStart": 42,
+                      "newLines": 14,
+                      "lines": [
+                        "   the cache's bytes per slot (2.06 MB, 2.41 MB); for two 22 GB cards, the second adds about 15 GiB (it holds its own",
+                        "   copy of the dense weights, its state and prompt buffers).",
+                        " - **The GPU's wait for the CPU**: the linear fit of the two measured windows, 0.88 x CPU time - 0.48 x GPU expert",
+                        "-  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 decoded within 4%",
+                        "-  of the best share).",
+                        "+  time, at least 0.5 ms. PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 was as fast as the best",
+                        "+  share: Coder 65.1 against 62.3 tokens/s at 0.2, UD-IQ4_XS 55.4 at both).",
+                        " - **g**, the card's GPU time relative to the 3060M's for the same work, is not measured and is the largest",
+                        "   uncertainty. These decode kernels reach about 40% of the 3060M's VRAM bandwidth ([3060M.md](3060M.md)), so",
+                        "   bandwidth alone does not scale them. The 2080 Ti has 2.27 times the SMs and 1.83 times the bandwidth, but half",
+                        "   the FP32 lanes per SM: g = 0.6-0.9. The P40 has the same SM count, ~1.5 GHz, and an older core: g = 1.2-1.6.",
+                        " - **The model on the measured PC** gives Coder 64 and UD-IQ4_XS 50 tokens/s, against 66.4 and 55.4 measured: it",
+                        "-  reads 4% and 10% low (its misses all go to the CPU, where the measured runs copied a share over PCIe).",
+                        "+  reads 4% and 10% low, so the tables below lean low.",
+                        " ",
+                        " ## Decode, estimated (tokens/s)",
+                        " "
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "moreFiles": 0,
+              "changedFiles": [
+                "/home/luwei/work/AI/Strata/docs/3060M-other-gpus.md"
+              ]
+            }
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01FWBkRsLFKMexSYJHFSVPXX",
+            "type": "tool_result",
+            "content": "?? docs/3060M-other-gpus.md\n?? docs/benchmarks/2026-10-17-3060m-gpu-estimate.py",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "python3 - <<'EOF'\np='docs/3060M-other-gpus.md'; s=open(p).read()\nfor a,b in [(\"PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 decoded within 4%\\n  of the best share).\",\n             \"PCIe 3.0 cards: `--pcie-frac 0` (all misses on the CPU; on the 3060M, 0 was as fast as the best\\n  share: Coder 65.1 against 62.3 tokens/s at 0.2, UD-IQ4_XS 55.4 at both).\"),\n            (\"it\\n  reads 4% and 10% low (its misses all go to the CPU, where the measured runs copied a share over PCIe).\",\n             \"it\\n  reads 4% and 10% low, so the tables below lean low.\")]:\n    assert a in s,a; s=s.replace(a,b)\nopen(p,'w').write(s)\nEOF\ngit status --short | grep -v _traj",
+          "description": "Fix two claims in the estimate file"
+        }
+      }
+    },
+    {
+      "step_id": 341,
+      "timestamp": "2026-10-17T16:00:30.486Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "The estimate is in its own file, `docs/3060M-other-gpus.md`. Every table number comes from a small model script, `docs/benchmarks/2026-10-17-3060m-gpu-estimate.py`; run it with `python3` to reproduce them.\n\nDecode estimates in tok/s; the low and high ends come from the assumed GPU speed range:\n\n| | Coder (now 66) | UD-IQ4_XS (now 55) |\n|---|---|---|\n| Tesla P40 24 GB | 46–61 | 45–56 |\n| RTX 2080 Ti 22 GB | 81–121 | 67–85 |\n| 2 × RTX 2080 Ti 22 GB | 79–117 | 80–109 |\n\n- **P40:** no gain, and Coder may get slower. It also only runs on Strata's experimental build, which has never been tested on its chip.\n- **One 2080 Ti 22 GB:** the best option, and supported by the normal engine.\n- **Two 2080 Ti:** only UD-IQ4_XS gains, about 20–30% over one card. NVLink doesn't help, because Strata doesn't use it.\n- **Prompt speed:** I didn't model it; the file only gives rough ranges. Both cards have PCIe 3.0, about half this machine's link speed.\n- **This board:** it has only one graphics-card slot, so a second card would need an M.2-to-PCIe adapter.\n\nThe largest uncertainty is how fast each card's GPU runs these kernels compared with this one; I used a guessed range. Profiling the real card would settle it.\n\nThe file has also been changed on disk since I wrote it, so the version there now is the current one. The two new files aren't committed yet; the repo's automatic commit should pick them up as before. I left `docs/3060M.md` alone. If you want, I can add a link to the new file there.",
+      "metrics": {
+        "prompt_tokens": 290235,
+        "completion_tokens": 613,
+        "cached_tokens": 290233,
+        "extra": {
+          "cache_creation_input_tokens": 1303,
+          "cache_read_input_tokens": 290233,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 1303,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 613,
+              "cache_read_input_tokens": 290233,
+              "cache_creation_input_tokens": 1303,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 1303
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 46287549,
-    "total_completion_tokens": 283894,
-    "total_cached_tokens": 46286919,
-    "total_steps": 331,
+    "total_prompt_tokens": 48854298,
+    "total_completion_tokens": 300610,
+    "total_cached_tokens": 48853650,
+    "total_steps": 341,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 715790,
-      "total_cache_read_input_tokens": 46286919
+      "total_cache_creation_input_tokens": 734631,
+      "total_cache_read_input_tokens": 48853650
     }
   }
 }
