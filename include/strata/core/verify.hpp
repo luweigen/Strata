@@ -184,8 +184,9 @@ private:
     bool ple_stage() const { return lb_ <= 1 && 1 < le_; }   ///< holds layer 1, where the PLE block runs
     bool capture_commit(std::string& err);
     bool record_window(int T, cudaStream_t cs, std::string& err);
-    static constexpr int kProfPer = 33;              // stamps per layer (32 left the hc-read second
-                                      // half's up-stamp at slot 32 = the next layer's slot 0: D8)
+    static constexpr int kProfPer = 35;              // stamps per layer (32 left the hc-read second
+                                      // half's up-stamp at slot 32 = the next layer's slot 0: D8); 33-34: the
+                                      // ffn half's hc-read end and the router's end (stage 17 split, 3060M)
     bool prof_on_ = false;
     unsigned long long* prof_ = nullptr;              // device: n_layers * kProfPer + 4 stamps
     std::vector<unsigned long long> prof_h_;

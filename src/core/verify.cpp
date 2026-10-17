@@ -668,6 +668,7 @@ bool Verifier::record_window(int T, cudaStream_t cs, std::string& err) {
         }
         stamp(l, 16, grp);
         gr_read_group(1, true, inj_, inj2_);
+        stamp(l, 33, grp);
         // the window's rows routed in 2 launches (one router GEMV reading the weight once, one
         // top-10) instead of 2 per token; every row's arithmetic is the single-token call's (STRATA_DEC_BATCH=0: old)
         const WeightRef* w_router = v.get("ffn_gate_inp.weight");
@@ -683,6 +684,7 @@ bool Verifier::record_window(int T, cudaStream_t cs, std::string& err) {
             mb.logits = logits_ + t * NE; mb.ids = ids_ + t * K; mb.weights = w_ + t * K;
             if (!moe_route(wt, g, l, K, mb, mixed_ + t * N, cs, err, nullptr)) return false;
         }
+        stamp(l, 34, grp);
         if (device_plan_)   // E-6: every routed expert resident: this group's plan without the host
             resident_plan(ids_ + tb * K, n * (int) K, (int) K, hits_.d_res + l * g.n_expert, (int) g.n_expert,
                           hits_.cache_base, slot_off_d_, (long long) hits_.blob,
@@ -864,7 +866,8 @@ std::string Verifier::profile_report() {
                                           "k/v+norm-rope", "kv+idx append", "q+q-idx", "scores+topk", "kv-resolve",
                                           "attention", "gate", "", "out-proj", "hc-read1+router", "shared+quant",
                                           "waitA", "VRAM hits", "waitB", "PCIe grp", "waitCPU", "copy+combine",
-                                          "(gap)", "head", "  hc0 norm", "  hc0 down", "  hc0 up", "", "", ""};
+                                          "(gap)", "head", "  hc0 norm", "  hc0 down", "  hc0 up", "  hc1 norm", "  hc1 down",
+                                          "  hc1 up", "  router", "  plan+doorbell"};
     std::string out;
     char b[80];
     double total = 0;
@@ -1156,6 +1159,18 @@ bool Verifier::run(int T, const int32_t* tokens, int64_t pos0, PoolMultiFn pool,
                 prof_sum_[kind][28] += dd;      //           down
                 prof_sum_[kind][29] += du;      //           up (through both halves, as before)
                 prof_sum_[kind][1] -= gap(at(l, 1), at(l, 0));   // (hc-read0 shown split)
+            }
+            // stage 17 (hc-read1+router) split: the ffn half's norm / down (its kernel's stamps 30, 31) / up (33),
+            // the router GEMV + top-10 (34), then the device plan and the doorbell (17)
+            const double n1 = gap(at(l, 30), at(l, 16)), d1 = gap(at(l, 31), at(l, 30)), u1 = gap(at(l, 33), at(l, 31)),
+                         r1 = gap(at(l, 34), at(l, 33)), b1 = gap(at(l, 17), at(l, 34));
+            if (n1 > 0 && d1 > 0 && u1 > 0 && r1 > 0 && b1 > 0) {
+                prof_sum_[kind][30] += n1;
+                prof_sum_[kind][31] += d1;
+                prof_sum_[kind][32] += u1;
+                prof_sum_[kind][33] += r1;
+                prof_sum_[kind][34] += b1;
+                prof_sum_[kind][17] -= gap(at(l, 17), at(l, 16));   // (shown split)
             }
         }
         prof_sum_[0][26] += gap(at(L, 1), at(L, 0));
