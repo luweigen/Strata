@@ -9882,19 +9882,229 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 138,
+      "timestamp": "2026-10-17T14:22:54.750Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>bwsrvt0ig</task-id>\n<summary>Monitor event: \"decode split: each result line, or a server failure\"</summary>\n<event>{\"model\": \"coder\", \"arm\": \"timing\", \"args\": \"--pcie-frac 0.2\", \"test\": \"decode#3\", \"tok_s\": 62.2, \"tokens\": 230, \"drafts\": \"170/185\"}</event>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 139,
+      "timestamp": "2026-10-17T14:22:58.465Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_012uv6TTd6bszuosgDL9SgQf",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_012uv6TTd6bszuosgDL9SgQf",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "S=/tmp/claude-1000/-home-luwei-work-AI-Strata/7383c513-d686-461b-b02e-39b288fc437e/scratchpad/split; ls $S; grep -h \"decode timing\\|expert tiers\" $S/coder-timing-*.log | cut -c1-600",
+            "description": "Read Coder timing-arm decode split lines"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_012uv6TTd6bszuosgDL9SgQf",
+            "content": "coder-profile-engine.log\ncoder-profile.json\ncoder-profile-server.log\ncoder-timing-engine.log\ncoder-timing.json\ncoder-timing-server.log\nresults.jsonl\nrun.err\nrun.py\nstrata decode timing: 40 windows, avg T 3.70, 3.20 tokens/window, 62.06 ms/window = verify 57.07 (GPU-reach wait 26.69 + per-layer host 25.91 [plan 0.10 actq 0.44 jobs 0.45 CPU 24.91] + stage 0.88) + commit/emit 0.04 + draft 4.93; per layer-window: CPU experts 11.58 (17.34 entries), VRAM hits 17.46, PCIe 2.15\nstrata decode timing: 56 windows, avg T 4.52, 4.09 tokens/window, 66.47 ms/window = verify 61.22 (GPU-reach wait 33.43 + per-layer host 24.24 [plan 0.13 actq 0.53 jobs 0.53 CPU 23.04] + stage 0.18) + commit/emit 0.04 + draft 5.21; per layer-window: CPU experts 11.00 (14.52 entries), VRAM hits 28.58, PCIe 2.01\nstrata decode timing: 61 windows, avg T 3.93, 3.75 tokens/window, 58.40 ms/window = verify 53.17 (GPU-reach wait 32.82 + per-layer host 17.14 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.14] + stage 0.04) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.77 (9.40 entries), VRAM hits 28.71, PCIe 1.21\nstrata decode timing: 63 windows, avg T 3.94, 3.65 tokens/window, 58.70 ms/window = verify 53.46 (GPU-reach wait 32.71 + per-layer host 17.56 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.56] + stage 0.03) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.85 (9.67 entries), VRAM hits 28.45, PCIe 1.22\n\n[stdout]\ncoder-profile-engine.log\ncoder-profile.json\ncoder-profile-server.log\ncoder-timing-engine.log\ncoder-timing.json\ncoder-timing-server.log\nresults.jsonl\nrun.err\nrun.py\nstrata decode timing: 40 windows, avg T 3.70, 3.20 tokens/window, 62.06 ms/window = verify 57.07 (GPU-reach wait 26.69 + per-layer host 25.91 [plan 0.10 actq 0.44 jobs 0.45 CPU 24.91] + stage 0.88) + commit/emit 0.04 + draft 4.93; per layer-window: CPU experts 11.58 (17.34 entries), VRAM hits 17.46, PCIe 2.15\nstrata decode timing: 56 windows, avg T 4.52, 4.09 tokens/window, 66.47 ms/window = verify 61.22 (GPU-reach wait 33.43 + per-layer host 24.24 [plan 0.13 actq 0.53 jobs 0.53 CPU 23.04] + stage 0.18) + commit/emit 0.04 + draft 5.21; per layer-window: CPU experts 11.00 (14.52 entries), VRAM hits 28.58, PCIe 2.01\nstrata decode timing: 61 windows, avg T 3.93, 3.75 tokens/window, 58.40 ms/window = verify 53.17 (GPU-reach wait 32.82 + per-layer host 17.14 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.14] + stage 0.04) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.77 (9.40 entries), VRAM hits 28.71, PCIe 1.21\nstrata decode timing: 63 windows, avg T 3.94, 3.65 tokens/window, 58.70 ms/window = verify 53.46 (GPU-reach wait 32.71 + per-layer host 17.56 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.56] + stage 0.03) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.85 (9.67 entries), VRAM hits 28.45, PCIe 1.22\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 151145,
+        "completion_tokens": 183,
+        "cached_tokens": 151141,
+        "extra": {
+          "cache_creation_input_tokens": 343,
+          "cache_read_input_tokens": 151141,
+          "output_tokens_details": {
+            "thinking_tokens": 0
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 343,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 4,
+              "output_tokens": 183,
+              "cache_read_input_tokens": 151141,
+              "cache_creation_input_tokens": 343,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 343
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "coder-profile-engine.log\ncoder-profile.json\ncoder-profile-server.log\ncoder-timing-engine.log\ncoder-timing.json\ncoder-timing-server.log\nresults.jsonl\nrun.err\nrun.py\nstrata decode timing: 40 windows, avg T 3.70, 3.20 tokens/window, 62.06 ms/window = verify 57.07 (GPU-reach wait 26.69 + per-layer host 25.91 [plan 0.10 actq 0.44 jobs 0.45 CPU 24.91] + stage 0.88) + commit/emit 0.04 + draft 4.93; per layer-window: CPU experts 11.58 (17.34 entries), VRAM hits 17.46, PCIe 2.15\nstrata decode timing: 56 windows, avg T 4.52, 4.09 tokens/window, 66.47 ms/window = verify 61.22 (GPU-reach wait 33.43 + per-layer host 24.24 [plan 0.13 actq 0.53 jobs 0.53 CPU 23.04] + stage 0.18) + commit/emit 0.04 + draft 5.21; per layer-window: CPU experts 11.00 (14.52 entries), VRAM hits 28.58, PCIe 2.01\nstrata decode timing: 61 windows, avg T 3.93, 3.75 tokens/window, 58.40 ms/window = verify 53.17 (GPU-reach wait 32.82 + per-layer host 17.14 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.14] + stage 0.04) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.77 (9.40 entries), VRAM hits 28.71, PCIe 1.21\nstrata decode timing: 63 windows, avg T 3.94, 3.65 tokens/window, 58.70 ms/window = verify 53.46 (GPU-reach wait 32.71 + per-layer host 17.56 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.56] + stage 0.03) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.85 (9.67 entries), VRAM hits 28.45, PCIe 1.22",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_012uv6TTd6bszuosgDL9SgQf",
+            "type": "tool_result",
+            "content": "coder-profile-engine.log\ncoder-profile.json\ncoder-profile-server.log\ncoder-timing-engine.log\ncoder-timing.json\ncoder-timing-server.log\nresults.jsonl\nrun.err\nrun.py\nstrata decode timing: 40 windows, avg T 3.70, 3.20 tokens/window, 62.06 ms/window = verify 57.07 (GPU-reach wait 26.69 + per-layer host 25.91 [plan 0.10 actq 0.44 jobs 0.45 CPU 24.91] + stage 0.88) + commit/emit 0.04 + draft 4.93; per layer-window: CPU experts 11.58 (17.34 entries), VRAM hits 17.46, PCIe 2.15\nstrata decode timing: 56 windows, avg T 4.52, 4.09 tokens/window, 66.47 ms/window = verify 61.22 (GPU-reach wait 33.43 + per-layer host 24.24 [plan 0.13 actq 0.53 jobs 0.53 CPU 23.04] + stage 0.18) + commit/emit 0.04 + draft 5.21; per layer-window: CPU experts 11.00 (14.52 entries), VRAM hits 28.58, PCIe 2.01\nstrata decode timing: 61 windows, avg T 3.93, 3.75 tokens/window, 58.40 ms/window = verify 53.17 (GPU-reach wait 32.82 + per-layer host 17.14 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.14] + stage 0.04) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.77 (9.40 entries), VRAM hits 28.71, PCIe 1.21\nstrata decode timing: 63 windows, avg T 3.94, 3.65 tokens/window, 58.70 ms/window = verify 53.46 (GPU-reach wait 32.71 + per-layer host 17.56 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.56] + stage 0.03) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.85 (9.67 entries), VRAM hits 28.45, PCIe 1.22",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "coder-profile-engine.log\ncoder-profile.json\ncoder-profile-server.log\ncoder-timing-engine.log\ncoder-timing.json\ncoder-timing-server.log\nresults.jsonl\nrun.err\nrun.py\nstrata decode timing: 40 windows, avg T 3.70, 3.20 tokens/window, 62.06 ms/window = verify 57.07 (GPU-reach wait 26.69 + per-layer host 25.91 [plan 0.10 actq 0.44 jobs 0.45 CPU 24.91] + stage 0.88) + commit/emit 0.04 + draft 4.93; per layer-window: CPU experts 11.58 (17.34 entries), VRAM hits 17.46, PCIe 2.15\nstrata decode timing: 56 windows, avg T 4.52, 4.09 tokens/window, 66.47 ms/window = verify 61.22 (GPU-reach wait 33.43 + per-layer host 24.24 [plan 0.13 actq 0.53 jobs 0.53 CPU 23.04] + stage 0.18) + commit/emit 0.04 + draft 5.21; per layer-window: CPU experts 11.00 (14.52 entries), VRAM hits 28.58, PCIe 2.01\nstrata decode timing: 61 windows, avg T 3.93, 3.75 tokens/window, 58.40 ms/window = verify 53.17 (GPU-reach wait 32.82 + per-layer host 17.14 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.14] + stage 0.04) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.77 (9.40 entries), VRAM hits 28.71, PCIe 1.21\nstrata decode timing: 63 windows, avg T 3.94, 3.65 tokens/window, 58.70 ms/window = verify 53.46 (GPU-reach wait 32.71 + per-layer host 17.56 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.56] + stage 0.03) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.85 (9.67 entries), VRAM hits 28.45, PCIe 1.22",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_012uv6TTd6bszuosgDL9SgQf",
+            "type": "tool_result",
+            "content": "coder-profile-engine.log\ncoder-profile.json\ncoder-profile-server.log\ncoder-timing-engine.log\ncoder-timing.json\ncoder-timing-server.log\nresults.jsonl\nrun.err\nrun.py\nstrata decode timing: 40 windows, avg T 3.70, 3.20 tokens/window, 62.06 ms/window = verify 57.07 (GPU-reach wait 26.69 + per-layer host 25.91 [plan 0.10 actq 0.44 jobs 0.45 CPU 24.91] + stage 0.88) + commit/emit 0.04 + draft 4.93; per layer-window: CPU experts 11.58 (17.34 entries), VRAM hits 17.46, PCIe 2.15\nstrata decode timing: 56 windows, avg T 4.52, 4.09 tokens/window, 66.47 ms/window = verify 61.22 (GPU-reach wait 33.43 + per-layer host 24.24 [plan 0.13 actq 0.53 jobs 0.53 CPU 23.04] + stage 0.18) + commit/emit 0.04 + draft 5.21; per layer-window: CPU experts 11.00 (14.52 entries), VRAM hits 28.58, PCIe 2.01\nstrata decode timing: 61 windows, avg T 3.93, 3.75 tokens/window, 58.40 ms/window = verify 53.17 (GPU-reach wait 32.82 + per-layer host 17.14 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.14] + stage 0.04) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.77 (9.40 entries), VRAM hits 28.71, PCIe 1.21\nstrata decode timing: 63 windows, avg T 3.94, 3.65 tokens/window, 58.70 ms/window = verify 53.46 (GPU-reach wait 32.71 + per-layer host 17.56 [plan 0.12 actq 0.46 jobs 0.42 CPU 16.56] + stage 0.03) + commit/emit 0.04 + draft 5.19; per layer-window: CPU experts 7.85 (9.67 entries), VRAM hits 28.45, PCIe 1.22",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "S=/tmp/claude-1000/-home-luwei-work-AI-Strata/7383c513-d686-461b-b02e-39b288fc437e/scratchpad/split; ls $S; grep -h \"decode timing\\|expert tiers\" $S/coder-timing-*.log | cut -c1-600",
+          "description": "Read Coder timing-arm decode split lines"
+        }
+      }
+    },
+    {
+      "step_id": 140,
+      "timestamp": "2026-10-17T14:23:12.817Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 151486,
+        "completion_tokens": 1320,
+        "cached_tokens": 151484,
+        "extra": {
+          "cache_creation_input_tokens": 990,
+          "cache_read_input_tokens": 151484,
+          "output_tokens_details": {
+            "thinking_tokens": 1075
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 990,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1320,
+              "cache_read_input_tokens": 151484,
+              "cache_creation_input_tokens": 990,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 990
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 141,
+      "timestamp": "2026-10-17T14:23:12.822Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "The Coder timing run is done: 61.5 / 64.3 / 62.2 tok/s, matching the A/B (62.3). The engine log already shows the per-window split. For the two steady decodes (#2/#3), one window commits 3.65–3.75 tokens in about 58.5 ms:\n\n- **The host waits about 32.7 ms for the GPU to reach each layer.** This is the GPU's dense and attention work that does not overlap with the CPU.\n- **CPU experts take about 16.4 ms**, 7.8 missed experts per layer.\n- **Drafting takes 5.2 ms**, and commit only 0.04 ms.\n\nWaiting for the GPU-profile run to see how that 32.7 ms splits by stage.",
+      "metrics": {
+        "prompt_tokens": 151486,
+        "completion_tokens": 1320,
+        "cached_tokens": 151484,
+        "extra": {
+          "cache_creation_input_tokens": 990,
+          "cache_read_input_tokens": 151484,
+          "output_tokens_details": {
+            "thinking_tokens": 1075
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 990,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 1320,
+              "cache_read_input_tokens": 151484,
+              "cache_creation_input_tokens": 990,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 990
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 10713505,
-    "total_completion_tokens": 89923,
-    "total_cached_tokens": 10713251,
-    "total_steps": 137,
+    "total_prompt_tokens": 11167622,
+    "total_completion_tokens": 92746,
+    "total_cached_tokens": 11167360,
+    "total_steps": 141,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 409676,
-      "total_cache_read_input_tokens": 10713251
+      "total_cache_creation_input_tokens": 411999,
+      "total_cache_read_input_tokens": 11167360
     }
   }
 }
