@@ -22286,19 +22286,970 @@
         "cwd": "/home/luwei/work/AI/Strata",
         "is_sidechain": false
       }
+    },
+    {
+      "step_id": 314,
+      "timestamp": "2026-10-17T15:03:54.061Z",
+      "source": "user",
+      "message": "估算如果用两块NVLink互联的2080Ti改到22G VRAM，两模型性能大约会有什么样的变化",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 315,
+      "timestamp": "2026-10-17T15:04:22.153Z",
+      "source": "user",
+      "message": "<task-notification>\n<task-id>b3xi36d9i</task-id>\n<summary>Monitor event: \"spec A/B: each result line, or a server failure\"</summary>\n<event>[Monitor expired after 30m with 10 events delivered. Re-arm it if you still need the watch.]</event>\n</task-notification>",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 316,
+      "timestamp": "2026-10-17T15:04:29.009Z",
+      "source": "user",
+      "message": "[Request interrupted by user]"
+    },
+    {
+      "step_id": 317,
+      "timestamp": "2026-10-17T15:04:29.036Z",
+      "source": "user",
+      "message": "估算如果用一块或两块NVLink互联的2080Ti（每块改到22G VRAM），两模型性能大约会有什么样的变化",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 318,
+      "timestamp": "2026-10-17T15:05:09.529Z",
+      "source": "user",
+      "message": "估算如果用一块P40，或一块或两块NVLink互联的2080Ti（每块改到22G VRAM），两模型性能大约会有什么样的变化",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 319,
+      "timestamp": "2026-10-17T15:05:59.715Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 256099,
+        "completion_tokens": 5368,
+        "cached_tokens": 256097,
+        "extra": {
+          "cache_creation_input_tokens": 369,
+          "cache_read_input_tokens": 256097,
+          "output_tokens_details": {
+            "thinking_tokens": 4592
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 369,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 5368,
+              "cache_read_input_tokens": 256097,
+              "cache_creation_input_tokens": 369,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 369
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 320,
+      "timestamp": "2026-10-17T15:06:01.509Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "These are estimates. My basis is the time split measured on this machine (Coder 56.0 ms per window after the router fix, UD-IQ4_XS 69.8 ms), scaled to each card. First I'll check four things that decide the numbers:\n1. whether Strata supports these two architectures at all (P40 is Pascal sm_61, 2080 Ti is Turing sm_75);\n2. what the multi-GPU mode can do;\n3. the expert-routing profile, to compute how the cache hit rate changes with more VRAM;\n4. how many PCIe slots this board has.",
+      "metrics": {
+        "prompt_tokens": 256099,
+        "completion_tokens": 5368,
+        "cached_tokens": 256097,
+        "extra": {
+          "cache_creation_input_tokens": 369,
+          "cache_read_input_tokens": 256097,
+          "output_tokens_details": {
+            "thinking_tokens": 4592
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 369,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 5368,
+              "cache_read_input_tokens": 256097,
+              "cache_creation_input_tokens": 369,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 369
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 321,
+      "timestamp": "2026-10-17T15:06:04.261Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01LJMY63YwK6dgNHX2SUtef3",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01LJMY63YwK6dgNHX2SUtef3",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "wc -l docs/MULTI_GPU.md && sed -n 1,80p docs/MULTI_GPU.md",
+            "description": "Read the multi-GPU documentation"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01LJMY63YwK6dgNHX2SUtef3",
+            "content": "141 docs/MULTI_GPU.md\n# Strata on two or three GPUs (layer split)\n\nOne model can run across several NVIDIA cards in one PC. The layers are split into contiguous ranges, one per GPU:\nthe first card runs layers 0 to K-1, the next card runs K onward, and so on; the last card also runs the output head\nand the draft (MTP) layer. Each card keeps an expert cache for **its own layers only**, so two cards hold about twice\nthe experts one card holds - for the Coder model on a 16 GB + 24 GB pair, nearly all of them, which is where the\nspeed comes from (decode then barely touches the CPU pool).\n\nThis is pipeline (layer) parallelism, not tensor parallelism: a token crosses from one card to the next once per\nverify window (a few hundred KB through pinned RAM), not twice per layer. No NVLink or peer-to-peer access is\nneeded; cards on x4 or x1 slots work, and the PCIe share of each card is probed on its own link.\n\n## Using it\n\n**Nothing to type.** `START-HERE.bat` (Linux: `./setup.sh`) lists your NVIDIA cards and says for each one whether\nStrata can use it:\n\n```\n  Your NVIDIA GPUs:\n    GPU 0: NVIDIA GeForce RTX 5080, 16 GB VRAM - can be used\n    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\n    GPU 2: NVIDIA GeForce RTX 3090, 24 GB VRAM - can be used\n  ...\n  1) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) + GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) together   (recommended)\n  2) GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) only\n  3) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) only\nWhich GPUs? [1]:\n```\n\nWhen two or more cards can share the model, the two best together are recommended (the newest generation first:\nit becomes the main card). A model installed on one card asks once, at its next start, whether to use both from\nnow on; the answer is kept.\n\n**Choosing yourself** (at setup or at any start):\n\n```\n--gpus 0,2                 these cards together, as nvidia-smi numbers them; the first is the main one. Remembered.\n--gpus all                 every card that can share the model\n--gpu 0                    one card (at a start: for that start only)\n--layer-split auto         (default) or the first layer of each later card, e.g. 18 or 16,32\n```\n\n**Not supported** (setup says so and names the cards that can be used instead):\n- a card older than the RTX 20 series (compute capability below 7.5: GTX 10 and older);\n- a card with less than 8 GB of VRAM, together with others (each card holds a copy of the dense weights and its\n  own prompt buffers) - unless you name it with `--gpus`: then setup says the risk and asks (`--yes` with the named\n  cards goes ahead);\n- Intel GPUs, and a mix of NVIDIA and AMD cards. (AMD cards share a model among themselves: `./setup.sh --backend\n  hip --gpus 1,0`, see [AMD_HIP.md](AMD_HIP.md).)\n\nOr edit an existing config (`strata-*.json`), then restart:\n\n```json\n\"gpu\": [0, 2],\n\"layer_split\": \"auto\"\n```\n\n**Skip the split when the first card holds everything** (opt-in, 0.1.31): `\"split_skip_if_fits\": true` in the config\n(engine flag `--split-skip-if-fits`, with `--layer-split auto`) runs on the first card alone when it holds every\nprofiled expert plus the context's KV, the draft layer and the reserve, and says so in the log; otherwise the split\nstays. On an R9700 32 GB + RX 9070 XT the R9700 holds all of the Coder's experts: with the flag 4K prompts read at\n1,776 tok/s instead of 1,244 (split) and decode runs at ~60 tok/s instead of ~51 (16K prompts ~5% slower than split).\n\n**Short prompts on a split (0.1.32, #340).** 0.1.30 gave each card's prompt path a loan from its own expert cache,\nrefilled after every request; on cards that hold nearly all their experts that cost short prompts up to a third of\ntheir speed. 0.1.32 refills all cards at once, uses a smaller streaming ring on a split, and lets a card with free\nVRAM keep its own prompt buffers - the same output as 0.1.31, measured on an R9700 + RX 9070 XT: 2K prompts 993 ->\n1,265 tok/s, 16K 1,852 -> 1,950, decode unchanged. `STRATA_SPLIT_OWN=1` (opt-in) gives every card its own buffers:\n2K 1,450 and 16K 2,227 tok/s there, but a full card then keeps a different set of experts resident, so the output\ndiffers from the default's (stable and coherent); `STRATA_SPLIT_OWN=auto` does that only where the buffers are at\nmost 12% of each card's VRAM.\n\nThe engine flags behind it: `--layer-split K1[,K2..]|auto` and `--split-device D1[,D2..]` (the later stages'\ndevices; default the next visible ones). `--layer-split K --split-device 0` runs both stages on one card sharing\neverything - the bit-exact check of the hand-off, not a speed mode.\n\n**auto** tries every placement (all of them for two or three cards; proportional to the free VRAM beyond that) and\nkeeps the one whose caches would hold the most of the expert profile, hottest pairs weighted most; ties go to the\nplacement that leaves the fullest card the most room. The startup log prints the choice:\n\n[stdout]\n141 docs/MULTI_GPU.md\n# Strata on two or three GPUs (layer split)\n\nOne model can run across several NVIDIA cards in one PC. The layers are split into contiguous ranges, one per GPU:\nthe first card runs layers 0 to K-1, the next card runs K onward, and so on; the last card also runs the output head\nand the draft (MTP) layer. Each card keeps an expert cache for **its own layers only**, so two cards hold about twice\nthe experts one card holds - for the Coder model on a 16 GB + 24 GB pair, nearly all of them, which is where the\nspeed comes from (decode then barely touches the CPU pool).\n\nThis is pipeline (layer) parallelism, not tensor parallelism: a token crosses from one card to the next once per\nverify window (a few hundred KB through pinned RAM), not twice per layer. No NVLink or peer-to-peer access is\nneeded; cards on x4 or x1 slots work, and the PCIe share of each card is probed on its own link.\n\n## Using it\n\n**Nothing to type.** `START-HERE.bat` (Linux: `./setup.sh`) lists your NVIDIA cards and says for each one whether\nStrata can use it:\n\n```\n  Your NVIDIA GPUs:\n    GPU 0: NVIDIA GeForce RTX 5080, 16 GB VRAM - can be used\n    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\n    GPU 2: NVIDIA GeForce RTX 3090, 24 GB VRAM - can be used\n  ...\n  1) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) + GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) together   (recommended)\n  2) GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) only\n  3) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) only\nWhich GPUs? [1]:\n```\n\nWhen two or more cards can share the model, the two best together are recommended (the newest generation first:\nit becomes the main card). A model installed on one card asks once, at its next start, whether to use both from\nnow on; the answer is kept.\n\n**Choosing yourself** (at setup or at any start):\n\n```\n--gpus 0,2                 these cards together, as nvidia-smi numbers them; the first is the main one. Remembered.\n--gpus all                 every card that can share the model\n--gpu 0                    one card (at a start: for that start only)\n--layer-split auto         (default) or the first layer of each later card, e.g. 18 or 16,32\n```\n\n**Not supported** (setup says so and names the cards that can be used instead):\n- a card older than the RTX 20 series (compute capability below 7.5: GTX 10 and older);\n- a card with less than 8 GB of VRAM, together with others (each card holds a copy of the dense weights and its\n  own prompt buffers) - unless you name it with `--gpus`: then setup says the risk and asks (`--yes` with the named\n  cards goes ahead);\n- Intel GPUs, and a mix of NVIDIA and AMD cards. (AMD cards share a model among themselves: `./setup.sh --backend\n  hip --gpus 1,0`, see [AMD_HIP.md](AMD_HIP.md).)\n\nOr edit an existing config (`strata-*.json`), then restart:\n\n```json\n\"gpu\": [0, 2],\n\"layer_split\": \"auto\"\n```\n\n**Skip the split when the first card holds everything** (opt-in, 0.1.31): `\"split_skip_if_fits\": true` in the config\n(engine flag `--split-skip-if-fits`, with `--layer-split auto`) runs on the first card alone when it holds every\nprofiled expert plus the context's KV, the draft layer and the reserve, and says so in the log; otherwise the split\nstays. On an R9700 32 GB + RX 9070 XT the R9700 holds all of the Coder's experts: with the flag 4K prompts read at\n1,776 tok/s instead of 1,244 (split) and decode runs at ~60 tok/s instead of ~51 (16K prompts ~5% slower than split).\n\n**Short prompts on a split (0.1.32, #340).** 0.1.30 gave each card's prompt path a loan from its own expert cache,\nrefilled after every request; on cards that hold nearly all their experts that cost short prompts up to a third of\ntheir speed. 0.1.32 refills all cards at once, uses a smaller streaming ring on a split, and lets a card with free\nVRAM keep its own prompt buffers - the same output as 0.1.31, measured on an R9700 + RX 9070 XT: 2K prompts 993 ->\n1,265 tok/s, 16K 1,852 -> 1,950, decode unchanged. `STRATA_SPLIT_OWN=1` (opt-in) gives every card its own buffers:\n2K 1,450 and 16K 2,227 tok/s there, but a full card then keeps a different set of experts resident, so the output\ndiffers from the default's (stable and coherent); `STRATA_SPLIT_OWN=auto` does that only where the buffers are at\nmost 12% of each card's VRAM.\n\nThe engine flags behind it: `--layer-split K1[,K2..]|auto` and `--split-device D1[,D2..]` (the later stages'\ndevices; default the next visible ones). `--layer-split K --split-device 0` runs both stages on one card sharing\neverything - the bit-exact check of the hand-off, not a speed mode.\n\n**auto** tries every placement (all of them for two or three cards; proportional to the free VRAM beyond that) and\nkeeps the one whose caches would hold the most of the expert profile, hottest pairs weighted most; ties go to the\nplacement that leaves the fullest card the most room. The startup log prints the choice:\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 256099,
+        "completion_tokens": 5368,
+        "cached_tokens": 256097,
+        "extra": {
+          "cache_creation_input_tokens": 369,
+          "cache_read_input_tokens": 256097,
+          "output_tokens_details": {
+            "thinking_tokens": 4592
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 369,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 5368,
+              "cache_read_input_tokens": 256097,
+              "cache_creation_input_tokens": 369,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 369
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "141 docs/MULTI_GPU.md\n# Strata on two or three GPUs (layer split)\n\nOne model can run across several NVIDIA cards in one PC. The layers are split into contiguous ranges, one per GPU:\nthe first card runs layers 0 to K-1, the next card runs K onward, and so on; the last card also runs the output head\nand the draft (MTP) layer. Each card keeps an expert cache for **its own layers only**, so two cards hold about twice\nthe experts one card holds - for the Coder model on a 16 GB + 24 GB pair, nearly all of them, which is where the\nspeed comes from (decode then barely touches the CPU pool).\n\nThis is pipeline (layer) parallelism, not tensor parallelism: a token crosses from one card to the next once per\nverify window (a few hundred KB through pinned RAM), not twice per layer. No NVLink or peer-to-peer access is\nneeded; cards on x4 or x1 slots work, and the PCIe share of each card is probed on its own link.\n\n## Using it\n\n**Nothing to type.** `START-HERE.bat` (Linux: `./setup.sh`) lists your NVIDIA cards and says for each one whether\nStrata can use it:\n\n```\n  Your NVIDIA GPUs:\n    GPU 0: NVIDIA GeForce RTX 5080, 16 GB VRAM - can be used\n    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\n    GPU 2: NVIDIA GeForce RTX 3090, 24 GB VRAM - can be used\n  ...\n  1) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) + GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) together   (recommended)\n  2) GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) only\n  3) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) only\nWhich GPUs? [1]:\n```\n\nWhen two or more cards can share the model, the two best together are recommended (the newest generation first:\nit becomes the main card). A model installed on one card asks once, at its next start, whether to use both from\nnow on; the answer is kept.\n\n**Choosing yourself** (at setup or at any start):\n\n```\n--gpus 0,2                 these cards together, as nvidia-smi numbers them; the first is the main one. Remembered.\n--gpus all                 every card that can share the model\n--gpu 0                    one card (at a start: for that start only)\n--layer-split auto         (default) or the first layer of each later card, e.g. 18 or 16,32\n```\n\n**Not supported** (setup says so and names the cards that can be used instead):\n- a card older than the RTX 20 series (compute capability below 7.5: GTX 10 and older);\n- a card with less than 8 GB of VRAM, together with others (each card holds a copy of the dense weights and its\n  own prompt buffers) - unless you name it with `--gpus`: then setup says the risk and asks (`--yes` with the named\n  cards goes ahead);\n- Intel GPUs, and a mix of NVIDIA and AMD cards. (AMD cards share a model among themselves: `./setup.sh --backend\n  hip --gpus 1,0`, see [AMD_HIP.md](AMD_HIP.md).)\n\nOr edit an existing config (`strata-*.json`), then restart:\n\n```json\n\"gpu\": [0, 2],\n\"layer_split\": \"auto\"\n```\n\n**Skip the split when the first card holds everything** (opt-in, 0.1.31): `\"split_skip_if_fits\": true` in the config\n(engine flag `--split-skip-if-fits`, with `--layer-split auto`) runs on the first card alone when it holds every\nprofiled expert plus the context's KV, the draft layer and the reserve, and says so in the log; otherwise the split\nstays. On an R9700 32 GB + RX 9070 XT the R9700 holds all of the Coder's experts: with the flag 4K prompts read at\n1,776 tok/s instead of 1,244 (split) and decode runs at ~60 tok/s instead of ~51 (16K prompts ~5% slower than split).\n\n**Short prompts on a split (0.1.32, #340).** 0.1.30 gave each card's prompt path a loan from its own expert cache,\nrefilled after every request; on cards that hold nearly all their experts that cost short prompts up to a third of\ntheir speed. 0.1.32 refills all cards at once, uses a smaller streaming ring on a split, and lets a card with free\nVRAM keep its own prompt buffers - the same output as 0.1.31, measured on an R9700 + RX 9070 XT: 2K prompts 993 ->\n1,265 tok/s, 16K 1,852 -> 1,950, decode unchanged. `STRATA_SPLIT_OWN=1` (opt-in) gives every card its own buffers:\n2K 1,450 and 16K 2,227 tok/s there, but a full card then keeps a different set of experts resident, so the output\ndiffers from the default's (stable and coherent); `STRATA_SPLIT_OWN=auto` does that only where the buffers are at\nmost 12% of each card's VRAM.\n\nThe engine flags behind it: `--layer-split K1[,K2..]|auto` and `--split-device D1[,D2..]` (the later stages'\ndevices; default the next visible ones). `--layer-split K --split-device 0` runs both stages on one card sharing\neverything - the bit-exact check of the hand-off, not a speed mode.\n\n**auto** tries every placement (all of them for two or three cards; proportional to the free VRAM beyond that) and\nkeeps the one whose caches would hold the most of the expert profile, hottest pairs weighted most; ties go to the\nplacement that leaves the fullest card the most room. The startup log prints the choice:",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01LJMY63YwK6dgNHX2SUtef3",
+            "type": "tool_result",
+            "content": "141 docs/MULTI_GPU.md\n# Strata on two or three GPUs (layer split)\n\nOne model can run across several NVIDIA cards in one PC. The layers are split into contiguous ranges, one per GPU:\nthe first card runs layers 0 to K-1, the next card runs K onward, and so on; the last card also runs the output head\nand the draft (MTP) layer. Each card keeps an expert cache for **its own layers only**, so two cards hold about twice\nthe experts one card holds - for the Coder model on a 16 GB + 24 GB pair, nearly all of them, which is where the\nspeed comes from (decode then barely touches the CPU pool).\n\nThis is pipeline (layer) parallelism, not tensor parallelism: a token crosses from one card to the next once per\nverify window (a few hundred KB through pinned RAM), not twice per layer. No NVLink or peer-to-peer access is\nneeded; cards on x4 or x1 slots work, and the PCIe share of each card is probed on its own link.\n\n## Using it\n\n**Nothing to type.** `START-HERE.bat` (Linux: `./setup.sh`) lists your NVIDIA cards and says for each one whether\nStrata can use it:\n\n```\n  Your NVIDIA GPUs:\n    GPU 0: NVIDIA GeForce RTX 5080, 16 GB VRAM - can be used\n    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\n    GPU 2: NVIDIA GeForce RTX 3090, 24 GB VRAM - can be used\n  ...\n  1) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) + GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) together   (recommended)\n  2) GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) only\n  3) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) only\nWhich GPUs? [1]:\n```\n\nWhen two or more cards can share the model, the two best together are recommended (the newest generation first:\nit becomes the main card). A model installed on one card asks once, at its next start, whether to use both from\nnow on; the answer is kept.\n\n**Choosing yourself** (at setup or at any start):\n\n```\n--gpus 0,2                 these cards together, as nvidia-smi numbers them; the first is the main one. Remembered.\n--gpus all                 every card that can share the model\n--gpu 0                    one card (at a start: for that start only)\n--layer-split auto         (default) or the first layer of each later card, e.g. 18 or 16,32\n```\n\n**Not supported** (setup says so and names the cards that can be used instead):\n- a card older than the RTX 20 series (compute capability below 7.5: GTX 10 and older);\n- a card with less than 8 GB of VRAM, together with others (each card holds a copy of the dense weights and its\n  own prompt buffers) - unless you name it with `--gpus`: then setup says the risk and asks (`--yes` with the named\n  cards goes ahead);\n- Intel GPUs, and a mix of NVIDIA and AMD cards. (AMD cards share a model among themselves: `./setup.sh --backend\n  hip --gpus 1,0`, see [AMD_HIP.md](AMD_HIP.md).)\n\nOr edit an existing config (`strata-*.json`), then restart:\n\n```json\n\"gpu\": [0, 2],\n\"layer_split\": \"auto\"\n```\n\n**Skip the split when the first card holds everything** (opt-in, 0.1.31): `\"split_skip_if_fits\": true` in the config\n(engine flag `--split-skip-if-fits`, with `--layer-split auto`) runs on the first card alone when it holds every\nprofiled expert plus the context's KV, the draft layer and the reserve, and says so in the log; otherwise the split\nstays. On an R9700 32 GB + RX 9070 XT the R9700 holds all of the Coder's experts: with the flag 4K prompts read at\n1,776 tok/s instead of 1,244 (split) and decode runs at ~60 tok/s instead of ~51 (16K prompts ~5% slower than split).\n\n**Short prompts on a split (0.1.32, #340).** 0.1.30 gave each card's prompt path a loan from its own expert cache,\nrefilled after every request; on cards that hold nearly all their experts that cost short prompts up to a third of\ntheir speed. 0.1.32 refills all cards at once, uses a smaller streaming ring on a split, and lets a card with free\nVRAM keep its own prompt buffers - the same output as 0.1.31, measured on an R9700 + RX 9070 XT: 2K prompts 993 ->\n1,265 tok/s, 16K 1,852 -> 1,950, decode unchanged. `STRATA_SPLIT_OWN=1` (opt-in) gives every card its own buffers:\n2K 1,450 and 16K 2,227 tok/s there, but a full card then keeps a different set of experts resident, so the output\ndiffers from the default's (stable and coherent); `STRATA_SPLIT_OWN=auto` does that only where the buffers are at\nmost 12% of each card's VRAM.\n\nThe engine flags behind it: `--layer-split K1[,K2..]|auto` and `--split-device D1[,D2..]` (the later stages'\ndevices; default the next visible ones). `--layer-split K --split-device 0` runs both stages on one card sharing\neverything - the bit-exact check of the hand-off, not a speed mode.\n\n**auto** tries every placement (all of them for two or three cards; proportional to the free VRAM beyond that) and\nkeeps the one whose caches would hold the most of the expert profile, hottest pairs weighted most; ties go to the\nplacement that leaves the fullest card the most room. The startup log prints the choice:",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "141 docs/MULTI_GPU.md\n# Strata on two or three GPUs (layer split)\n\nOne model can run across several NVIDIA cards in one PC. The layers are split into contiguous ranges, one per GPU:\nthe first card runs layers 0 to K-1, the next card runs K onward, and so on; the last card also runs the output head\nand the draft (MTP) layer. Each card keeps an expert cache for **its own layers only**, so two cards hold about twice\nthe experts one card holds - for the Coder model on a 16 GB + 24 GB pair, nearly all of them, which is where the\nspeed comes from (decode then barely touches the CPU pool).\n\nThis is pipeline (layer) parallelism, not tensor parallelism: a token crosses from one card to the next once per\nverify window (a few hundred KB through pinned RAM), not twice per layer. No NVLink or peer-to-peer access is\nneeded; cards on x4 or x1 slots work, and the PCIe share of each card is probed on its own link.\n\n## Using it\n\n**Nothing to type.** `START-HERE.bat` (Linux: `./setup.sh`) lists your NVIDIA cards and says for each one whether\nStrata can use it:\n\n```\n  Your NVIDIA GPUs:\n    GPU 0: NVIDIA GeForce RTX 5080, 16 GB VRAM - can be used\n    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\n    GPU 2: NVIDIA GeForce RTX 3090, 24 GB VRAM - can be used\n  ...\n  1) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) + GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) together   (recommended)\n  2) GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) only\n  3) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) only\nWhich GPUs? [1]:\n```\n\nWhen two or more cards can share the model, the two best together are recommended (the newest generation first:\nit becomes the main card). A model installed on one card asks once, at its next start, whether to use both from\nnow on; the answer is kept.\n\n**Choosing yourself** (at setup or at any start):\n\n```\n--gpus 0,2                 these cards together, as nvidia-smi numbers them; the first is the main one. Remembered.\n--gpus all                 every card that can share the model\n--gpu 0                    one card (at a start: for that start only)\n--layer-split auto         (default) or the first layer of each later card, e.g. 18 or 16,32\n```\n\n**Not supported** (setup says so and names the cards that can be used instead):\n- a card older than the RTX 20 series (compute capability below 7.5: GTX 10 and older);\n- a card with less than 8 GB of VRAM, together with others (each card holds a copy of the dense weights and its\n  own prompt buffers) - unless you name it with `--gpus`: then setup says the risk and asks (`--yes` with the named\n  cards goes ahead);\n- Intel GPUs, and a mix of NVIDIA and AMD cards. (AMD cards share a model among themselves: `./setup.sh --backend\n  hip --gpus 1,0`, see [AMD_HIP.md](AMD_HIP.md).)\n\nOr edit an existing config (`strata-*.json`), then restart:\n\n```json\n\"gpu\": [0, 2],\n\"layer_split\": \"auto\"\n```\n\n**Skip the split when the first card holds everything** (opt-in, 0.1.31): `\"split_skip_if_fits\": true` in the config\n(engine flag `--split-skip-if-fits`, with `--layer-split auto`) runs on the first card alone when it holds every\nprofiled expert plus the context's KV, the draft layer and the reserve, and says so in the log; otherwise the split\nstays. On an R9700 32 GB + RX 9070 XT the R9700 holds all of the Coder's experts: with the flag 4K prompts read at\n1,776 tok/s instead of 1,244 (split) and decode runs at ~60 tok/s instead of ~51 (16K prompts ~5% slower than split).\n\n**Short prompts on a split (0.1.32, #340).** 0.1.30 gave each card's prompt path a loan from its own expert cache,\nrefilled after every request; on cards that hold nearly all their experts that cost short prompts up to a third of\ntheir speed. 0.1.32 refills all cards at once, uses a smaller streaming ring on a split, and lets a card with free\nVRAM keep its own prompt buffers - the same output as 0.1.31, measured on an R9700 + RX 9070 XT: 2K prompts 993 ->\n1,265 tok/s, 16K 1,852 -> 1,950, decode unchanged. `STRATA_SPLIT_OWN=1` (opt-in) gives every card its own buffers:\n2K 1,450 and 16K 2,227 tok/s there, but a full card then keeps a different set of experts resident, so the output\ndiffers from the default's (stable and coherent); `STRATA_SPLIT_OWN=auto` does that only where the buffers are at\nmost 12% of each card's VRAM.\n\nThe engine flags behind it: `--layer-split K1[,K2..]|auto` and `--split-device D1[,D2..]` (the later stages'\ndevices; default the next visible ones). `--layer-split K --split-device 0` runs both stages on one card sharing\neverything - the bit-exact check of the hand-off, not a speed mode.\n\n**auto** tries every placement (all of them for two or three cards; proportional to the free VRAM beyond that) and\nkeeps the one whose caches would hold the most of the expert profile, hottest pairs weighted most; ties go to the\nplacement that leaves the fullest card the most room. The startup log prints the choice:",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01LJMY63YwK6dgNHX2SUtef3",
+            "type": "tool_result",
+            "content": "141 docs/MULTI_GPU.md\n# Strata on two or three GPUs (layer split)\n\nOne model can run across several NVIDIA cards in one PC. The layers are split into contiguous ranges, one per GPU:\nthe first card runs layers 0 to K-1, the next card runs K onward, and so on; the last card also runs the output head\nand the draft (MTP) layer. Each card keeps an expert cache for **its own layers only**, so two cards hold about twice\nthe experts one card holds - for the Coder model on a 16 GB + 24 GB pair, nearly all of them, which is where the\nspeed comes from (decode then barely touches the CPU pool).\n\nThis is pipeline (layer) parallelism, not tensor parallelism: a token crosses from one card to the next once per\nverify window (a few hundred KB through pinned RAM), not twice per layer. No NVLink or peer-to-peer access is\nneeded; cards on x4 or x1 slots work, and the PCIe share of each card is probed on its own link.\n\n## Using it\n\n**Nothing to type.** `START-HERE.bat` (Linux: `./setup.sh`) lists your NVIDIA cards and says for each one whether\nStrata can use it:\n\n```\n  Your NVIDIA GPUs:\n    GPU 0: NVIDIA GeForce RTX 5080, 16 GB VRAM - can be used\n    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\n    GPU 2: NVIDIA GeForce RTX 3090, 24 GB VRAM - can be used\n  ...\n  1) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) + GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) together   (recommended)\n  2) GPU 2 (NVIDIA GeForce RTX 3090, 24 GB) only\n  3) GPU 0 (NVIDIA GeForce RTX 5080, 16 GB) only\nWhich GPUs? [1]:\n```\n\nWhen two or more cards can share the model, the two best together are recommended (the newest generation first:\nit becomes the main card). A model installed on one card asks once, at its next start, whether to use both from\nnow on; the answer is kept.\n\n**Choosing yourself** (at setup or at any start):\n\n```\n--gpus 0,2                 these cards together, as nvidia-smi numbers them; the first is the main one. Remembered.\n--gpus all                 every card that can share the model\n--gpu 0                    one card (at a start: for that start only)\n--layer-split auto         (default) or the first layer of each later card, e.g. 18 or 16,32\n```\n\n**Not supported** (setup says so and names the cards that can be used instead):\n- a card older than the RTX 20 series (compute capability below 7.5: GTX 10 and older);\n- a card with less than 8 GB of VRAM, together with others (each card holds a copy of the dense weights and its\n  own prompt buffers) - unless you name it with `--gpus`: then setup says the risk and asks (`--yes` with the named\n  cards goes ahead);\n- Intel GPUs, and a mix of NVIDIA and AMD cards. (AMD cards share a model among themselves: `./setup.sh --backend\n  hip --gpus 1,0`, see [AMD_HIP.md](AMD_HIP.md).)\n\nOr edit an existing config (`strata-*.json`), then restart:\n\n```json\n\"gpu\": [0, 2],\n\"layer_split\": \"auto\"\n```\n\n**Skip the split when the first card holds everything** (opt-in, 0.1.31): `\"split_skip_if_fits\": true` in the config\n(engine flag `--split-skip-if-fits`, with `--layer-split auto`) runs on the first card alone when it holds every\nprofiled expert plus the context's KV, the draft layer and the reserve, and says so in the log; otherwise the split\nstays. On an R9700 32 GB + RX 9070 XT the R9700 holds all of the Coder's experts: with the flag 4K prompts read at\n1,776 tok/s instead of 1,244 (split) and decode runs at ~60 tok/s instead of ~51 (16K prompts ~5% slower than split).\n\n**Short prompts on a split (0.1.32, #340).** 0.1.30 gave each card's prompt path a loan from its own expert cache,\nrefilled after every request; on cards that hold nearly all their experts that cost short prompts up to a third of\ntheir speed. 0.1.32 refills all cards at once, uses a smaller streaming ring on a split, and lets a card with free\nVRAM keep its own prompt buffers - the same output as 0.1.31, measured on an R9700 + RX 9070 XT: 2K prompts 993 ->\n1,265 tok/s, 16K 1,852 -> 1,950, decode unchanged. `STRATA_SPLIT_OWN=1` (opt-in) gives every card its own buffers:\n2K 1,450 and 16K 2,227 tok/s there, but a full card then keeps a different set of experts resident, so the output\ndiffers from the default's (stable and coherent); `STRATA_SPLIT_OWN=auto` does that only where the buffers are at\nmost 12% of each card's VRAM.\n\nThe engine flags behind it: `--layer-split K1[,K2..]|auto` and `--split-device D1[,D2..]` (the later stages'\ndevices; default the next visible ones). `--layer-split K --split-device 0` runs both stages on one card sharing\neverything - the bit-exact check of the hand-off, not a speed mode.\n\n**auto** tries every placement (all of them for two or three cards; proportional to the free VRAM beyond that) and\nkeeps the one whose caches would hold the most of the expert profile, hottest pairs weighted most; ties go to the\nplacement that leaves the fullest card the most room. The startup log prints the choice:",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "wc -l docs/MULTI_GPU.md && sed -n 1,80p docs/MULTI_GPU.md",
+          "description": "Read the multi-GPU documentation"
+        }
+      }
+    },
+    {
+      "step_id": 322,
+      "timestamp": "2026-10-17T15:06:03.372Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01PvLt4Qh8u2LtYhfYyAiZ8p",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01PvLt4Qh8u2LtYhfYyAiZ8p",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "grep -rn -i \"pascal\\|turing\\|sm_75\\|sm_61\\|2080\\|P40\\|compute capability [0-9]\\|minimum.*arch\\|bf16.*sm_80\\|__CUDA_ARCH__ *< *800\\|__CUDA_ARCH__ >= 800\" docs/*.md CMakeLists.txt src include 2>/dev/null | grep -v \"^docs/3060M.md\" | head -30",
+            "description": "Search for architecture support statements"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01PvLt4Qh8u2LtYhfYyAiZ8p",
+            "content": "docs/MULTI_GPU.md:21:    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\ndocs/MULTI_GPU.md:107:    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\ndocs/MULTI_GPU.md:118:- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\ndocs/MULTI_GPU.md:119:  Turing card runs the same kernels instead of the tensor-core prompt attention.\ndocs/MULTI_GPU.md:139:- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\ninclude/strata/kernels/gr.hpp:28:/// Configure before creating/capturing a session, and do not mutate concurrently with gr_read.\ndocs/INSTALL.md:16:| **GPU** | **NVIDIA** RTX 20, 30, 40 or 50 series, **12 GB VRAM or more** (8 GB runs, slowly). Measured on an RTX 5070 and an RTX 3090; RTX 20 (Turing, since 0.1.27) was tested by a contributor on an RTX 2070. **AMD** Radeon RX 7900 XT / XTX, RX 9070 / 9070 XT and Radeon AI PRO R9700 (validated), RX 7800 XT / 7700 XT and RX 9060 XT (validated by their owners), RX 6800 / 6900 series (community-reported), with 12 GB of VRAM or more. See [AMD cards](#amd-cards). |\ninclude/strata/kernels/s2_expert_grouped.hpp:43:///                  resident without recapturing anything\nsrc/core/device_main.cpp:41:    //     arch gfx1201, 15.9 GiB, wave32          (CUDA: compute capability 12.0, 11.9 GiB)\nsrc/core/device.cu:170:    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\nsrc/core/device.cu:179:    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\nsrc/core/device.cu:183:    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\nCMakeLists.txt:76:  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\nCMakeLists.txt:82:    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\nCMakeLists.txt:84:    # Pre-sm_75 is refused.\nCMakeLists.txt:88:    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\nCMakeLists.txt:96:        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\nCMakeLists.txt:97:        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\nCMakeLists.txt:102:                          \"needs compute capability 6.0 (sm_60) or newer\")\nsrc/core/layer.cpp:1259:    // lived inside the stage-4 block and restructuring that left the function with no return at all.\nsrc/core/session.cpp:218:        // the CPU pool on what it published; `post` combines those experts with THIS layer's weights.  Capturing\nsrc/kernels/cuda/qsa_prompt_attn.cu:30:// The MMA below needs sm_75 or newer (Turing runs it as two k=8 steps); cp.async needs sm_80. Builds for pre-sm_75\nsrc/kernels/cuda/qsa_prompt_attn.cu:32:// there.  Turing compiles cp_async16 to a trap as well and takes the v1 kernel instead of launch_i8.\nsrc/kernels/cuda/qsa_prompt_attn.cu:35:#elif !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 800\nsrc/kernels/cuda/qsa_prompt_attn.cu:41:// m16n8k16 with f16 inputs needs sm_80.  Turing (sm_75) has m16n8k8 with the SAME A/B/C register mapping, so the\nsrc/kernels/cuda/qsa_prompt_attn.cu:48:    __trap();   // AMD and pre-Turing builds: no mma.sync (the host keeps the old kernel there)\nsrc/kernels/cuda/qsa_prompt_attn.cu:978:    bool turing = false;   // per call, from the CURRENT device (a layer split can mix Turing with newer cards)\nsrc/kernels/cuda/qsa_prompt_attn.cu:979:    {   // sm_75 or newer: the MMA above compiles for both.  sm_80+ runs the cp.async kernel (launch_i8); Turing has\nsrc/kernels/cuda/qsa_prompt_attn.cu:982:        // #371: the compute capability with its minor - sm_70 (V100) has no m16n8k8 (the kernels trap below sm_75)\nsrc/kernels/cuda/qsa_prompt_attn.cu:999:        turing = cc[dev] < 80;\n\n[stdout]\ndocs/MULTI_GPU.md:21:    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\ndocs/MULTI_GPU.md:107:    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\ndocs/MULTI_GPU.md:118:- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\ndocs/MULTI_GPU.md:119:  Turing card runs the same kernels instead of the tensor-core prompt attention.\ndocs/MULTI_GPU.md:139:- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\ninclude/strata/kernels/gr.hpp:28:/// Configure before creating/capturing a session, and do not mutate concurrently with gr_read.\ndocs/INSTALL.md:16:| **GPU** | **NVIDIA** RTX 20, 30, 40 or 50 series, **12 GB VRAM or more** (8 GB runs, slowly). Measured on an RTX 5070 and an RTX 3090; RTX 20 (Turing, since 0.1.27) was tested by a contributor on an RTX 2070. **AMD** Radeon RX 7900 XT / XTX, RX 9070 / 9070 XT and Radeon AI PRO R9700 (validated), RX 7800 XT / 7700 XT and RX 9060 XT (validated by their owners), RX 6800 / 6900 series (community-reported), with 12 GB of VRAM or more. See [AMD cards](#amd-cards). |\ninclude/strata/kernels/s2_expert_grouped.hpp:43:///                  resident without recapturing anything\nsrc/core/device_main.cpp:41:    //     arch gfx1201, 15.9 GiB, wave32          (CUDA: compute capability 12.0, 11.9 GiB)\nsrc/core/device.cu:170:    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\nsrc/core/device.cu:179:    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\nsrc/core/device.cu:183:    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\nCMakeLists.txt:76:  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\nCMakeLists.txt:82:    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\nCMakeLists.txt:84:    # Pre-sm_75 is refused.\nCMakeLists.txt:88:    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\nCMakeLists.txt:96:        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\nCMakeLists.txt:97:        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\nCMakeLists.txt:102:                          \"needs compute capability 6.0 (sm_60) or newer\")\nsrc/core/layer.cpp:1259:    // lived inside the stage-4 block and restructuring that left the function with no return at all.\nsrc/core/session.cpp:218:        // the CPU pool on what it published; `post` combines those experts with THIS layer's weights.  Capturing\nsrc/kernels/cuda/qsa_prompt_attn.cu:30:// The MMA below needs sm_75 or newer (Turing runs it as two k=8 steps); cp.async needs sm_80. Builds for pre-sm_75\nsrc/kernels/cuda/qsa_prompt_attn.cu:32:// there.  Turing compiles cp_async16 to a trap as well and takes the v1 kernel instead of launch_i8.\nsrc/kernels/cuda/qsa_prompt_attn.cu:35:#elif !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 800\nsrc/kernels/cuda/qsa_prompt_attn.cu:41:// m16n8k16 with f16 inputs needs sm_80.  Turing (sm_75) has m16n8k8 with the SAME A/B/C register mapping, so the\nsrc/kernels/cuda/qsa_prompt_attn.cu:48:    __trap();   // AMD and pre-Turing builds: no mma.sync (the host keeps the old kernel there)\nsrc/kernels/cuda/qsa_prompt_attn.cu:978:    bool turing = false;   // per call, from the CURRENT device (a layer split can mix Turing with newer cards)\nsrc/kernels/cuda/qsa_prompt_attn.cu:979:    {   // sm_75 or newer: the MMA above compiles for both.  sm_80+ runs the cp.async kernel (launch_i8); Turing has\nsrc/kernels/cuda/qsa_prompt_attn.cu:982:        // #371: the compute capability with its minor - sm_70 (V100) has no m16n8k8 (the kernels trap below sm_75)\nsrc/kernels/cuda/qsa_prompt_attn.cu:999:        turing = cc[dev] < 80;\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 256099,
+        "completion_tokens": 5368,
+        "cached_tokens": 256097,
+        "extra": {
+          "cache_creation_input_tokens": 369,
+          "cache_read_input_tokens": 256097,
+          "output_tokens_details": {
+            "thinking_tokens": 4592
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 369,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 5368,
+              "cache_read_input_tokens": 256097,
+              "cache_creation_input_tokens": 369,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 369
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "docs/MULTI_GPU.md:21:    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\ndocs/MULTI_GPU.md:107:    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\ndocs/MULTI_GPU.md:118:- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\ndocs/MULTI_GPU.md:119:  Turing card runs the same kernels instead of the tensor-core prompt attention.\ndocs/MULTI_GPU.md:139:- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\ninclude/strata/kernels/gr.hpp:28:/// Configure before creating/capturing a session, and do not mutate concurrently with gr_read.\ndocs/INSTALL.md:16:| **GPU** | **NVIDIA** RTX 20, 30, 40 or 50 series, **12 GB VRAM or more** (8 GB runs, slowly). Measured on an RTX 5070 and an RTX 3090; RTX 20 (Turing, since 0.1.27) was tested by a contributor on an RTX 2070. **AMD** Radeon RX 7900 XT / XTX, RX 9070 / 9070 XT and Radeon AI PRO R9700 (validated), RX 7800 XT / 7700 XT and RX 9060 XT (validated by their owners), RX 6800 / 6900 series (community-reported), with 12 GB of VRAM or more. See [AMD cards](#amd-cards). |\ninclude/strata/kernels/s2_expert_grouped.hpp:43:///                  resident without recapturing anything\nsrc/core/device_main.cpp:41:    //     arch gfx1201, 15.9 GiB, wave32          (CUDA: compute capability 12.0, 11.9 GiB)\nsrc/core/device.cu:170:    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\nsrc/core/device.cu:179:    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\nsrc/core/device.cu:183:    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\nCMakeLists.txt:76:  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\nCMakeLists.txt:82:    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\nCMakeLists.txt:84:    # Pre-sm_75 is refused.\nCMakeLists.txt:88:    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\nCMakeLists.txt:96:        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\nCMakeLists.txt:97:        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\nCMakeLists.txt:102:                          \"needs compute capability 6.0 (sm_60) or newer\")\nsrc/core/layer.cpp:1259:    // lived inside the stage-4 block and restructuring that left the function with no return at all.\nsrc/core/session.cpp:218:        // the CPU pool on what it published; `post` combines those experts with THIS layer's weights.  Capturing\nsrc/kernels/cuda/qsa_prompt_attn.cu:30:// The MMA below needs sm_75 or newer (Turing runs it as two k=8 steps); cp.async needs sm_80. Builds for pre-sm_75\nsrc/kernels/cuda/qsa_prompt_attn.cu:32:// there.  Turing compiles cp_async16 to a trap as well and takes the v1 kernel instead of launch_i8.\nsrc/kernels/cuda/qsa_prompt_attn.cu:35:#elif !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 800\nsrc/kernels/cuda/qsa_prompt_attn.cu:41:// m16n8k16 with f16 inputs needs sm_80.  Turing (sm_75) has m16n8k8 with the SAME A/B/C register mapping, so the\nsrc/kernels/cuda/qsa_prompt_attn.cu:48:    __trap();   // AMD and pre-Turing builds: no mma.sync (the host keeps the old kernel there)\nsrc/kernels/cuda/qsa_prompt_attn.cu:978:    bool turing = false;   // per call, from the CURRENT device (a layer split can mix Turing with newer cards)\nsrc/kernels/cuda/qsa_prompt_attn.cu:979:    {   // sm_75 or newer: the MMA above compiles for both.  sm_80+ runs the cp.async kernel (launch_i8); Turing has\nsrc/kernels/cuda/qsa_prompt_attn.cu:982:        // #371: the compute capability with its minor - sm_70 (V100) has no m16n8k8 (the kernels trap below sm_75)\nsrc/kernels/cuda/qsa_prompt_attn.cu:999:        turing = cc[dev] < 80;",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01PvLt4Qh8u2LtYhfYyAiZ8p",
+            "type": "tool_result",
+            "content": "docs/MULTI_GPU.md:21:    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\ndocs/MULTI_GPU.md:107:    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\ndocs/MULTI_GPU.md:118:- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\ndocs/MULTI_GPU.md:119:  Turing card runs the same kernels instead of the tensor-core prompt attention.\ndocs/MULTI_GPU.md:139:- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\ninclude/strata/kernels/gr.hpp:28:/// Configure before creating/capturing a session, and do not mutate concurrently with gr_read.\ndocs/INSTALL.md:16:| **GPU** | **NVIDIA** RTX 20, 30, 40 or 50 series, **12 GB VRAM or more** (8 GB runs, slowly). Measured on an RTX 5070 and an RTX 3090; RTX 20 (Turing, since 0.1.27) was tested by a contributor on an RTX 2070. **AMD** Radeon RX 7900 XT / XTX, RX 9070 / 9070 XT and Radeon AI PRO R9700 (validated), RX 7800 XT / 7700 XT and RX 9060 XT (validated by their owners), RX 6800 / 6900 series (community-reported), with 12 GB of VRAM or more. See [AMD cards](#amd-cards). |\ninclude/strata/kernels/s2_expert_grouped.hpp:43:///                  resident without recapturing anything\nsrc/core/device_main.cpp:41:    //     arch gfx1201, 15.9 GiB, wave32          (CUDA: compute capability 12.0, 11.9 GiB)\nsrc/core/device.cu:170:    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\nsrc/core/device.cu:179:    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\nsrc/core/device.cu:183:    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\nCMakeLists.txt:76:  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\nCMakeLists.txt:82:    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\nCMakeLists.txt:84:    # Pre-sm_75 is refused.\nCMakeLists.txt:88:    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\nCMakeLists.txt:96:        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\nCMakeLists.txt:97:        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\nCMakeLists.txt:102:                          \"needs compute capability 6.0 (sm_60) or newer\")\nsrc/core/layer.cpp:1259:    // lived inside the stage-4 block and restructuring that left the function with no return at all.\nsrc/core/session.cpp:218:        // the CPU pool on what it published; `post` combines those experts with THIS layer's weights.  Capturing\nsrc/kernels/cuda/qsa_prompt_attn.cu:30:// The MMA below needs sm_75 or newer (Turing runs it as two k=8 steps); cp.async needs sm_80. Builds for pre-sm_75\nsrc/kernels/cuda/qsa_prompt_attn.cu:32:// there.  Turing compiles cp_async16 to a trap as well and takes the v1 kernel instead of launch_i8.\nsrc/kernels/cuda/qsa_prompt_attn.cu:35:#elif !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 800\nsrc/kernels/cuda/qsa_prompt_attn.cu:41:// m16n8k16 with f16 inputs needs sm_80.  Turing (sm_75) has m16n8k8 with the SAME A/B/C register mapping, so the\nsrc/kernels/cuda/qsa_prompt_attn.cu:48:    __trap();   // AMD and pre-Turing builds: no mma.sync (the host keeps the old kernel there)\nsrc/kernels/cuda/qsa_prompt_attn.cu:978:    bool turing = false;   // per call, from the CURRENT device (a layer split can mix Turing with newer cards)\nsrc/kernels/cuda/qsa_prompt_attn.cu:979:    {   // sm_75 or newer: the MMA above compiles for both.  sm_80+ runs the cp.async kernel (launch_i8); Turing has\nsrc/kernels/cuda/qsa_prompt_attn.cu:982:        // #371: the compute capability with its minor - sm_70 (V100) has no m16n8k8 (the kernels trap below sm_75)\nsrc/kernels/cuda/qsa_prompt_attn.cu:999:        turing = cc[dev] < 80;",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "docs/MULTI_GPU.md:21:    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\ndocs/MULTI_GPU.md:107:    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\ndocs/MULTI_GPU.md:118:- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\ndocs/MULTI_GPU.md:119:  Turing card runs the same kernels instead of the tensor-core prompt attention.\ndocs/MULTI_GPU.md:139:- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\ninclude/strata/kernels/gr.hpp:28:/// Configure before creating/capturing a session, and do not mutate concurrently with gr_read.\ndocs/INSTALL.md:16:| **GPU** | **NVIDIA** RTX 20, 30, 40 or 50 series, **12 GB VRAM or more** (8 GB runs, slowly). Measured on an RTX 5070 and an RTX 3090; RTX 20 (Turing, since 0.1.27) was tested by a contributor on an RTX 2070. **AMD** Radeon RX 7900 XT / XTX, RX 9070 / 9070 XT and Radeon AI PRO R9700 (validated), RX 7800 XT / 7700 XT and RX 9060 XT (validated by their owners), RX 6800 / 6900 series (community-reported), with 12 GB of VRAM or more. See [AMD cards](#amd-cards). |\ninclude/strata/kernels/s2_expert_grouped.hpp:43:///                  resident without recapturing anything\nsrc/core/device_main.cpp:41:    //     arch gfx1201, 15.9 GiB, wave32          (CUDA: compute capability 12.0, 11.9 GiB)\nsrc/core/device.cu:170:    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\nsrc/core/device.cu:179:    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\nsrc/core/device.cu:183:    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\nCMakeLists.txt:76:  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\nCMakeLists.txt:82:    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\nCMakeLists.txt:84:    # Pre-sm_75 is refused.\nCMakeLists.txt:88:    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\nCMakeLists.txt:96:        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\nCMakeLists.txt:97:        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\nCMakeLists.txt:102:                          \"needs compute capability 6.0 (sm_60) or newer\")\nsrc/core/layer.cpp:1259:    // lived inside the stage-4 block and restructuring that left the function with no return at all.\nsrc/core/session.cpp:218:        // the CPU pool on what it published; `post` combines those experts with THIS layer's weights.  Capturing\nsrc/kernels/cuda/qsa_prompt_attn.cu:30:// The MMA below needs sm_75 or newer (Turing runs it as two k=8 steps); cp.async needs sm_80. Builds for pre-sm_75\nsrc/kernels/cuda/qsa_prompt_attn.cu:32:// there.  Turing compiles cp_async16 to a trap as well and takes the v1 kernel instead of launch_i8.\nsrc/kernels/cuda/qsa_prompt_attn.cu:35:#elif !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 800\nsrc/kernels/cuda/qsa_prompt_attn.cu:41:// m16n8k16 with f16 inputs needs sm_80.  Turing (sm_75) has m16n8k8 with the SAME A/B/C register mapping, so the\nsrc/kernels/cuda/qsa_prompt_attn.cu:48:    __trap();   // AMD and pre-Turing builds: no mma.sync (the host keeps the old kernel there)\nsrc/kernels/cuda/qsa_prompt_attn.cu:978:    bool turing = false;   // per call, from the CURRENT device (a layer split can mix Turing with newer cards)\nsrc/kernels/cuda/qsa_prompt_attn.cu:979:    {   // sm_75 or newer: the MMA above compiles for both.  sm_80+ runs the cp.async kernel (launch_i8); Turing has\nsrc/kernels/cuda/qsa_prompt_attn.cu:982:        // #371: the compute capability with its minor - sm_70 (V100) has no m16n8k8 (the kernels trap below sm_75)\nsrc/kernels/cuda/qsa_prompt_attn.cu:999:        turing = cc[dev] < 80;",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01PvLt4Qh8u2LtYhfYyAiZ8p",
+            "type": "tool_result",
+            "content": "docs/MULTI_GPU.md:21:    GPU 1: NVIDIA GeForce GTX 1080 Ti, 11 GB VRAM - not supported - older than the RTX 20 series (compute capability 6.1; Strata needs 7.5 or newer)\ndocs/MULTI_GPU.md:107:    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\ndocs/MULTI_GPU.md:118:- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\ndocs/MULTI_GPU.md:119:  Turing card runs the same kernels instead of the tensor-core prompt attention.\ndocs/MULTI_GPU.md:139:- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\ninclude/strata/kernels/gr.hpp:28:/// Configure before creating/capturing a session, and do not mutate concurrently with gr_read.\ndocs/INSTALL.md:16:| **GPU** | **NVIDIA** RTX 20, 30, 40 or 50 series, **12 GB VRAM or more** (8 GB runs, slowly). Measured on an RTX 5070 and an RTX 3090; RTX 20 (Turing, since 0.1.27) was tested by a contributor on an RTX 2070. **AMD** Radeon RX 7900 XT / XTX, RX 9070 / 9070 XT and Radeon AI PRO R9700 (validated), RX 7800 XT / 7700 XT and RX 9060 XT (validated by their owners), RX 6800 / 6900 series (community-reported), with 12 GB of VRAM or more. See [AMD cards](#amd-cards). |\ninclude/strata/kernels/s2_expert_grouped.hpp:43:///                  resident without recapturing anything\nsrc/core/device_main.cpp:41:    //     arch gfx1201, 15.9 GiB, wave32          (CUDA: compute capability 12.0, 11.9 GiB)\nsrc/core/device.cu:170:    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\nsrc/core/device.cu:179:    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\nsrc/core/device.cu:183:    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\nCMakeLists.txt:76:  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\nCMakeLists.txt:82:    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\nCMakeLists.txt:84:    # Pre-sm_75 is refused.\nCMakeLists.txt:88:    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\nCMakeLists.txt:96:        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\nCMakeLists.txt:97:        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\nCMakeLists.txt:102:                          \"needs compute capability 6.0 (sm_60) or newer\")\nsrc/core/layer.cpp:1259:    // lived inside the stage-4 block and restructuring that left the function with no return at all.\nsrc/core/session.cpp:218:        // the CPU pool on what it published; `post` combines those experts with THIS layer's weights.  Capturing\nsrc/kernels/cuda/qsa_prompt_attn.cu:30:// The MMA below needs sm_75 or newer (Turing runs it as two k=8 steps); cp.async needs sm_80. Builds for pre-sm_75\nsrc/kernels/cuda/qsa_prompt_attn.cu:32:// there.  Turing compiles cp_async16 to a trap as well and takes the v1 kernel instead of launch_i8.\nsrc/kernels/cuda/qsa_prompt_attn.cu:35:#elif !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 800\nsrc/kernels/cuda/qsa_prompt_attn.cu:41:// m16n8k16 with f16 inputs needs sm_80.  Turing (sm_75) has m16n8k8 with the SAME A/B/C register mapping, so the\nsrc/kernels/cuda/qsa_prompt_attn.cu:48:    __trap();   // AMD and pre-Turing builds: no mma.sync (the host keeps the old kernel there)\nsrc/kernels/cuda/qsa_prompt_attn.cu:978:    bool turing = false;   // per call, from the CURRENT device (a layer split can mix Turing with newer cards)\nsrc/kernels/cuda/qsa_prompt_attn.cu:979:    {   // sm_75 or newer: the MMA above compiles for both.  sm_80+ runs the cp.async kernel (launch_i8); Turing has\nsrc/kernels/cuda/qsa_prompt_attn.cu:982:        // #371: the compute capability with its minor - sm_70 (V100) has no m16n8k8 (the kernels trap below sm_75)\nsrc/kernels/cuda/qsa_prompt_attn.cu:999:        turing = cc[dev] < 80;",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "grep -rn -i \"pascal\\|turing\\|sm_75\\|sm_61\\|2080\\|P40\\|compute capability [0-9]\\|minimum.*arch\\|bf16.*sm_80\\|__CUDA_ARCH__ *< *800\\|__CUDA_ARCH__ >= 800\" docs/*.md CMakeLists.txt src include 2>/dev/null | grep -v \"^docs/3060M.md\" | head -30",
+          "description": "Search for architecture support statements"
+        }
+      }
+    },
+    {
+      "step_id": 323,
+      "timestamp": "2026-10-17T15:06:05.919Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01CH3M76vPz2y88ebybCHcVL",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01CH3M76vPz2y88ebybCHcVL",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "ls -la data/expert-profile*.bin; sed -n 1,40p tools/make_profile.py | grep -v \"^import\\|^$\" | head -30; sudo -n dmidecode -t slot 2>/dev/null | grep -E \"Designation|Type|Current Usage\" | head; lspci | grep -iE \"vga|3d|bridge\" | head",
+            "description": "Check expert profile format and PCIe slots"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01CH3M76vPz2y88ebybCHcVL",
+            "content": "-rw-rw-r-- 1 luwei luwei 196632 Oct  2 08:48 data/expert-profile.bin\n-rw-rw-r-- 1 luwei luwei  98328 Oct  2 08:48 data/expert-profile-coder.bin\n\"\"\"tools/make_profile.py - the expert-cache profile (`data/expert-profile.bin`): every (layer, expert) pair, ranked.\n`--expert-cache auto` fills the VRAM slots it can afford with the profile's pairs in order, so the ranking decides\nwhich experts start resident (the adaptive tier then swaps in what a conversation routes most).  A profile that\nranks fewer pairs than a card can hold caps the cache (issue #46: a 32 GB card stopped at 8,000 slots); this tool\nwrites one that ranks all 24,576.\nThe order: the base profile's ranking (default: the shipped data/expert-profile.bin), then the pairs your routing\ntraces used, most frequent first, then every pair still missing, interleaved across the layers.\n    python tools/make_profile.py [TRACE ...] [--base data/expert-profile.bin | --no-base] [--out PATH]\n                                 [--n-expert 256]      (a pruned model: GSQ-RCO Coder keeps 256 of 512)\nA routing trace comes from a one-shot engine run with `--dump-routing FILE` (a prompt typical of your use; the\nrouted experts of every layer and position are written).  Point the model config's `--expert-profile` at the result.\n\"\"\"\nfrom collections import defaultdict\nfrom pathlib import Path\nROOT = Path(__file__).resolve().parent.parent\nN_LAYER, N_EXPERT = 48, 512\nMAGIC, VERSION = b\"STRP\", 1\ndef read_profile(path, n_expert=N_EXPERT):\n    blob = Path(path).read_bytes()\n    if blob[:4] != MAGIC:\n        raise SystemExit(f\"{path}: not a Strata profile\")\n    ver, nl, ne, slots, n = struct.unpack_from(\"<5I\", blob, 4)\n    if (nl, ne) != (N_LAYER, n_expert):\n        raise SystemExit(f\"{path}: {nl}x{ne}, not {N_LAYER}x{n_expert}\")\n    return [struct.unpack_from(\"<HH\", blob, 24 + 4 * i) for i in range(n)]\ndef read_trace(path, n_expert=N_EXPERT):\n    \"\"\"(layer, k, k expert ids, k weights) records, as `--dump-routing` writes them.\"\"\"\n    blob = Path(path).read_bytes()\n    off, freq = 0, defaultdict(int)\n00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14d8\n00:01.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:01.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:01.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:04.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14dd\n\n[stdout]\n-rw-rw-r-- 1 luwei luwei 196632 Oct  2 08:48 data/expert-profile.bin\n-rw-rw-r-- 1 luwei luwei  98328 Oct  2 08:48 data/expert-profile-coder.bin\n\"\"\"tools/make_profile.py - the expert-cache profile (`data/expert-profile.bin`): every (layer, expert) pair, ranked.\n`--expert-cache auto` fills the VRAM slots it can afford with the profile's pairs in order, so the ranking decides\nwhich experts start resident (the adaptive tier then swaps in what a conversation routes most).  A profile that\nranks fewer pairs than a card can hold caps the cache (issue #46: a 32 GB card stopped at 8,000 slots); this tool\nwrites one that ranks all 24,576.\nThe order: the base profile's ranking (default: the shipped data/expert-profile.bin), then the pairs your routing\ntraces used, most frequent first, then every pair still missing, interleaved across the layers.\n    python tools/make_profile.py [TRACE ...] [--base data/expert-profile.bin | --no-base] [--out PATH]\n                                 [--n-expert 256]      (a pruned model: GSQ-RCO Coder keeps 256 of 512)\nA routing trace comes from a one-shot engine run with `--dump-routing FILE` (a prompt typical of your use; the\nrouted experts of every layer and position are written).  Point the model config's `--expert-profile` at the result.\n\"\"\"\nfrom collections import defaultdict\nfrom pathlib import Path\nROOT = Path(__file__).resolve().parent.parent\nN_LAYER, N_EXPERT = 48, 512\nMAGIC, VERSION = b\"STRP\", 1\ndef read_profile(path, n_expert=N_EXPERT):\n    blob = Path(path).read_bytes()\n    if blob[:4] != MAGIC:\n        raise SystemExit(f\"{path}: not a Strata profile\")\n    ver, nl, ne, slots, n = struct.unpack_from(\"<5I\", blob, 4)\n    if (nl, ne) != (N_LAYER, n_expert):\n        raise SystemExit(f\"{path}: {nl}x{ne}, not {N_LAYER}x{n_expert}\")\n    return [struct.unpack_from(\"<HH\", blob, 24 + 4 * i) for i in range(n)]\ndef read_trace(path, n_expert=N_EXPERT):\n    \"\"\"(layer, k, k expert ids, k weights) records, as `--dump-routing` writes them.\"\"\"\n    blob = Path(path).read_bytes()\n    off, freq = 0, defaultdict(int)\n00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14d8\n00:01.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:01.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:01.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:04.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14dd\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 256099,
+        "completion_tokens": 5368,
+        "cached_tokens": 256097,
+        "extra": {
+          "cache_creation_input_tokens": 369,
+          "cache_read_input_tokens": 256097,
+          "output_tokens_details": {
+            "thinking_tokens": 4592
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 369,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 5368,
+              "cache_read_input_tokens": 256097,
+              "cache_creation_input_tokens": 369,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 369
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "-rw-rw-r-- 1 luwei luwei 196632 Oct  2 08:48 data/expert-profile.bin\n-rw-rw-r-- 1 luwei luwei  98328 Oct  2 08:48 data/expert-profile-coder.bin\n\"\"\"tools/make_profile.py - the expert-cache profile (`data/expert-profile.bin`): every (layer, expert) pair, ranked.\n`--expert-cache auto` fills the VRAM slots it can afford with the profile's pairs in order, so the ranking decides\nwhich experts start resident (the adaptive tier then swaps in what a conversation routes most).  A profile that\nranks fewer pairs than a card can hold caps the cache (issue #46: a 32 GB card stopped at 8,000 slots); this tool\nwrites one that ranks all 24,576.\nThe order: the base profile's ranking (default: the shipped data/expert-profile.bin), then the pairs your routing\ntraces used, most frequent first, then every pair still missing, interleaved across the layers.\n    python tools/make_profile.py [TRACE ...] [--base data/expert-profile.bin | --no-base] [--out PATH]\n                                 [--n-expert 256]      (a pruned model: GSQ-RCO Coder keeps 256 of 512)\nA routing trace comes from a one-shot engine run with `--dump-routing FILE` (a prompt typical of your use; the\nrouted experts of every layer and position are written).  Point the model config's `--expert-profile` at the result.\n\"\"\"\nfrom collections import defaultdict\nfrom pathlib import Path\nROOT = Path(__file__).resolve().parent.parent\nN_LAYER, N_EXPERT = 48, 512\nMAGIC, VERSION = b\"STRP\", 1\ndef read_profile(path, n_expert=N_EXPERT):\n    blob = Path(path).read_bytes()\n    if blob[:4] != MAGIC:\n        raise SystemExit(f\"{path}: not a Strata profile\")\n    ver, nl, ne, slots, n = struct.unpack_from(\"<5I\", blob, 4)\n    if (nl, ne) != (N_LAYER, n_expert):\n        raise SystemExit(f\"{path}: {nl}x{ne}, not {N_LAYER}x{n_expert}\")\n    return [struct.unpack_from(\"<HH\", blob, 24 + 4 * i) for i in range(n)]\ndef read_trace(path, n_expert=N_EXPERT):\n    \"\"\"(layer, k, k expert ids, k weights) records, as `--dump-routing` writes them.\"\"\"\n    blob = Path(path).read_bytes()\n    off, freq = 0, defaultdict(int)\n00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14d8\n00:01.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:01.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:01.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:04.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14dd",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01CH3M76vPz2y88ebybCHcVL",
+            "type": "tool_result",
+            "content": "-rw-rw-r-- 1 luwei luwei 196632 Oct  2 08:48 data/expert-profile.bin\n-rw-rw-r-- 1 luwei luwei  98328 Oct  2 08:48 data/expert-profile-coder.bin\n\"\"\"tools/make_profile.py - the expert-cache profile (`data/expert-profile.bin`): every (layer, expert) pair, ranked.\n`--expert-cache auto` fills the VRAM slots it can afford with the profile's pairs in order, so the ranking decides\nwhich experts start resident (the adaptive tier then swaps in what a conversation routes most).  A profile that\nranks fewer pairs than a card can hold caps the cache (issue #46: a 32 GB card stopped at 8,000 slots); this tool\nwrites one that ranks all 24,576.\nThe order: the base profile's ranking (default: the shipped data/expert-profile.bin), then the pairs your routing\ntraces used, most frequent first, then every pair still missing, interleaved across the layers.\n    python tools/make_profile.py [TRACE ...] [--base data/expert-profile.bin | --no-base] [--out PATH]\n                                 [--n-expert 256]      (a pruned model: GSQ-RCO Coder keeps 256 of 512)\nA routing trace comes from a one-shot engine run with `--dump-routing FILE` (a prompt typical of your use; the\nrouted experts of every layer and position are written).  Point the model config's `--expert-profile` at the result.\n\"\"\"\nfrom collections import defaultdict\nfrom pathlib import Path\nROOT = Path(__file__).resolve().parent.parent\nN_LAYER, N_EXPERT = 48, 512\nMAGIC, VERSION = b\"STRP\", 1\ndef read_profile(path, n_expert=N_EXPERT):\n    blob = Path(path).read_bytes()\n    if blob[:4] != MAGIC:\n        raise SystemExit(f\"{path}: not a Strata profile\")\n    ver, nl, ne, slots, n = struct.unpack_from(\"<5I\", blob, 4)\n    if (nl, ne) != (N_LAYER, n_expert):\n        raise SystemExit(f\"{path}: {nl}x{ne}, not {N_LAYER}x{n_expert}\")\n    return [struct.unpack_from(\"<HH\", blob, 24 + 4 * i) for i in range(n)]\ndef read_trace(path, n_expert=N_EXPERT):\n    \"\"\"(layer, k, k expert ids, k weights) records, as `--dump-routing` writes them.\"\"\"\n    blob = Path(path).read_bytes()\n    off, freq = 0, defaultdict(int)\n00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14d8\n00:01.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:01.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:01.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:04.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14dd",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "-rw-rw-r-- 1 luwei luwei 196632 Oct  2 08:48 data/expert-profile.bin\n-rw-rw-r-- 1 luwei luwei  98328 Oct  2 08:48 data/expert-profile-coder.bin\n\"\"\"tools/make_profile.py - the expert-cache profile (`data/expert-profile.bin`): every (layer, expert) pair, ranked.\n`--expert-cache auto` fills the VRAM slots it can afford with the profile's pairs in order, so the ranking decides\nwhich experts start resident (the adaptive tier then swaps in what a conversation routes most).  A profile that\nranks fewer pairs than a card can hold caps the cache (issue #46: a 32 GB card stopped at 8,000 slots); this tool\nwrites one that ranks all 24,576.\nThe order: the base profile's ranking (default: the shipped data/expert-profile.bin), then the pairs your routing\ntraces used, most frequent first, then every pair still missing, interleaved across the layers.\n    python tools/make_profile.py [TRACE ...] [--base data/expert-profile.bin | --no-base] [--out PATH]\n                                 [--n-expert 256]      (a pruned model: GSQ-RCO Coder keeps 256 of 512)\nA routing trace comes from a one-shot engine run with `--dump-routing FILE` (a prompt typical of your use; the\nrouted experts of every layer and position are written).  Point the model config's `--expert-profile` at the result.\n\"\"\"\nfrom collections import defaultdict\nfrom pathlib import Path\nROOT = Path(__file__).resolve().parent.parent\nN_LAYER, N_EXPERT = 48, 512\nMAGIC, VERSION = b\"STRP\", 1\ndef read_profile(path, n_expert=N_EXPERT):\n    blob = Path(path).read_bytes()\n    if blob[:4] != MAGIC:\n        raise SystemExit(f\"{path}: not a Strata profile\")\n    ver, nl, ne, slots, n = struct.unpack_from(\"<5I\", blob, 4)\n    if (nl, ne) != (N_LAYER, n_expert):\n        raise SystemExit(f\"{path}: {nl}x{ne}, not {N_LAYER}x{n_expert}\")\n    return [struct.unpack_from(\"<HH\", blob, 24 + 4 * i) for i in range(n)]\ndef read_trace(path, n_expert=N_EXPERT):\n    \"\"\"(layer, k, k expert ids, k weights) records, as `--dump-routing` writes them.\"\"\"\n    blob = Path(path).read_bytes()\n    off, freq = 0, defaultdict(int)\n00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14d8\n00:01.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:01.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:01.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:04.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14dd",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01CH3M76vPz2y88ebybCHcVL",
+            "type": "tool_result",
+            "content": "-rw-rw-r-- 1 luwei luwei 196632 Oct  2 08:48 data/expert-profile.bin\n-rw-rw-r-- 1 luwei luwei  98328 Oct  2 08:48 data/expert-profile-coder.bin\n\"\"\"tools/make_profile.py - the expert-cache profile (`data/expert-profile.bin`): every (layer, expert) pair, ranked.\n`--expert-cache auto` fills the VRAM slots it can afford with the profile's pairs in order, so the ranking decides\nwhich experts start resident (the adaptive tier then swaps in what a conversation routes most).  A profile that\nranks fewer pairs than a card can hold caps the cache (issue #46: a 32 GB card stopped at 8,000 slots); this tool\nwrites one that ranks all 24,576.\nThe order: the base profile's ranking (default: the shipped data/expert-profile.bin), then the pairs your routing\ntraces used, most frequent first, then every pair still missing, interleaved across the layers.\n    python tools/make_profile.py [TRACE ...] [--base data/expert-profile.bin | --no-base] [--out PATH]\n                                 [--n-expert 256]      (a pruned model: GSQ-RCO Coder keeps 256 of 512)\nA routing trace comes from a one-shot engine run with `--dump-routing FILE` (a prompt typical of your use; the\nrouted experts of every layer and position are written).  Point the model config's `--expert-profile` at the result.\n\"\"\"\nfrom collections import defaultdict\nfrom pathlib import Path\nROOT = Path(__file__).resolve().parent.parent\nN_LAYER, N_EXPERT = 48, 512\nMAGIC, VERSION = b\"STRP\", 1\ndef read_profile(path, n_expert=N_EXPERT):\n    blob = Path(path).read_bytes()\n    if blob[:4] != MAGIC:\n        raise SystemExit(f\"{path}: not a Strata profile\")\n    ver, nl, ne, slots, n = struct.unpack_from(\"<5I\", blob, 4)\n    if (nl, ne) != (N_LAYER, n_expert):\n        raise SystemExit(f\"{path}: {nl}x{ne}, not {N_LAYER}x{n_expert}\")\n    return [struct.unpack_from(\"<HH\", blob, 24 + 4 * i) for i in range(n)]\ndef read_trace(path, n_expert=N_EXPERT):\n    \"\"\"(layer, k, k expert ids, k weights) records, as `--dump-routing` writes them.\"\"\"\n    blob = Path(path).read_bytes()\n    off, freq = 0, defaultdict(int)\n00:00.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14d8\n00:01.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:01.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:01.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:02.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:03.2 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14db\n00:04.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.0 Host bridge: Advanced Micro Devices, Inc. [AMD] Device 14da\n00:08.1 PCI bridge: Advanced Micro Devices, Inc. [AMD] Device 14dd",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "ls -la data/expert-profile*.bin; sed -n 1,40p tools/make_profile.py | grep -v \"^import\\|^$\" | head -30; sudo -n dmidecode -t slot 2>/dev/null | grep -E \"Designation|Type|Current Usage\" | head; lspci | grep -iE \"vga|3d|bridge\" | head",
+          "description": "Check expert profile format and PCIe slots"
+        }
+      }
+    },
+    {
+      "step_id": 324,
+      "timestamp": "2026-10-17T15:06:12.532Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 256468,
+        "completion_tokens": 412,
+        "cached_tokens": 256466,
+        "extra": {
+          "cache_creation_input_tokens": 10822,
+          "cache_read_input_tokens": 256466,
+          "output_tokens_details": {
+            "thinking_tokens": 251
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 10822,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 412,
+              "cache_read_input_tokens": 256466,
+              "cache_creation_input_tokens": 10822,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 10822
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 325,
+      "timestamp": "2026-10-17T15:06:12.537Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "The 2080 Ti meets Strata's sm_75+ requirement, while the P40 (sm_61) would need the experimental SM60 build—I'll verify that build covers sm_61 and keep reading the multi-GPU doc for its 2080 Ti benchmark details.",
+      "metrics": {
+        "prompt_tokens": 256468,
+        "completion_tokens": 412,
+        "cached_tokens": 256466,
+        "extra": {
+          "cache_creation_input_tokens": 10822,
+          "cache_read_input_tokens": 256466,
+          "output_tokens_details": {
+            "thinking_tokens": 251
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 10822,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 412,
+              "cache_read_input_tokens": 256466,
+              "cache_creation_input_tokens": 10822,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 10822
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 326,
+      "timestamp": "2026-10-17T15:06:12.538Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01Bwb7D4DqpE6X1E2HrzRkaQ",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01Bwb7D4DqpE6X1E2HrzRkaQ",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "sed -n 76,103p CMakeLists.txt; sed -n 165,195p src/core/device.cu; sed -n 80,141p docs/MULTI_GPU.md",
+            "description": "Read SM60 build rules and multi-GPU measurements"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01Bwb7D4DqpE6X1E2HrzRkaQ",
+            "content": "option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\n  if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)\n    set(CMAKE_CUDA_ARCHITECTURES 120 CACHE STRING \"CUDA architectures\" FORCE)\n  endif()\n  foreach(_a IN LISTS CMAKE_CUDA_ARCHITECTURES)\n    string(REGEX REPLACE \"-.*$\" \"\" _base \"${_a}\")     # 120-real / 120-virtual are still 120\n    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\n    # portable fp32-FMA fallback, so RTX 20 (75), 30 (86), RTX 40 (89) and RTX 50 (120) build too.\n    # Pre-sm_75 is refused.\n    if(_base STREQUAL \"native\" OR _base STREQUAL \"all\" OR _base STREQUAL \"all-major\")\n      continue()\n    endif()\n    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\n    # These sit below every architecture the kernels were written for, so two intrinsics are replaced below\n    # their arch - `__dp4a` (6.1+) and `__nanosleep` (7.0+) - in include/strata/kernels/dp4a.hpp, which is\n    # bit-exact for the first and merely a shorter pause for the second (sm_70 has both).  Community-tested,\n    # not in the ready-made engine; RTX 20/30/40/50 cards must use the release engine instead.  It needs a CUDA\n    # 12.x toolkit: CUDA 13 dropped sm_60 and sm_70 (nvcc fails CMake's compiler test with \"compute_70\").\n    if(_base LESS 75 AND NOT STRATA_EXPERIMENTAL_SM60)\n      message(FATAL_ERROR\n        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\n        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\n        \"-DSTRATA_EXPERIMENTAL_SM60=ON; upstream does not support it.)\")\n    endif()\n    if(_base LESS 60)\n      message(FATAL_ERROR \"CMAKE_CUDA_ARCHITECTURES '${CMAKE_CUDA_ARCHITECTURES}': even the experimental build \"\n                          \"needs compute capability 6.0 (sm_60) or newer\")\n    endif()\n    d.total_bytes = total_b;\n\n    check(cudaDriverGetVersion(&d.driver_version), \"cudaDriverGetVersion\");\n    check(cudaRuntimeGetVersion(&d.runtime_version), \"cudaRuntimeGetVersion\");\n\n    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\n    // fp32-FMA fallback below sm_80, the tensor-core prompt kernels refuse and fall back).  Compiling for a\n    // supported arch is enforced by CMake; RUNNING on an older card is caught here, because a binary can be carried\n    // to a machine with an older card and would otherwise silently take whatever path the driver chose.  The HIP\n    // backend checks the card against the architectures the binary was compiled for (and wave32).\n#if defined(STRATA_USE_HIP)\n    d.arch = base_arch(p.gcnArchName);\n    if (const std::string why = arch_problem(p, ordinal); !why.empty()) throw CudaError(why, -1);\n#else\n    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\n    // was built for - refusing them below 7.5 there made the flag useless; the release engine keeps 7.5\n#if defined(STRATA_EXPERIMENTAL_SM60)\n    constexpr int kMinCc = 60;\n    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\n#else\n    constexpr int kMinCc = 75;\n    const char* const kNeed = \"7.5 or newer (RTX 20 / 30 / 40 / 50 series)\";\n#endif\n    if (d.cc_major * 10 + d.cc_minor < kMinCc) {\n        throw CudaError(\"device \" + d.name + \" reports compute capability \" + std::to_string(d.cc_major) +\n                            \".\" + std::to_string(d.cc_minor) + \"; Strata needs compute capability \" + kNeed,\n                        -1);\n    }\n#endif\n    return d;\n}\n\n```\nstrata generate: layer split auto: K=19 - the caches hold 11767 of 12288 profiled pairs (fullest device 100%)\nstrata serve: layer split: layers 0-18 (CUDA0), 19-47 (CUDA1), one hand-off per window\n```\n\n## What each card holds\n\n- **every card**: a copy of the dense weights (~3.4 GB for the Coder), its own session state (the KV cache of the full\n  context), its verify window and its prompt-path buffers, and an expert cache for its layers filled from the profile;\n- **the last card**: also the output head and the draft layer (~0.8 GB);\n- **host RAM**: the expert arena once, shared by all cards (the CPU pool computes whatever no card holds).\n\nPrompts are read in chunks that flow through the cards in turn; while a later card reads chunk c, the first card\nalready reads chunk c+1. Conversation checkpoints save and restore every card's state; the adaptive expert swaps copy\ninto the card that owns the layer.\n\n## Limits (for now)\n\n- **Works across cards** (bench/results/2026-09-29-layer-split-limits):\n  - images (`--vision`): each card keeps its own image-position table;\n  - control vectors and the experimental speed projection: each card holds the vector's tables, switched on and\n    off per request on all of them;\n  - KV streaming (`--kv-resident`): each card streams the KV of its own session;\n  - mid-prompt checkpoints (`--prompt-cache-every`): each card saves its part of a checkpoint when it has read that\n    chunk;\n  - the older helper-GPU caches (`--expert-cache-remote`, docs/SECOND_GPU.md): they take the visible GPUs no stage\n    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\n    as it did without a split: its per-layer round trip costs more than the CPU pool needs for those experts.\n- `--mmap-experts` needs a canonical pack (`experts.bin`), with or without a split; a native (IQ) pack says so at\n  start.\n- The prompt path has its own buffers on every card (1.5 GB each at the default 2048-token chunk; `--prefill 1024`\n  halves that) instead of borrowing cache slots as one card does. An explicit `--expert-cache` on the first card is\n  capped to leave room for them.\n- Under WDDM (Windows, and WSL2) only 8 GiB of the expert arena is pinned (more, mapped into two GPU contexts,\n  leaves WDDM refusing allocations); the rest streams through the pinned staging ring. A Linux driver has no such\n  limit, so there the whole arena is pinned (since 0.1.31; the cap cost a 4090 + 3060 split two thirds of its\n  prompt speed, #253). `STRATA_ARENA_PIN_GIB=N` pins at most N GiB, `0` the whole arena, on any OS.\n- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\n  Turing card runs the same kernels instead of the tensor-core prompt attention.\n\n## Measured\n\nThe Coder on an RTX 5080 + RTX 3090 (Ryzen 9 9950X3D), 32K context; details in\n`bench/results/2026-09-29-layer-split/`:\n\n| | Prompt 16K / 28K tok/s | Decode story / code tok/s |\n|---|---|---|\n| 5080 alone | 1,726-2,017 / 1,970 | 83-87 / 88-105 |\n| 5080 + 3090, best split (K=26) | 2,039 / 2,357 | 84 / 110 |\n| 5080 + 3090, auto (K=22) | 2,037 / 2,073 | 80 / 109 |\n\n- **Prompts gain the most** (+18-20%): each card reads its own layers of the chunk while the other reads the next.\n- **Decode is on par with the faster card alone**, and ahead on code. Once both caches hold nearly every routed\n  expert, the per-layer GPU time decides.\n- **Correctness:** one GPU is byte-identical to 0.1.20, and the hand-off itself is bit-exact.\n\n**Which cards and in what order:**\n- Put the fastest card first; auto gives it as many layers as its cache allows.\n- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\n  3090 pair slower (68 / 90 tok/s decode): every extra card costs its own round per window.\n- More cards pay off when the model's routed experts do not fit the faster ones.\n\n[stdout]\n  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\n  if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)\n    set(CMAKE_CUDA_ARCHITECTURES 120 CACHE STRING \"CUDA architectures\" FORCE)\n  endif()\n  foreach(_a IN LISTS CMAKE_CUDA_ARCHITECTURES)\n    string(REGEX REPLACE \"-.*$\" \"\" _base \"${_a}\")     # 120-real / 120-virtual are still 120\n    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\n    # portable fp32-FMA fallback, so RTX 20 (75), 30 (86), RTX 40 (89) and RTX 50 (120) build too.\n    # Pre-sm_75 is refused.\n    if(_base STREQUAL \"native\" OR _base STREQUAL \"all\" OR _base STREQUAL \"all-major\")\n      continue()\n    endif()\n    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\n    # These sit below every architecture the kernels were written for, so two intrinsics are replaced below\n    # their arch - `__dp4a` (6.1+) and `__nanosleep` (7.0+) - in include/strata/kernels/dp4a.hpp, which is\n    # bit-exact for the first and merely a shorter pause for the second (sm_70 has both).  Community-tested,\n    # not in the ready-made engine; RTX 20/30/40/50 cards must use the release engine instead.  It needs a CUDA\n    # 12.x toolkit: CUDA 13 dropped sm_60 and sm_70 (nvcc fails CMake's compiler test with \"compute_70\").\n    if(_base LESS 75 AND NOT STRATA_EXPERIMENTAL_SM60)\n      message(FATAL_ERROR\n        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\n        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\n        \"-DSTRATA_EXPERIMENTAL_SM60=ON; upstream does not support it.)\")\n    endif()\n    if(_base LESS 60)\n      message(FATAL_ERROR \"CMAKE_CUDA_ARCHITECTURES '${CMAKE_CUDA_ARCHITECTURES}': even the experimental build \"\n                          \"needs compute capability 6.0 (sm_60) or newer\")\n    endif()\n    d.total_bytes = total_b;\n\n    check(cudaDriverGetVersion(&d.driver_version), \"cudaDriverGetVersion\");\n    check(cudaRuntimeGetVersion(&d.runtime_version), \"cudaRuntimeGetVersion\");\n\n    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\n    // fp32-FMA fallback below sm_80, the tensor-core prompt kernels refuse and fall back).  Compiling for a\n    // supported arch is enforced by CMake; RUNNING on an older card is caught here, because a binary can be carried\n    // to a machine with an older card and would otherwise silently take whatever path the driver chose.  The HIP\n    // backend checks the card against the architectures the binary was compiled for (and wave32).\n#if defined(STRATA_USE_HIP)\n    d.arch = base_arch(p.gcnArchName);\n    if (const std::string why = arch_problem(p, ordinal); !why.empty()) throw CudaError(why, -1);\n#else\n    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\n    // was built for - refusing them below 7.5 there made the flag useless; the release engine keeps 7.5\n#if defined(STRATA_EXPERIMENTAL_SM60)\n    constexpr int kMinCc = 60;\n    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\n#else\n    constexpr int kMinCc = 75;\n    const char* const kNeed = \"7.5 or newer (RTX 20 / 30 / 40 / 50 series)\";\n#endif\n    if (d.cc_major * 10 + d.cc_minor < kMinCc) {\n        throw CudaError(\"device \" + d.name + \" reports compute capability \" + std::to_string(d.cc_major) +\n                            \".\" + std::to_string(d.cc_minor) + \"; Strata needs compute capability \" + kNeed,\n                        -1);\n    }\n#endif\n    return d;\n}\n\n```\nstrata generate: layer split auto: K=19 - the caches hold 11767 of 12288 profiled pairs (fullest device 100%)\nstrata serve: layer split: layers 0-18 (CUDA0), 19-47 (CUDA1), one hand-off per window\n```\n\n## What each card holds\n\n- **every card**: a copy of the dense weights (~3.4 GB for the Coder), its own session state (the KV cache of the full\n  context), its verify window and its prompt-path buffers, and an expert cache for its layers filled from the profile;\n- **the last card**: also the output head and the draft layer (~0.8 GB);\n- **host RAM**: the expert arena once, shared by all cards (the CPU pool computes whatever no card holds).\n\nPrompts are read in chunks that flow through the cards in turn; while a later card reads chunk c, the first card\nalready reads chunk c+1. Conversation checkpoints save and restore every card's state; the adaptive expert swaps copy\ninto the card that owns the layer.\n\n## Limits (for now)\n\n- **Works across cards** (bench/results/2026-09-29-layer-split-limits):\n  - images (`--vision`): each card keeps its own image-position table;\n  - control vectors and the experimental speed projection: each card holds the vector's tables, switched on and\n    off per request on all of them;\n  - KV streaming (`--kv-resident`): each card streams the KV of its own session;\n  - mid-prompt checkpoints (`--prompt-cache-every`): each card saves its part of a checkpoint when it has read that\n    chunk;\n  - the older helper-GPU caches (`--expert-cache-remote`, docs/SECOND_GPU.md): they take the visible GPUs no stage\n    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\n    as it did without a split: its per-layer round trip costs more than the CPU pool needs for those experts.\n- `--mmap-experts` needs a canonical pack (`experts.bin`), with or without a split; a native (IQ) pack says so at\n  start.\n- The prompt path has its own buffers on every card (1.5 GB each at the default 2048-token chunk; `--prefill 1024`\n  halves that) instead of borrowing cache slots as one card does. An explicit `--expert-cache` on the first card is\n  capped to leave room for them.\n- Under WDDM (Windows, and WSL2) only 8 GiB of the expert arena is pinned (more, mapped into two GPU contexts,\n  leaves WDDM refusing allocations); the rest streams through the pinned staging ring. A Linux driver has no such\n  limit, so there the whole arena is pinned (since 0.1.31; the cap cost a 4090 + 3060 split two thirds of its\n  prompt speed, #253). `STRATA_ARENA_PIN_GIB=N` pins at most N GiB, `0` the whole arena, on any OS.\n- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\n  Turing card runs the same kernels instead of the tensor-core prompt attention.\n\n## Measured\n\nThe Coder on an RTX 5080 + RTX 3090 (Ryzen 9 9950X3D), 32K context; details in\n`bench/results/2026-09-29-layer-split/`:\n\n| | Prompt 16K / 28K tok/s | Decode story / code tok/s |\n|---|---|---|\n| 5080 alone | 1,726-2,017 / 1,970 | 83-87 / 88-105 |\n| 5080 + 3090, best split (K=26) | 2,039 / 2,357 | 84 / 110 |\n| 5080 + 3090, auto (K=22) | 2,037 / 2,073 | 80 / 109 |\n\n- **Prompts gain the most** (+18-20%): each card reads its own layers of the chunk while the other reads the next.\n- **Decode is on par with the faster card alone**, and ahead on code. Once both caches hold nearly every routed\n  expert, the per-layer GPU time decides.\n- **Correctness:** one GPU is byte-identical to 0.1.20, and the hand-off itself is bit-exact.\n\n**Which cards and in what order:**\n- Put the fastest card first; auto gives it as many layers as its cache allows.\n- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\n  3090 pair slower (68 / 90 tok/s decode): every extra card costs its own round per window.\n- More cards pay off when the model's routed experts do not fit the faster ones.\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 256468,
+        "completion_tokens": 412,
+        "cached_tokens": 256466,
+        "extra": {
+          "cache_creation_input_tokens": 10822,
+          "cache_read_input_tokens": 256466,
+          "output_tokens_details": {
+            "thinking_tokens": 251
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 10822,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 412,
+              "cache_read_input_tokens": 256466,
+              "cache_creation_input_tokens": 10822,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 10822
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\n  if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)\n    set(CMAKE_CUDA_ARCHITECTURES 120 CACHE STRING \"CUDA architectures\" FORCE)\n  endif()\n  foreach(_a IN LISTS CMAKE_CUDA_ARCHITECTURES)\n    string(REGEX REPLACE \"-.*$\" \"\" _base \"${_a}\")     # 120-real / 120-virtual are still 120\n    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\n    # portable fp32-FMA fallback, so RTX 20 (75), 30 (86), RTX 40 (89) and RTX 50 (120) build too.\n    # Pre-sm_75 is refused.\n    if(_base STREQUAL \"native\" OR _base STREQUAL \"all\" OR _base STREQUAL \"all-major\")\n      continue()\n    endif()\n    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\n    # These sit below every architecture the kernels were written for, so two intrinsics are replaced below\n    # their arch - `__dp4a` (6.1+) and `__nanosleep` (7.0+) - in include/strata/kernels/dp4a.hpp, which is\n    # bit-exact for the first and merely a shorter pause for the second (sm_70 has both).  Community-tested,\n    # not in the ready-made engine; RTX 20/30/40/50 cards must use the release engine instead.  It needs a CUDA\n    # 12.x toolkit: CUDA 13 dropped sm_60 and sm_70 (nvcc fails CMake's compiler test with \"compute_70\").\n    if(_base LESS 75 AND NOT STRATA_EXPERIMENTAL_SM60)\n      message(FATAL_ERROR\n        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\n        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\n        \"-DSTRATA_EXPERIMENTAL_SM60=ON; upstream does not support it.)\")\n    endif()\n    if(_base LESS 60)\n      message(FATAL_ERROR \"CMAKE_CUDA_ARCHITECTURES '${CMAKE_CUDA_ARCHITECTURES}': even the experimental build \"\n                          \"needs compute capability 6.0 (sm_60) or newer\")\n    endif()\n    d.total_bytes = total_b;\n\n    check(cudaDriverGetVersion(&d.driver_version), \"cudaDriverGetVersion\");\n    check(cudaRuntimeGetVersion(&d.runtime_version), \"cudaRuntimeGetVersion\");\n\n    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\n    // fp32-FMA fallback below sm_80, the tensor-core prompt kernels refuse and fall back).  Compiling for a\n    // supported arch is enforced by CMake; RUNNING on an older card is caught here, because a binary can be carried\n    // to a machine with an older card and would otherwise silently take whatever path the driver chose.  The HIP\n    // backend checks the card against the architectures the binary was compiled for (and wave32).\n#if defined(STRATA_USE_HIP)\n    d.arch = base_arch(p.gcnArchName);\n    if (const std::string why = arch_problem(p, ordinal); !why.empty()) throw CudaError(why, -1);\n#else\n    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\n    // was built for - refusing them below 7.5 there made the flag useless; the release engine keeps 7.5\n#if defined(STRATA_EXPERIMENTAL_SM60)\n    constexpr int kMinCc = 60;\n    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\n#else\n    constexpr int kMinCc = 75;\n    const char* const kNeed = \"7.5 or newer (RTX 20 / 30 / 40 / 50 series)\";\n#endif\n    if (d.cc_major * 10 + d.cc_minor < kMinCc) {\n        throw CudaError(\"device \" + d.name + \" reports compute capability \" + std::to_string(d.cc_major) +\n                            \".\" + std::to_string(d.cc_minor) + \"; Strata needs compute capability \" + kNeed,\n                        -1);\n    }\n#endif\n    return d;\n}\n\n```\nstrata generate: layer split auto: K=19 - the caches hold 11767 of 12288 profiled pairs (fullest device 100%)\nstrata serve: layer split: layers 0-18 (CUDA0), 19-47 (CUDA1), one hand-off per window\n```\n\n## What each card holds\n\n- **every card**: a copy of the dense weights (~3.4 GB for the Coder), its own session state (the KV cache of the full\n  context), its verify window and its prompt-path buffers, and an expert cache for its layers filled from the profile;\n- **the last card**: also the output head and the draft layer (~0.8 GB);\n- **host RAM**: the expert arena once, shared by all cards (the CPU pool computes whatever no card holds).\n\nPrompts are read in chunks that flow through the cards in turn; while a later card reads chunk c, the first card\nalready reads chunk c+1. Conversation checkpoints save and restore every card's state; the adaptive expert swaps copy\ninto the card that owns the layer.\n\n## Limits (for now)\n\n- **Works across cards** (bench/results/2026-09-29-layer-split-limits):\n  - images (`--vision`): each card keeps its own image-position table;\n  - control vectors and the experimental speed projection: each card holds the vector's tables, switched on and\n    off per request on all of them;\n  - KV streaming (`--kv-resident`): each card streams the KV of its own session;\n  - mid-prompt checkpoints (`--prompt-cache-every`): each card saves its part of a checkpoint when it has read that\n    chunk;\n  - the older helper-GPU caches (`--expert-cache-remote`, docs/SECOND_GPU.md): they take the visible GPUs no stage\n    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\n    as it did without a split: its per-layer round trip costs more than the CPU pool needs for those experts.\n- `--mmap-experts` needs a canonical pack (`experts.bin`), with or without a split; a native (IQ) pack says so at\n  start.\n- The prompt path has its own buffers on every card (1.5 GB each at the default 2048-token chunk; `--prefill 1024`\n  halves that) instead of borrowing cache slots as one card does. An explicit `--expert-cache` on the first card is\n  capped to leave room for them.\n- Under WDDM (Windows, and WSL2) only 8 GiB of the expert arena is pinned (more, mapped into two GPU contexts,\n  leaves WDDM refusing allocations); the rest streams through the pinned staging ring. A Linux driver has no such\n  limit, so there the whole arena is pinned (since 0.1.31; the cap cost a 4090 + 3060 split two thirds of its\n  prompt speed, #253). `STRATA_ARENA_PIN_GIB=N` pins at most N GiB, `0` the whole arena, on any OS.\n- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\n  Turing card runs the same kernels instead of the tensor-core prompt attention.\n\n## Measured\n\nThe Coder on an RTX 5080 + RTX 3090 (Ryzen 9 9950X3D), 32K context; details in\n`bench/results/2026-09-29-layer-split/`:\n\n| | Prompt 16K / 28K tok/s | Decode story / code tok/s |\n|---|---|---|\n| 5080 alone | 1,726-2,017 / 1,970 | 83-87 / 88-105 |\n| 5080 + 3090, best split (K=26) | 2,039 / 2,357 | 84 / 110 |\n| 5080 + 3090, auto (K=22) | 2,037 / 2,073 | 80 / 109 |\n\n- **Prompts gain the most** (+18-20%): each card reads its own layers of the chunk while the other reads the next.\n- **Decode is on par with the faster card alone**, and ahead on code. Once both caches hold nearly every routed\n  expert, the per-layer GPU time decides.\n- **Correctness:** one GPU is byte-identical to 0.1.20, and the hand-off itself is bit-exact.\n\n**Which cards and in what order:**\n- Put the fastest card first; auto gives it as many layers as its cache allows.\n- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\n  3090 pair slower (68 / 90 tok/s decode): every extra card costs its own round per window.\n- More cards pay off when the model's routed experts do not fit the faster ones.",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Bwb7D4DqpE6X1E2HrzRkaQ",
+            "type": "tool_result",
+            "content": "  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\n  if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)\n    set(CMAKE_CUDA_ARCHITECTURES 120 CACHE STRING \"CUDA architectures\" FORCE)\n  endif()\n  foreach(_a IN LISTS CMAKE_CUDA_ARCHITECTURES)\n    string(REGEX REPLACE \"-.*$\" \"\" _base \"${_a}\")     # 120-real / 120-virtual are still 120\n    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\n    # portable fp32-FMA fallback, so RTX 20 (75), 30 (86), RTX 40 (89) and RTX 50 (120) build too.\n    # Pre-sm_75 is refused.\n    if(_base STREQUAL \"native\" OR _base STREQUAL \"all\" OR _base STREQUAL \"all-major\")\n      continue()\n    endif()\n    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\n    # These sit below every architecture the kernels were written for, so two intrinsics are replaced below\n    # their arch - `__dp4a` (6.1+) and `__nanosleep` (7.0+) - in include/strata/kernels/dp4a.hpp, which is\n    # bit-exact for the first and merely a shorter pause for the second (sm_70 has both).  Community-tested,\n    # not in the ready-made engine; RTX 20/30/40/50 cards must use the release engine instead.  It needs a CUDA\n    # 12.x toolkit: CUDA 13 dropped sm_60 and sm_70 (nvcc fails CMake's compiler test with \"compute_70\").\n    if(_base LESS 75 AND NOT STRATA_EXPERIMENTAL_SM60)\n      message(FATAL_ERROR\n        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\n        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\n        \"-DSTRATA_EXPERIMENTAL_SM60=ON; upstream does not support it.)\")\n    endif()\n    if(_base LESS 60)\n      message(FATAL_ERROR \"CMAKE_CUDA_ARCHITECTURES '${CMAKE_CUDA_ARCHITECTURES}': even the experimental build \"\n                          \"needs compute capability 6.0 (sm_60) or newer\")\n    endif()\n    d.total_bytes = total_b;\n\n    check(cudaDriverGetVersion(&d.driver_version), \"cudaDriverGetVersion\");\n    check(cudaRuntimeGetVersion(&d.runtime_version), \"cudaRuntimeGetVersion\");\n\n    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\n    // fp32-FMA fallback below sm_80, the tensor-core prompt kernels refuse and fall back).  Compiling for a\n    // supported arch is enforced by CMake; RUNNING on an older card is caught here, because a binary can be carried\n    // to a machine with an older card and would otherwise silently take whatever path the driver chose.  The HIP\n    // backend checks the card against the architectures the binary was compiled for (and wave32).\n#if defined(STRATA_USE_HIP)\n    d.arch = base_arch(p.gcnArchName);\n    if (const std::string why = arch_problem(p, ordinal); !why.empty()) throw CudaError(why, -1);\n#else\n    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\n    // was built for - refusing them below 7.5 there made the flag useless; the release engine keeps 7.5\n#if defined(STRATA_EXPERIMENTAL_SM60)\n    constexpr int kMinCc = 60;\n    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\n#else\n    constexpr int kMinCc = 75;\n    const char* const kNeed = \"7.5 or newer (RTX 20 / 30 / 40 / 50 series)\";\n#endif\n    if (d.cc_major * 10 + d.cc_minor < kMinCc) {\n        throw CudaError(\"device \" + d.name + \" reports compute capability \" + std::to_string(d.cc_major) +\n                            \".\" + std::to_string(d.cc_minor) + \"; Strata needs compute capability \" + kNeed,\n                        -1);\n    }\n#endif\n    return d;\n}\n\n```\nstrata generate: layer split auto: K=19 - the caches hold 11767 of 12288 profiled pairs (fullest device 100%)\nstrata serve: layer split: layers 0-18 (CUDA0), 19-47 (CUDA1), one hand-off per window\n```\n\n## What each card holds\n\n- **every card**: a copy of the dense weights (~3.4 GB for the Coder), its own session state (the KV cache of the full\n  context), its verify window and its prompt-path buffers, and an expert cache for its layers filled from the profile;\n- **the last card**: also the output head and the draft layer (~0.8 GB);\n- **host RAM**: the expert arena once, shared by all cards (the CPU pool computes whatever no card holds).\n\nPrompts are read in chunks that flow through the cards in turn; while a later card reads chunk c, the first card\nalready reads chunk c+1. Conversation checkpoints save and restore every card's state; the adaptive expert swaps copy\ninto the card that owns the layer.\n\n## Limits (for now)\n\n- **Works across cards** (bench/results/2026-09-29-layer-split-limits):\n  - images (`--vision`): each card keeps its own image-position table;\n  - control vectors and the experimental speed projection: each card holds the vector's tables, switched on and\n    off per request on all of them;\n  - KV streaming (`--kv-resident`): each card streams the KV of its own session;\n  - mid-prompt checkpoints (`--prompt-cache-every`): each card saves its part of a checkpoint when it has read that\n    chunk;\n  - the older helper-GPU caches (`--expert-cache-remote`, docs/SECOND_GPU.md): they take the visible GPUs no stage\n    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\n    as it did without a split: its per-layer round trip costs more than the CPU pool needs for those experts.\n- `--mmap-experts` needs a canonical pack (`experts.bin`), with or without a split; a native (IQ) pack says so at\n  start.\n- The prompt path has its own buffers on every card (1.5 GB each at the default 2048-token chunk; `--prefill 1024`\n  halves that) instead of borrowing cache slots as one card does. An explicit `--expert-cache` on the first card is\n  capped to leave room for them.\n- Under WDDM (Windows, and WSL2) only 8 GiB of the expert arena is pinned (more, mapped into two GPU contexts,\n  leaves WDDM refusing allocations); the rest streams through the pinned staging ring. A Linux driver has no such\n  limit, so there the whole arena is pinned (since 0.1.31; the cap cost a 4090 + 3060 split two thirds of its\n  prompt speed, #253). `STRATA_ARENA_PIN_GIB=N` pins at most N GiB, `0` the whole arena, on any OS.\n- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\n  Turing card runs the same kernels instead of the tensor-core prompt attention.\n\n## Measured\n\nThe Coder on an RTX 5080 + RTX 3090 (Ryzen 9 9950X3D), 32K context; details in\n`bench/results/2026-09-29-layer-split/`:\n\n| | Prompt 16K / 28K tok/s | Decode story / code tok/s |\n|---|---|---|\n| 5080 alone | 1,726-2,017 / 1,970 | 83-87 / 88-105 |\n| 5080 + 3090, best split (K=26) | 2,039 / 2,357 | 84 / 110 |\n| 5080 + 3090, auto (K=22) | 2,037 / 2,073 | 80 / 109 |\n\n- **Prompts gain the most** (+18-20%): each card reads its own layers of the chunk while the other reads the next.\n- **Decode is on par with the faster card alone**, and ahead on code. Once both caches hold nearly every routed\n  expert, the per-layer GPU time decides.\n- **Correctness:** one GPU is byte-identical to 0.1.20, and the hand-off itself is bit-exact.\n\n**Which cards and in what order:**\n- Put the fastest card first; auto gives it as many layers as its cache allows.\n- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\n  3090 pair slower (68 / 90 tok/s decode): every extra card costs its own round per window.\n- More cards pay off when the model's routed experts do not fit the faster ones.",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\n  if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)\n    set(CMAKE_CUDA_ARCHITECTURES 120 CACHE STRING \"CUDA architectures\" FORCE)\n  endif()\n  foreach(_a IN LISTS CMAKE_CUDA_ARCHITECTURES)\n    string(REGEX REPLACE \"-.*$\" \"\" _base \"${_a}\")     # 120-real / 120-virtual are still 120\n    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\n    # portable fp32-FMA fallback, so RTX 20 (75), 30 (86), RTX 40 (89) and RTX 50 (120) build too.\n    # Pre-sm_75 is refused.\n    if(_base STREQUAL \"native\" OR _base STREQUAL \"all\" OR _base STREQUAL \"all-major\")\n      continue()\n    endif()\n    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\n    # These sit below every architecture the kernels were written for, so two intrinsics are replaced below\n    # their arch - `__dp4a` (6.1+) and `__nanosleep` (7.0+) - in include/strata/kernels/dp4a.hpp, which is\n    # bit-exact for the first and merely a shorter pause for the second (sm_70 has both).  Community-tested,\n    # not in the ready-made engine; RTX 20/30/40/50 cards must use the release engine instead.  It needs a CUDA\n    # 12.x toolkit: CUDA 13 dropped sm_60 and sm_70 (nvcc fails CMake's compiler test with \"compute_70\").\n    if(_base LESS 75 AND NOT STRATA_EXPERIMENTAL_SM60)\n      message(FATAL_ERROR\n        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\n        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\n        \"-DSTRATA_EXPERIMENTAL_SM60=ON; upstream does not support it.)\")\n    endif()\n    if(_base LESS 60)\n      message(FATAL_ERROR \"CMAKE_CUDA_ARCHITECTURES '${CMAKE_CUDA_ARCHITECTURES}': even the experimental build \"\n                          \"needs compute capability 6.0 (sm_60) or newer\")\n    endif()\n    d.total_bytes = total_b;\n\n    check(cudaDriverGetVersion(&d.driver_version), \"cudaDriverGetVersion\");\n    check(cudaRuntimeGetVersion(&d.runtime_version), \"cudaRuntimeGetVersion\");\n\n    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\n    // fp32-FMA fallback below sm_80, the tensor-core prompt kernels refuse and fall back).  Compiling for a\n    // supported arch is enforced by CMake; RUNNING on an older card is caught here, because a binary can be carried\n    // to a machine with an older card and would otherwise silently take whatever path the driver chose.  The HIP\n    // backend checks the card against the architectures the binary was compiled for (and wave32).\n#if defined(STRATA_USE_HIP)\n    d.arch = base_arch(p.gcnArchName);\n    if (const std::string why = arch_problem(p, ordinal); !why.empty()) throw CudaError(why, -1);\n#else\n    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\n    // was built for - refusing them below 7.5 there made the flag useless; the release engine keeps 7.5\n#if defined(STRATA_EXPERIMENTAL_SM60)\n    constexpr int kMinCc = 60;\n    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\n#else\n    constexpr int kMinCc = 75;\n    const char* const kNeed = \"7.5 or newer (RTX 20 / 30 / 40 / 50 series)\";\n#endif\n    if (d.cc_major * 10 + d.cc_minor < kMinCc) {\n        throw CudaError(\"device \" + d.name + \" reports compute capability \" + std::to_string(d.cc_major) +\n                            \".\" + std::to_string(d.cc_minor) + \"; Strata needs compute capability \" + kNeed,\n                        -1);\n    }\n#endif\n    return d;\n}\n\n```\nstrata generate: layer split auto: K=19 - the caches hold 11767 of 12288 profiled pairs (fullest device 100%)\nstrata serve: layer split: layers 0-18 (CUDA0), 19-47 (CUDA1), one hand-off per window\n```\n\n## What each card holds\n\n- **every card**: a copy of the dense weights (~3.4 GB for the Coder), its own session state (the KV cache of the full\n  context), its verify window and its prompt-path buffers, and an expert cache for its layers filled from the profile;\n- **the last card**: also the output head and the draft layer (~0.8 GB);\n- **host RAM**: the expert arena once, shared by all cards (the CPU pool computes whatever no card holds).\n\nPrompts are read in chunks that flow through the cards in turn; while a later card reads chunk c, the first card\nalready reads chunk c+1. Conversation checkpoints save and restore every card's state; the adaptive expert swaps copy\ninto the card that owns the layer.\n\n## Limits (for now)\n\n- **Works across cards** (bench/results/2026-09-29-layer-split-limits):\n  - images (`--vision`): each card keeps its own image-position table;\n  - control vectors and the experimental speed projection: each card holds the vector's tables, switched on and\n    off per request on all of them;\n  - KV streaming (`--kv-resident`): each card streams the KV of its own session;\n  - mid-prompt checkpoints (`--prompt-cache-every`): each card saves its part of a checkpoint when it has read that\n    chunk;\n  - the older helper-GPU caches (`--expert-cache-remote`, docs/SECOND_GPU.md): they take the visible GPUs no stage\n    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\n    as it did without a split: its per-layer round trip costs more than the CPU pool needs for those experts.\n- `--mmap-experts` needs a canonical pack (`experts.bin`), with or without a split; a native (IQ) pack says so at\n  start.\n- The prompt path has its own buffers on every card (1.5 GB each at the default 2048-token chunk; `--prefill 1024`\n  halves that) instead of borrowing cache slots as one card does. An explicit `--expert-cache` on the first card is\n  capped to leave room for them.\n- Under WDDM (Windows, and WSL2) only 8 GiB of the expert arena is pinned (more, mapped into two GPU contexts,\n  leaves WDDM refusing allocations); the rest streams through the pinned staging ring. A Linux driver has no such\n  limit, so there the whole arena is pinned (since 0.1.31; the cap cost a 4090 + 3060 split two thirds of its\n  prompt speed, #253). `STRATA_ARENA_PIN_GIB=N` pins at most N GiB, `0` the whole arena, on any OS.\n- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\n  Turing card runs the same kernels instead of the tensor-core prompt attention.\n\n## Measured\n\nThe Coder on an RTX 5080 + RTX 3090 (Ryzen 9 9950X3D), 32K context; details in\n`bench/results/2026-09-29-layer-split/`:\n\n| | Prompt 16K / 28K tok/s | Decode story / code tok/s |\n|---|---|---|\n| 5080 alone | 1,726-2,017 / 1,970 | 83-87 / 88-105 |\n| 5080 + 3090, best split (K=26) | 2,039 / 2,357 | 84 / 110 |\n| 5080 + 3090, auto (K=22) | 2,037 / 2,073 | 80 / 109 |\n\n- **Prompts gain the most** (+18-20%): each card reads its own layers of the chunk while the other reads the next.\n- **Decode is on par with the faster card alone**, and ahead on code. Once both caches hold nearly every routed\n  expert, the per-layer GPU time decides.\n- **Correctness:** one GPU is byte-identical to 0.1.20, and the hand-off itself is bit-exact.\n\n**Which cards and in what order:**\n- Put the fastest card first; auto gives it as many layers as its cache allows.\n- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\n  3090 pair slower (68 / 90 tok/s decode): every extra card costs its own round per window.\n- More cards pay off when the model's routed experts do not fit the faster ones.",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01Bwb7D4DqpE6X1E2HrzRkaQ",
+            "type": "tool_result",
+            "content": "  option(STRATA_EXPERIMENTAL_SM60 \"community build for GPUs below compute capability 7.5: Pascal sm_60, Volta sm_70 (#236)\" OFF)\n  if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)\n    set(CMAKE_CUDA_ARCHITECTURES 120 CACHE STRING \"CUDA architectures\" FORCE)\n  endif()\n  foreach(_a IN LISTS CMAKE_CUDA_ARCHITECTURES)\n    string(REGEX REPLACE \"-.*$\" \"\" _base \"${_a}\")     # 120-real / 120-virtual are still 120\n    # Turing port: developed and measured on sm_120 (RTX 50); the tf32 mma in the QSA scorer has a\n    # portable fp32-FMA fallback, so RTX 20 (75), 30 (86), RTX 40 (89) and RTX 50 (120) build too.\n    # Pre-sm_75 is refused.\n    if(_base STREQUAL \"native\" OR _base STREQUAL \"all\" OR _base STREQUAL \"all-major\")\n      continue()\n    endif()\n    # STRATA_EXPERIMENTAL_SM60: a Pascal (sm_60, GP100-class) or Volta (sm_70, V100 / Titan V, #236) build.\n    # These sit below every architecture the kernels were written for, so two intrinsics are replaced below\n    # their arch - `__dp4a` (6.1+) and `__nanosleep` (7.0+) - in include/strata/kernels/dp4a.hpp, which is\n    # bit-exact for the first and merely a shorter pause for the second (sm_70 has both).  Community-tested,\n    # not in the ready-made engine; RTX 20/30/40/50 cards must use the release engine instead.  It needs a CUDA\n    # 12.x toolkit: CUDA 13 dropped sm_60 and sm_70 (nvcc fails CMake's compiler test with \"compute_70\").\n    if(_base LESS 75 AND NOT STRATA_EXPERIMENTAL_SM60)\n      message(FATAL_ERROR\n        \"Strata needs an NVIDIA GPU of compute capability 7.5 or newer (RTX 20 / 30 / 40 / 50 series), but \"\n        \"CMAKE_CUDA_ARCHITECTURES is '${CMAKE_CUDA_ARCHITECTURES}'.  (A Pascal sm_60 or Volta sm_70 build is \"\n        \"-DSTRATA_EXPERIMENTAL_SM60=ON; upstream does not support it.)\")\n    endif()\n    if(_base LESS 60)\n      message(FATAL_ERROR \"CMAKE_CUDA_ARCHITECTURES '${CMAKE_CUDA_ARCHITECTURES}': even the experimental build \"\n                          \"needs compute capability 6.0 (sm_60) or newer\")\n    endif()\n    d.total_bytes = total_b;\n\n    check(cudaDriverGetVersion(&d.driver_version), \"cudaDriverGetVersion\");\n    check(cudaRuntimeGetVersion(&d.runtime_version), \"cudaRuntimeGetVersion\");\n\n    // The engine supports compute capability 7.5 and newer (Turing: the QSA scorer's tf32 mma has a portable\n    // fp32-FMA fallback below sm_80, the tensor-core prompt kernels refuse and fall back).  Compiling for a\n    // supported arch is enforced by CMake; RUNNING on an older card is caught here, because a binary can be carried\n    // to a machine with an older card and would otherwise silently take whatever path the driver chose.  The HIP\n    // backend checks the card against the architectures the binary was compiled for (and wave32).\n#if defined(STRATA_USE_HIP)\n    d.arch = base_arch(p.gcnArchName);\n    if (const std::string why = arch_problem(p, ordinal); !why.empty()) throw CudaError(why, -1);\n#else\n    // #236: the experimental build (-DSTRATA_EXPERIMENTAL_SM60=ON: Pascal sm_60, Volta sm_70) runs on the cards it\n    // was built for - refusing them below 7.5 there made the flag useless; the release engine keeps 7.5\n#if defined(STRATA_EXPERIMENTAL_SM60)\n    constexpr int kMinCc = 60;\n    const char* const kNeed = \"6.0 or newer (this is the experimental Pascal / Volta build)\";\n#else\n    constexpr int kMinCc = 75;\n    const char* const kNeed = \"7.5 or newer (RTX 20 / 30 / 40 / 50 series)\";\n#endif\n    if (d.cc_major * 10 + d.cc_minor < kMinCc) {\n        throw CudaError(\"device \" + d.name + \" reports compute capability \" + std::to_string(d.cc_major) +\n                            \".\" + std::to_string(d.cc_minor) + \"; Strata needs compute capability \" + kNeed,\n                        -1);\n    }\n#endif\n    return d;\n}\n\n```\nstrata generate: layer split auto: K=19 - the caches hold 11767 of 12288 profiled pairs (fullest device 100%)\nstrata serve: layer split: layers 0-18 (CUDA0), 19-47 (CUDA1), one hand-off per window\n```\n\n## What each card holds\n\n- **every card**: a copy of the dense weights (~3.4 GB for the Coder), its own session state (the KV cache of the full\n  context), its verify window and its prompt-path buffers, and an expert cache for its layers filled from the profile;\n- **the last card**: also the output head and the draft layer (~0.8 GB);\n- **host RAM**: the expert arena once, shared by all cards (the CPU pool computes whatever no card holds).\n\nPrompts are read in chunks that flow through the cards in turn; while a later card reads chunk c, the first card\nalready reads chunk c+1. Conversation checkpoints save and restore every card's state; the adaptive expert swaps copy\ninto the card that owns the layer.\n\n## Limits (for now)\n\n- **Works across cards** (bench/results/2026-09-29-layer-split-limits):\n  - images (`--vision`): each card keeps its own image-position table;\n  - control vectors and the experimental speed projection: each card holds the vector's tables, switched on and\n    off per request on all of them;\n  - KV streaming (`--kv-resident`): each card streams the KV of its own session;\n  - mid-prompt checkpoints (`--prompt-cache-every`): each card saves its part of a checkpoint when it has read that\n    chunk;\n  - the older helper-GPU caches (`--expert-cache-remote`, docs/SECOND_GPU.md): they take the visible GPUs no stage\n    runs on, and hold only experts no stage's cache holds. On the test rig, a 2080 Ti helper made decoding slower,\n    as it did without a split: its per-layer round trip costs more than the CPU pool needs for those experts.\n- `--mmap-experts` needs a canonical pack (`experts.bin`), with or without a split; a native (IQ) pack says so at\n  start.\n- The prompt path has its own buffers on every card (1.5 GB each at the default 2048-token chunk; `--prefill 1024`\n  halves that) instead of borrowing cache slots as one card does. An explicit `--expert-cache` on the first card is\n  capped to leave room for them.\n- Under WDDM (Windows, and WSL2) only 8 GiB of the expert arena is pinned (more, mapped into two GPU contexts,\n  leaves WDDM refusing allocations); the rest streams through the pinned staging ring. A Linux driver has no such\n  limit, so there the whole arena is pinned (since 0.1.31; the cap cost a 4090 + 3060 split two thirds of its\n  prompt speed, #253). `STRATA_ARENA_PIN_GIB=N` pins at most N GiB, `0` the whole arena, on any OS.\n- Every card needs compute capability 7.5 (RTX 20 or newer). The pre-sm_80 QSA scorer path is fp32 FMAs, so a\n  Turing card runs the same kernels instead of the tensor-core prompt attention.\n\n## Measured\n\nThe Coder on an RTX 5080 + RTX 3090 (Ryzen 9 9950X3D), 32K context; details in\n`bench/results/2026-09-29-layer-split/`:\n\n| | Prompt 16K / 28K tok/s | Decode story / code tok/s |\n|---|---|---|\n| 5080 alone | 1,726-2,017 / 1,970 | 83-87 / 88-105 |\n| 5080 + 3090, best split (K=26) | 2,039 / 2,357 | 84 / 110 |\n| 5080 + 3090, auto (K=22) | 2,037 / 2,073 | 80 / 109 |\n\n- **Prompts gain the most** (+18-20%): each card reads its own layers of the chunk while the other reads the next.\n- **Decode is on par with the faster card alone**, and ahead on code. Once both caches hold nearly every routed\n  expert, the per-layer GPU time decides.\n- **Correctness:** one GPU is byte-identical to 0.1.20, and the hand-off itself is bit-exact.\n\n**Which cards and in what order:**\n- Put the fastest card first; auto gives it as many layers as its cache allows.\n- Leave out a much slower card when two already hold the model. An RTX 2080 Ti as a third card made the 5080 +\n  3090 pair slower (68 / 90 tok/s decode): every extra card costs its own round per window.\n- More cards pay off when the model's routed experts do not fit the faster ones.",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "sed -n 76,103p CMakeLists.txt; sed -n 165,195p src/core/device.cu; sed -n 80,141p docs/MULTI_GPU.md",
+          "description": "Read SM60 build rules and multi-GPU measurements"
+        }
+      }
+    },
+    {
+      "step_id": 327,
+      "timestamp": "2026-10-17T15:07:18.926Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 267290,
+        "completion_tokens": 7524,
+        "cached_tokens": 267288,
+        "extra": {
+          "cache_creation_input_tokens": 3766,
+          "cache_read_input_tokens": 267288,
+          "output_tokens_details": {
+            "thinking_tokens": 6223
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3766,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 7524,
+              "cache_read_input_tokens": 267288,
+              "cache_creation_input_tokens": 3766,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3766
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 328,
+      "timestamp": "2026-10-17T15:07:18.930Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "reasoning_content": "Found that NVLink offers no benefit here since Strata doesn't use P2P, P40 support is untested/experimental, and the board only has one x16 slot. Since expert-profile.bin lacks routing frequencies, I'll fit a Zipf distribution to each model's measured hit rate to build the decode model instead.",
+      "metrics": {
+        "prompt_tokens": 267290,
+        "completion_tokens": 7524,
+        "cached_tokens": 267288,
+        "extra": {
+          "cache_creation_input_tokens": 3766,
+          "cache_read_input_tokens": 267288,
+          "output_tokens_details": {
+            "thinking_tokens": 6223
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3766,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 7524,
+              "cache_read_input_tokens": 267288,
+              "cache_creation_input_tokens": 3766,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3766
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 329,
+      "timestamp": "2026-10-17T15:07:27.025Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "Executed Bash toolu_01UwBtueouPAgCWkmXtEgp9A",
+      "tool_calls": [
+        {
+          "tool_call_id": "toolu_01UwBtueouPAgCWkmXtEgp9A",
+          "function_name": "Bash",
+          "arguments": {
+            "command": "python3 - <<'EOF'\nimport math\ndef H(k,s): return sum(i**-s for i in range(1,int(k)+1))+ (k-int(k))*((int(k)+1)**-s)\ndef hit(k,N,s): return H(min(k,N),s)/H(N,s)\ndef fit(k,N,h):\n    lo,hi=0.0,3.0\n    for _ in range(60):\n        m=(lo+hi)/2\n        (lo,hi)=(m,hi) if hit(k,N,m)<h else (lo,m)\n    return (lo+hi)/2\n# measured on the 3060M (decode windows): hit share of distinct experts per layer-window, slots per layer\nM={\"coder\":dict(N=256,slots=2666,h=28.6/37.6,D=37.6,c=15.8/(7.8*48),hg=11.46/(28.6*48),G0=31.0,draft=5.2,tpw=3.72,blob=2.06,cache=5.11,total=23.42),\n   \"ud\":dict(N=512,slots=1864,h=22.3/38.1,D=38.1,c=33.0/(12.2*48),hg=9.45/(22.3*48),G0=29.8,draft=5.2,tpw=3.87,blob=2.41,cache=4.19,total=55.43)}\nfor m,d in M.items(): d[\"s\"]=fit(d[\"slots\"]/48,d[\"N\"],d[\"h\"]); print(m,\"zipf s=%.3f\"%d[\"s\"], \"c=%.1f us/expert CPU, hg=%.2f us GPU\"%(d[\"c\"]*1e3,d[\"hg\"]*1e3))\ndef window(d,cache_gib,g,cpu_scale=1.0):\n    slots=min(cache_gib*1.0737e9/(d[\"blob\"]*1e6), d[\"N\"]*48)\n    h=hit(slots/48,d[\"N\"],d[\"s\"]); cpuN=d[\"D\"]*(1-h)*48; hitsN=d[\"D\"]*h*48\n    cpu=cpuN*d[\"c\"]*cpu_scale; hits=hitsN*d[\"hg\"]*g\n    wait=max(0.5,0.88*cpu-0.48*hits) if cpu>0.05 else 0.5\n    w=d[\"G0\"]*g+hits+wait+d[\"draft\"]*g+0.1\n    return slots,h,cpu,w,1000*d[\"tpw\"]/w\ncards={\"3060M 12GB (model check)\":(0,1.0),\"P40 24GB\":(12,None),\"2080Ti 22GB\":(10,None)}\nfor m,d in M.items():\n    print(\"==\",m)\n    s,h,c,w,t=window(d,d[\"cache\"],1.0); print(f\"  3060M check: slots {s:.0f} hit {h:.1%} cpu {c:.1f} window {w:.1f} -> {t:.1f} tok/s\")\n    for name,extra,gs in [(\"P40 24GB\",12,(1.2,1.6)),(\"2080Ti 22GB\",10,(0.6,0.75)),(\"2x2080Ti 22GB\",10+15,(0.6,0.75))]:\n        for g in gs:\n            s,h,c,w,t=window(d,d[\"cache\"]+extra,g)\n            hand=0.3 if name.startswith(\"2x\") else 0\n            w2=w+hand; print(f\"  {name:14s} g={g}: slots {s:.0f} ({s/(d['N']*48):.0%}) hit {h:.1%} CPU {c:.1f} ms window {w2:.1f} -> {1000*d['tpw']/w2:.0f} tok/s\")\nEOF",
+            "description": "Model decode speed for P40 and 2080 Ti setups"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "toolu_01UwBtueouPAgCWkmXtEgp9A",
+            "content": "coder zipf s=1.016 c=42.2 us/expert CPU, hg=8.35 us GPU\nud zipf s=0.953 c=56.4 us/expert CPU, hg=8.83 us GPU\n== coder\n  3060M check: slots 2663 hit 76.0% cpu 18.2 window 58.3 -> 63.8 tok/s\n  P40 24GB       g=1.2: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 61.2 -> 61 tok/s\n  P40 24GB       g=1.6: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 81.4 -> 46 tok/s\n  2080Ti 22GB    g=0.6: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 30.8 -> 121 tok/s\n  2080Ti 22GB    g=0.75: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 38.3 -> 97 tok/s\n  2x2080Ti 22GB  g=0.6: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 31.7 -> 117 tok/s\n  2x2080Ti 22GB  g=0.75: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 39.3 -> 95 tok/s\n== ud\n  3060M check: slots 1867 hit 58.6% cpu 42.7 window 77.6 -> 49.9 tok/s\n  P40 24GB       g=1.2: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 68.6 -> 56 tok/s\n  P40 24GB       g=1.6: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 85.3 -> 45 tok/s\n  2080Ti 22GB    g=0.6: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 45.4 -> 85 tok/s\n  2080Ti 22GB    g=0.75: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 51.6 -> 75 tok/s\n  2x2080Ti 22GB  g=0.6: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 35.6 -> 109 tok/s\n  2x2080Ti 22GB  g=0.75: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 42.0 -> 92 tok/s\n\n[stdout]\ncoder zipf s=1.016 c=42.2 us/expert CPU, hg=8.35 us GPU\nud zipf s=0.953 c=56.4 us/expert CPU, hg=8.83 us GPU\n== coder\n  3060M check: slots 2663 hit 76.0% cpu 18.2 window 58.3 -> 63.8 tok/s\n  P40 24GB       g=1.2: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 61.2 -> 61 tok/s\n  P40 24GB       g=1.6: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 81.4 -> 46 tok/s\n  2080Ti 22GB    g=0.6: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 30.8 -> 121 tok/s\n  2080Ti 22GB    g=0.75: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 38.3 -> 97 tok/s\n  2x2080Ti 22GB  g=0.6: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 31.7 -> 117 tok/s\n  2x2080Ti 22GB  g=0.75: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 39.3 -> 95 tok/s\n== ud\n  3060M check: slots 1867 hit 58.6% cpu 42.7 window 77.6 -> 49.9 tok/s\n  P40 24GB       g=1.2: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 68.6 -> 56 tok/s\n  P40 24GB       g=1.6: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 85.3 -> 45 tok/s\n  2080Ti 22GB    g=0.6: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 45.4 -> 85 tok/s\n  2080Ti 22GB    g=0.75: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 51.6 -> 75 tok/s\n  2x2080Ti 22GB  g=0.6: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 35.6 -> 109 tok/s\n  2x2080Ti 22GB  g=0.75: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 42.0 -> 92 tok/s\n[metadata] {\"noOutputExpected\": false}"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 267290,
+        "completion_tokens": 7524,
+        "cached_tokens": 267288,
+        "extra": {
+          "cache_creation_input_tokens": 3766,
+          "cache_read_input_tokens": 267288,
+          "output_tokens_details": {
+            "thinking_tokens": 6223
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 3766,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 7524,
+              "cache_read_input_tokens": 267288,
+              "cache_creation_input_tokens": 3766,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 3766
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "tool_use",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false,
+        "tool_use_name": "Bash",
+        "tool_result_metadata": {
+          "tool_use_result": {
+            "stdout": "coder zipf s=1.016 c=42.2 us/expert CPU, hg=8.35 us GPU\nud zipf s=0.953 c=56.4 us/expert CPU, hg=8.83 us GPU\n== coder\n  3060M check: slots 2663 hit 76.0% cpu 18.2 window 58.3 -> 63.8 tok/s\n  P40 24GB       g=1.2: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 61.2 -> 61 tok/s\n  P40 24GB       g=1.6: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 81.4 -> 46 tok/s\n  2080Ti 22GB    g=0.6: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 30.8 -> 121 tok/s\n  2080Ti 22GB    g=0.75: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 38.3 -> 97 tok/s\n  2x2080Ti 22GB  g=0.6: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 31.7 -> 117 tok/s\n  2x2080Ti 22GB  g=0.75: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 39.3 -> 95 tok/s\n== ud\n  3060M check: slots 1867 hit 58.6% cpu 42.7 window 77.6 -> 49.9 tok/s\n  P40 24GB       g=1.2: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 68.6 -> 56 tok/s\n  P40 24GB       g=1.6: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 85.3 -> 45 tok/s\n  2080Ti 22GB    g=0.6: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 45.4 -> 85 tok/s\n  2080Ti 22GB    g=0.75: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 51.6 -> 75 tok/s\n  2x2080Ti 22GB  g=0.6: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 35.6 -> 109 tok/s\n  2x2080Ti 22GB  g=0.75: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 42.0 -> 92 tok/s",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01UwBtueouPAgCWkmXtEgp9A",
+            "type": "tool_result",
+            "content": "coder zipf s=1.016 c=42.2 us/expert CPU, hg=8.35 us GPU\nud zipf s=0.953 c=56.4 us/expert CPU, hg=8.83 us GPU\n== coder\n  3060M check: slots 2663 hit 76.0% cpu 18.2 window 58.3 -> 63.8 tok/s\n  P40 24GB       g=1.2: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 61.2 -> 61 tok/s\n  P40 24GB       g=1.6: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 81.4 -> 46 tok/s\n  2080Ti 22GB    g=0.6: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 30.8 -> 121 tok/s\n  2080Ti 22GB    g=0.75: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 38.3 -> 97 tok/s\n  2x2080Ti 22GB  g=0.6: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 31.7 -> 117 tok/s\n  2x2080Ti 22GB  g=0.75: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 39.3 -> 95 tok/s\n== ud\n  3060M check: slots 1867 hit 58.6% cpu 42.7 window 77.6 -> 49.9 tok/s\n  P40 24GB       g=1.2: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 68.6 -> 56 tok/s\n  P40 24GB       g=1.6: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 85.3 -> 45 tok/s\n  2080Ti 22GB    g=0.6: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 45.4 -> 85 tok/s\n  2080Ti 22GB    g=0.75: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 51.6 -> 75 tok/s\n  2x2080Ti 22GB  g=0.6: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 35.6 -> 109 tok/s\n  2x2080Ti 22GB  g=0.75: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 42.0 -> 92 tok/s",
+            "is_error": false
+          }
+        },
+        "tool_result_is_error": false,
+        "metadata": {
+          "tool_use_result": {
+            "stdout": "coder zipf s=1.016 c=42.2 us/expert CPU, hg=8.35 us GPU\nud zipf s=0.953 c=56.4 us/expert CPU, hg=8.83 us GPU\n== coder\n  3060M check: slots 2663 hit 76.0% cpu 18.2 window 58.3 -> 63.8 tok/s\n  P40 24GB       g=1.2: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 61.2 -> 61 tok/s\n  P40 24GB       g=1.6: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 81.4 -> 46 tok/s\n  2080Ti 22GB    g=0.6: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 30.8 -> 121 tok/s\n  2080Ti 22GB    g=0.75: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 38.3 -> 97 tok/s\n  2x2080Ti 22GB  g=0.6: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 31.7 -> 117 tok/s\n  2x2080Ti 22GB  g=0.75: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 39.3 -> 95 tok/s\n== ud\n  3060M check: slots 1867 hit 58.6% cpu 42.7 window 77.6 -> 49.9 tok/s\n  P40 24GB       g=1.2: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 68.6 -> 56 tok/s\n  P40 24GB       g=1.6: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 85.3 -> 45 tok/s\n  2080Ti 22GB    g=0.6: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 45.4 -> 85 tok/s\n  2080Ti 22GB    g=0.75: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 51.6 -> 75 tok/s\n  2x2080Ti 22GB  g=0.6: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 35.6 -> 109 tok/s\n  2x2080Ti 22GB  g=0.75: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 42.0 -> 92 tok/s",
+            "stderr": "",
+            "interrupted": false,
+            "isImage": false,
+            "noOutputExpected": false
+          },
+          "raw_tool_result": {
+            "tool_use_id": "toolu_01UwBtueouPAgCWkmXtEgp9A",
+            "type": "tool_result",
+            "content": "coder zipf s=1.016 c=42.2 us/expert CPU, hg=8.35 us GPU\nud zipf s=0.953 c=56.4 us/expert CPU, hg=8.83 us GPU\n== coder\n  3060M check: slots 2663 hit 76.0% cpu 18.2 window 58.3 -> 63.8 tok/s\n  P40 24GB       g=1.2: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 61.2 -> 61 tok/s\n  P40 24GB       g=1.6: slots 8918 (73%) hit 95.0% CPU 3.8 ms window 81.4 -> 46 tok/s\n  2080Ti 22GB    g=0.6: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 30.8 -> 121 tok/s\n  2080Ti 22GB    g=0.75: slots 7876 (64%) hit 93.1% CPU 5.3 ms window 38.3 -> 97 tok/s\n  2x2080Ti 22GB  g=0.6: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 31.7 -> 117 tok/s\n  2x2080Ti 22GB  g=0.75: slots 12288 (100%) hit 100.0% CPU 0.0 ms window 39.3 -> 95 tok/s\n== ud\n  3060M check: slots 1867 hit 58.6% cpu 42.7 window 77.6 -> 49.9 tok/s\n  P40 24GB       g=1.2: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 68.6 -> 56 tok/s\n  P40 24GB       g=1.6: slots 7213 (29%) hit 79.6% CPU 21.0 ms window 85.3 -> 45 tok/s\n  2080Ti 22GB    g=0.6: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 45.4 -> 85 tok/s\n  2080Ti 22GB    g=0.75: slots 6322 (26%) hit 77.5% CPU 23.2 ms window 51.6 -> 75 tok/s\n  2x2080Ti 22GB  g=0.6: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 35.6 -> 109 tok/s\n  2x2080Ti 22GB  g=0.75: slots 13005 (53%) hit 89.3% CPU 11.1 ms window 42.0 -> 92 tok/s",
+            "is_error": false
+          }
+        },
+        "raw_arguments": {
+          "command": "python3 - <<'EOF'\nimport math\ndef H(k,s): return sum(i**-s for i in range(1,int(k)+1))+ (k-int(k))*((int(k)+1)**-s)\ndef hit(k,N,s): return H(min(k,N),s)/H(N,s)\ndef fit(k,N,h):\n    lo,hi=0.0,3.0\n    for _ in range(60):\n        m=(lo+hi)/2\n        (lo,hi)=(m,hi) if hit(k,N,m)<h else (lo,m)\n    return (lo+hi)/2\n# measured on the 3060M (decode windows): hit share of distinct experts per layer-window, slots per layer\nM={\"coder\":dict(N=256,slots=2666,h=28.6/37.6,D=37.6,c=15.8/(7.8*48),hg=11.46/(28.6*48),G0=31.0,draft=5.2,tpw=3.72,blob=2.06,cache=5.11,total=23.42),\n   \"ud\":dict(N=512,slots=1864,h=22.3/38.1,D=38.1,c=33.0/(12.2*48),hg=9.45/(22.3*48),G0=29.8,draft=5.2,tpw=3.87,blob=2.41,cache=4.19,total=55.43)}\nfor m,d in M.items(): d[\"s\"]=fit(d[\"slots\"]/48,d[\"N\"],d[\"h\"]); print(m,\"zipf s=%.3f\"%d[\"s\"], \"c=%.1f us/expert CPU, hg=%.2f us GPU\"%(d[\"c\"]*1e3,d[\"hg\"]*1e3))\ndef window(d,cache_gib,g,cpu_scale=1.0):\n    slots=min(cache_gib*1.0737e9/(d[\"blob\"]*1e6), d[\"N\"]*48)\n    h=hit(slots/48,d[\"N\"],d[\"s\"]); cpuN=d[\"D\"]*(1-h)*48; hitsN=d[\"D\"]*h*48\n    cpu=cpuN*d[\"c\"]*cpu_scale; hits=hitsN*d[\"hg\"]*g\n    wait=max(0.5,0.88*cpu-0.48*hits) if cpu>0.05 else 0.5\n    w=d[\"G0\"]*g+hits+wait+d[\"draft\"]*g+0.1\n    return slots,h,cpu,w,1000*d[\"tpw\"]/w\ncards={\"3060M 12GB (model check)\":(0,1.0),\"P40 24GB\":(12,None),\"2080Ti 22GB\":(10,None)}\nfor m,d in M.items():\n    print(\"==\",m)\n    s,h,c,w,t=window(d,d[\"cache\"],1.0); print(f\"  3060M check: slots {s:.0f} hit {h:.1%} cpu {c:.1f} window {w:.1f} -> {t:.1f} tok/s\")\n    for name,extra,gs in [(\"P40 24GB\",12,(1.2,1.6)),(\"2080Ti 22GB\",10,(0.6,0.75)),(\"2x2080Ti 22GB\",10+15,(0.6,0.75))]:\n        for g in gs:\n            s,h,c,w,t=window(d,d[\"cache\"]+extra,g)\n            hand=0.3 if name.startswith(\"2x\") else 0\n            w2=w+hand; print(f\"  {name:14s} g={g}: slots {s:.0f} ({s/(d['N']*48):.0%}) hit {h:.1%} CPU {c:.1f} ms window {w2:.1f} -> {1000*d['tpw']/w2:.0f} tok/s\")\nEOF",
+          "description": "Model decode speed for P40 and 2080 Ti setups"
+        }
+      }
+    },
+    {
+      "step_id": 330,
+      "timestamp": "2026-10-17T15:07:58.436Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "",
+      "metrics": {
+        "prompt_tokens": 271056,
+        "completion_tokens": 3671,
+        "cached_tokens": 271054,
+        "extra": {
+          "cache_creation_input_tokens": 8440,
+          "cache_read_input_tokens": 271054,
+          "output_tokens_details": {
+            "thinking_tokens": 1788
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 8440,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 3671,
+              "cache_read_input_tokens": 271054,
+              "cache_creation_input_tokens": 8440,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 8440
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 331,
+      "timestamp": "2026-10-17T15:08:07.043Z",
+      "source": "agent",
+      "model_name": "claude-opus-5-5",
+      "message": "# P40 / 2080 Ti 22G 换卡估算（解码 tok/s）\n\n**结论：** 一块 2080 Ti 22G 最划算，Coder 约快 20–80%，UD 约快 20–55%。P40 基本没有提升，Coder 还可能变慢。两块 2080 Ti 主要对 UD 有用；NVLink 用不上。\n\n## 估算方法\n\n以本机实测为基础：Coder 修了路由后约 66 tok/s，UD 约 55 tok/s，每个窗口的时间按 GPU、CPU、草稿拆开。换卡只改变两样东西：\n- **显存变大，能缓存的专家变多，CPU 要算的专家变少。** 命中率用 Zipf 分布拟合本机实测：Coder 2666 个槽命中 76%，UD 1864 个槽命中 58.6%。PCIe 3.0 的卡按 `--pcie-frac 0` 算。\n- **GPU 本身的速度。** 用系数 g 表示 GPU 部分耗时相对 3060M 的倍数，这是最大的不确定项。前面测过，这些解码内核只用到显存带宽的约 40%，不能单按带宽算：\n  - 2080 Ti：68 个 SM、616 GB/s，但 Turing 每个 SM 的 FP32 单元只有 Ampere 的一半，取 g = 0.6–0.9；\n  - P40：Pascal 架构、346 GB/s、1.5 GHz，取 g = 1.2–1.6。\n\n用这个模型反算本机，得到 Coder 63.8 tok/s、UD 49.9 tok/s，比实测低 4–10%。所以下面的数偏保守。\n\n| 配置 | 缓存能放下的专家（Coder / UD） | **Coder IQ1_M** | **UD-IQ4_XS** |\n|---|---|---|---|\n| 本机 3060M 12G（实测） | 22% / 8% | **66** | **55** |\n| P40 24G | 73% / 29% | 46–61 | 45–56 |\n| 2080 Ti 22G | 64% / 26% | 80–120 | 67–85 |\n| 2× 2080 Ti 22G | 100% / 53% | 79–117 | 80–109 |\n\n**各配置怎么解读：**\n- **P40：** 显存多一倍，CPU 专家从每窗口约 16 ms 降到约 4 ms；但 GPU 本身更慢，而 Coder 本来就卡在 GPU 上，所以抵消甚至变慢。UD 的提升来自 CPU 等待减少，被更慢的 GPU 吃掉。\n- **2080 Ti 22G：** 两头都占优，显存多 10 GB，GPU 也更快。\n- **两块 2080 Ti：** Coder 在一块卡上就能命中约 93%，加第二块卡几乎没用。Strata 的层切分是流水线方式，解码时两卡轮流算，第二块还要加一次交接。UD 的命中率从 77% 升到 89%，比单卡快约 20–30%。\n- **NVLink 没有用：** Strata 每个窗口只经主机内存交接几百 KB，不用 P2P 或 NVLink（`docs/MULTI_GPU.md`）。\n\n## Prefill：只能定性估计\n\n两种卡都是 PCIe 3.0（约 12 GB/s，本机实测 26.8），而 prefill 每个块都要把没缓存的专家整个流过一遍：\n- **2080 Ti：**\n  - Coder：没缓存的专家从 18 GiB 降到 8 GiB，正好抵消链路变慢；加上 int8 张量核更快，估计快 1.3–1.8 倍。\n  - UD：每块要流约 41 GiB，PCIe 3.0 上约 3.6 s（本机约 2 s），会被链路限住，估计只快 0–40%。\n  - 两块卡时，文档实测流水线让 prompt 再快 18–20%。\n- **P40：** 没有张量核（MMQ 只能走 dp4a），FP16 速度只有 1/64，prompt 注意力要退回旧内核，所以 prefill 很可能比 3060M 慢，估计只有 0.3–0.7 倍。\n\n## 实际限制\n\n- **P40 不在正式支持范围内。** 引擎要求算力 7.5 以上；P40 是 6.1，只能用社区维护的实验构建 `-DSTRATA_EXPERIMENTAL_SM60=ON`。它需要 CUDA 12.x 工具链（CUDA 13 已不支持 Pascal），注释里只写了 sm_60 和 sm_70，sm_61 没人测过。另外 P40 是被动散热，需要加风扇，供电是 8-pin EPS。\n- **这块主板只有一个 x16 显卡槽**（从 `lspci` 看）。第二块 2080 Ti 得靠 M.2 转 PCIe（x4），Strata 支持 x4，但功耗约 2×250 W，机箱和电源都要考虑。\n- **大显存的附带好处：** 22–24 GB 能把上下文开到 64K 而不用 KV 流式（现在 12 GB 只推荐 32K）。\n\n以上都是估算，没有实测。主要的不确定项是 g 系数和 Zipf 拟合的命中率曲线，表里的范围就是按这两项取的。要我把这段估算写进 `docs/3060M.md` 吗？",
+      "metrics": {
+        "prompt_tokens": 271056,
+        "completion_tokens": 3671,
+        "cached_tokens": 271054,
+        "extra": {
+          "cache_creation_input_tokens": 8440,
+          "cache_read_input_tokens": 271054,
+          "output_tokens_details": {
+            "thinking_tokens": 1788
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 8440,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "global",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 3671,
+              "cache_read_input_tokens": 271054,
+              "cache_creation_input_tokens": 8440,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 8440
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard",
+          "fallback_credit": null
+        }
+      },
+      "extra": {
+        "stop_reason": "end_turn",
+        "cwd": "/home/luwei/work/AI/Strata",
+        "is_sidechain": false
+      }
     }
   ],
   "final_metrics": {
-    "total_prompt_tokens": 42893668,
-    "total_completion_tokens": 225904,
-    "total_cached_tokens": 42893064,
-    "total_steps": 313,
+    "total_prompt_tokens": 46287549,
+    "total_completion_tokens": 283894,
+    "total_cached_tokens": 46286919,
+    "total_steps": 331,
     "extra": {
       "service_tiers": [
         "standard"
       ],
-      "total_cache_creation_input_tokens": 653301,
-      "total_cache_read_input_tokens": 42893064
+      "total_cache_creation_input_tokens": 715790,
+      "total_cache_read_input_tokens": 46286919
     }
   }
 }
