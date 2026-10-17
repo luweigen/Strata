@@ -10,6 +10,7 @@
 #include "strata/kernels/cpu/expert_layout.hpp"
 #include "strata/kernels/bf16_gemv.hpp"
 #include "strata/kernels/native_router.hpp"
+#include "strata/kernels/router_top10.hpp"
 #include "strata/kernels/native_moe.hpp"
 #include "strata/kernels/cpu/expert.hpp"
 #include "strata/kernels/elementwise.hpp"
@@ -678,6 +679,15 @@ bool Verifier::record_window(int T, cudaStream_t cs, std::string& err) {
                                           NE, n, cs);
                 native_router_top10_multi(logits_ + tb * NE, ids_ + tb * K, w_ + tb * K, n, cs);
             } catch (const std::exception& e) { err = "verify router: " + std::string(e.what()); return false; }
+        } else if (dec_batch && n > 1 && w_router != nullptr && native_router_enabled()) {
+            // any other geometry (the GSQ-RCO Coder: 256 experts): the same GEMV for the window's rows, then the
+            // generic top-k once for all of them (one block per row: each row's result is its single-row call's).
+            // Per token it was 4.5 ms per window on the 3060M against 0.9 for UD-IQ4_XS's 512-expert path.
+            try {
+                bf16_gemv_fp32_mmvf_multi(mixed_ + tb * N, N, (const uint16_t*) w_router->data, logits_ + tb * NE, NE, N,
+                                          NE, n, cs);
+            } catch (const std::exception& e) { err = "verify router: " + std::string(e.what()); return false; }
+            router_top10(logits_ + tb * NE, n, (int) NE, (int) K, ids_ + tb * K, w_ + tb * K, cs);
         } else
         for (int t = tb; t < te; ++t) {
             MoEBuffers mb = ss.moe;

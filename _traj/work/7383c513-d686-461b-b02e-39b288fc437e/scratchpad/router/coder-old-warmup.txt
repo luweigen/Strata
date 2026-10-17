@@ -1,0 +1,18 @@
+```cpp
+#include <mutex>
+#include <list>
+#include <unordered_map>
+#include <utility>
+
+template <typename K, typename V>
+class LRUCache {
+public:
+    explicit LRUCache(size_t capacity) : capacity_(capacity) {}
+
+    bool get(const K& key, V& value) {
+        std::lock_guard<std::mutex> lock(mutex_);
+        auto it = map_.find(key);
+        if (it == map_.end()) {
+            return false;
+        }
+        // Move the node to the front of the list (most

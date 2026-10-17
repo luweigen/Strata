@@ -1,0 +1,25 @@
+```cpp
+static std::vector<std::string> llama_get_list_splits(const std::string & path, const int idx, const int n_split) {
+    std::vector<std::string> paths;
+    paths.reserve(n_split);
+
+    std::vector<char> buf(llama_path_max(), 0);
+
+    int ret = llama_split_prefix(buf.data(), buf.size(), path.c_str(), idx, n_split);
+    if (!ret) {
+        throw std::runtime_error(format("invalid split file name: %s", path.c_str()));
+    }
+
+    std::string split_prefix(buf.data(), ret);
+    if (split_prefix.empty()) {
+        throw std::runtime_error(format("invalid split file: %s", path.c_str()));
+    }
+
+    for (int i = 0; i < n_split; ++i) {
+        ret = llama_split_path(buf.data(), buf.size(), split_prefix.c_str(), i, n_split);
+        paths.emplace_back(buf.data(), ret);
+    }
+
+    return paths;
+}
+```
