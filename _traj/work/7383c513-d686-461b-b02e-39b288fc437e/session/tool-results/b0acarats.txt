@@ -1,0 +1,450 @@
+     1	# Strata on an RTX 3060 Laptop GPU: a manual conda install, speed and BFCL against llama.cpp
+     2	
+     3	This page records work on one desktop PC (RTX 3060 Laptop GPU 12 GB on a desktop card, Ryzen 9 8945HX, 92 GiB
+     4	RAM; details in [The PC](#the-pc)), 2026-10-02/03:
+     5	
+     6	- an install done by hand, without `setup.py`: the same steps setup does, with every dependency in an active conda
+     7	  environment (`strata`) instead of `.venv` and a system CUDA toolkit. Use it when you want Strata in your own conda
+     8	  environment, have no sudo, or already have the GGUF files;
+     9	- the GSQ-RCO Coder IQ1_M and Unsloth's UD-IQ4_XS (not a setup choice) measured against llama.cpp on a Strix Halo,
+    10	  on the tasks of EngramHalo.cpp's `docs/strix-halo/windows.md`;
+    11	- `/v1/completions`, added to the server for BFCL's path B, and BFCL multi-turn pilots against the Strix Halo's
+    12	  llama.cpp runs;
+    13	- where the CPU time goes during BFCL (threads, SMT, temperatures).
+    14	
+    15	## The PC
+    16	
+    17	A desktop mini board, not a laptop: a mobile CPU (Ryzen 9 8945HX) on a mini-ITX-class board, and a mobile GPU chip
+    18	(GA106M, "RTX 3060 Laptop GPU") on a desktop PCIe card, the kind sold as a converted laptop GPU (subsystem ID
+    19	`10de:0000`, no OEM's). The model's experts live in system RAM; the GPU holds the dense layers, the KV cache and a
+    20	cache of experts (2666 of the Coder's, 1864 of UD-IQ4_XS's); the experts it does not hold are computed by the CPU
+    21	from RAM or copied to the GPU over PCIe (`--pcie-frac`). So the numbers that matter are the GPU's VRAM and memory
+    22	bandwidth, the PCIe link, the RAM's bandwidth and the CPU's cores. Read on 2026-10-03 with `lscpu`, `nvidia-smi -q`,
+    23	sysfs and `lspci`; "spec" marks a vendor figure, "measured" one measured on this PC.
+    24	
+    25	**GPU**
+    26	
+    27	| | |
+    28	|---|---|
+    29	| Card | NVIDIA GeForce RTX 3060 Laptop GPU, GA106M (`10de:2520`, rev a1), Ampere, compute capability 8.6; VBIOS 94.06.0F.00.AE |
+    30	| VRAM | 12288 MiB GDDR6; memory clock 7001 MHz (14 Gbps effective); 192-bit bus, 336 GB/s (spec for GA106 at 14 Gbps) |
+    31	| Cores, clocks | 30 SMs, 3840 CUDA cores (spec); graphics clock up to 2100 MHz, 1980 MHz seen under the BFCL load |
+    32	| Power | 80 W limit (default and current; the card allows 1-85 W); P0 under load; 60-64 °C at 100% load |
+    33	| PCIe link | **PCIe 4.0 x16** (16 GT/s, x16, the card's maximum; the slot can do 5.0): about 31.5 GB/s each way in theory |
+    34	| PCIe, measured | **26.8 GB/s host to device** (the engine's probe at every start, so `--pcie-frac 0.55`, the default) |
+    35	| BAR1 | 8192 MiB (less than the 12 GiB of VRAM) |
+    36	| Driver | 580.142, the official driver repacked by "FrankenDriver" for converted cards: same kernel module, plus `NVreg_RegistryDwords="RM1457588=1;"` (see `~/3060M-FrankenDriver-Linux.md`); GSP firmware on, persistence mode off, dynamic power management 3 |
+    37	| CUDA | 13.0 toolkit in the conda environment (nvcc 13.0.88, cuBLAS 13.1.1.3); the engine is built for sm_86 |
+    38	
+    39	**CPU**
+    40	
+    41	| | |
+    42	|---|---|
+    43	| CPU | AMD Ryzen 9 8945HX (Zen 4, mobile "HX"), 16 cores / 32 threads, 1 socket, 1 NUMA node |
+    44	| Layout | two chiplets: CCD1 = cores 0-7, CCD2 = cores 8-15; logical CPUs 16-31 are the SMT siblings of 0-15 |
+    45	| Caches | L1d 32 KiB + L1i 32 KiB per core, L2 1 MiB per core (16 MiB), L3 64 MiB (32 MiB per chiplet) |
+    46	| Vector | AVX2 and AVX-512 (F, BW, DQ, VL, CD, IFMA, VBMI, VBMI2, VNNI, **BF16**, BITALG, VPOPCNTDQ) |
+    47	| Clocks | 400-5461 MHz; measured under the BFCL load: 5083 MHz on CCD1, 4901 MHz on CCD2 |
+    48	| Power policy | `amd-pstate-epp`, governor `powersave`, energy preference `performance` |
+    49	| Strata's use | 15 expert-pool workers pinned to cores 1-15 and the host thread on core 0; SMT siblings left idle (see "Where the CPU time goes") |
+    50	
+    51	**Memory**
+    52	
+    53	| | |
+    54	|---|---|
+    55	| Modules | 2 x 48 GB DDR5 SO-DIMM, Crucial `CT48G56C46S5.M16B1` (manufacturer ID bank 6, 0x9B), dual rank, unbuffered, no ECC, 1.1 V |
+    56	| Channels | **dual channel**: one module on channel A, one on channel B (both slots used; the board takes up to 128 GB) |
+    57	| Speed | rated DDR5-5600 (CL46), **running at 5200 MT/s** (the 8945HX's supported maximum) |
+    58	| Bandwidth | 5200 MT/s x 8 bytes x 2 channels = **83.2 GB/s** in theory; **measured: about 55 GB/s read** (66%), see below |
+    59	| Seen by the OS | 98.8 GB (`free`), 92 GiB `MemTotal`; 2 GiB is the iGPU's carve-out (`mem_info_vram_total`) |
+    60	| Settings | swap 8 GiB file (3 MiB used); transparent huge pages `madvise`; no static huge pages |
+    61	| Page cache reads | the engine loads cached model files at 8.7-9.3 GiB/s (a single-threaded file read, not a bandwidth figure) |
+    62	
+    63	Read with `sudo dmidecode -t memory` (saved as `~/dmi-memory.txt`).
+    64	
+    65	**CPU memory bandwidth, measured** (2026-10-04, machine idle). A STREAM-style test in C with OpenMP
+    66	(`benchmarks/2026-10-04-3060m-membw.c`: `gcc -O3 -march=native -ffast-math -fopenmp`, AVX-512 code): three 2 GiB
+    67	arrays (far larger than the 64 MiB L3), best of 5 passes, threads pinned with `OMP_PLACES`/`OMP_PROC_BIND=close`.
+    68	Bytes are counted as STREAM counts them (what the code loads and stores):
+    69	
+    70	| threads (cores) | read | write | copy | triad | memset (NT stores) | memcpy (NT stores) |
+    71	|---|---|---|---|---|---|---|
+    72	| 1 (core 1) | 46.2 | 24.9 | 31.4 | 35.8 | 62.3 | 36.2 |
+    73	| 2 (cores 1-2) | 51.4 | 24.8 | 34.1 | 37.9 | 65.4 | 46.4 |
+    74	| 4 (cores 1-4) | 50.9 | 24.1 | 32.4 | 36.6 | 59.1 | 48.5 |
+    75	| 8 (cores 1-8) | 52.0 | 24.2 | 31.5 | 35.5 | 57.0 | 49.1 |
+    76	| **15 (cores 1-15, Strata's workers)** | **54.6** | 24.1 | 30.9 | 34.6 | 55.2 | 48.2 |
+    77	| 16 (all cores) | 55.5 | 24.2 | 30.8 | 34.5 | 54.5 | 47.9 |
+    78	| 32 (with the SMT siblings) | 55.3 | 24.1 | 30.6 | 34.4 | 49.3 | 47.3 |
+    79	| 8, CCD1 only (cores 0-7) | 49.7 | 23.7 | 31.3 | 35.3 | 56.2 | 48.0 |
+    80	| 8, CCD2 only (cores 8-15) | 46.4 | 23.7 | 31.2 | 35.1 | 56.7 | 48.0 |
+    81	| 8, 4 on each chiplet | **57.0** | 24.7 | 31.6 | 35.4 | 56.1 | 50.0 |
+    82	
+    83	GB/s; a repeat of the 15- and 16-thread rows came within 0.7 GB/s.
+    84	
+    85	- **Read, what Strata's expert workers do** (they only read weights): about **55 GB/s** with 15-16 threads, 66% of
+    86	  the 83.2 GB/s theory; at most 57.0 with 4 threads on each chiplet. One thread already reaches 46 GB/s and 2-4
+    87	  reach 51: memory, not the number of cores, is the limit.
+    88	- **One chiplet** reads 46-50 GB/s, both together 55-57: each chiplet's Infinity Fabric link nearly fills the memory
+    89	  on its own, so spreading over both adds about 10%.
+    90	- **SMT siblings add nothing** (55.3 with 32 threads vs 55.5 with 16; memset drops from 54.5 to 49.3), which agrees
+    91	  with Strata leaving them idle.
+    92	- **Plain stores count half**: `write` and the stores in `copy`/`triad` first read each cache line
+    93	  (read-for-ownership), so 24 GB/s counted is about 48 GB/s of real traffic. Non-temporal stores (glibc's
+    94	  memset/memcpy at this size) skip that: 54-65 GB/s for writing.
+    95	- For comparison on this PC: the GPU's VRAM 336 GB/s (spec), the PCIe link 26.8 GB/s measured. The experts the GPU
+    96	  does not hold are read by the CPU at most at about 55 GB/s, or copied to the GPU at 26.8 GB/s.
+    97	
+    98	**GPU kernel speed, measured** (2026-10-06, GPU otherwise idle). The prompt path's expert products run through
+    99	llama.cpp's MMQ kernels (int8 tensor cores, `strata_mmq` in `build/`). The harness is the Halo branch's
+   100	`benchmarks/2026-10-06-halo-mmq-tiles.cpp` (AIMAX395-ROCm) ported to CUDA as
+   101	`benchmarks/2026-10-06-3060m-mmq-tiles.cu`: `hip*` renamed to `cuda*`, and no `Product::opt_rows`, which this
+   102	branch does not have (here the tile follows the group's largest expert, there its median). Random weight bytes: the
+   103	time is real, the values are not. "Uniform": 512 experts of exactly J rows, groups of 16, the tile for J, the
+   104	kernel's own throughput. "Layer": one 4,165-token layer (41,650 rows, Zipf-like per expert, 3 seeds), class-major,
+   105	groups of 16 within a class, as the engine runs it. Two runs (`benchmarks/2026-10-06-3060m-mmq-tiles.log`):
+   106	
+   107	| TOPS (2 x rows x cols x J) | J=16 | 32 | 48 | 64 | 80 | 96 | 112 | 128 | 256 | layer ms | layer TOPS |
+   108	|---|---|---|---|---|---|---|---|---|---|---|---|
+   109	| gate/up IQ3_XXS (Coder) | 7.9 | 13.9-16.3 | 18.9-21.6 | 25.8 | 27.5-27.8 | 29.9-30.1 | 32.1 | 33.5-33.7 | 33.5-33.6 | 12.1 | 22.5 |
+   110	| gate/up IQ2_S (Coder) | 10.0-10.2 | 14.0-14.1 | 18.7 | 21.4 | 24.6-24.7 | 25.8-25.9 | 27.2 | 28.2 | 28.5 | 13.9 | 19.6-19.7 |
+   111	| gate/up IQ4_XS (UD-IQ4_XS) | 12.1 | 18.8-18.9 | 24.9-25.0 | 28.1-28.3 | 30.8 | 33.3-33.4 | 34.5-34.6 | 35.8 | 36.7-36.8 | 10.9 | 25.1 |
+   112	| gate/up IQ3_S (UD-IQ4_XS) | 9.5-9.6 | 14.4 | 20.6 | 24.2 | 26.7 | 29.3-29.4 | 31.0 | 32.7 | 32.6 | 12.6 | 21.6-21.7 |
+   113	| down IQ4_NL (Coder) | 10.0 | 15.2-15.3 | 16.3-16.9 | 19.5-19.9 | 20.9-21.0 | 24.2 | 25.0-25.1 | 25.8-25.9 | 26.4-26.5 | 7.5 | 18.2 |
+   114	| down Q2_0 (Coder) | 13.6-13.7 | 19.1-19.2 | 23.5-23.6 | 19.9-20.2 | 22.5 | 24.8 | 25.9-26.0 | 27.2 | 27.4-27.6 | 6.7 | 20.2-20.3 |
+   115	| down IQ4_XS (UD-IQ4_XS) | 15.0-15.1 | 23.1-23.3 | 24.1-25.2 | 27.1-27.4 | 29.4-29.6 | 32.4-32.5 | 32.8-32.9 | 35.6 | 37.1-37.2 | 5.3 | 25.7-25.9 |
+   116	| down Q8_0 (UD-IQ4_XS) | 6.0 | 11.3 | 14.2 | 17.0 | 18.3 | 21.2-21.3 | 22.2-22.3 | 23.1 | 25.2 | 8.4-8.5 | 16.1-16.2 |
+   117	
+   118	- **The kernels' peak on this card: 37 TOPS** (down IQ4_XS at 256 rows per expert; gate/up IQ4_XS 36.8), 33-36 TOPS
+   119	  for most types at J = 128, 25-28 for IQ2_S, IQ4_NL, Q2_0 and Q8_0. The two runs agree within 1% except IQ3_XXS
+   120	  at J = 32-48 (13.9 vs 16.3, 18.9 vs 21.6).
+   121	- **Small tiles are slow**: J = 16 reaches 6-15 TOPS, a quarter to a half of J = 128. Q2_0 down is slower at J = 64
+   122	  than at 48 (about 20 vs 23.5, both runs).
+   123	- **One layer runs at 16-26 TOPS**, 66-75% of the uniform J = 128 speed. The experts above 128 rows hold 52% of
+   124	  the rows (21,591) and take 37-47% of the layer's time; those of 17-32 rows hold 13% and take 17-23%.
+   125	- Clocks during the run (`nvidia-smi` every 200 ms): SM 1582-1762 MHz, mean 1656, not the 2100 MHz maximum;
+   126	  35 W mean, 38.6 W at most, under the 80 W limit; memory at 7001 MHz. Every sample reports the throttle reason
+   127	  0x4 ("SW power cap") although the draw is far below the limit; not explained yet.
+   128	- Against the int8 tensor cores' peak: GA10x does 2,048 dense int8 operations per clock per SM (from NVIDIA's RTX
+   129	  3090 figure: 284 TOPS, 82 SMs, 1695 MHz), so 30 SMs give 102 TOPS at the 1656 MHz measured (129 at 2100 MHz).
+   130	  37 TOPS is 36% of that.
+   131	- Against the Halo (Radeon 8060S, gfx1151, same harness, same layer, tile for the median): 22.6-30.7 ms per layer
+   132	  for the four gate/up types and 10.2-15.0 ms for the four down types with its shipped `max-ilp` build
+   133	  (`AIMAX+395-ROCm.md` on that branch); here 10.9-13.9 and 5.3-8.5 ms, 1.7-2.2 times faster per type (the tile choice differs, see above).
+   134	
+   135	**cuBLAS GEMM speed, measured** (2026-10-06, GPU otherwise idle). The Halo branch's
+   136	`benchmarks/2026-10-05-halo-gemm-variants.cpp` (`GemmEx` across input/output types, layouts and shapes, constant
+   137	nonzero data, 10 timed calls, 200 for the small shapes) ported to cuBLAS as
+   138	`benchmarks/2026-10-05-3060m-gemm-variants.cu`: `hip*` renamed, and the `compute 16F` row given `__half`
+   139	alpha/beta (cuBLAS reads them in the compute type; with the original's float 1.0 it read 0, skipped the product and
+   140	reported 661 TFLOP/s). Three runs back to back (`benchmarks/2026-10-06-3060m-gemm-variants.log`); the table gives
+   141	runs 2-3, as run 1's first three rows were still on a rising clock (20.3-23.7 TFLOP/s). SM clock 1935-2017 MHz.
+   142	
+   143	| shape, layout, types | 3060M TFLOP/s | Halo (gfx1151, hipBLAS + hipBLASLt) |
+   144	|---|---|---|
+   145	| the engine's dense shape N=3072 T=8192 K=2048, T/N, **BF16 or FP16 in -> FP32 out** | **28.0-28.1** | 4.3 |
+   146	| the same, FP16 -> FP16 out / BF16 -> BF16 out | 29.0-29.1 / 28.8-29.0 | 23.6-24.0 |
+   147	| the same, FP16 -> FP16, compute 16F (FP16 accumulate) | 37.4-38.6 | - |
+   148	| N/N layout, FP16 -> FP32 / FP16 -> FP16 | 27.7-27.8 / 28.3 | 5.3 / 20.3 |
+   149	| 4096^3, T/N FP16 -> FP32 / N/N FP16 -> FP16 / T/N BF16 -> BF16 | 26.6-26.7 / 27.4-27.5 / 28.2 | 4.3 / 25.4 / 26.1 |
+   150	| the expert shape N=1280 T=160 K=2560, FP16 -> FP32 / FP16 -> FP16 | 22.2 / 21.8-22.2 | 3.5 / 18.7 |
+   151	| the expert down shape N=2560 T=160 K=640, FP16 -> FP32 | 10.6 | 3.7 |
+   152	| decode-like N=3072 T=8 K=2048, FP16 -> FP32 | 2.0 | 1.0 |
+   153	
+   154	- **No FP32-output penalty here**: FP32 out runs at 96-97% of 16-bit out on the engine's shape (28.0 vs 29.0),
+   155	  where the Halo's hipBLAS loses 5-6x. Every `cublasGemmEx` the engine issues asks for FP32 out, so this card needs
+   156	  no tuning table for it.
+   157	- **The library is near the card's limit**: GeForce Ampere does FP16/BF16 with FP32 accumulate at 512 operations
+   158	  per clock per SM (from NVIDIA's RTX 3090 figure: 71 TFLOPS, 82 SMs, 1695 MHz), 30.4 TFLOP/s for 30 SMs at
+   159	  1980 MHz. 28-29 TFLOP/s is 92-95% of that. FP16 accumulate is twice the rate (60.8); 37-39 TFLOP/s measured,
+   160	  and the Halo branch found FP16 accumulate too inexact for the engine (1.2e-2 relative error against 3.3e-4).
+   161	- **The small shapes take 47-51 us each** whatever their size: the expert gate/up (1.05 GFLOP) 22 TFLOP/s, the
+   162	  down (0.52 GFLOP) 10.6, decode-like (0.10 GFLOP) 2.0. The decode-like call reads 12.6 MB of weights in 50 us,
+   163	  252 GB/s, 75% of the VRAM's 336 GB/s.
+   164	- Against the int8 MMQ above (37 TOPS at best, 16-26 TOPS per layer): the FP16 GEMM at an expert's shape gives
+   165	  22 TFLOP/s, but the engine's experts stay quantized for MMQ, which reads each 0.5-1.7 MB expert once instead of a
+   166	  dequantized FP16 copy.
+   167	
+   168	**Storage and network**
+   169	
+   170	| | |
+   171	|---|---|
+   172	| SSD | Acer SSD N3500 1 TB (MAXIO MAP1202, DRAM-less), **PCIe 3.0 x4** (8 GT/s x4: about 3.9 GB/s in theory); root on LVM, 688 GB free |
+   173	| Measured | the engine's expert load at start: 55.4 GiB of UD-IQ4_XS experts at 2.57-2.75 GiB/s (20-22 s), 23.4 GiB of Coder experts at 1.7-2.9 GiB/s - from the SSD, or partly from the page cache; when they are all cached: 8.7-9.3 GiB/s |
+   174	| Network share | `/mnt/evox2` (SMB): 112 MB/s measured with `rsync` (59.3 GB in 8 min 24 s; 93.7 GB in 13 min 16 s); loading a model straight from it ran at 0.11 GiB/s |
+   175	
+   176	**System and software**
+   177	
+   178	| | |
+   179	|---|---|
+   180	| Board | "Micro Computer (HK) Tech Limited" / "Meigao Innovation Technology", product `MotherBoard Series`, board `DRFXL`, BIOS 1.14 (2025-11-13); chassis type 3 = desktop |
+   181	| iGPU | AMD Raphael (Radeon 610M class), PCIe-attached at 16 GT/s x16; not used by Strata |
+   182	| OS | Ubuntu 24.04.4 LTS, Linux 6.8.0-136-generic, gcc 13.3.0 |
+   183	| Python | 3.14.7 in the conda environment `strata` (`~/miniconda3/envs/strata`); BFCL in `bfcl-py312` (Python 3.12) |
+   184	| Models | Qwen3.8-Flash-Next Coder IQ1_M (2 shards, 58.4 GB) and Unsloth UD-IQ4_XS (3 shards, 93.7 GB), in `~/Documents` |
+   185	
+   186	## Why not setup.py
+   187	
+   188	`./setup.sh` was tried first. Two things made the manual route the better one on this PC:
+   189	
+   190	- **No ready-made engine.** Step 4 got HTTP 404 for the release download (v0.1.34, then the latest release), so the
+   191	  engine has to be compiled here.
+   192	- **The CUDA toolkit needs sudo.** setup installs `cuda-toolkit-13-0` through apt (`setup.py` `install_build_tools`),
+   193	  which asks for a password and stopped the run: `sudo: a terminal is required to read the password`.
+   194	- **Its Python packages go into `.venv`,** not into the conda environment. `setup.sh` creates `.venv` from whatever
+   195	  `python3` is first on PATH (here the conda one), with `include-system-site-packages = false`.
+   196	
+   197	The CUDA toolkit from conda needs no sudo and lives in the environment, so everything below goes there. The `.venv`
+   198	setup made was deleted afterwards.
+   199	
+   200	## 1. Copy the model files
+   201	
+   202	The GGUF files came from a network share. A local copy on the SSD (`rsync`, 112 MB/s, 8 min 24 s for 59.3 GB):
+   203	
+   204	```sh
+   205	rsync -a --info=progress2 "/mnt/evox2/Users/Wei Lu/Documents/Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF/" \
+   206	      ~/Documents/Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF/
+   207	```
+   208	
+   209	The folder as published: the shards in `IQ1_M/`, the vision encoder one level up.
+   210	
+   211	```
+   212	Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF/
+   213	  IQ1_M/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.gguf   29.6 GB
+   214	  IQ1_M/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00002-of-00002.gguf   28.8 GB
+   215	  mmproj-Qwen3.8-Flash-Next-BF16.gguf                           0.9 GB
+   216	  tensor-allocation/, README.md, chat_template.jinja, run-server.ps1
+   217	```
+   218	
+   219	All 7 file sizes were compared with the source after the copy: they match. (The `.done` files next to the shards
+   220	were written by the first `setup.py` run; they are harmless.)
+   221	
+   222	## 2. Python packages
+   223	
+   224	The same pinned packages setup installs, into the active environment:
+   225	
+   226	```sh
+   227	conda activate strata
+   228	python -m pip install -r requirements.txt
+   229	```
+   230	
+   231	This includes `cmake` 4.4.3 and `ninja` 1.13.2, used for the build.
+   232	
+   233	## 3. The CUDA toolkit, from conda
+   234	
+   235	```sh
+   236	conda install -n strata -c nvidia/label/cuda-13.0.3 -c nvidia cuda-toolkit=13.0.3
+   237	```
+   238	
+   239	Installed: `cuda-toolkit` 13.0.3, `cuda-nvcc` 13.0.88, `cuda-cudart` 13.0.96, `libcublas` 13.1.1.3. `nvcc` is in
+   240	`$CONDA_PREFIX/bin`, the libraries in `$CONDA_PREFIX/lib`. CUDA 13.0 is what setup installs; an RTX 30 card (sm_86)
+   241	would also build with 12.x.
+   242	
+   243	## 4. The engine
+   244	
+   245	llama.cpp at the pinned commit (`3cf0325`) is in `third_party/llama.cpp` (the first `setup.py` run downloaded it;
+   246	`setup.py` `get_llama_cpp` shows the zip URL). The build uses setup's CMake flags, plus `CUDAToolkit_ROOT` so CMake
+   247	finds the conda toolkit:
+   248	
+   249	```sh
+   250	cmake -G Ninja -S . -B build -DCMAKE_BUILD_TYPE=Release \
+   251	      -DSTRATA_ENABLE_CUDA=ON -DSTRATA_BUILD_TESTS=OFF -DCMAKE_CUDA_ARCHITECTURES=86 \
+   252	      -DCMAKE_CUDA_COMPILER=$CONDA_PREFIX/bin/nvcc -DCUDAToolkit_ROOT=$CONDA_PREFIX \
+   253	      -DSTRATA_GGML_DIR=$PWD/third_party/llama.cpp
+   254	cmake --build build --target strata -j 16
+   255	mkdir -p engine && cp build/strata engine/strata
+   256	```
+   257	
+   258	It built on the first attempt (126 steps, system gcc 13.3.0 as the host compiler). `ldd engine/strata` shows
+   259	`libcudart.so.13`, `libcublas.so.13` and `libcublasLt.so.13` from `~/miniconda3/envs/strata/lib`.
+   260	
+   261	`engine/BUILD.json` is written as setup writes it for a local build (`"source": "local"`, `"archs": [86]`, the
+   262	source fingerprint from `setup.source_hash`, `cuda_dirs` = the environment's `bin` and `lib`), so a later
+   263	`setup.py` sees the engine as already built.
+   264	
+   265	## 5. The pack
+   266	
+   267	The model data go to `../Strata-data`, setup's default data folder, so setup finds them too. The experts stay in the
+   268	GGUF and are read from it at start; the pack holds the index, the dense tensors and the tokenizer:
+   269	
+   270	```sh
+   271	export STRATA_GGUF_PY=$PWD/third_party/llama.cpp/gguf-py
+   272	python tools/iq_pack.py \
+   273	  --gguf ~/Documents/Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF/IQ1_M/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.gguf \
+   274	  --out ../Strata-data/packs/coder-iq1_m
+   275	```
+   276	
+   277	Result: 1079 tensors, 302 served natively, arena 1.37 GiB; `tokenizer/` with a vocabulary of 248320. The low-RAM
+   278	`--experts-bin` file is not needed: IQ1_M uses ~23 GB of RAM and this PC has 92.
+   279	
+   280	## 6. The MTP draft layer
+   281	
+   282	The draft layer for speculative decoding comes from the original Qwen checkpoint (only its MTP tensors, 4.9 GB):
+   283	
+   284	```sh
+   285	M=../Strata-data/mtp
+   286	python tools/mtp_fetch.py fetch --out $M
+   287	python tools/mtp_pack.py --src $M --experts q2_0 --out $M/mtp-q2_0.gguf
+   288	python tools/mtp_rt.py --gguf $M/mtp-q2_0.gguf --out $M/rt
+   289	cp data/draft_vocab.bin $M/rt/draft_vocab.bin     # setup's default subset (cjk)
+   290	```
+   291	
+   292	## 7. The config and the start script
+   293	
+   294	`strata-coder-iq1_m.json` carries the arguments setup chooses for this PC: 32K context (recommended for 12 GB
+   295	VRAM), 8-bit KV cache, no images, no KV streaming (it starts at 64K), no low-RAM mode. Shard 2 holds the
+   296	`per_layer_token_embd` table, so it is the `--ple-gguf`:
+   297	
+   298	```json
+   299	{
+   300	 "exe": "/home/luwei/work/AI/Strata/engine/strata",
+   301	 "args": ["--pack", "/home/luwei/work/AI/Strata-data/packs/coder-iq1_m",
+   302	          "--native", "<GGUF folder>/IQ1_M/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.gguf",
+   303	          "--ple-gguf", "<GGUF folder>/IQ1_M/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00002-of-00002.gguf",
+   304	          "--expert-profile", "/home/luwei/work/AI/Strata/data/expert-profile-coder.bin",
+   305	          "--expert-cache", "auto", "--prefill", "auto", "--spec", "4", "--spec-min-p", "0.5",
+   306	          "--mtp", "/home/luwei/work/AI/Strata-data/mtp/rt",
+   307	          "--max-context", "32768", "--kv", "int8", "--pcie-frac", "0.2"],
+   308	 "cwd": "/home/luwei/work/AI/Strata",
+   309	 "tokenizer": "/home/luwei/work/AI/Strata-data/packs/coder-iq1_m/tokenizer",
+   310	 "model_name": "qwen3.8-flash-next-coder-iq1_m",
+   311	 "log": "/home/luwei/work/AI/Strata/strata-coder-iq1_m.log",
+   312	 "lib_dirs": ["/home/luwei/miniconda3/envs/strata/bin", "/home/luwei/miniconda3/envs/strata/lib"],
+   313	 "port": 8080
+   314	}
+   315	```
+   316	
+   317	`--pcie-frac 0.2` was added on 2026-10-04, after the measurement in [`--pcie-frac`: decode and prefill](#--pcie-frac-decode-and-prefill)
+   318	(setup leaves it to the engine, which picks 0.55 here); everything measured before that ran at 0.55.
+   319	
+   320	`lib_dirs` is what makes the conda CUDA libraries work: the server puts them on the engine's `LD_LIBRARY_PATH`
+   321	(`serve/server.py`, `child_env`).
+   322	
+   323	`run-coder-iq1_m.sh` starts the server with the environment's Python (not `.venv`):
+   324	
+   325	```sh
+   326	#!/bin/sh
+   327	cd "/home/luwei/work/AI/Strata"
+   328	exec "/home/luwei/miniconda3/envs/strata/bin/python" "/home/luwei/work/AI/Strata/serve/server.py" --engine strata --config "/home/luwei/work/AI/Strata/strata-coder-iq1_m.json" --port 8080 --open
+   329	```
+   330	
+   331	Start the model with `./run-coder-iq1_m.sh`, not `./setup.sh`: setup.sh would make a new `.venv`.
+   332	
+   333	## Where everything is
+   334	
+   335	| What | Where |
+   336	|---|---|
+   337	| Python packages, CUDA toolkit 13.0 | conda environment `strata` |
+   338	| Engine | `engine/strata`, `engine/BUILD.json` (build tree: `build/`) |
+   339	| llama.cpp 3cf0325 | `third_party/llama.cpp` |
+   340	| GGUF shards (read in place) | `~/Documents/Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF/IQ1_M/` |
+   341	| Pack | `../Strata-data/packs/coder-iq1_m/` |
+   342	| MTP draft layer | `../Strata-data/mtp/rt/` |
+   343	| Config, start script | `strata-coder-iq1_m.json`, `run-coder-iq1_m.sh` |
+   344	
+   345	Nothing was installed system-wide and no sudo was used.
+   346	
+   347	## First start and a test request
+   348	
+   349	All steps done; the MTP layer is 4.9 GB of downloaded tensors, 848 MB as `mtp-q2_0.gguf` and 787 MB in `rt/`.
+   350	
+   351	The first start (`python serve/server.py --engine strata --config strata-coder-iq1_m.json --port 8080`) answered
+   352	on `/v1/models` after 19 s:
+   353	
+   354	- experts loaded into RAM: 23.42 GiB at 2.86 GiB/s
+   355	- GPU expert cache: 2666 experts, 5.11 GiB of VRAM; 11579 MiB of the 12288 MiB in use with the model loaded
+   356	
+   357	One request, measured on this PC (RTX 3060 Laptop 12 GB, Ryzen 9 8945HX, 92 GB RAM; 32K context, 8-bit KV),
+   358	"Write a Python function that checks whether a number is prime. Code only.", `max_tokens` 600:
+   359	
+   360	| | |
+   361	|---|---|
+   362	| prompt | 67 tokens in 1.31 s (51 tokens/s) |
+   363	| output | 245 tokens in 5.97 s (41.0 tokens/s) |
+   364	| MTP drafts | 164 of 197 accepted (83%) |
+   365	| expert cache hits | 64.6% |
+   366	
+   367	The answer was a correct `is_prime` (trial division by odd numbers up to the square root). This is one short
+   368	request, not a benchmark: longer answers and longer contexts were not measured.
+   369	
+   370	## Against llama.cpp on Strix Halo (the same tasks)
+   371	
+   372	EngramHalo.cpp's `docs/strix-halo/windows.md` ("Expert-pruned GSQ-RCO Coder vs IQ4_XS", 2026-10-01) measured this
+   373	same model file, the GSQ-RCO Coder, with its llama.cpp branch on an AMD Ryzen AI MAX+ 395 (Radeon 8060S iGPU, 128 GB
+   374	LPDDR5X, 96 GB carved for the GPU, Windows 11). The same tasks were run here with Strata on 2026-10-02.
+   375	
+   376	**How it was run here.** One server start, nothing else on the GPU, the config above (32K context, 8-bit KV,
+   377	MTP draft layer with `--spec 4`), temperature 0, numbers from the `timings` object of `/v1/chat/completions`. The
+   378	script is `benchmarks/2026-10-02-3060m-bench_halo.py`, its raw results
+   379	`benchmarks/2026-10-02-3060m-coder-iq1_m.json`; its prompts:
+   380	
+   381	- server sequence, 400 tokens out each: a rewrite of `llama_get_list_splits` (cold first request), a rewrite of
+   382	  `select_weight_buft` (fresh prompt), the first 4749 tokens of `llama-model-loader.cpp` + "summarize it function
+   383	  by function", then the first prompt again
+   384	- llama-bench shape: 4085 tokens of EngramHalo's other `src/llama-*.cpp` files (pp, 1 token out); "write a
+   385	  thread-safe LRU cache" (tg, 128 tokens out); at depth, a 16384-token prefix of the same sources, then the prefix
+   386	  + 4037 more tokens
+   387	
+   388	**Server sequence:**
+   389	
+   390	| | Strix Halo, llama.cpp (windows.md) | RTX 3060 Laptop, Strata (this PC) |
+   391	|---|---|---|
+   392	| model load to listening | 30 s | 11.5 s (19 s the first start after the copy) |
+   393	| cold first request, decode (MTP) | 26.1 t/s, 86.5% acc | **43.3 t/s**, 88.1% acc |
+   394	| fresh code prompt, decode (MTP) | 21.9 t/s, 74.5% acc | **42.1 t/s**, 80.0% acc |
+   395	| prefill @ ~4.75K | 321.5 t/s (4754 tokens) | **961.3 t/s** (4749 tokens) |
+   396	| decode tail after that prefill | 20.8 t/s, 81.9% acc | **39.3 t/s**, 77.5% acc |
+   397	| repeated prompt (reference only) | 49.9 t/s | 45.1 t/s, 91.7% acc |
+   398	
+   399	**llama-bench shape:**
+   400	
+   401	| test | Strix Halo, llama-bench | RTX 3060 Laptop, Strata server |
+   402	|---|---|---|
+   403	| pp4096 @ d0 | 318.1 +/- 70.0 (warm-up pass 365.3) | **926.9** (4085 tokens) |
+   404	| tg128 @ d0 | 20.92 +/- 0.19 (plain decode) | 36.2 (MTP, 61.4% acc) |
+   405	| pp4096 @ d16384 | 269.9 +/- 1.2 | **~1126** (derived, see below); 1084.6 over the whole 20421-token prompt |
+   406	| tg128 @ d16384 | 17.98 +/- 0.15 (plain decode) | 37.4 (MTP, 65.3% acc) |
+   407	
+   408	**What differs, read before comparing:**
+   409	
+   410	- **Different machines, not only different engines.** Strix Halo keeps the whole model in GPU-visible memory
+   411	  (LPDDR5X shared with the iGPU). Here the GPU holds 2666 of the experts (5.11 GiB of its 12 GB) and the
+   412	  CPU computes the rest from RAM; an RTX 3060 has much more compute for prefill than the 8060S.
+   413	- **tg is MTP here, plain decode there.** Strata's server does not run without the MTP draft layer (`strata serve:
+   414	  needs --spec T, --mtp DIR and --prefill CHUNK`), so llama-bench's plain `tg128` has no direct counterpart. The
+   415	  server-sequence rows are the like-for-like decode comparison: both sides use MTP there (llama.cpp with the EasiiX
+   416	  MTP sidecar + `draft-mtp,ngram-mod`, Strata with its own draft layer).
+   417	- **pp4096 @ d16384 is derived.** The chat cache did not reuse the 16384-token prefix (`cache_n` 0: it keeps whole
+   418	  turns, and the second prompt is one longer user turn), so that request prefilled all 20421 tokens. The rate of
+   419	  the last 4037 tokens is the difference of the two requests: (20421 - 16384) tokens / (18.83 s - 15.24 s) = 1126
+   420	  t/s. llama-bench prefills only the 4096 at depth.
+   421	- **Chat API vs raw completion.** Strata has only `/v1/chat/completions` and `/v1/messages`, so every prompt went
+   422	  through the chat template and the model thought before answering; windows.md used llama.cpp's `/completion`.
+   423	  windows.md does not record its exact prompts: the prompts here are of the same kind (a function rewrite, a
+   424	  4.75K chunk of `llama-model-loader.cpp`), not the same text.
+   425	- **Context:** 32K here, 163840 there. **KV:** 8-bit on both.
+   426	- Every request here stopped at its `max_tokens` (`finish: length`). n=1 per row, one session.
+   427	
+   428	**Reading it:** on this PC Strata decodes this model at about 2x the Halo llama.cpp speed (39-43 t/s vs 21-26 t/s
+   429	with MTP on both) and prefills about 3x (961 vs 321 t/s at 4.75K). The MTP acceptance is in the same range on both
+   430	(78-88%). The repeated-prompt row is the one where llama.cpp is ahead (49.9 vs 45.1 t/s): its ngram speculator
+   431	reuses the answer it has seen, and Strata's suffix drafting does not seem to gain as much there. Quality was not
+   432	compared.
+   433	
+   434	## Unsloth UD-IQ4_XS (not a setup choice): it runs
+   435	
+   436	Unsloth's UD-IQ4_XS of the original model (3 shards, 93.7 GB) is not one of setup's sizes; setup offers only
+   437	UD-Q4_K_XL of Unsloth's files. It was tried by hand on 2026-10-02, the same way as the Coder above.
+   438	
+   439	**The file.** Shard 1 holds metadata only (10.9 MB); shards 2 and 3 hold the tensors, and layer 14's gate, up and
+   440	down are split across them. The experts are IQ3_S (33.9 GB), IQ4_NL (20.3 GB), Q8_0 (4.5 GB) and IQ4_XS (0.9 GB):
+   441	55.4 GiB in all, which fits in this PC's 92 GB of RAM, so the engine keeps all of them there (not setup's
+   442	UD-Q4_K_XL mode, which keeps a RAM budget and reads the rest from the SSD). The `mtp-...-Q8_0.gguf` llama.cpp
+   443	sidecar in the same folder is not used: Strata uses its own draft layer (step 6, shared with the Coder).
+   444	
+   445	**The pack** (29 s; with `--compat-bf16`, as setup does for UD-Q4_K_XL):
+   446	
+   447	```sh
+   448	python tools/iq_pack.py --gguf ~/Documents/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf \
+   449	  --out ../Strata-data/packs/unsloth-ud-iq4_xs --compat-bf16
+   450	```

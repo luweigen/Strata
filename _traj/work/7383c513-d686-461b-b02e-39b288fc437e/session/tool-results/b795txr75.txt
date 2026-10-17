@@ -1,0 +1,416 @@
+   450	```
+   451	
+   452	Result: every tensor accepted; `native_experts.txt` v4 (the per-role shard column for layer 14); 1079 tensors,
+   453	303 served natively, arena 1.38 GiB; 195 tensors (1.20 GiB) to BF16, expert and PLE table bytes unchanged.
+   454	
+   455	**The config** `strata-unsloth-ud-iq4_xs.json` is the Coder's with `--pack`, `--native` (shard 1),
+   456	`--expert-profile data/expert-profile.bin` (the original model's) and the tokenizer changed. With more than two
+   457	shards there is no `--ple-gguf`: the engine finds the PLE table's shard itself from shard 1, as setup does for
+   458	UD-Q4_K_XL. Start: `./run-unsloth-ud-iq4_xs.sh`.
+   459	
+   460	**Measured on this PC** (32K context, 8-bit KV, MTP; "Write a Python function that checks whether a number is
+   461	prime. Code only.", temperature 0):
+   462	
+   463	| | from the network share | from the local SSD |
+   464	|---|---|---|
+   465	| model load to listening | 587 s (55.43 GiB at 0.11 GiB/s) | **42 s** (55.43 GiB at 2.72 GiB/s) |
+   466	| decode | 33.4 t/s, 158/192 drafts accepted (82%) | 34.1 t/s, 166/208 accepted (80%) |
+   467	| GPU expert cache | 1864 experts, 4.19 GiB; 48.3% hit | 1864 experts, 4.19 GiB |
+   468	| RAM in use while serving | 60 GB of 92 (31 GB available) | |
+   469	
+   470	The answer was correct both times. On the same prompt the Coder IQ1_M decodes at 41.0 t/s: UD-IQ4_XS has twice the
+   471	experts, so fewer of them fit on the GPU (1864 vs 2666) and fewer hit there (48.3% vs 64.6%). The SSD load ran
+   472	right after the copy, so part of the file may still have been in the page cache: a cold load can be slower.
+   473	
+   474	The shards were copied with `rsync` from the share (93.7 GB, 112 MB/s, 13 min 16 s), sizes compared after the
+   475	copy.
+   476	
+   477	### UD-IQ4_XS against llama.cpp on Strix Halo
+   478	
+   479	windows.md measured this same file (unsloth UD-IQ4_XS, 87.24 GiB, 3 shards) on the Strix Halo twice: on
+   480	2026-10-01 next to the Coder, and on 2026-09-02/03 (its main tables). The same script, prompts and order as the
+   481	Coder run above were run here with Strata on 2026-10-02, a fresh server start from the local SSD, config
+   482	`strata-unsloth-ud-iq4_xs.json`. Raw results: `benchmarks/2026-10-02-3060m-unsloth-ud-iq4_xs.json`.
+   483	
+   484	**Server sequence** (temperature 0, 400 tokens out, MTP on both sides):
+   485	
+   486	| | Strix Halo, 2026-10-01 | Strix Halo, 2026-09-02 | RTX 3060 Laptop, Strata |
+   487	|---|---|---|---|
+   488	| model load to listening | 83 s | 1m28s-1m34s | **42 s** (55.43 GiB at 2.57 GiB/s) |
+   489	| cold first request, decode | 28.2 t/s, 87.8% acc | 28.1-30.4 t/s | **37.6 t/s**, 87.9% acc |
+   490	| fresh code prompt, decode | 25.1 t/s, 78.2% acc | 30.1-30.7 t/s, 89.2% acc | **38.7 t/s**, 87.1% acc |
+   491	| prefill @ ~4.75K | 277.2 t/s | 277.6-283.6 t/s | **662.8 t/s** |
+   492	| decode tail after that prefill | 23.0 t/s, 84.9% acc | 21.3-25.1 t/s | **33.1 t/s**, 76.9% acc |
+   493	| repeated prompt (reference only) | **58.6 t/s**, 99.2% acc | | 42.6 t/s, 92.3% acc |
+   494	
+   495	**llama-bench shape:**
+   496	
+   497	| test | Strix Halo, 2026-10-01 | Strix Halo, 2026-09-03 | RTX 3060 Laptop, Strata server |
+   498	|---|---|---|---|
+   499	| pp4096 @ d0 | 339.5 +/- 6.0 | 314.05 +/- 52.35 (warm 350.8) | **819.4** (4085 tokens) |
+   500	| tg128 @ d0 | 21.83 +/- 0.52 (plain) | 22.77 +/- 0.18 (plain) | 32.2 (MTP, 71.4% acc) |
+   501	| pp4096 @ d16384 | 244.1 +/- 19.5 | 258.79 +/- 2.56 | **~949** (derived: 4037 tokens in 22.70 - 18.44 s); 899.7 over all 20421 |
+   502	| tg128 @ d16384 | 16.25 +/- 4.23 (plain) | 19.44 +/- 0.18 (plain) | 31.7 (MTP, 67.4% acc) |
+   503	
+   504	The same caveats as for the Coder apply: different machines, MTP here vs plain decode in llama-bench's tg rows,
+   505	the depth prefill derived from two whole-prompt requests, the chat template here vs `/completion` there, and n=1
+   506	per row.
+   507	
+   508	**Reading it:**
+   509	
+   510	- With UD-IQ4_XS, this PC decodes 1.3-1.5x the Halo's speed with MTP on both (33-39 vs 23-30 t/s) and prefills
+   511	  about 2.4x (663 vs 277-284 t/s at 4.75K). The margin is smaller than with the Coder (2x decode, 3x prefill):
+   512	  here the GPU holds 1864 of the experts instead of 2666, so more of each token's work is on the CPU, while the
+   513	  Halo keeps every expert in GPU-visible memory whatever the file.
+   514	- Against the Coder on this PC, UD-IQ4_XS is 8-16% slower to decode (37.6/38.7/33.1 vs 43.3/42.1/39.3 t/s),
+   515	  12-31% slower to prefill on the 4-20K prompts, and takes 42 s to load instead of 11.5 s. On the Halo the two are within 5-10% of each
+   516	  other in decode (windows.md): there the model's size costs memory, here it costs GPU expert-cache room.
+   517	- The repeated prompt is again where llama.cpp leads (58.6 vs 42.6 t/s): its ngram speculator drafts the answer it
+   518	  has seen (99.2% acceptance there, 92.3% here).
+   519	
+   520	## `/v1/completions` (added for BFCL's path B)
+   521	
+   522	BFCL's path B renders the Qwen3 prompt itself and sends it to `/v1/completions`, which Strata did not have. It was
+   523	added to `serve/server.py` (tests: `serve/test_server.py`, class `Completions`; documented in DETAILS.md, "Using
+   524	it"):
+   525	
+   526	- the prompt is one string (special tokens such as `<|im_start|>` read as tokens, as llama.cpp does) or one list of
+   527	  token ids; no chat template;
+   528	- the model's text comes back unparsed: `<think>` and `<tool_call>` stay in `text` (a pass-through parser in place
+   529	  of `OutputParser`; the queue, timings, history and engine restarts are the chat endpoint's);
+   530	- `stop` (a string or a list) ends the text before the first match; a stream holds back text that may be the start
+   531	  of one; `max_tokens` unset / 0 / -1 = the rest of the context, a prompt that does not fit is a 400;
+   532	- OpenAI's `text_completion` shape, streamed or not, with `usage` (`cached_tokens`) and llama.cpp's `timings`;
+   533	  `echo`, `suffix`, `logprobs` and `n`/`best_of` > 1 are refused with a 400.
+   534	
+   535	On the engine (Coder IQ1_M): a raw Qwen prompt answered with `timings` (36.2 t/s, 15/15 drafts accepted); `stop:
+   536	["return"]` cut the text right before it; a prompt ending at `assistant\n` returned the model's own
+   537	`<think>...</think>` as text; the next request reused 17 cached prompt tokens.
+   538	
+   539	## BFCL multi-turn against llama.cpp on the Strix Halo
+   540	
+   541	The Strix Halo runs are in freetoken (`README.md`, "BFCL multi-turn 测试计划"; runs in `bfcl/runs/`): llama.cpp HIP
+   542	on the Radeon 8060S, the same two model files, BFCL at gorilla `6ea5797` with local handlers, temperature 0.001,
+   543	one request at a time. Two paths:
+   544	
+   545	- **A, native function calling** (what Claude Code uses): `/v1/chat/completions` + `tools`. The server's chat
+   546	  template and tool parser are part of what is measured; llama.cpp used the froggeric v22.5 template, Strata the
+   547	  model's own.
+   548	- **B, BFCL's own prompt**: BFCL renders the Qwen3 prompt and parses `<tool_call>` itself, through
+   549	  `/v1/completions`. The prompt is the same text for both engines: only the weights and the engine are measured.
+   550	
+   551	**Scripts** (`tools/bfcl/`):
+   552	
+   553	- `setup-bfcl.sh`: a conda environment `bfcl-py312` (BFCL's dependencies stay out of `strata`), gorilla at
+   554	  `6ea5797` with the Windows checkout's handler changes applied, `bfcl-eval` editable, and a Qwen3.8 tokenizer for
+   555	  path B (only the small files of the Qwen3.8-27B-NVFP4 folder the Windows runs used: BFCL counts the prompt's
+   556	  tokens with it and reads the context length, 262144, from its `config.json`).
+   557	- `run-bfcl.sh --config strata-gsq|strata-iq4xs --path A|B --think off|on [--pilot] [--start] [--resume DIR]`:
+   558	  generate + evaluate into `~/work/AI/bfcl/runs/<config>-<path>-<think>-<cat>-<stamp>/` with the same `run.json`
+   559	  keys as the Windows `run-bfcl.ps1`, so its `summarize-bfcl.py` reads both. `--start` starts the Strata server for
+   560	  the config and stops it at the end; `--resume` continues a stopped run in its own folder (entries that ended in an
+   561	  inference error are removed first - BFCL keeps them and scores them 0 - then BFCL generates only the missing ids).
+   562	
+   563	**The 32K context.** BFCL asks for `min(4096, 262144 - prompt)` = 4096 new tokens. Base and miss_param prompts
+   564	peaked at 14.7K tokens on the Halo, so they fit in this config's 32K; two of the pilot's long_context items
+   565	(`multi_turn_long_context_100` and `_120`, prompts of 35.2K-35.6K tokens) do not, and Strata refuses them with a
+   566	400 (requests are never truncated). They count as wrong in every Strata pilot below; the Halo served 163K.
+   567	
+   568	### Pilots: 40 items, thinking off
+   569	
+   570	The pilot is 10 items of each category (`pilot_ids.json`: ids 0, 20, ... 180).
+   571	
+   572	| model | engine | path | overall | base | miss_func | miss_param | long_ctx | out tok/call |
+   573	|---|---|---|---|---|---|---|---|---|
+   574	| GSQ Coder IQ1_M | Strata | A | 45.0 [31,60] | 70 | 20 | 30 | 60 | 67 |
+   575	| GSQ Coder IQ1_M | Strata | B | 55.0 [40,69] | 70 | 60 | 40 | 50 | 55 |
+   576	| UD-IQ4_XS | Strata | A | 37.5 [24,53] | 50 | 40 | 30 | 30 | 88 |
+   577	| UD-IQ4_XS | Strata | B | 45.0 [31,60] | 70 | 50 | 20 | 40 | 66 |
+   578	| UD-IQ4_XS | llama.cpp, Halo | A | 40.0 [26,55] (README) | 60 | 20 | 40 | 40 | 81 |
+   579	| UD-IQ4_XS | llama.cpp, Halo | B | **67.5** [52,80] | 80 | 70 | 50 | 70 | 73 |
+   580	
+   581	(Wilson 95% intervals; transport errors 0 in every run.) The Halo has no GSQ pilot: for the GSQ rows below, its
+   582	400-item runs are scored on the pilot's 20 base + miss_param ids.
+   583	
+   584	**Same 20 ids (base + miss_param), and time per call** (BFCL's own latency per model call; the Halo's numbers from
+   585	its 400-item runs unless marked):
+   586	
+   587	| model | engine, path | right | model time | s/call | tok/call |
+   588	|---|---|---|---|---|---|
+   589	| GSQ Coder | llama.cpp A | 7/20 | 23.0 min | 4.06 | 65 |
+   590	| GSQ Coder | llama.cpp B | 10/20 | 19.5 min | 3.80 | 52 |
+   591	| GSQ Coder | Strata A | 10/20 | 13.0 min | 2.51 | 67 |
+   592	| GSQ Coder | Strata B | 11/20 | 12.1 min | 2.39 | 50 |
+   593	| UD-IQ4_XS | llama.cpp A | 8/20 | 24.5 min | 4.82 | 74 |
+   594	| UD-IQ4_XS | llama.cpp B | 12/20 (pilot: 13/20) | 19.3 min | 4.69 | 61 |
+   595	| UD-IQ4_XS | Strata A | 8/20 | 16.1 min | 3.41 | 79 |
+   596	| UD-IQ4_XS | Strata B | 9/20 | 13.9 min | 3.37 | 61 |
+   597	
+   598	Per call this PC with Strata is 1.4-1.7x faster than the Halo with llama.cpp at about the same output length per
+   599	call (engine and hardware together, as above). BFCL calls are mostly prompt: 14-27K characters in, 50-90 tokens
+   600	out.
+   601	
+   602	### The UD-IQ4_XS gap on path B
+   603	
+   604	With the GSQ Coder the two engines score the same on path B (11 vs 10 of 20). With UD-IQ4_XS Strata scores lower:
+   605	45.0 vs 67.5 on the 40 pilot items. Item by item (path B pilots):
+   606	
+   607	- both right 18, both wrong 13, only llama.cpp right 9, only Strata right 0 (exact McNemar p = 0.004 against this
+   608	  one llama.cpp run). Two of the 9 are the over-length items Strata refuses at 32K.
+   609	- The prompts are byte-identical (checked on 5 items, 14-27K characters each, ending in BFCL's empty think block).
+   610	- In 6 of the other 7 the answers differ from the first generated text, often from the first word.
+   611	- **llama.cpp does not agree with itself either.** Its pilot and its 400-item run, the same 20 base + miss_param
+   612	  ids: first step identical 8/20, whole item identical 2/20; llama.cpp against Strata: first step identical
+   613	  4-6/20, whole item 0/20. Its two runs scored 13 and 12 of those 20, Strata 9.
+   614	
+   615	So the first-step divergence alone proves nothing (temperature 0.001 and speculative decoding make runs differ),
+   616	but the score gap is larger than llama.cpp's own run-to-run spread. What differs from the GSQ Coder, where the
+   617	engines match: UD-IQ4_XS is prepared by hand with `--compat-bf16`, which rounds 195 tensors (1.20 GiB) to BF16
+   618	(largest absolute error 0.0144); the GSQ pack needs no conversion. That was the first suspect; the 400-item run below answers it.
+   619	
+   620	**The 400-item path B run settles it: no gap.** Strata's run (2026-10-03, `multi_turn_base` + `multi_turn_miss_param`,
+   621	200 each, thinking off; `~/work/AI/bfcl/runs/strata-iq4xs-B-off-...-r1`) against llama.cpp's 400-item path B run on
+   622	the same items:
+   623	
+   624	| UD-IQ4_XS, path B, thinking off | overall (400) | base (200) | miss_param (200) | model time / entry | calls / entry | s / call | tok / call |
+   625	|---|---|---|---|---|---|---|---|
+   626	| llama.cpp, Strix Halo | 48.2 | 59.0 | 37.5 | 52.4 s | 11.5 | 4.55 | 61 |
+   627	| Strata, RTX 3060 Laptop | **52.2** [47,57] | **61.0** | **43.5** | **38.9 s** | 11.5 | 3.40 | 61 |
+   628	
+   629	Item by item: base - only llama.cpp right 18, only Strata right 22 (exact McNemar p = 0.64); miss_param - 18 and 30
+   630	(p = 0.11); both together 36 and 52 (p = 0.11). Strata is 4 points higher, inside the noise of one pass. The
+   631	pilot's 9-to-0 was a small-sample effect on 40 items, not the `--compat-bf16` conversion: with the same weights and
+   632	the same prompt the two engines score the same. Transport errors 0; failures: state mismatch 106, empty turn 51,
+   633	wrong execution result 31, step limit 3.
+   634	
+   635	Speed: the whole run took 260 min of generation here (4.33 h; BFCL's model time 4.32 h), against about 5.8 h on
+   636	the Halo (windows.md: 52 s/entry). Per entry this PC with Strata needs 26% less model time at the same number of
+   637	calls and output tokens - engine and hardware together.
+   638	
+   639	### GSQ Coder, path A, thinking on: 400 items
+   640	
+   641	The setup closest to Claude Code: native function calling, thinking on (`local-fc-think`, `max_tokens` 16384),
+   642	`multi_turn_base` + `multi_turn_miss_param`, 2026-10-03/04 (`~/work/AI/bfcl/runs/strata-gsq-A-on-...-think1`; run
+   643	detached with `setsid nohup` after 6 items, then `--resume`). Against the Halo's run of the same setup
+   644	(windows.md, `gsq-hip-A-on-...-gsq-think1`):
+   645	
+   646	| GSQ Coder, path A, thinking on | overall (400) | base (200) | miss_param (200) | model time / entry | calls / entry | s / call | tok / call |
+   647	|---|---|---|---|---|---|---|---|
+   648	| llama.cpp, Strix Halo | **60.2** | **79.0** | 41.5 | 97.5 s | 12.4 | 7.89 | 159 |
+   649	| Strata, RTX 3060 Laptop GPU | 52.5 [48,57] | 66.0 | 39.0 | **68.0 s** | 13.1 | **5.21** | 166 |
+   650	
+   651	- **Context refusals: 11** (3 base, 8 miss_param), all "prompt + max tokens (16384) exceeds the context (32768)":
+   652	  prompts of 16.4K+ tokens with thinking's 16384-token budget do not fit in 32K. The Halo got 5 of these 11 right.
+   653	  **Redone at 64K** (2026-10-04, `strata-coder-iq1_m-64k.json`: `--max-context 65536 --kv-resident 32768`, the GPU
+   654	  still holds 2637 experts; the 389 other entries copied from this run, folder `...-refusals64k`): all 11 ran, with
+   655	  prompts of 12.8K-31.3K tokens, and all 11 were wrong (instance state 9, execution result 1, step limit 1; 4 of them
+   656	  used the whole 16384-token thinking budget). The score stays **52.5** (base 66.0, miss_param 39.0), now with 0
+   657	  inference errors in 400, so the refusals cost nothing here. 64 min for the 11.
+   658	- **base is a real gap**: only llama.cpp right 35, only Strata right 9 (exact McNemar p < 0.001); 3 of the 35 are
+   659	  the refusals. miss_param is not: 25 and 20 (p = 0.55). Both together: 60 and 29 (p = 0.0013).
+   660	- Strata's extra base failures are wrong final states (instance_state_mismatch 53 vs 29). The items read like
+   661	  different choices by the model, not malformed calls: `cd "/temp"` where the Halo wrote `cd "temp"`, hashtags
+   662	  written into a tweet's text, a summary written into a file that should stay empty.
+   663	- Speed: 30% less model time per entry and 34% less per call, with about the same calls and output tokens
+   664	  (engine and hardware together). The whole run: 507 min of generation here, about 10.8 h on the Halo.
+   665	
+   666	What differs from path B, where the engines score the same: path A goes through each server's chat template and
+   667	tool-call parser. The Halo's GSQ server ran froggeric **v22.4** (`--chat-template-file` with the `chat_template.jinja`
+   668	in the Coder's folder, the same file as `~/Documents/Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF/chat_template.jinja`);
+   669	Strata ran the model's own template. Both use the XML tool format (v22.4's `tool_call_format` defaults to `xml`, and
+   670	the Halo passed none), so Strata's parser reads v22.4's calls. Checked offline (2026-10-04) by rendering a
+   671	BFCL-shaped conversation (tools, an earlier call and its result, earlier reasoning, a mid-conversation system
+   672	message) through Strata's own request conversion and renderer: both templates render it and keep the reasoning and
+   673	the system message, and the parser reads a v22.4-style call (`ls` with `a: true` as a boolean). What the model sees
+   674	differs in two ways:
+   675	
+   676	- the model's own template adds "Reasoning effort is set to xhigh. Please think carefully through the task, ..." to
+   677	  the system prompt: with no `reasoning_effort` in the request it defaults to `xhigh`, and BFCL's thinking handler
+   678	  sends only `enable_thinking`. v22.4 has no such line;
+   679	- the tool rules: v22.4 asks for all reasoning inside `<think>`, the `<tool_call>` right after it with no text before,
+   680	  one closed block per call, and shows an example; the model's own template allows "optional reasoning ... BEFORE the
+   681	  function call".
+   682	
+   683	That was the first suspect for the base gap. **Tested: it is not the template.** The same 400 entries with v22.4 in
+   684	Strata (2026-10-04/05; `strata-coder-iq1_m-64k-v224.json`: a copy of the tokenizer folder, `tokenizer-v22.4`, with
+   685	v22.4 as its `chat_template.jinja`, 64K context; the first 10 entries at `--pcie-frac` 0.55, the other 390 at 0.2;
+   686	folder `strata-gsq-64k-v224-A-on-...-think1`):
+   687	
+   688	| GSQ Coder, path A, thinking on | template | overall | base | miss_param | s / entry | calls / entry | tok / call | step limit hit |
+   689	|---|---|---|---|---|---|---|---|---|
+   690	| llama.cpp, Strix Halo | v22.4 | **60.2** | **79.0** | 41.5 | 97.5 | 12.4 | 160 | 7 |
+   691	| Strata (32K + the 11 refusals at 64K) | the model's own | 52.5 | 66.0 | 39.0 | 77.6 | 13.7 | 186 | 6 |
+   692	| Strata (64K) | v22.4 | 51.8 [47,57] | 66.0 | 37.5 | 73.3 | 13.9 | 230 | 21 |
+   693	
+   694	- **The two Strata runs score the same**: base 66.0 in both; item by item, only v22.4 right 38, only the model's own
+   695	  template right 41 (exact McNemar p = 0.82; base 17 and 17). The template's "xhigh" line and tool rules do not
+   696	  explain the gap.
+   697	- **The gap to the Halo stays**: Strata with v22.4 against the Halo with v22.4 - base: only Strata right 9, only the
+   698	  Halo right 35 (p < 0.001); miss_param 14 and 22 (p = 0.24); both together 23 and 57 (p < 0.001).
+   699	- With v22.4 Strata writes longer answers (230 output tokens per call against 186) and runs into the 20-step limit
+   700	  more often (21 entries against 6); its wrong final states drop (116 against 138).
+   701	- One context refusal even at 64K: `multi_turn_miss_param_60` reached a 51.0K-token prompt (+ 16384 > 65536).
+   702	- Speed: not comparable with the runs before it (390 of its entries ran at `--pcie-frac` 0.2, see below).
+   703	
+   704	So with the same weights, the same template and the same prompts from BFCL, Strata answers base entries worse than
+   705	llama.cpp on path A with thinking on, while on path B (BFCL's own prompt and parser, thinking off) the two score the
+   706	same.
+   707	
+   708	**The messages are not the cause** (2026-10-05; both runs kept every request and reply, `--include-input-log`;
+   709	Strata's v22.4 run against the Halo's, the 200 base entries):
+   710	
+   711	- The first request of every entry (messages + tools) is byte-identical on both servers: 200/200.
+   712	- Both servers' replies come back into the next request the same way: `reasoning_content` kept, `tool_calls` with
+   713	  their ids, the tool results after them. The one difference: llama.cpp answers `content=''`, Strata
+   714	  `content=None`, next to the tool calls.
+   715	- The runs take different actions, from early on: the tool calls are identical in every turn in 58 of 200 entries
+   716	  (486 of 731 turns). Strata's own two runs (the model's template and v22.4) agree less with each other: 41 of 200
+   717	  entries (437 of 733 turns).
+   718	- In the 35 entries only the Halo got right, the actions first differ in turn 0 in 20 and in later turns in 15 - the
+   719	  same spread as in the entries both got right (37 in turn 0, 33 later, 53 never). No turn stands out where a
+   720	  message fed back goes wrong.
+   721	- Strata's output is not reproducible from one request to the next anyway: the first step of `multi_turn_base_0`,
+   722	  sent 4 times to a fresh server (temperature 0, 0.001, 0.001, 0): all three later answers, the second greedy one
+   723	  too, differ from the first at the same point (character 148). This is
+   724	  #410 in DETAILS.md (adaptive swaps, the prompt cache and the PCIe share change the arithmetic); temperature 0.001
+   725	  does not stand out from greedy.
+   726	
+   727	So the 35-to-9 on base is not explained by the template, the protocol or sampling. What is left: how the two engines'
+   728	arithmetic holds up over long thinking - on path B the thinking was off and the engines matched. Not run yet, and
+   729	the test that separates the two: path B with thinking on (BFCL's own prompt and parser, so no server-side parsing at
+   730	all; the Halo: 55.2, base 69.5). If Strata is behind there too, the difference is in the engine's output over long
+   731	generations; if not, it is in path A's server side.
+   732	
+   733	## Where the CPU time goes during BFCL
+   734	
+   735	The Ryzen 9 8945HX has 16 cores on two chiplets (CCD1: cores 0-7, CCD2: 8-15) and 32 threads: logical CPUs 16-31
+   736	are the SMT siblings of cores 0-15 (`lscpu -e`). The engine pins one expert-pool worker per physical core (15
+   737	workers on cores 1-15, `src/kernels/cpu/pool.cpp`) and its host thread on core 0, which spins to answer the GPU
+   738	without delay; the SMT siblings are left idle on purpose (`src/core/session.cpp`: another thread on a worker's core
+   739	or its sibling took the CPU path from 36.3 to 26.9 GB/s on the machine that was measured).
+   740	
+   741	Measured over 5 s during the 400-item UD-IQ4_XS path B run (`/proc/stat`):
+   742	
+   743	| | core 0 | cores 1-15 (expert workers) | SMT siblings 16-31 | clock |
+   744	|---|---|---|---|---|
+   745	| CCD1 (cores 0-7) | 100% (the host thread) | 12% each | 0-3% | 5083 MHz |
+   746	| CCD2 (cores 8-15) | | 12% each | 0% | 4901 MHz |
+   747	
+   748	The GPU was at 100%. The workers are idle most of the time because a BFCL call is mostly prompt, and Strata reads
+   749	prompts on the GPU; the expert pool only works during the short decode. More threads (the 16 SMT siblings,
+   750	`--pool-workers 31`) would add workers to a pool that waits most of the time, and the CPU's expert path is limited by
+   751	memory bandwidth, which a sibling does not add. For long answers (decode-heavy work such as coding sessions) the
+   752	worker count can matter; `tools/calibrate.py` tries fewer workers than the default. Not measured on this PC.
+   753	
+   754	Temperatures at the same time (`~/temp.sh`): CPU Tccd1 87.1 °C, Tccd2 63.1 °C, Tctl 85.0 °C; GPU 60 °C at 100%;
+   755	iGPU 57 °C; SSD 42.8 °C. CCD1 is warmer because it holds core 0 with the spinning host thread (seven engine threads are
+   756	pinned to CPU 0, the host thread among them), and it runs about 180 MHz faster than CCD2; the worker load is spread evenly over
+   757	both. 87 °C is below the 8945HX's 100 °C limit.
+   758	
+   759	## `--pcie-frac`: decode and prefill
+   760	
+   761	`--pcie-frac` is the share of the experts the GPU does not hold that are copied to the GPU over PCIe for each token;
+   762	the CPU computes the rest from RAM. Without the flag the engine measures the link at start and keeps its default when
+   763	the link is fast: here "PCIe probe: 26.8 GB/s host->device -> pcie_frac 0.55 (default 0.55)" (`src/program/generate.cpp`:
+   764	20 GB/s or more keeps the default). The rule does not compare the link with the CPU's own path to RAM, and on this PC
+   765	the two are far apart: the PCIe link moves 26.8 GB/s (measured), the CPU reads RAM at about 55 GB/s (measured above),
+   766	and the copies are read from the same RAM, so they take their 26.8 GB/s out of the ~55 the CPU workers share.
+   767	
+   768	**The prediction** (from these bandwidths): decode is best near 0.2 for the Coder and 0.25 for UD-IQ4_XS; prefill
+   769	the other way, 0.65-0.85.
+   770	
+   771	**The test** (2026-10-04, machine idle; `benchmarks/2026-10-04-3060m-pcie-frac.py`, results in
+   772	`benchmarks/2026-10-04-3060m-pcie-frac.jsonl`). For each model and value, a fresh server with the model's config plus
+   773	`--pcie-frac X` (checked in the engine's arguments; the probe did not run), one warm-up request, then:
+   774	
+   775	- decode: the same prompt 3 times - the rewrite of `llama_get_list_splits` (274 prompt tokens), temperature 0,
+   776	  thinking off, `max_tokens` 512 (the answers stop on their own at 229-230 tokens). Repeats 2 and 3 reuse the cached
+   777	  prompt (`cache_n` 267) and their drafts differ a little, so the first, uncached run is given beside the median;
+   778	- prefill: 4038 and 16298 tokens of real code (EngramHalo's `src/llama-*.cpp`), 1 token out, nothing reused
+   779	  (`cache_n` 0); the same text for every value.
+   780	
+   781	| model | `--pcie-frac` | decode, median of 3 (1st run) | vs 0.55 | prefill 4K | prefill 16K |
+   782	|---|---|---|---|---|---|
+   783	| Coder IQ1_M | 0 | **65.1** (62.0) | +25% | 895.5 | 1066.3 |
+   784	| Coder IQ1_M | **0.2** | **62.3** (61.3) | +20% | 900.2 | 1065.3 |
+   785	| Coder IQ1_M | 0.55 (the probe's choice) | 51.9 (51.8) | | 896.7 | 1063.7 |
+   786	| Coder IQ1_M | 0.75 | 46.6 (43.4) | -10% | 892.2 | 1061.9 |
+   787	| UD-IQ4_XS | 0 | **55.4** (53.4) | +24% | 796.7 | 889.2 |
+   788	| UD-IQ4_XS | **0.25** | **55.4** (55.4) | +24% | 800.3 | 889.8 |
+   789	| UD-IQ4_XS | 0.55 (the probe's choice) | 44.6 (43.9) | | 794.3 | 887.7 |
+   790	| UD-IQ4_XS | 0.75 | 39.7 (39.6) | -11% | 794.6 | 887.1 |
+   791	
+   792	tokens/s. A single run before this test (same prompt, Coder) gave 61.8 / 61.3 / 51.7 t/s at 0 / 0.2 / 0.55, with
+   793	byte-identical answers at 0 and 0.2 and a different answer from byte 650 at 0.55; its GPU expert-cache hit rate rose
+   794	with the value (63.4% / 66.3% / 76.2%) while decode got slower.
+   795	
+   796	- **Decode: the prediction holds.** 0-0.25 is 20-25% faster than the 0.55 the engine picks, on both models; 0.75 is
+   797	  another 10-11% slower. Between 0 and 0.2/0.25 there is no clear winner (the repeats vary by about 2 t/s, more than
+   798	  the difference).
+   799	- **Prefill: `--pcie-frac` changes nothing** - within 0.5% across all four values at 4K and 16K, on both models. The
+   800	  prompt path streams every expert whatever the value says (as `tools/calibrate.py` notes), so the 0.65-0.85
+   801	  predicted for prefill does not apply to this engine.
+   802	- **So the configs now set it**: `--pcie-frac 0.2` in `strata-coder-iq1_m.json`, `0.25` in
+   803	  `strata-unsloth-ud-iq4_xs.json` (2026-10-04). `strata-coder-iq1_m-64k.json` keeps the engine's choice (0.55). The template
+   804	  test's `-64k-v224.json` got `--pcie-frac 0.2` when that run was resumed (2026-10-04): its first 10 entries ran at
+   805	  0.55, the other 390 at 0.2 (noted in its `run.json`), so its speed is not comparable with the BFCL runs before it.
+   806	  Every speed on this page measured before this section ran at 0.55: with the new setting, output is 20-25% faster
+   807	  than those figures.
+   808	
+   809	**On a real workload: the BFCL runs** (GSQ Coder, path A, thinking on). Every request writes "done: N tokens in E s
+   810	(R tok/s)" to the server log, R being the decode rate from the first token on. Requests under 20 tokens are left out
+   811	(their rate is noise); "token-weighted" is all tokens over all decode time:
+   812	
+   813	| run | `--pcie-frac` | requests | tokens | median | token-weighted |
+   814	|---|---|---|---|---|---|
+   815	| the model's own template, 32K, the whole 400-entry run | 0.55 | 5404 | 1,014,385 | 40.9 | 40.5 tok/s |
+   816	| v22.4, 64K, its first 10 entries (before the pause) | 0.55 | 142 | 17,733 | 42.3 | 41.6 tok/s |
+   817	| v22.4, 64K, the other 390 entries (after the resume) | **0.2** | 5448 | 1,304,873 | **51.3** | **54.1 tok/s** |
+   818	
+   819	Decode is **about 30% faster** at 0.2 over these conversations of 5-50K tokens (25% by the median), a little more
+   820	than the 20% of the short prompt above. The 32K and 64K runs at 0.55 agree (40.5 and 41.6 tok/s), so 64K's KV
+   821	streaming is not what changed. The templates differ between the runs, and with them the answers; the two runs at
+   822	0.55 show that this moves the rate little. Prefill is not in these logs; the test above found no change.
+   823	
+   824	### Why the engine picks 0.55 here, and a draft of a better default
+   825	
+   826	**The rule** (`src/program/generate.cpp`, the `pcie_frac < 0` block; the same rule again for a layer split's other
+   827	cards): native packs start from 0.55, "measured on x16 links (~26-28 GB/s)"; the engine probes the link at start and
+   828	keeps 0.55 from 20 GB/s up, scales it down below that (`0.55 x link / 26`), and uses 0 below 4 GB/s. The code also
+   829	records the machine it was measured on: 6 cores, the pool kernel reading 44.14 GB/s, the pool draining 33.7 GB/s
+   830	(`no_host_worker`'s comment, `include/strata/kernels/cpu/pool.hpp`). This PC has the same kind of link (26.8 GB/s),
+   831	but its CPU side is very different: 15 workers instead of 5, two chiplets, about 55 GB/s of RAM read. The rule
+   832	only looks at the link, so it keeps a value measured for a different CPU. `tools/calibrate.py` measures the share
+   833	per PC (0, 0.2, 0.35, 0.55, 0.75, keeping the fastest) and would have found 0 or 0.2 here; setup offers it after an
+   834	install, but not with `--yes`, and this install did not go through setup.
+   835	
+   836	**A sentence in DETAILS.md that this PC contradicts.** DETAILS.md ("For byte-identical repeats ...") says:
+   837	"`--pcie-frac 0` costs decode speed (the missed experts all run on the CPU), so keep it for A/B runs." Measured
+   838	here, 0 is the fastest value or tied for it (Coder 65.1 t/s at 0, 62.3 at 0.2, 51.9 at 0.55; UD-IQ4_XS 55.4 at 0 and
+   839	at 0.25, 44.6 at 0.55). The sentence holds on the machine the default was measured on, not in general; it should
+   840	say so (for example "costs decode speed on PCs where the default share is right; run `--calibrate`"). DETAILS.md is
+   841	not changed here.
+   842	
+   843	**A draft** (`src/program/generate.cpp`, 2026-10-04, compiled; not yet run in the engine - the GPU was busy):
+   844	
+   845	- `probe_host_read_gbps(threads)`: the host RAM read bandwidth with the pool's thread count (one per physical core),
+   846	  a 1 GiB buffer, best of 3 passes; about 0.3 s at start, only when the share is not given.
+   847	- `default_pcie_frac(native, link, host)`: one function for both places the rule was written. The link-only rule
+   848	  is unchanged. With `STRATA_PCIE_HOST_RULE=1` it also weighs the link against the host:
+   849	  `0.55 x (link / host) / (27 / 44.14)` - the measuring machine's link-to-kernel ratio - and never raises the value.
+   850	- The probe line now also prints the host bandwidth: "PCIe probe: 26.8 GB/s host->device, host RAM read X GB/s ->
+   851	  pcie_frac ...", so starts on other PCs collect both numbers.
+   852	
+   853	Tested on its own (the two functions compiled into a small program, 2026-10-04, while a BFCL run used the GPU and
+   854	RAM): the probe read **45.0 GB/s** with 15 threads (55 GB/s idle with the STREAM test above); rule off: 0.55 / 0.28 /
+   855	0 for a 26.8 / 13 / 2 GB/s link, as before; rule on: **0.54** at 26.8 GB/s and 45 GB/s, 0.44 with 55 GB/s, 0.55 for
+   856	the measuring machine's numbers, 0.21 for a 13 GB/s link; the canonical pack keeps 0.2.
+   857	
+   858	**So the ratio is not the explanation.** Weighing the link against RAM bandwidth moves the share from 0.55 to
+   859	0.44-0.54 on this PC; the measured best is 0-0.25. What the draft does not measure is what most likely differs:
+   860	the pool's own expert throughput (15 workers here, 5 there; the IQ kernels may be limited by compute, not only by
+   861	RAM) and the GPU's side of the copies (the copy kernel runs on the GPU's SMs: 30 on this GPU, 48 on an RTX 5070).
+   862	That is why the rule stays opt-in. Next measurement, when the GPU is free: decode at `--pcie-frac` 0 and 0.55 with
+   863	the engine's pool counters (`pool phases ... drain`) and the GPU's per-token times, to see which side waits. The
+   864	alternatives to a formula: let setup run `--calibrate` also with `--yes`, or balance the share at run time from
+   865	the measured drain and copy times (the share is already settable per request: `strata_tune` key `pcie_frac`).

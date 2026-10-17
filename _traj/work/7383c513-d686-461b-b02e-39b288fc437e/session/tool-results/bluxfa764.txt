@@ -1,0 +1,370 @@
+     1	# Qwen3.8-27B（dense）在本项目上的测试
+     2	
+     3	2026-10-09 测试。本文回答两个问题：Qwen3.8-27B 能不能在本项目上跑；本项目为 Qwen3.8-Flash-Next 做的优化，有多少对这个 dense 模型也起作用。
+     4	
+     5	测试用的脚本和原始日志都在 [results/qwen3.8-27b-20261009/](results/qwen3.8-27b-20261009/)。
+     6	
+     7	## 结论
+     8	
+     9	- **能跑。** 架构是 `qwen35`，本项目的 runtime（`bin/hip`）可以直接加载。模型自带的 NextN MTP 头用 `--spec-type draft-mtp` 就能用，不需要 `-md`。
+    10	- **本项目比 EngramHalo 快。** 两者都在 120 W 下、交替测：预填充快 13–23%，不开 MTP 的解码快 2%，开 MTP（n=3）的解码快 28%（31.5 对 24.6 t/s，草稿接受率相近，约 90%）。
+    11	- **Flash-Next 专用的优化基本用不上。** QSA、HC、PLE、MoE 专家 kernel、MTP 的 IndexShare 和低秩 head，在 27B 上都不会触发。真正能触发的开关和默认开启的 kernel，逐项关掉都看不出差别，全部关掉只差约 1–3%。
+    12	- **相比 EngramHalo 快出来的部分，来源还没拆清。** 它不在上面这些开关里。可能来自 pwilkin 底座的版本差异、投机解码相关的补丁（这部分没有做消融），或 ROCm 版本不同。
+    13	- **不开 MTP 时解码已接近带宽上限。** 12.4 t/s × 17.55 GB 权重 ≈ 218 GB/s，接近这台机器的实际带宽，解码的提升只能靠投机解码。
+    14	- **App 里的 MTP 已经支持（P0，见下文）。** 原来 manager 只对 `qwen4exp` 架构和 Flash-Next 的文件名开启 MTP，而且总会传 `-md`。现在，自带 MTP 层的模型会自动用内嵌 MTP 起草。App 默认配置下 27B 的解码：单会话 30–31 t/s，8 个会话合计约 71 t/s（不开 MTP 时分别是 12.3 和 51.4）。后续计划见 [Qwen3.8-27B-TODO.md](Qwen3.8-27B-TODO.md)。
+    15	- **P1 又快了约 10%（见下文）。** 两项 Flash-Next 的优化移植到了 27B：MTP 草稿的低秩 head（草稿时间减半）和 GDN 延迟回滚（verify 短 3–7%）。App 默认配置下：单会话 34.4 t/s，8 个会话合计 78.4 t/s。Flash-Next 的贪心输出逐字节不变，速度在噪声内。
+    16	- **P2 让预填充快了 31–39%（见下文）。** 27B 的 Q4_K/Q5_K/Q6_K/IQ4_XS 权重从 MMQ 改走矩阵核心的 MMB GEMM：pp2048 约 411 → 563 t/s，pp16384 约 369 → 500 t/s，perplexity 不变（5.3634 → 5.3603）。解码不变；Flash-Next 不受影响，贪心输出逐字节相同。
+    17	- **P3 解决了多会话和长上下文的问题（见下文）。** 27B 用上了 v3 行级磁盘缓存、slot 间前缀复制和 KV regions。128K 的会话：停服务时能写进磁盘，重启后 146 s 恢复（原来写不完而丢失，要重新预填充 862 s）。与 32K、64K 的会话同处一个池时，预填充 2009 → 874 s，解码 12.2 → 18.0 tok/s。另外修了服务端三处选 slot 的问题，它们对所有模型都会让缓存失效。Flash-Next 贪心输出逐字节相同，速度在噪声内。
+    18	
+    19	## 测试环境
+    20	
+    21	| | |
+    22	|---|---|
+    23	| 机器 | Ryzen AI Max+ 395 / Radeon 8060S（gfx1151），Windows 11 |
+    24	| 功耗 | STAPM / slow 120 W，fast 140 W（由 `E:\work\AI\RyzenAdj\win32\ryzenadjOnDemand.ps1 -i` 读回确认），测试间温度 54 °C 左右 |
+    25	| 模型 | `C:\Users\Wei Lu\Documents\Qwen3.8-27B\Qwen3.8-27B-UD-Q4_K_XL.gguf`，16.34 GiB，27.32B 参数 |
+    26	| 本项目 | v0.4.8-29-gf3297bc；`src/llama.cpp/build/bin/llama-bench.exe` 和 `bin/hip/llama-server.exe`，PATH 指向 `bin/hip` |
+    27	| 对照 | `E:\work\AI\EngramHalo.cpp`（d806240c9）的 `build/bin`，ROCm 用 `C:\conda_envs\rocm100-py312`，并设 `ROCBLAS_USE_HIPBLASLT=1`（与模型目录里 `run-server.ps1` 的设置相同） |
+    28	
+    29	**注意：** 模型目录里 EngramHalo 的旧日志（`ab.log`、`depth-27B.log`）是在 45 W 下测的，不能和本文的数字直接比较。本文所有对照都是在 120 W 下重新测、并且两边交替进行的。
+    30	
+    31	### 模型结构（从 GGUF 读出）
+    32	
+    33	- 65 层，`n_embd` 5120，FFN 17408（dense SwiGLU，没有专家）。
+    34	- `full_attention_interval` 4：48 层 Gated DeltaNet + 16 层 gated full attention（24 个头，4 个 KV 头，head dim 256）。
+    35	- 带一层内嵌的 NextN MTP（`nextn_predict_layers` 1）。
+    36	- 按字节算的权重类型：Q5_K 约 50%，IQ4_XS 约 18%，Q4_K 约 17%，Q6_K 约 15%（包括 `output.weight`，即 vocab 248320 的 LM head，约 1 GB），另有少量 Q8_0（`ssm_alpha/beta`）、IQ4_NL、Q3_K，以及一个 IQ3_S 张量。
+    37	
+    38	## 测试 1：llama-bench 三方 A/B（`ab1.sh`）
+    39	
+    40	参数：`-ngl 999 -fa 1 -b 8192 -ub 2048 -p 512,4096,16384 -n 128 -r 2`。三组按 本项目关开关 → 本项目开 HIP_GATES → EngramHalo 的顺序轮换，跑了两轮。HIP_GATES 就是 `tools/manager.py` 里 `HIP_GATES` 的非 MTP 部分。
+    41	
+    42	| t/s | 本项目，开关全关 | 本项目，开 HIP_GATES | EngramHalo |
+    43	|---|---|---|---|
+    44	| pp512 | 413.1 / 409.7 | 418.5 / 414.4 | 360.9 / 376.2 |
+    45	| pp4096 | 401.9 / 392.2 | 406.5 / 400.9 | 337.9 / 345.1 |
+    46	| pp16384 | 371.9 / 361.0 | 375.8 / 376.4 | 305.0 / 304.3 |
+    47	| tg128 | 12.40 / 12.39 | 12.40 / 12.38 | 12.17 / 12.20 |
+    48	
+    49	每格依次是第 1 轮和第 2 轮的结果。
+    50	
+    51	- 本项目比 EngramHalo 的预填充快 13% / 18% / 23%（pp512 / pp4096 / pp16384），上下文越长差距越大。解码快 2%。
+    52	- HIP_GATES 开与关之间，预填充差 1–4%，解码没有差别。
+    53	
+    54	## 测试 2：逐项消融（`ab3.sh`）
+    55	
+    56	只在本项目上跑。base 是 27B 上能触发的开关：`LLAMA_MMB=1 LLAMA_MMB_MIN_T=512 LLAMA_MMB_TALL=2 LLAMA_MMB_CACHE=4 LLAMA_GDN_CONV=1 LLAMA_NORM_ROWS=1`，再加上 runtime 默认开启的那些 kernel。每次只关一项，并且**每个实验组前都先跑一次 base**，和紧挨着的 base 比。参数：`-p 4096 -n 128 -r 3`。
+    57	
+    58	| 关掉的优化 | 前一个 base 的 pp4096 / tg128 | 实验组的 pp4096 / tg128 |
+    59	|---|---|---|
+    60	| `LLAMA_GDN_CONV=0`（concat+conv+silu 融合） | 407.5 / 12.43 | 399.0 / 12.40 |
+    61	| `LLAMA_NORM_ROWS=0`（每行一个 wave 的 RMS norm） | 398.7 / 12.39 | 395.6 / 12.37 |
+    62	| `LLAMA_MMB=0` | 394.5 / 12.41 | 401.1 / 12.42 |
+    63	| `STRIX_GDN_R16=0`（GDN 预填充改用 tiled kernel） | 396.8 / 12.39 | 387.7 / 12.36 |
+    64	| `STRIX_GDN_COLS=1`（GDN 解码不用每个 warp 两列） | 395.9 / 12.38 | 401.9 / 12.39 |
+    65	| `STRIX_MMQ_Q6K_ANY=0`（Q6_K 不在所有宽度走 MMQ） | 400.5 / 12.37 | 412.1 / 12.37 |
+    66	| `STRIX_CHAIN_FUSE=0`（逐元素运算链融合） | 402.7 / 12.40 | 402.2 / 12.34 |
+    67	| `STRIX_GDN_GATHER_SKIP=0`（state 行原地读取） | 399.0 / 12.40 | 395.5 / 12.31 |
+    68	| `STRIX_NORM_SCALE=0` | 391.9 / 12.47 | 391.3 / 12.47 |
+    69	| **以上全部关闭，另加 `STRIX_CONT_SIGMOID=0`** | 390.2 / 12.47 | **386.6 / 12.30** |
+    70	
+    71	最后一行之后又跑了一次 base：390.1 / 12.48。
+    72	
+    73	**结论：** base 本身在 390–408 之间漂移，各次 pp 的标准差约为 ±2–10。没有哪一项单独关掉后超出这个范围。全部关掉时，pp 约 −1%，tg 约 −1.4%。`STRIX_MMQ_Q6K_ANY=0` 在这次测试里反而快了 3%，但还在噪声范围内，值得在 pp16384 上再测一次。
+    74	
+    75	需要说明的是，`STRIX_GDN_R16=0` 换上的 tiled kernel 本身可能也是 fork 里的代码，所以「全部关闭」并不等于 stock llama.cpp。
+    76	
+    77	### 作废的一轮（`ab2.log`）
+    78	
+    79	第一次消融在 14:11–14:35 之间，机器上有别的负载干扰：开头的 base tg 是 9.16，结尾的 base 是 12.36，pp 标准差到了 ±60–97。那段时间功耗限制正常，干扰来源不明。这一轮整体作废，日志保留在目录里备查。因此 `ab3.sh` 改成了 base 与实验组交替跑。
+    80	
+    81	## 测试 3：服务端，开 MTP 与不开（`mtp_ab.sh`）
+    82	
+    83	用模型目录里的 `bench.py` 测试：
+    84	
+    85	- 预填充：一段约 4.5K token 的源码，每次加 salt，保证不命中缓存。
+    86	- 解码：3 个不同的写代码 prompt，每个 800 token，temperature 0，thinking 关闭。
+    87	
+    88	server 参数与 `run-server.ps1` 相同：`-fa on -ctk q8_0 -ctv q8_0 -b 8192 -ub 2048 -t 4 --parallel 1 --jinja`，只把 `-c` 改成了 65536，并且不加载 mmproj。
+    89	
+    90	- MTP 组：`--spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0`。
+    91	- 本项目额外设置了上面的 base 开关，以及 `STRIX_SPEC_DRAFT_UBATCH=2048`。
+    92	
+    93	| | 4.5K 预填充 t/s | 解码中位数 t/s（最小–最大） | 接受率中位数 |
+    94	|---|---|---|---|
+    95	| 本项目 MTP r1 | 377.7 | 31.5（29.5–32.8） | 92.0% |
+    96	| EngramHalo MTP r1 | 326.6 | 24.6（23.9–26.1） | 88.4% |
+    97	| 本项目 MTP r2 | 384.7 | 31.5（30.0–31.7） | 90.1% |
+    98	| EngramHalo MTP r2 | 323.3 | 23.8（19.1–26.6） | 89.8% |
+    99	| 本项目 MTP r3 | 367.7 | 31.6（30.2–33.0） | 89.8% |
+   100	| EngramHalo MTP r3 | 319.5 | 25.1（24.0–26.4） | 89.7% |
+   101	| 本项目，不开 MTP | 385.5 / 382.9 | 12.4 / 12.4 | – |
+   102	| EngramHalo，不开 MTP | 333.9 / 323.7 | 12.0 / 12.0 | – |
+   103	
+   104	r1 和 r2 来自 `mtp_ab.log`，r3 以及第二次不开 MTP 的对照来自 `mtp_ab2.log`。归档的 `mtp_ab.sh` 是第二次运行时的版本：循环只跑 r3，后面再跑三组不开 MTP 的对照。第一次运行时循环是 `for r in 1 2`。
+   105	
+   106	- **开 MTP 后，本项目解码 31.5 t/s，是不开 MTP 的 2.5 倍。比 EngramHalo 快 28%。** 两边的接受率相近，所以这个差距来自每一轮投机的成本，而不是来自 prompt 的差异。
+   107	- `mtp_ab.log` 里第一次「本项目、不开 MTP」的预填充只有 210 t/s。复测两次分别是 385 和 383，所以那一次是干扰造成的离群值。
+   108	
+   109	## 静态分析：哪些优化对 qwen35 起作用
+   110	
+   111	由子代理通读源码得出，没有运行。27B 用的是 upstream 的 `src/models/qwen35.cpp` 和 `delta-net-base.cpp`，项目改动大多集中在 `qwen4exp.cpp` 里，或者只匹配 qwen4exp 才有的张量形状。
+   112	
+   113	**能触发**
+   114	
+   115	- GDN 系列：
+   116	  - R16 预填充 kernel（`gated_delta_net.cu:663`，要求 S_v=128、单序列、16–32768 个 token）
+   117	  - COLS2 解码 kernel（`gated_delta_net.cu:721`）
+   118	  - state 行原地读取（`llama-graph.cpp:3663`）
+   119	  - `LLAMA_GDN_CONV`（`gdn-conv.cu:42-83`，匹配 C=10240、4 个抽头）
+   120	- `LLAMA_NORM_ROWS`：q/k norm、`ssm_norm` 和 L2 norm，行数 ≥4096 时生效（`norm-gated.cu:57-140`）。
+   121	- chain fusion 与 cont+sigmoid 融合，覆盖 alpha/gate 那段逐元素运算。
+   122	- `mmvq_i8`：5–8 列的 Q6_K / Q8_0 GEMV，作用在 MTP verify 和多 slot 场景。
+   123	- verify 小矩阵路径（`ggml-cuda.cu:2112`）。
+   124	- Q6_K MMQ（`mmq.cu:378`）。
+   125	- MTP 投机解码相关：`draft-mtp`（不带 `-md`）、`spec_draft_ubatch`、even drafts、carry state。
+   126	- server 层：checkpoint、slot、kv_zero_freed 等。
+   127	
+   128	**部分触发**
+   129	
+   130	- `LLAMA_MMB`：dense 路径只接受 IQ4_NL / Q8_0 / BF16 / F32 / 带影子的 Q6_K（`mmb.cu:1223-1228`），所以在 27B 上只命中 `ssm_alpha/beta` 和少量 IQ4_NL 张量。（P2 加了 K-quant，见下文。）
+   131	- 磁盘 prompt cache：走 v2 整状态格式。v3 按行写入和前缀复制都需要 hybrid_idx 内存（`server-context.cpp:1903, 2145`）。
+   132	- `mmvq_rdna35_rows`：只对 batch=1 的 IQ4_NL 生效。
+   133	
+   134	**不触发**
+   135	
+   136	- 全部 QSA 开关和 FA gather（只在 `qwen4exp.cpp:1826` 调用）。
+   137	- `LLAMA_HC_*`、`LLAMA_PLE_CONV` 和 PLE 预取、`LLAMA_IDX_RELU_SUM`。
+   138	- MoE 专家 GEMM：`LLAMA_MMB_GLU`、glu3、MMB_KQ、DOWN16，只作用于 MUL_MAT_ID。
+   139	- `LLAMA_MMB_BF16W`、F32SPLIT、HC16、BF16 twins：27B 没有浮点权重矩阵。
+   140	- `LLAMA_NORM_GATED`：它要求 sigmoid 门，而 qwen35 用的是 SiLU（`qwen35.cpp:249`）。（P2 已加 SiLU 版本。）
+   141	- GDN 延迟回滚：`llama-memory-recurrent.cpp:96` 要求架构是 QWEN4EXP。（P1 已移植到 qwen35。）
+   142	- `LLAMA_MTP_INDEX_SHARE`、`LLAMA_MTP_QSA`、MTP 低秩 head。（低秩 head 在 P1 已移植。）
+   143	- KV regions 和 ragged ubatch（`qwen35.cpp:350` 断言 equal_seqs）。
+   144	- getrows cast fusion。
+   145	
+   146	**一个现成的 bug：`LLAMA_MMB_SHADOW` 的影子权重永远不会被创建。** `ggml_cuda_mmb_supported_mm` 要求 Q6_K 的 BF16 影子已经存在（`mmb.cu:1224-1225`），而影子只在 `supported_mm` 通过之后才创建（`ggml-cuda.cu:6737`），两者互相等待。这个问题在 Flash-Next 上同样存在。此外，27B 的 `output.weight` 还超出了 `ne[1] ≤ 32768` 的限制（`mmb.cu:1152`）。
+   147	
+   148	## P0：App 支持 27B 的内嵌 MTP（2026-10-09 完成）
+   149	
+   150	测试脚本和日志在 [results/qwen3.8-27b-20261009/p0/](results/qwen3.8-27b-20261009/p0/)。
+   151	
+   152	### 改动
+   153	
+   154	- **`tools/manager.py`**
+   155	  - `has_embedded_mtp()` / `embedded_mtp()`：GGUF 里 `<arch>.nextn_predict_layers` > 0 的模型算作自带 MTP 层。`qwen4exp` 被**明确排除**，所以 Flash-Next 仍走外挂 draft 的路径。`metadata()` 的白名单里加上了 `.nextn_predict_layers`；catalog 和 companions 里加了 `mtp_embedded` 字段。如果 catalog 是旧版本缓存的、没有这个字段，就读文件头来判断。
+   156	  - 自带 MTP 层的模型默认开启 MTP，`validate_profile` 不再要求草稿文件，`argv` 不传 `-md` 和 `-ngld`，只传 `--spec-type draft-mtp --spec-draft-n-max/--spec-draft-p-min`。日志横幅显示 `MTP=on (embedded layer)`。
+   157	  - 新增参数 `runtime_environment(cfg, model=None)`：自带 MTP 层的 dense 模型使用自己的两张草稿表（理由见下面的测量）：
+   158	    - `STRIX_SPEC_DRAFT_BY_SLOTS`：`dm,dm,dm,dm,dm`
+   159	    - `STRIX_SPEC_DRAFT_BY_SLOTS_SAMPLED`：`3,3,3,3,2`，每项都不超过 `dm`
+   160	    
+   161	    Flash-Next 保持原来的 `dm,2,2,2,0` 和 `2,2,1,1,0`。
+   162	- **配置页**（`integrations/jan/ConfigurationView.tsx`、`status.ts`、中英文 locale）：自带 MTP 层的模型，MTP 开关可以使用，草稿模型下拉框置灰，并提示「该模型用自带的 MTP 层起草」。这部分改动没有做类型检查和构建，因为本机没有 Jan 源码。
+   163	- **`tools/test_manager.py`**：新增两个测试。
+   164	  - 27B 走内嵌 MTP：不传 `-md`，草稿表使用 dense 版本，旧 catalog 能通过读文件头识别，没有 MTP 层的非 qwen4exp 模型仍然被拒绝开启 MTP。
+   165	  - Flash-Next 仍传 `-md`/`-ngld`，两张表不变。
+   166	  
+   167	  全部 63 个测试通过。
+   168	
+   169	### Flash-Next 不退步的验证
+   170	
+   171	`argv_cmp.py` 用改动前的 manager（`6ecfdc1`）和改动后的 manager，对本机真实的 Flash-Next 模型（`Qwen3.8-Flash-Next-UD-IQ4_XS`）生成 6 种 profile 下的启动参数和环境变量：
+   172	
+   173	- 默认
+   174	- 单 slot
+   175	- 关闭 MTP
+   176	- `draft_max 5` / `draft_min 0.1`
+   177	- 关闭 QSA 并使用 q8_0 KV
+   178	- 4 个 slot 加 512K KV pool
+   179	
+   180	结果：校验后的 profile、`argv` 和 `LLAMA_*`/`GGML_*`/`STRIX_*` 环境变量**完全相同**。runtime 二进制没有改动，所以 Flash-Next 的性能不会受影响。
+   181	
+   182	### 测量
+   183	
+   184	所有测量都通过 manager、按 App 的默认 profile 启动：8 slot、`-kvu`、ctx 262144、ub 8192、f16 KV，开启 vision、`--lazy-mode on-direct`，功耗 120 W。
+   185	
+   186	prompt 分三组：
+   187	- code：3 个写代码 prompt，每个 600 token。
+   188	- zh：2 个中文 prompt（散文、技术解释），每个 600 token。
+   189	- sampled：temperature 0.7、top_k 20、top_p 0.8，与 Jan 的默认设置相同。
+   190	
+   191	**单会话下的草稿长度和停止阈值**（`sweep1.log`，t/s 取各 prompt 的平均值）：
+   192	
+   193	| draft_max / draft_min | code 贪心 | zh 贪心 | zh 采样 |
+   194	|---|---|---|---|
+   195	| 关闭 MTP | 12.35 | 12.20 | 12.17 |
+   196	| 2 / 0.3 | 26.85 | 21.67 | 20.83 |
+   197	| **3 / 0.3（默认）** | 31.13 | 22.59 | 20.82 |
+   198	| 4 / 0.3 | 33.31 | 21.29 | 20.58 |
+   199	| 5 / 0.3 | 33.62 | 20.21 | 21.27 |
+   200	| 6 / 0.3 | 31.86 | 19.04 | 21.14 |
+   201	| 3 / 0 | 30.96 | 23.20 | 20.94 |
+   202	| 4 / 0 | 33.13 | 22.32 | 21.76 |
+   203	| 5 / 0 | 33.33 | 20.42 | 21.15 |
+   204	| 4 / 0.5 | 32.73 | 19.72 | 18.97 |
+   205	
+   206	- 写代码时接受率约 90%，草稿长度 4–5 比 3 快约 7%。中文散文的接受率只有 30–50%（第一个 prompt 尤其低），草稿长度 3 最好，加到 4 会掉 3–6%。所以默认值仍取 3 / 0.3，和 Flash-Next 相同。
+   207	- `draft_min` 取 0 和 0.3 的差别在噪声以内。
+   208	- 采样那一列基本不随 draft_max 变化，因为这一轮用的还是 MoE 的采样表，单 slot 时草稿上限是 2。
+   209	
+   210	**采样请求在单会话下的草稿上限**（`sweep2.log`，draft_max 4）：
+   211	
+   212	| 单 slot 的采样草稿上限 | code 采样 | zh 采样 |
+   213	|---|---|---|
+   214	| 2（MoE 表） | 26.42 | 21.07 |
+   215	| **3** | 30.59 | 21.93 |
+   216	| 4 | 31.25 | 21.36 |
+   217	
+   218	**多会话**（`sweep2.log`、`sweep3.log`，每个会话 500 token，合计 tok/s）：
+   219	
+   220	| 草稿表 | 贪心 4 会话 | 贪心 8 会话 | 采样 2 会话 | 采样 4 会话 | 采样 8 会话 |
+   221	|---|---|---|---|---|---|
+   222	| 关闭 MTP | 38.8 | 51.4–51.7 | 22.6 | 38.8 | 51.4 |
+   223	| MoE 表（贪心 `3,2,2,2,0`，采样 `2,2,1,1,0`） | 54.2 | 50.3 | 42.4 | 41.8 | 50.4 |
+   224	| `3,3,3,3,0` | 53.3 | 50.5 | 43.1 | 50.4 | 50.3 |
+   225	| `3,3,3,3,2` | 55.3 | 69.3 | 42.0 | 52.0 | 69.7 |
+   226	| `3,3,3,3,3` | 56.2 | **73.5** | – | – | – |
+   227	
+   228	- MoE 表在 5 个及以上会话时把草稿数设为 0。在 27B 上这等于没开 MTP：8 个会话 50.3 tok/s，关闭 MTP 是 51.4。原因是 dense 模型在一个 step 内，所有 token 读的是同一份权重，多 verify 几个草稿几乎不增加成本。而 MoE 每多一个 token 就要多读约 10 个专家，所以那张表在会话多时停止起草。
+   229	- 贪心选 `dm,dm,dm,dm,dm`，采样选 `3,3,3,3,2`。采样在 5 个及以上会话时取 3 的情况没有测。
+   230	- 第一次多会话测试（`sweep2-invalid.log`）作废了：测试脚本沿用了上一组保存的 `mtp: false`，导致 MTP 实际上没开。只有其中关闭 MTP 的那组对照数据有效。
+   231	
+   232	**最终默认值的端到端测量**（`final.log`，没有任何环境变量覆盖）：
+   233	
+   234	| | 1 会话 | 4 会话 | 8 会话 |
+   235	|---|---|---|---|
+   236	| 贪心（code + zh 混合） | 31.1 | 53.8 | 71.4 |
+   237	| 采样 | 30.2 | 53.3 | 70.8 |
+   238	| 关闭 MTP（对照，取自上表） | 12.3 | 38.8 | 51.4 |
+   239	
+   240	单会话下：code 贪心 30.5、zh 贪心 22.0、zh 采样 21.4 t/s。改动前，App 里的 27B 只能不开 MTP，单会话 12.3 t/s。
+   241	
+   242	## P1：降低每一轮投机的成本（2026-10-09 完成）
+   243	
+   244	测试脚本和日志在 [results/qwen3.8-27b-20261009/p1/](results/qwen3.8-27b-20261009/p1/)。TODO 里的三项：第 3 项（低秩 head）和第 4 项（GDN 延迟回滚）做了并已装进 `bin/hip`；第 5 项（mmvq 调优）测了，收益约 1%，不做。
+   245	
+   246	App 默认配置下，27B 的解码（`final.log`，与 P0 的 `final.log` 同样的测法）：
+   247	
+   248	| tok/s | 1 会话 | 4 会话 | 8 会话 |
+   249	|---|---|---|---|
+   250	| 贪心，P0 | 31.1 | 53.8 | 71.4 |
+   251	| **贪心，P1** | **34.4** | **59.4** | **78.4** |
+   252	| 采样，P0 | 30.2 | 53.3 | 70.8 |
+   253	| **采样，P1** | **34.5** | **59.8** | **74.6** |
+   254	| 关闭 MTP，P0 | 12.3 | 38.8 | 51.4 |
+   255	| 关闭 MTP，P1（`final-mtpoff.log`） | 12.4 | 40.0 | 52.7 |
+   256	
+   257	单会话分组：code 贪心 34.6（P0 30.5）、zh 贪心 23.8（22.0）、zh 采样 21.6（21.4）。中文散文本身接受率低（第一个 prompt 只有 40% 左右），草稿便宜了对它帮助有限。
+   258	
+   259	### 改动
+   260	
+   261	- **`src/llama-model-loader.cpp`：`STRIX_EXTRA_TENSORS=<gguf>`。** 把一个同架构旁挂文件里、模型自身没有的张量加进来，只在加载 MTP 时生效；名字和模型重复就报错。这样 27B 不用为了多 140 MB 而重写 17 GB 的文件。
+   262	- **`src/models/qwen35.cpp`**
+   263	  - `graph_mtp` 的 LM head：有 `blk.64.nextn.lr_proj` / `lr_scores` 时，先做低秩预打分，取前 `STRIX_MTP_LR_K`（512）个候选，只对这些行做精确乘法，其余为 -inf。做法和 qwen4exp 的 `apply_mtp_lowrank_head` 相同，秩从文件读。target 照常 verify，所以输出仍是 target 的。
+   264	  - 线性注意力层接上 GDN 延迟回滚：短 batch（verify、解码步）走记录式的 `ggml_gated_delta_net_lazy`，长 batch 先 replay 再走原路径，和 `qwen4exp.cpp` 的非 ragged 路径一致。
+   265	- **`src/llama-memory-recurrent.cpp`**：延迟回滚原来只对 `QWEN4EXP` 开，现在也对 `QWEN35` 开。`STRIX_GDN_LAZY_QWEN35=0` 可以让 qwen35 回到快照方式；qwen4exp 的条件没有变。
+   266	- 以上三个文件由新的 `patches/apply_qwen35_dense_mtp_049.py` 生成，加在 `PATCH_ORDER` 末尾。`bootstrap/UPSTREAM.json` 记录了两个新进 delta 的文件，`tools/replay_bootstrap.py` 从干净 upstream 重放：89 / 89 一致。
+   267	- **`tools/make_mtp_lowrank.py`（新）**：给自带 MTP 层的模型拟合低秩 head，写成旁挂文件 `mtp-<family>-head-lr<r>.gguf`。
+   268	- **`tools/manager.py`**：`embedded_mtp_head()` 在模型目录里找 `mtp-<family>-head-lr*.gguf`，要求 family 是模型文件名的前缀、架构相同。找到并且开了 MTP，就设 `STRIX_EXTRA_TENSORS`。catalog 把它列为 head；`merge_heads` 找不到同 family 的 shared draft，所以不会去合并它。
+   269	- **`tools/test_manager.py`**：扩充了内嵌 MTP 的测试（只认对的 family 和架构，MTP 关时不传，catalog 角色是 head、不触发合并），Flash-Next 的测试加了「不设 `STRIX_EXTRA_TENSORS`」。63 个测试全部通过。
+   270	- **安装**：`src/llama.cpp/build/bin` 的 runtime 文件已复制到 `bin/hip`，和 `bootstrap --build` 做的一样。原来的文件备份在 `E:\work\AI\rulith-inference_tmp27\hip-before-p1\`。实际只有 `llama.dll` 变了，其余 DLL 大小相同。`mtp-Qwen3.8-27B-head-lr512.gguf`（140 MB）已放到模型目录 `C:\Users\Wei Lu\Documents\Qwen3.8-27B\`。
+   271	
+   272	### 第 3 项：低秩 head
+   273	
+   274	**为什么值得做。** 一个草稿步读 MTP 层约 0.35 GB，再读整个 LM head 1.04 GB（Q6_K，248320 × 5120）。head 占了草稿步的四分之三。
+   275	
+   276	**拟合。** 方法和 Flash-Next 的相同（`docs/results.md` 0.4.6 节）：取 head 实际输入的二阶矩 Σ = L Lᵀ，对 W L 做 SVD 取前 r 个分量，得到 `lr_scores = W L V_r`（Q8_0）和 `lr_proj = V_r^T L^-1`（F16）。仓库里没有当时的拟合脚本，`tools/make_mtp_lowrank.py` 是按这个描述重写的。
+   277	
+   278	**数据。** MTP head 的输入要先经过它自己的 `shared_head_norm`，和主模型最后的 hidden state 分布不同，所以必须采真实的草稿状态。做法是在 `common/speculative.cpp` 读 `h_row` 的地方临时加一段把每一行写进文件的代码（`STRIX_MTP_DUMP_H`，采完已删掉，tree 与 recipe 一致），用 `collect.sh` 跑 4 个并行会话：
+   279	
+   280	- 训练：40 个 prompt（中英文散文、代码、数学、对话），贪心和采样各一次，共 74179 行；
+   281	- 留出：另外 10 个 prompt，共 19594 行。
+   282	
+   283	**召回率**：精确 head 的 top-1 落在预打分前 K 个候选里的比例，用量化后的张量计算：
+   284	
+   285	| 秩 | 文件大小 | 留出集 K=128 | K=256 | **K=512** | K=1024 |
+   286	|---|---|---|---|---|---|
+   287	| 384 | 101 MB | 97.20% | 98.55% | 99.32% | 99.60% |
+   288	| **512** | 135 MB | 98.78% | 99.50% | **99.70%** | 99.78% |
+   289	| 768 | 203 MB | 99.58% | 99.80% | 99.95% | 100% |
+   290	| 1024 | 270 MB | 99.90% | 99.95% | 100% | 100% |
+   291	
+   292	**速度**（`ab_lr.sh`，P1 build、App profile，关掉延迟回滚只比 head，两轮交替；表中为两轮的值）：
+   293	
+   294	| | code t/s | zh t/s | zh 采样 t/s | 每轮投机耗时 | 其中草稿 |
+   295	|---|---|---|---|---|---|
+   296	| 完整 head | 29.5 / 31.0 | 22.2 / 22.8 | 20.9 / 20.7 | 119–125 ms | 21.5–24.4 ms |
+   297	| **秩 512** | 32.7 / 33.9 | 23.7 / 23.8 | 22.8 / 23.5 | 109–116 ms | 11.5–12.2 ms |
+   298	| 秩 768 | 33.5 / 33.6 | 24.5 / 23.7 | 22.8 / 22.9 | 110–115 ms | 12.3–12.8 ms |
+   299	| 秩 1024 | 32.4 / 33.5 | 23.4 / 23.1 | 22.6 / 22.1 | 110–118 ms | 13.1–14.1 ms |
+   300	
+   301	- 草稿时间减半（22–24 → 约 12 ms），每轮短约 8%，code +10%、zh +5%、zh 采样 +11%。各档接受率都在噪声内，没有看到秩 512 漏掉 top-1 的影响。
+   302	- 选秩 512：比 768 少 70 MB，速度相同；1024 的草稿慢 1.5 ms。
+   303	
+   304	### 第 4 项：GDN 延迟回滚
+   305	
+   306	**正确性**（`lazy_eq.py`）：4 个 prompt、贪心 400 token，开关延迟回滚各跑一次：
+   307	
+   308	- 单会话：开 MTP 和不开 MTP 都 4/4 逐字节相同。
+   309	- 4 个会话并行：开和关的结果不一样，但关掉延迟回滚时，并行的结果和单会话也只有 1/4 相同，说明并行批次本身就不是逐位确定的（batch 组成随时序变化）。分叉点都在近似平局的 token 上，开 MTP 和不开 MTP 的分叉位置一样，文本通顺。这不是回滚引起的。
+   310	
+   311	**速度**（`ab_lazy.sh`、`ab_lazy8.sh`，P1 build、lr512 head，两轮交替）：
+   312	
+   313	| | 延迟回滚开 | 关 | verify 耗时（开 / 关） |
+   314	|---|---|---|---|
+   315	| 1 会话 code，t/s | 35.1 / 35.1 | 33.9 / 34.3 | 89.5 / 92.5 ms |
+   316	| 4 会话，合计 tok/s | 59.2 / 59.9 | 56.8 / 57.8 | 115–118 / 125–127 ms |
+   317	| 8 会话，合计 tok/s | 80.3 / 81.5 | 75.9 / 74.0 | 170–174 / 182–184 ms |
+   318	| 8 会话关闭 MTP | 52.9 / 51.4 | 51.7 / 51.6 | 151–155 / 155 ms |
+   319	
+   320	- 开 MTP 时 verify 短 3–7%，会话越多越明显（每个会话每层每 token 少写 3 MB state）。
+   321	- 不开 MTP 时（记录累积，`STRIX_GDN_ACC` 默认 8）在噪声内，约 +1%。
+   322	- 作废数据：`ab_lazy.log` 中标为 8 会话的几行实际只有 4 个 slot。`lazy_eq.py` 在共用的 state 里存了 `parallel: 4`，后面的测试沿用了它。开和关之间的对比仍然成立，但绝对值作废，8 会话用 `ab_lazy8.log` 重测。
+   323	- 同样的教训在 `final-mtpoff.log` 又出现一次：harness 保存 `{}` 时 `mtp` 默认是关的，App 则会保存带 MTP 的默认 profile。这份日志可以作为 P1 下关闭 MTP 的对照。
+   324	
+   325	### 第 5 项：batch=1 的 mmvq
+   326	
+   327	`mmvq_bw.sh`：在 llama-bench tg 的一个解码步上用 `STRIX_NODE_TIMING` 计时（关 HIP graph），按输出宽度归组，再和 GGUF 里对应权重的字节数相除：
+   328	
+   329	| 组（输出宽度） | 主要类型 | 带宽 |
+   330	|---|---|---|
+   331	| LM head 248320 | Q6_K | 228 GB/s |
+   332	| FFN gate/up 17408 | Q5_K、IQ4_XS、Q4_K | 209 GB/s |
+   333	| 5120（ffn_down、ssm_out、attn_output） | Q5_K、Q6_K | 190 GB/s |
+   334	| 10240（GDN 的 qkv） | Q5_K、Q4_K | 186 GB/s |
+   335	| 6144（GDN 的 z） | Q5_K、Q4_K | 180 GB/s |
+   336	| 48（`ssm_alpha/beta`，96 个） | Q8_0 | 每个约 25 µs，受启动开销限制 |
+   337	
+   338	matmul 一共 86 ms，占 113 ms GPU 时间。全部提到 head 的 228 GB/s，最多能省约 10%。
+   339	
+   340	实验（`mmvq_nw.sh`）：把 RDNA3.5 上 batch=1 的 Q4_K/Q5_K/Q6_K/IQ4_XS 的 nwarps 从 1 改成 2 / 4 / 8，测 tg128，两轮交替：
+   341	
+   342	| nwarps | 1（现状） | 2 | 4 | 8 |
+   343	|---|---|---|---|---|
+   344	| t/s | 12.56 / 12.55 | 12.64 / 12.74 | 12.63 / 12.67 | 12.46 / 12.55 |
+   345	
+   346	最多 +1%，而且只作用在不开 MTP 的单会话解码上：MTP 的 verify 是 batch 4，走的是另一条路径。这个模板同时服务 Flash-Next 的 IQ4_XS 专家 GEMV。为 1% 去动共享 kernel 不划算，已经还原，不做。
+   347	
+   348	### Flash-Next 不退步的验证
+   349	
+   350	- **manager**：`argv_cmp.py` 对比最初的 manager（`6ecfdc1`，P0 之前）和现在的，Flash-Next 在 6 种 profile 下的 argv 和环境变量完全相同（没有 `STRIX_EXTRA_TENSORS`）。
+   351	- **runtime**（`flashnext_check.py`）：App 默认 profile（外挂 draft + lr512 head、QSA、8 slot），原 `bin/hip` 与 P1 build 交替跑：
+   352	
+   353	| | base（原 bin/hip） | new（P1 build） |
+   354	|---|---|---|
+   355	| 贪心 3 个 prompt | 基准 | 两轮都是 3/3 逐字节相同 |
+   356	| 单会话 code / zh / 解释，t/s | 56.9–57.5 / 32.9–33.5 / 44.7–46.9 | 59.4 / 34.9–35.2 / 47.1–47.3 |
+   357	| 单会话每轮投机 | 71.0–72.8 ms | 69.3 ms |
+   358	| 4 会话合计 | 71.2 / 69.9 | 68.8 / 71.4 |
+   359	| 预填充 11.8K（`fn_prefill.log`，加载后第 2–5 个 prompt） | 1336–1357 t/s | 1333–1355 t/s |
+   360	
+   361	- 加载后的第一个 prompt 两边都会波动（base 也出现过 1070），所以只比较之后的几个。
+   362	- 本机只有 UD-IQ4_XS，没有 UD-Q4_K_XL，后者没有测。按 TODO 的要求它也要测，见 TODO。
+   363	
+   364	## P2：预填充（2026-10-10 完成）
+   365	
+   366	测试脚本和日志在 [results/qwen3.8-27b-20261009/p2/](results/qwen3.8-27b-20261009/p2/)。
+   367	
+   368	**结果：27B 的预填充快了 31–39%，解码不变，Flash-Next 不变。** llama-bench（`ab_bench.sh`，App 的开关，`-b/-ub 8192`，两轮交替）：
+   369	
+   370	| t/s | pp512 | pp2048 | pp8192 | pp16384 | tg128 |
